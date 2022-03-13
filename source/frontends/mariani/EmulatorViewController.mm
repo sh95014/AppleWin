@@ -34,6 +34,8 @@
 #import "windows.h"
 
 #import "context.h"
+#import "ParallelInterface.h"
+#import "Printers/AppleWriterPrinter.h"
 
 #import <SDL.h>
 #import "benchmark.h"
@@ -46,6 +48,7 @@
 #import "CommonTypes.h"
 #import "MarianiFrame.h"
 #import "MarianiJoystick.h"
+#import "MarianiWriter.h"
 #import "EmulatorRenderer.h"
 #import "UserDefaults.h"
 
@@ -63,19 +66,24 @@
 @property Initialisation *initialisation;
 
 #ifdef SHOW_EMULATED_CPU_SPEED
-@property NSDate *samplePeriodBeginClockTime;
+@property (strong) NSDate *samplePeriodBeginClockTime;
 @property uint64_t samplePeriodBeginCumulativeCycles;
 @property NSInteger frameCount;
 #endif // SHOW_EMULATED_CPU_SPEED
-@property NSTimer *runLoopTimer;
+@property (strong) NSTimer *runLoopTimer;
 @property CVDisplayLinkRef displayLink;
 
-@property AVAssetWriter *videoWriter;
-@property AVAssetWriterInput *videoWriterInput;
-@property AVAssetWriterInputPixelBufferAdaptor *videoWriterAdaptor;
+@property (strong) AVAssetWriter *videoWriter;
+@property (strong) AVAssetWriterInput *videoWriterInput;
+@property (strong) AVAssetWriterInputPixelBufferAdaptor *videoWriterAdaptor;
 @property int64_t videoWriterFrameNumber;
 @property (getter=isRecordingScreen) BOOL recordingScreen;
-@property NSTimer *recordingTimer;
+@property (strong) NSTimer *recordingTimer;
+
+@property (strong) IBOutlet NSWindow *printerWindow;
+@property (strong) IBOutlet PrinterView *printerView;
+@property AncientPrinterEmulationLibrary::AppleWriterPrinter *printer;
+@property AncientPrinterEmulationLibrary::MarianiWriter *printerWriter;
 
 @end
 
@@ -101,6 +109,18 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     std::shared_ptr<Paddle> paddle(new mariani::Gamepad());
     self.initialisation = new Initialisation(frame, paddle);
     applyOptions(options);
+    
+    if (self.printerWindow == nil) {
+        if (![[NSBundle mainBundle] loadNibNamed:@"Printer" owner:self topLevelObjects:nil]) {
+            NSLog(@"failed to load Printer nib");
+            return;
+        }
+    }
+    self.printerWriter = new AncientPrinterEmulationLibrary::MarianiWriter(self.printerView);
+    self.printer = new AncientPrinterEmulationLibrary::AppleWriterPrinter(*self.printerWriter);
+    Printer_SetPrinter(*self.printer);
+    [self.printerWindow orderFront:self];
+    
     frame->Begin();
 }
 

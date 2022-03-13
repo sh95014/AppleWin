@@ -241,6 +241,16 @@
 		B00F4EB227DD8093000F55BF /* Writer.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EAA27DD8093000F55BF /* Writer.h */; };
 		B00F4EB327DD8093000F55BF /* AppleWriterPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */; };
 		B00F4EB727DD90A6000F55BF /* GenericPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EB527DD90A5000F55BF /* GenericPrinter.h */; };
+		B00F4EBF27DDA5EB000F55BF /* Printer.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00F4EBE27DDA5EB000F55BF /* Printer.xib */; };
+		B00F4EC027DDA5EB000F55BF /* Printer.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00F4EBE27DDA5EB000F55BF /* Printer.xib */; };
+		B00F4ECA27DDA67D000F55BF /* PrinterView.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EC827DDA67D000F55BF /* PrinterView.h */; };
+		B00F4ECB27DDA67D000F55BF /* PrinterView.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EC827DDA67D000F55BF /* PrinterView.h */; };
+		B00F4ECC27DDA67D000F55BF /* PrinterView.m in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EC927DDA67D000F55BF /* PrinterView.m */; };
+		B00F4ECD27DDA67D000F55BF /* PrinterView.m in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EC927DDA67D000F55BF /* PrinterView.m */; };
+		B00F4ED027DDB098000F55BF /* MarianiWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00F4ECE27DDB098000F55BF /* MarianiWriter.mm */; };
+		B00F4ED127DDB098000F55BF /* MarianiWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00F4ECE27DDB098000F55BF /* MarianiWriter.mm */; };
+		B00F4ED227DDB098000F55BF /* MarianiWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4ECF27DDB098000F55BF /* MarianiWriter.h */; };
+		B00F4ED327DDB098000F55BF /* MarianiWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4ECF27DDB098000F55BF /* MarianiWriter.h */; };
 		B020F8A62785D30E0071D3C7 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B020F8A32785D30E0071D3C7 /* stdafx.cpp */; };
 		B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8A82785EA440071D3C7 /* AVFoundation.framework */; };
 		B020F8AB2785F3920071D3C7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8AA2785F3920071D3C7 /* CoreMedia.framework */; };
@@ -675,6 +685,11 @@
 		B00F4EAA27DD8093000F55BF /* Writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Writer.h; path = source/Printers/Writer.h; sourceTree = "<group>"; };
 		B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppleWriterPrinter.h; path = source/Printers/AppleWriterPrinter.h; sourceTree = "<group>"; };
 		B00F4EB527DD90A5000F55BF /* GenericPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericPrinter.h; path = source/Printers/GenericPrinter.h; sourceTree = "<group>"; };
+		B00F4EBE27DDA5EB000F55BF /* Printer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Printer.xib; sourceTree = "<group>"; };
+		B00F4EC827DDA67D000F55BF /* PrinterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrinterView.h; sourceTree = "<group>"; };
+		B00F4EC927DDA67D000F55BF /* PrinterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrinterView.m; sourceTree = "<group>"; };
+		B00F4ECE27DDB098000F55BF /* MarianiWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MarianiWriter.mm; sourceTree = "<group>"; };
+		B00F4ECF27DDB098000F55BF /* MarianiWriter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = MarianiWriter.h; sourceTree = "<group>"; };
 		B020F8A32785D30E0071D3C7 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stdafx.cpp; path = test/TestCPU6502/stdafx.cpp; sourceTree = SOURCE_ROOT; };
 		B020F8A42785D30E0071D3C7 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = test/TestCPU6502/stdafx.h; sourceTree = SOURCE_ROOT; };
 		B020F8A52785D30E0071D3C7 /* TestCPU6502.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCPU6502.cpp; path = test/TestCPU6502/TestCPU6502.cpp; sourceTree = SOURCE_ROOT; };
@@ -1340,12 +1355,16 @@
 				B0689D082780B9B60029EB7D /* MarianiFrame.cpp */,
 				B090CF2127B5A2A900C6C23D /* MarianiJoystick.h */,
 				B090CF2027B5A2A900C6C23D /* MarianiJoystick.mm */,
+				B00F4ECF27DDB098000F55BF /* MarianiWriter.h */,
+				B00F4ECE27DDB098000F55BF /* MarianiWriter.mm */,
 				B043659327B8769E00329469 /* NSMutableString+RTF.h */,
 				B043659427B8769E00329469 /* NSMutableString+RTF.m */,
 				B0927414277D9399003FFB79 /* PreferencesViewController.h */,
 				B0927415277D9399003FFB79 /* PreferencesViewController.mm */,
 				B0927418277D9403003FFB79 /* PreferencesWindowController.h */,
 				B0927419277D9403003FFB79 /* PreferencesWindowController.m */,
+				B00F4EC827DDA67D000F55BF /* PrinterView.h */,
+				B00F4EC927DDA67D000F55BF /* PrinterView.m */,
 				B049E8A4277C4F0E00FC14A3 /* ShaderTypes.h */,
 				B049E8A6277C4F6D00FC14A3 /* Shaders.metal */,
 				B0689D152781984F0029EB7D /* UserDefaults.h */,
@@ -1356,6 +1375,7 @@
 				B07612332789E4BE009E79BE /* About.xib */,
 				B0F25BCF2789B2DB0080523F /* DiskImageBrowser.xib */,
 				B0F0138E2785A211002936B4 /* Preferences.storyboard */,
+				B00F4EBE27DDA5EB000F55BF /* Printer.xib */,
 				B0ED3FCD2785973C006E4784 /* Localizable.strings */,
 				B089EF2D27BADA5200BDC415 /* Mariani.help */,
 				B032DE2C277A0C24006DC0F7 /* main.m */,
@@ -2076,6 +2096,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B00F4ECB27DDA67D000F55BF /* PrinterView.h in Headers */,
+				B00F4ED327DDB098000F55BF /* MarianiWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2138,6 +2160,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B00F4ECA27DDA67D000F55BF /* PrinterView.h in Headers */,
+				B00F4ED227DDB098000F55BF /* MarianiWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2467,6 +2491,7 @@
 				B00ECBCE279EEB600041E16C /* Hddrvr.bin in Resources */,
 				B00ECBCF279EEB600041E16C /* CHARSET8C.bmp in Resources */,
 				B00ECBD0279EEB600041E16C /* DISK2-13sector.rom in Resources */,
+				B00F4EC027DDA5EB000F55BF /* Printer.xib in Resources */,
 				B00ECBD1279EEB600041E16C /* DISK2.rom in Resources */,
 				B00ECBD2279EEB600041E16C /* MainMenu.xib in Resources */,
 				B00ECBD3279EEB600041E16C /* About.xib in Resources */,
@@ -2506,6 +2531,7 @@
 				B045FE762782984F006E36F9 /* Hddrvr.bin in Resources */,
 				B045FE8D2782B9B3006E36F9 /* CHARSET8C.bmp in Resources */,
 				B045FE742782984F006E36F9 /* DISK2-13sector.rom in Resources */,
+				B00F4EBF27DDA5EB000F55BF /* Printer.xib in Resources */,
 				B045FE7B2782984F006E36F9 /* DISK2.rom in Resources */,
 				B032DE2B277A0C24006DC0F7 /* MainMenu.xib in Resources */,
 				B07612302789E4BE009E79BE /* About.xib in Resources */,
@@ -2629,6 +2655,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B00ECB7A279EEB600041E16C /* guiddef.cpp in Sources */,
+				B00F4ED127DDB098000F55BF /* MarianiWriter.mm in Sources */,
 				B00ECB7B279EEB600041E16C /* UserDefaults.m in Sources */,
 				B00ECB7C279EEB600041E16C /* sdirectsound.cpp in Sources */,
 				B00ECB7D279EEB600041E16C /* Joystick.cpp in Sources */,
@@ -2655,6 +2682,7 @@
 				B00ECB91279EEB600041E16C /* PropertySheet.cpp in Sources */,
 				B00ECB92279EEB600041E16C /* Speech.cpp in Sources */,
 				B00ECB93279EEB600041E16C /* EmulatorRenderer.m in Sources */,
+				B00F4ECD27DDA67D000F55BF /* PrinterView.m in Sources */,
 				B00ECB94279EEB600041E16C /* Debugger_Assembler.cpp in Sources */,
 				B00ECB95279EEB600041E16C /* commonframe.cpp in Sources */,
 				B00ECB96279EEB600041E16C /* fileapi.cpp in Sources */,
@@ -2697,6 +2725,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B09AB80D277A21410002A6C3 /* guiddef.cpp in Sources */,
+				B00F4ED027DDB098000F55BF /* MarianiWriter.mm in Sources */,
 				B0689D182781984F0029EB7D /* UserDefaults.m in Sources */,
 				B049E820277B512500FC14A3 /* sdirectsound.cpp in Sources */,
 				B09AB7D2277A21180002A6C3 /* Joystick.cpp in Sources */,
@@ -2723,6 +2752,7 @@
 				B09AB7D8277A21180002A6C3 /* PropertySheet.cpp in Sources */,
 				B09AB674277A14DB0002A6C3 /* Speech.cpp in Sources */,
 				B049E8A3277C44B100FC14A3 /* EmulatorRenderer.m in Sources */,
+				B00F4ECC27DDA67D000F55BF /* PrinterView.m in Sources */,
 				B09AB73B277A1BA40002A6C3 /* Debugger_Assembler.cpp in Sources */,
 				B049E832277B5E3700FC14A3 /* commonframe.cpp in Sources */,
 				B09AB819277A21410002A6C3 /* fileapi.cpp in Sources */,
