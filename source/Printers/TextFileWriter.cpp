@@ -41,9 +41,14 @@ namespace AncientPrinterEmulationLibrary
         // Filter most control characters - TODO: Add more?
         if (character >= 0x20
             || character == '\t'
-            || character == '\r')
+			|| character == '\r'
+            || character == '\n')
         {
             m_OutputStream.put(character);
+        }
+        if (character == '\n')
+        {
+            m_OutputStream.flush();
         }
         return 0;
     }
