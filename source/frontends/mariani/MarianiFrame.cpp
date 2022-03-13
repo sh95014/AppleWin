@@ -8,7 +8,7 @@
 #include "StdAfx.h"
 #include "MarianiFrame.h"
 #include "linux/resources.h"
-#include "ParallelPrinter.h"
+#include "ParallelInterface.h"
 #include "AppDelegate.h"
 
 namespace mariani
@@ -20,6 +20,18 @@ namespace mariani
     g_sProgramDir = GetSupportDirectory();
     g_bPrinterAppend = true;
     g_bFilterUnprintable = false;
+
+    outputStream = new std::ofstream(g_sProgramDir + "Printer.txt");
+    textFileWriter = new AncientPrinterEmulationLibrary::TextFileWriter(*outputStream);
+    genericPrinter = new AncientPrinterEmulationLibrary::GenericPrinter(*textFileWriter);
+    Printer_SetPrinter(*genericPrinter);
+  }
+
+  MarianiFrame::~MarianiFrame()
+  {
+    delete genericPrinter;
+    delete textFileWriter;
+    delete outputStream;
   }
 
   void MarianiFrame::Initialize(bool resetVideoState)

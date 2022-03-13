@@ -8,6 +8,9 @@
 #pragma once
 
 #include "sdlframe.h"
+#include <fstream>
+#include "Printers/GenericPrinter.h"
+#include "Printers/TextFileWriter.h"
 
 namespace common2
 {
@@ -21,6 +24,7 @@ namespace mariani
   {
   public:
     MarianiFrame(const common2::EmulatorOptions & options);
+    virtual ~MarianiFrame();
 
     void VideoPresentScreen() override;
     void Initialize(bool resetVideoState) override;
@@ -44,7 +48,11 @@ namespace mariani
 
   private:
     // FIXME: without this hack the app crashes randomly elsewhere
-    Uint8 padding[1];
+    Uint8 padding[16];
+
+    std::ofstream *outputStream;
+    AncientPrinterEmulationLibrary::GenericPrinter *genericPrinter;
+    AncientPrinterEmulationLibrary::TextFileWriter *textFileWriter;
   };
 
 }

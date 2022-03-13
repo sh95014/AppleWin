@@ -45,7 +45,6 @@
 		B0098C97277E140100F38E0C /* FrameBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB5F0277A14DA0002A6C3 /* FrameBase.cpp */; };
 		B0098C98277E140100F38E0C /* DiskImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB646277A14DB0002A6C3 /* DiskImage.cpp */; };
 		B0098C99277E140100F38E0C /* DiskImageHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB5FD277A14DA0002A6C3 /* DiskImageHelper.cpp */; };
-		B0098C9A277E140100F38E0C /* ParallelPrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB601277A14DA0002A6C3 /* ParallelPrinter.cpp */; };
 		B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E7EA277A36CE00FC14A3 /* PropertySheetHelper.cpp */; };
 		B0098C9C277E143200F38E0C /* benchmark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB79F277A20FA0002A6C3 /* benchmark.cpp */; };
 		B0098C9D277E144E00F38E0C /* slirp2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB820277A21640002A6C3 /* slirp2.cpp */; };
@@ -91,7 +90,6 @@
 		B0098CCA277E171100F38E0C /* VidHD.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB632277A14DB0002A6C3 /* VidHD.h */; };
 		B0098CCB277E171100F38E0C /* 6821.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5F6277A14DA0002A6C3 /* 6821.h */; };
 		B0098CCC277E171100F38E0C /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A5277A20FA0002A6C3 /* version.h */; };
-		B0098CCD277E171100F38E0C /* ParallelPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5FA277A14DA0002A6C3 /* ParallelPrinter.h */; };
 		B0098CCE277E171100F38E0C /* CardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB63C277A14DB0002A6C3 /* CardManager.h */; };
 		B0098CCF277E171100F38E0C /* z80.h in Headers */ = {isa = PBXBuildFile; fileRef = B049E7D0277A339700FC14A3 /* z80.h */; };
 		B0098CD0277E171100F38E0C /* DiskImageHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB651277A14DB0002A6C3 /* DiskImageHelper.h */; };
@@ -232,6 +230,17 @@
 		B00ECBE6279EEBAB0041E16C /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */; };
 		B00ECBE9279EEBDC0041E16C /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE7279EEBD30041E16C /* SDL2.framework */; };
 		B00ECBEA279EEBDC0041E16C /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE7279EEBD30041E16C /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B00F4EA127DD7CF5000F55BF /* ParallelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4E9F27DD7CF5000F55BF /* ParallelInterface.cpp */; };
+		B00F4EA227DD7CF5000F55BF /* ParallelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EA027DD7CF5000F55BF /* ParallelInterface.h */; };
+		B00F4EAC27DD8093000F55BF /* TextFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EA427DD8093000F55BF /* TextFileWriter.cpp */; };
+		B00F4EAD27DD8093000F55BF /* BasePrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EA527DD8093000F55BF /* BasePrinter.h */; };
+		B00F4EAE27DD8093000F55BF /* AppleWriterPrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EA627DD8093000F55BF /* AppleWriterPrinter.cpp */; };
+		B00F4EAF27DD8093000F55BF /* TextFileWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EA727DD8093000F55BF /* TextFileWriter.h */; };
+		B00F4EB027DD8093000F55BF /* Printer.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EA827DD8093000F55BF /* Printer.h */; };
+		B00F4EB127DD8093000F55BF /* BasePrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EA927DD8093000F55BF /* BasePrinter.cpp */; };
+		B00F4EB227DD8093000F55BF /* Writer.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EAA27DD8093000F55BF /* Writer.h */; };
+		B00F4EB327DD8093000F55BF /* AppleWriterPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */; };
+		B00F4EB727DD90A6000F55BF /* GenericPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EB527DD90A5000F55BF /* GenericPrinter.h */; };
 		B020F8A62785D30E0071D3C7 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B020F8A32785D30E0071D3C7 /* stdafx.cpp */; };
 		B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8A82785EA440071D3C7 /* AVFoundation.framework */; };
 		B020F8AB2785F3920071D3C7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8AA2785F3920071D3C7 /* CoreMedia.framework */; };
@@ -655,6 +664,17 @@
 		B00ECBE4279EEB600041E16C /* Mariani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mariani.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../boost_1_78_0/universal/libboost_program_options.a; sourceTree = "<group>"; };
 		B00ECBE7279EEBD30041E16C /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../SDL2.framework; sourceTree = "<group>"; };
+		B00F4E9F27DD7CF5000F55BF /* ParallelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParallelInterface.cpp; path = source/ParallelInterface.cpp; sourceTree = "<group>"; };
+		B00F4EA027DD7CF5000F55BF /* ParallelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParallelInterface.h; path = source/ParallelInterface.h; sourceTree = "<group>"; };
+		B00F4EA427DD8093000F55BF /* TextFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextFileWriter.cpp; path = source/Printers/TextFileWriter.cpp; sourceTree = "<group>"; };
+		B00F4EA527DD8093000F55BF /* BasePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePrinter.h; path = source/Printers/BasePrinter.h; sourceTree = "<group>"; };
+		B00F4EA627DD8093000F55BF /* AppleWriterPrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppleWriterPrinter.cpp; path = source/Printers/AppleWriterPrinter.cpp; sourceTree = "<group>"; };
+		B00F4EA727DD8093000F55BF /* TextFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFileWriter.h; path = source/Printers/TextFileWriter.h; sourceTree = "<group>"; };
+		B00F4EA827DD8093000F55BF /* Printer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Printer.h; path = source/Printers/Printer.h; sourceTree = "<group>"; };
+		B00F4EA927DD8093000F55BF /* BasePrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BasePrinter.cpp; path = source/Printers/BasePrinter.cpp; sourceTree = "<group>"; };
+		B00F4EAA27DD8093000F55BF /* Writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Writer.h; path = source/Printers/Writer.h; sourceTree = "<group>"; };
+		B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppleWriterPrinter.h; path = source/Printers/AppleWriterPrinter.h; sourceTree = "<group>"; };
+		B00F4EB527DD90A5000F55BF /* GenericPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericPrinter.h; path = source/Printers/GenericPrinter.h; sourceTree = "<group>"; };
 		B020F8A32785D30E0071D3C7 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stdafx.cpp; path = test/TestCPU6502/stdafx.cpp; sourceTree = SOURCE_ROOT; };
 		B020F8A42785D30E0071D3C7 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = test/TestCPU6502/stdafx.h; sourceTree = SOURCE_ROOT; };
 		B020F8A52785D30E0071D3C7 /* TestCPU6502.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCPU6502.cpp; path = test/TestCPU6502/TestCPU6502.cpp; sourceTree = SOURCE_ROOT; };
@@ -817,14 +837,12 @@
 		B09AB5F7277A14DA0002A6C3 /* CPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPU.h; path = source/CPU.h; sourceTree = SOURCE_ROOT; };
 		B09AB5F8277A14DA0002A6C3 /* SaveState_Structs_v1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveState_Structs_v1.h; path = source/SaveState_Structs_v1.h; sourceTree = SOURCE_ROOT; };
 		B09AB5F9277A14DA0002A6C3 /* SaveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveState.h; path = source/SaveState.h; sourceTree = SOURCE_ROOT; };
-		B09AB5FA277A14DA0002A6C3 /* ParallelPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParallelPrinter.h; path = source/ParallelPrinter.h; sourceTree = SOURCE_ROOT; };
 		B09AB5FB277A14DA0002A6C3 /* SerialComms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SerialComms.h; path = source/SerialComms.h; sourceTree = SOURCE_ROOT; };
 		B09AB5FC277A14DA0002A6C3 /* DiskImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiskImage.h; path = source/DiskImage.h; sourceTree = SOURCE_ROOT; };
 		B09AB5FD277A14DA0002A6C3 /* DiskImageHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DiskImageHelper.cpp; path = source/DiskImageHelper.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB5FE277A14DA0002A6C3 /* DiskFormatTrack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DiskFormatTrack.cpp; path = source/DiskFormatTrack.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB5FF277A14DA0002A6C3 /* SynchronousEventManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SynchronousEventManager.cpp; path = source/SynchronousEventManager.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB600277A14DA0002A6C3 /* Disk2CardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Disk2CardManager.h; path = source/Disk2CardManager.h; sourceTree = SOURCE_ROOT; };
-		B09AB601277A14DA0002A6C3 /* ParallelPrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParallelPrinter.cpp; path = source/ParallelPrinter.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB602277A14DA0002A6C3 /* Speaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Speaker.h; path = source/Speaker.h; sourceTree = SOURCE_ROOT; };
 		B09AB603277A14DA0002A6C3 /* Joystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Joystick.cpp; path = source/Joystick.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB604277A14DA0002A6C3 /* VidHD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VidHD.cpp; path = source/VidHD.cpp; sourceTree = SOURCE_ROOT; };
@@ -1248,6 +1266,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B00F4EA327DD807A000F55BF /* Printers */ = {
+			isa = PBXGroup;
+			children = (
+				B00F4EA627DD8093000F55BF /* AppleWriterPrinter.cpp */,
+				B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */,
+				B00F4EA927DD8093000F55BF /* BasePrinter.cpp */,
+				B00F4EA527DD8093000F55BF /* BasePrinter.h */,
+				B00F4EB527DD90A5000F55BF /* GenericPrinter.h */,
+				B00F4EA827DD8093000F55BF /* Printer.h */,
+				B00F4EA427DD8093000F55BF /* TextFileWriter.cpp */,
+				B00F4EA727DD8093000F55BF /* TextFileWriter.h */,
+				B00F4EAA27DD8093000F55BF /* Writer.h */,
+			);
+			name = Printers;
+			sourceTree = "<group>";
+		};
 		B032DE18277A0C23006DC0F7 = {
 			isa = PBXGroup;
 			children = (
@@ -1547,13 +1581,14 @@
 				B09AB638277A14DB0002A6C3 /* NTSC_CharSet.h */,
 				B09AB64F277A14DB0002A6C3 /* NTSC.cpp */,
 				B09AB624277A14DB0002A6C3 /* NTSC.h */,
-				B09AB601277A14DA0002A6C3 /* ParallelPrinter.cpp */,
-				B09AB5FA277A14DA0002A6C3 /* ParallelPrinter.h */,
+				B00F4E9F27DD7CF5000F55BF /* ParallelInterface.cpp */,
+				B00F4EA027DD7CF5000F55BF /* ParallelInterface.h */,
 				B09AB5E5277A14DA0002A6C3 /* Peripheral_Clock_Generic.cpp */,
 				B09AB63F277A14DB0002A6C3 /* Peripheral_Clock_Generic.h */,
 				B09AB631277A14DB0002A6C3 /* Peripheral_Clock_ThunderClockPlus.cpp */,
 				B09AB620277A14DB0002A6C3 /* Pravets.cpp */,
 				B09AB64A277A14DB0002A6C3 /* Pravets.h */,
+				B00F4EA327DD807A000F55BF /* Printers */,
 				B09AB5EA277A14DA0002A6C3 /* Registry.cpp */,
 				B09AB5EF277A14DA0002A6C3 /* Registry.h */,
 				B09AB763277A1E380002A6C3 /* resource.h */,
@@ -1981,19 +2016,24 @@
 				B0098CCF277E171100F38E0C /* z80.h in Headers */,
 				B0098CDF277E171100F38E0C /* SNESMAX.h in Headers */,
 				B0098CD8277E171100F38E0C /* resources.h in Headers */,
+				B00F4EB327DD8093000F55BF /* AppleWriterPrinter.h in Headers */,
 				B0098CE7277E171100F38E0C /* z80emu.h in Headers */,
 				B0F8500427D1B44F0015F642 /* NetworkBackend.h in Headers */,
+				B00F4EB027DD8093000F55BF /* Printer.h in Headers */,
+				B00F4EB727DD90A6000F55BF /* GenericPrinter.h in Headers */,
 				B0098CDD277E171100F38E0C /* Memory.h in Headers */,
 				B0098CD0277E171100F38E0C /* DiskImageHelper.h in Headers */,
 				B0098CCC277E171100F38E0C /* version.h in Headers */,
+				B00F4EB227DD8093000F55BF /* Writer.h in Headers */,
 				B0098CDE277E171100F38E0C /* benchmark.h in Headers */,
+				B00F4EA227DD7CF5000F55BF /* ParallelInterface.h in Headers */,
 				B0098CDB277E171100F38E0C /* PropertySheetHelper.h in Headers */,
 				B0098CE0277E171100F38E0C /* DiskImage.h in Headers */,
 				B0098CCA277E171100F38E0C /* VidHD.h in Headers */,
 				B0098CE8277E171100F38E0C /* Core.h in Headers */,
-				B0098CCD277E171100F38E0C /* ParallelPrinter.h in Headers */,
 				B0098CBB277E171100F38E0C /* DiskLog.h in Headers */,
 				B089EF3327BB051900BDC415 /* StrFormat.h in Headers */,
+				B00F4EAF27DD8093000F55BF /* TextFileWriter.h in Headers */,
 				B0098CBD277E171100F38E0C /* LanguageCard.h in Headers */,
 				B0098CCB277E171100F38E0C /* 6821.h in Headers */,
 				B0098CB7277E171100F38E0C /* SSI263Phonemes.h in Headers */,
@@ -2012,6 +2052,7 @@
 				B0098CDC277E171100F38E0C /* Interface.h in Headers */,
 				B0098CE1277E171100F38E0C /* Harddisk.h in Headers */,
 				B0098CBF277E171100F38E0C /* NTSC_CharSet.h in Headers */,
+				B00F4EAD27DD8093000F55BF /* BasePrinter.h in Headers */,
 				B0098CBE277E171100F38E0C /* linuxframe.h in Headers */,
 				B0098CEF277E171200F38E0C /* Video.h in Headers */,
 				B0098CC7277E171100F38E0C /* Mockingboard.h in Headers */,
@@ -2507,6 +2548,7 @@
 			files = (
 				B0F8500227D1B44F0015F642 /* NetworkBackend.cpp in Sources */,
 				B0098D06277E1D4F00F38E0C /* unzip.c in Sources */,
+				B00F4EAE27DD8093000F55BF /* AppleWriterPrinter.cpp in Sources */,
 				B0098C88277E140100F38E0C /* RGBMonitor.cpp in Sources */,
 				B0098C9D277E144E00F38E0C /* slirp2.cpp in Sources */,
 				B0098C7E277E140100F38E0C /* CPU.cpp in Sources */,
@@ -2516,7 +2558,6 @@
 				B0098C86277E140100F38E0C /* SAM.cpp in Sources */,
 				B0098CAF277E147500F38E0C /* PropertySheet.cpp in Sources */,
 				B0098C8A277E140100F38E0C /* NoSlotClock.cpp in Sources */,
-				B0098C9A277E140100F38E0C /* ParallelPrinter.cpp in Sources */,
 				B0098C8D277E140100F38E0C /* Pravets.cpp in Sources */,
 				B0098C99277E140100F38E0C /* DiskImageHelper.cpp in Sources */,
 				B0098CB3277E148600F38E0C /* z80mem.cpp in Sources */,
@@ -2534,6 +2575,7 @@
 				B0098CAD277E147500F38E0C /* SerialComms.cpp in Sources */,
 				B0098CB1277E148600F38E0C /* z80.cpp in Sources */,
 				B0098CA4277E144E00F38E0C /* resources.cpp in Sources */,
+				B00F4EAC27DD8093000F55BF /* TextFileWriter.cpp in Sources */,
 				B0098CA5277E144E00F38E0C /* keyboard.cpp in Sources */,
 				B0098C82277E140100F38E0C /* Memory.cpp in Sources */,
 				B0098CAC277E147500F38E0C /* Debugger_Display.cpp in Sources */,
@@ -2549,6 +2591,7 @@
 				B0098C8B277E140100F38E0C /* z80emu.cpp in Sources */,
 				B0098CA2277E144E00F38E0C /* registry.cpp in Sources */,
 				B0098C94277E140100F38E0C /* AY8910.cpp in Sources */,
+				B00F4EB127DD8093000F55BF /* BasePrinter.cpp in Sources */,
 				B089EF3427BB051900BDC415 /* StrFormat.cpp in Sources */,
 				B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */,
 				B0098C9F277E144E00F38E0C /* linuxframe.cpp in Sources */,
@@ -2558,6 +2601,7 @@
 				B0098C84277E140100F38E0C /* Utilities.cpp in Sources */,
 				B0098CA1277E144E00F38E0C /* context.cpp in Sources */,
 				B0098C77277E140100F38E0C /* Disk2CardManager.cpp in Sources */,
+				B00F4EA127DD7CF5000F55BF /* ParallelInterface.cpp in Sources */,
 				B0098C7C277E140100F38E0C /* Core.cpp in Sources */,
 				B0098C93277E140100F38E0C /* LanguageCard.cpp in Sources */,
 				B0098CAA277E147500F38E0C /* FourPlay.cpp in Sources */,
@@ -3038,7 +3082,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
@@ -3074,7 +3118,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
+				PRODUCT_BUNDLE_IDENTIFIER = "";
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
@@ -3235,7 +3279,7 @@
 					/usr/local/lib,
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
+				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.mariani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
@@ -3275,7 +3319,7 @@
 					/usr/local/lib,
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
+				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.mariani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
