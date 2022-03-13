@@ -117,6 +117,12 @@
                                     <action selector="rebootEmulatorAction:" target="Voe-Tx-rLC" id="vA5-k8-OWY"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="ZGI-li-5WS"/>
+                            <menuItem title="Print…" keyEquivalent="p" id="G3j-Lj-xc0">
+                                <connections>
+                                    <action selector="print:" target="S0z-N3-T9h" id="zyR-AE-t1P"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>

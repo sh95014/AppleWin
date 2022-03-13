@@ -6,5 +6,7 @@
 	<string>Mariani.help</string>
 	<key>CFBundleHelpBookName</key>
 	<string>Mariani Help</string>
+	<key>ATSApplicationFontsPath</key>
+	<string>.</string>
 </dict>
 </plist>

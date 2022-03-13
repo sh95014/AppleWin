@@ -64,6 +64,8 @@ namespace AncientPrinterEmulationLibrary
         PageX = PageLeftMarginTwips;
         PageY = PageTopMarginTwips;
 
+        CharacterIsAdjacent = false;
+
         m_Output.SetPageMetrics((int)PageWidthTwips, (int)PageHeightTwips, (int)TwipsPerDot);
     }
 
@@ -124,6 +126,7 @@ namespace AncientPrinterEmulationLibrary
     void BasePrinter::CarriageReturn(bool lineFeed /* = false*/)
     {
         PageX = PageLeftMarginTwips;
+        CharacterIsAdjacent = false;
         if (lineFeed)
         {
             LineFeed();
@@ -164,6 +167,7 @@ namespace AncientPrinterEmulationLibrary
         int x = (int)(PageX + (offsetX * HorizontalPitchTwips));
         int y = (int)(PageY + (offsetY * TwipsPerDot));
         m_Output.Plot(x, y);
+        CharacterIsAdjacent = false;
 #if LOG_BASE_PRINTER_PLOTS
         LOG_BASE_PRINTER("Plotted %d %d\n", x, y);
 #endif
@@ -192,7 +196,8 @@ namespace AncientPrinterEmulationLibrary
             CarriageReturn(); // TODO: Should be configurable for + Line Feed
             break;
         }
-        int width = m_Output.WriteCharacter((int)PageX, (int)PageY, ascii);
+        int width = m_Output.WriteCharacter((int)PageX, (int)PageY, ascii, CharacterIsAdjacent);
+        CharacterIsAdjacent = true;
         if (ascii >= 0x20)
         {
 #if LOG_BASE_PRINTER_PRINTS

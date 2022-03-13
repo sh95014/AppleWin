@@ -17,10 +17,12 @@ namespace AncientPrinterEmulationLibrary
     {
     public:
         MarianiWriter(PrinterView *printerView);
-        virtual int WriteCharacter(int x, int y, char character);
+        virtual int WriteCharacter(int x, int y, char character, bool isAdjacent = false);
         
     private:
         PrinterView *myPrinterView;
-        NSFont *myFont;
+        int stringX;
+        int stringY;
+        NSString *string;
     };
 }

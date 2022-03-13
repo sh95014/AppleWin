@@ -1,0 +1,27 @@
+FONTLOG for the FX Matrix fonts
+
+This file provides detailed information on the FX Matrix Font Software.
+This information should be distributed along with the FX Matrix fonts
+and any derivative works.
+
+Basic Font Information
+
+FX Matrix is a typeface inspired by the output of Epson FX 9-pin dot
+matrix printers from the 80's. Its goal is to closely resemble the
+output of the EPSON FX-80 printer as supporting the various print
+modes originally by the printer.
+
+ChangeLog
+
+16 March 2013 (Robin Eckert) FX Matrix version 1.0
+- Initial release
+
+Acknowledgements
+
+If you make modifications be sure to add your name (N), email (E), web-address
+(if you have one) (W) and description (D). This list is in alphabetical order.
+
+N: Robin Eckert
+E: const@const-iterator.de
+W: http://const-iterator.de
+D: creator of initial version

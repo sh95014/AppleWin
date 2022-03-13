@@ -82,5 +82,8 @@ namespace AncientPrinterEmulationLibrary
         void PrintCharacter(unsigned char byte);
         void UpdateFontSize();
         void WrapX();
+
+    private:
+        bool CharacterIsAdjacent;
     };
 }

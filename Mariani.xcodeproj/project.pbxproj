@@ -241,8 +241,6 @@
 		B00F4EB227DD8093000F55BF /* Writer.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EAA27DD8093000F55BF /* Writer.h */; };
 		B00F4EB327DD8093000F55BF /* AppleWriterPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */; };
 		B00F4EB727DD90A6000F55BF /* GenericPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EB527DD90A5000F55BF /* GenericPrinter.h */; };
-		B00F4EBF27DDA5EB000F55BF /* Printer.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00F4EBE27DDA5EB000F55BF /* Printer.xib */; };
-		B00F4EC027DDA5EB000F55BF /* Printer.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00F4EBE27DDA5EB000F55BF /* Printer.xib */; };
 		B00F4ECA27DDA67D000F55BF /* PrinterView.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EC827DDA67D000F55BF /* PrinterView.h */; };
 		B00F4ECB27DDA67D000F55BF /* PrinterView.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EC827DDA67D000F55BF /* PrinterView.h */; };
 		B00F4ECC27DDA67D000F55BF /* PrinterView.m in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EC927DDA67D000F55BF /* PrinterView.m */; };
@@ -251,6 +249,10 @@
 		B00F4ED127DDB098000F55BF /* MarianiWriter.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00F4ECE27DDB098000F55BF /* MarianiWriter.mm */; };
 		B00F4ED227DDB098000F55BF /* MarianiWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4ECF27DDB098000F55BF /* MarianiWriter.h */; };
 		B00F4ED327DDB098000F55BF /* MarianiWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4ECF27DDB098000F55BF /* MarianiWriter.h */; };
+		B00F4ED727DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B00F4ED627DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf */; };
+		B00F4ED827DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B00F4ED627DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf */; };
+		B00F4EDB27DE0061000F55BF /* Printer.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00F4EDA27DE005D000F55BF /* Printer.xib */; };
+		B00F4EDC27DE0062000F55BF /* Printer.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00F4EDA27DE005D000F55BF /* Printer.xib */; };
 		B020F8A62785D30E0071D3C7 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B020F8A32785D30E0071D3C7 /* stdafx.cpp */; };
 		B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8A82785EA440071D3C7 /* AVFoundation.framework */; };
 		B020F8AB2785F3920071D3C7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8AA2785F3920071D3C7 /* CoreMedia.framework */; };
@@ -685,11 +687,13 @@
 		B00F4EAA27DD8093000F55BF /* Writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Writer.h; path = source/Printers/Writer.h; sourceTree = "<group>"; };
 		B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppleWriterPrinter.h; path = source/Printers/AppleWriterPrinter.h; sourceTree = "<group>"; };
 		B00F4EB527DD90A5000F55BF /* GenericPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericPrinter.h; path = source/Printers/GenericPrinter.h; sourceTree = "<group>"; };
-		B00F4EBE27DDA5EB000F55BF /* Printer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Printer.xib; sourceTree = "<group>"; };
 		B00F4EC827DDA67D000F55BF /* PrinterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrinterView.h; sourceTree = "<group>"; };
 		B00F4EC927DDA67D000F55BF /* PrinterView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrinterView.m; sourceTree = "<group>"; };
 		B00F4ECE27DDB098000F55BF /* MarianiWriter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MarianiWriter.mm; sourceTree = "<group>"; };
 		B00F4ECF27DDB098000F55BF /* MarianiWriter.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = MarianiWriter.h; sourceTree = "<group>"; };
+		B00F4ED627DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FXMatrix105MonoEliteRegular.otf; path = Fonts/FXMatrix105MonoEliteRegular.otf; sourceTree = "<group>"; };
+		B00F4ED927DE005D000F55BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Printer.xib; sourceTree = "<group>"; };
+		B00F4EE027DE0082000F55BF /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Printer.strings"; sourceTree = "<group>"; };
 		B020F8A32785D30E0071D3C7 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stdafx.cpp; path = test/TestCPU6502/stdafx.cpp; sourceTree = SOURCE_ROOT; };
 		B020F8A42785D30E0071D3C7 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = test/TestCPU6502/stdafx.h; sourceTree = SOURCE_ROOT; };
 		B020F8A52785D30E0071D3C7 /* TestCPU6502.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCPU6502.cpp; path = test/TestCPU6502/TestCPU6502.cpp; sourceTree = SOURCE_ROOT; };
@@ -1297,6 +1301,46 @@
 			name = Printers;
 			sourceTree = "<group>";
 		};
+		B00F4ED427DDFFC6000F55BF /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B00F4ED627DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
+		B00F4ED527DDFFCF000F55BF /* ROMs */ = {
+			isa = PBXGroup;
+			children = (
+				B045FE6C2782984E006E36F9 /* Apple2_JPlus_Video.rom */,
+				B045FE672782984E006E36F9 /* Apple2_JPlus.rom */,
+				B045FE5D2782984E006E36F9 /* Apple2_Plus.rom */,
+				B045FE6F2782984E006E36F9 /* Apple2.rom */,
+				B045FE702782984E006E36F9 /* Apple2e_Enhanced.rom */,
+				B045FE5C2782984E006E36F9 /* Apple2e.rom */,
+				B045FE642782984E006E36F9 /* Base64A_German_Video.rom */,
+				B045FE682782984E006E36F9 /* Base64A.rom */,
+				B045FE5E2782984E006E36F9 /* DISK2-13sector.rom */,
+				B045FE652782984E006E36F9 /* DISK2.rom */,
+				B045FE602782984E006E36F9 /* Hddrvr.bin */,
+				B045FE712782984F006E36F9 /* Mockingboard-D.rom */,
+				B045FE5F2782984E006E36F9 /* MouseInterface.rom */,
+				B045FE6D2782984E006E36F9 /* Parallel.rom */,
+				B045FE692782984E006E36F9 /* PRAVETS8C.ROM */,
+				B045FE612782984E006E36F9 /* PRAVETS8M.ROM */,
+				B045FE6A2782984E006E36F9 /* PRAVETS82.ROM */,
+				B045FE6B2782984E006E36F9 /* SSC.rom */,
+				B045FE6E2782984E006E36F9 /* ThunderClockPlus.rom */,
+				B045FE622782984E006E36F9 /* TK3000e.rom */,
+				B045FE632782984E006E36F9 /* TKClock.rom */,
+				B045FE882782B9B3006E36F9 /* CHARSET4.BMP */,
+				B045FE892782B9B3006E36F9 /* CHARSET8C.bmp */,
+				B045FE8B2782B9B3006E36F9 /* CHARSET8M.bmp */,
+				B045FE8A2782B9B3006E36F9 /* CHARSET82.bmp */,
+			);
+			name = ROMs;
+			sourceTree = "<group>";
+		};
 		B032DE18277A0C23006DC0F7 = {
 			isa = PBXGroup;
 			children = (
@@ -1375,7 +1419,7 @@
 				B07612332789E4BE009E79BE /* About.xib */,
 				B0F25BCF2789B2DB0080523F /* DiskImageBrowser.xib */,
 				B0F0138E2785A211002936B4 /* Preferences.storyboard */,
-				B00F4EBE27DDA5EB000F55BF /* Printer.xib */,
+				B00F4EDA27DE005D000F55BF /* Printer.xib */,
 				B0ED3FCD2785973C006E4784 /* Localizable.strings */,
 				B089EF2D27BADA5200BDC415 /* Mariani.help */,
 				B032DE2C277A0C24006DC0F7 /* main.m */,
@@ -1410,31 +1454,8 @@
 		B045FE5B278297F8006E36F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				B045FE6C2782984E006E36F9 /* Apple2_JPlus_Video.rom */,
-				B045FE672782984E006E36F9 /* Apple2_JPlus.rom */,
-				B045FE5D2782984E006E36F9 /* Apple2_Plus.rom */,
-				B045FE6F2782984E006E36F9 /* Apple2.rom */,
-				B045FE702782984E006E36F9 /* Apple2e_Enhanced.rom */,
-				B045FE5C2782984E006E36F9 /* Apple2e.rom */,
-				B045FE642782984E006E36F9 /* Base64A_German_Video.rom */,
-				B045FE682782984E006E36F9 /* Base64A.rom */,
-				B045FE5E2782984E006E36F9 /* DISK2-13sector.rom */,
-				B045FE652782984E006E36F9 /* DISK2.rom */,
-				B045FE602782984E006E36F9 /* Hddrvr.bin */,
-				B045FE712782984F006E36F9 /* Mockingboard-D.rom */,
-				B045FE5F2782984E006E36F9 /* MouseInterface.rom */,
-				B045FE6D2782984E006E36F9 /* Parallel.rom */,
-				B045FE692782984E006E36F9 /* PRAVETS8C.ROM */,
-				B045FE612782984E006E36F9 /* PRAVETS8M.ROM */,
-				B045FE6A2782984E006E36F9 /* PRAVETS82.ROM */,
-				B045FE6B2782984E006E36F9 /* SSC.rom */,
-				B045FE6E2782984E006E36F9 /* ThunderClockPlus.rom */,
-				B045FE622782984E006E36F9 /* TK3000e.rom */,
-				B045FE632782984E006E36F9 /* TKClock.rom */,
-				B045FE882782B9B3006E36F9 /* CHARSET4.BMP */,
-				B045FE892782B9B3006E36F9 /* CHARSET8C.bmp */,
-				B045FE8B2782B9B3006E36F9 /* CHARSET8M.bmp */,
-				B045FE8A2782B9B3006E36F9 /* CHARSET82.bmp */,
+				B00F4ED527DDFFCF000F55BF /* ROMs */,
+				B00F4ED427DDFFC6000F55BF /* Fonts */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2489,13 +2510,14 @@
 				B00ECBCC279EEB600041E16C /* Assets.xcassets in Resources */,
 				B00ECBCD279EEB600041E16C /* Base64A_German_Video.rom in Resources */,
 				B00ECBCE279EEB600041E16C /* Hddrvr.bin in Resources */,
+				B00F4EDC27DE0062000F55BF /* Printer.xib in Resources */,
 				B00ECBCF279EEB600041E16C /* CHARSET8C.bmp in Resources */,
 				B00ECBD0279EEB600041E16C /* DISK2-13sector.rom in Resources */,
-				B00F4EC027DDA5EB000F55BF /* Printer.xib in Resources */,
 				B00ECBD1279EEB600041E16C /* DISK2.rom in Resources */,
 				B00ECBD2279EEB600041E16C /* MainMenu.xib in Resources */,
 				B00ECBD3279EEB600041E16C /* About.xib in Resources */,
 				B00ECBD4279EEB600041E16C /* Apple2_JPlus_Video.rom in Resources */,
+				B00F4ED827DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf in Resources */,
 				B00ECBD5279EEB600041E16C /* Preferences.storyboard in Resources */,
 				B00ECBD6279EEB600041E16C /* TK3000e.rom in Resources */,
 				B00ECBD7279EEB600041E16C /* Mockingboard-D.rom in Resources */,
@@ -2529,13 +2551,14 @@
 				B032DE28277A0C24006DC0F7 /* Assets.xcassets in Resources */,
 				B045FE7A2782984F006E36F9 /* Base64A_German_Video.rom in Resources */,
 				B045FE762782984F006E36F9 /* Hddrvr.bin in Resources */,
+				B00F4EDB27DE0061000F55BF /* Printer.xib in Resources */,
 				B045FE8D2782B9B3006E36F9 /* CHARSET8C.bmp in Resources */,
 				B045FE742782984F006E36F9 /* DISK2-13sector.rom in Resources */,
-				B00F4EBF27DDA5EB000F55BF /* Printer.xib in Resources */,
 				B045FE7B2782984F006E36F9 /* DISK2.rom in Resources */,
 				B032DE2B277A0C24006DC0F7 /* MainMenu.xib in Resources */,
 				B07612302789E4BE009E79BE /* About.xib in Resources */,
 				B045FE822782984F006E36F9 /* Apple2_JPlus_Video.rom in Resources */,
+				B00F4ED727DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf in Resources */,
 				B0F0138C2785A211002936B4 /* Preferences.storyboard in Resources */,
 				B045FE782782984F006E36F9 /* TK3000e.rom in Resources */,
 				B045FE872782984F006E36F9 /* Mockingboard-D.rom in Resources */,
@@ -2984,6 +3007,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		B00F4EDA27DE005D000F55BF /* Printer.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B00F4ED927DE005D000F55BF /* Base */,
+				B00F4EE027DE0082000F55BF /* zh-Hant */,
+			);
+			name = Printer.xib;
+			sourceTree = "<group>";
+		};
 		B032DE29277A0C24006DC0F7 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

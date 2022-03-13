@@ -30,7 +30,7 @@ namespace AncientPrinterEmulationLibrary
         virtual int  Plot(int x, int y) { return 0; };
         virtual int  SetFont(int textWidth, int textHeight) { return 0; };
         virtual int  SetPageMetrics(int pageWidth, int pageHeight, int dotSize) { return 0; };
-        virtual int  WriteCharacter(int x, int y, char character) { return 0; };
+        virtual int  WriteCharacter(int x, int y, char character, bool isAdjacent = false) { return 0; };
 
     private:
         Writer(Writer const&);

@@ -13,12 +13,18 @@
 @end
 
 @implementation PrinterString
+#ifdef DEBUG
+- (NSString *)description {
+    return [NSString stringWithFormat:@"%@ (%.1f, %.1f) \"%@\"", [super description], self.location.x, self.location.y, self.string];
+}
+#endif // DEBUG
 @end
 
 @interface PrinterView ()
 
 @property (strong) NSMutableArray<PrinterString *> *strings;
 @property (strong) NSFont *font;
+@property (strong) NSDictionary *fontAttributes;
 
 @end
 
@@ -26,7 +32,23 @@
 
 - (void)awakeFromNib {
     self.strings = [NSMutableArray array];
-    self.font = [NSFont monospacedSystemFontOfSize:9 weight:NSFontWeightRegular];
+    self.font = [NSFont fontWithName:@"FXMatrix105MonoEliteRegular" size:9];
+    
+    // To match the resolution of AppleWriterPrinter, we assume 72 dpi and
+    // the default Elite font is 12 cpi, so we want our character spacing to
+    // fit 12 characters per "inch" on the screen.
+    const CGFloat fontWidth = self.font.maximumAdvancement.width;
+    const CGFloat characterWidth = (self.bounds.size.width / 8.5) / 12.0;
+    
+    // But unfortunately, that math seems to be slightly off, possibly because
+    // maximumAdvancement is lying, so let's fudge  it based on real
+    // measurements:
+    const CGFloat kerning = (characterWidth - fontWidth) * 0.925;
+    
+    self.fontAttributes = @{
+        NSFontAttributeName: self.font,
+        NSKernAttributeName: @(kerning),
+    };
 }
 
 - (BOOL)isFlipped {
@@ -41,7 +63,7 @@
     
     [[NSColor blackColor] setStroke];
     for (PrinterString *ps in self.strings) {
-        [ps.string drawAtPoint:ps.location withAttributes:@{ NSFontAttributeName:self.font }];
+        [ps.string drawAtPoint:ps.location withAttributes:self.fontAttributes];
     }
 }
 
