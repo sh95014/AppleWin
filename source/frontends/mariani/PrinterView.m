@@ -30,6 +30,7 @@
 @interface PrinterView ()
 
 @property (strong) NSFont *font;
+@property (assign) CGFloat lineHeight;
 @property (strong) NSDictionary *fontAttributes;
 @property (strong) NSMutableArray<PrinterPage *> *pages;
 
@@ -43,7 +44,8 @@
     self.pages = [NSMutableArray arrayWithObject:page];
     
     self.font = [NSFont fontWithName:@"FXMatrix105MonoEliteRegular" size:9];
-    
+    self.lineHeight = self.font.ascender + self.font.descender + self.font.leading;
+
     // To match the resolution of AppleWriterPrinter, we assume 72 dpi and
     // the default Elite font is 12 cpi, so we want our character spacing to
     // fit 12 characters per "inch" on the screen.
@@ -81,8 +83,14 @@
         NSInteger pageNumber = [[NSPrintOperation currentOperation] currentPage];
         page = [self.pages objectAtIndex:pageNumber - 1];
     }
+    
     for (PrinterString *ps in page.strings) {
         CGPoint location = ps.location;
+        if (location.y + self.lineHeight < CGRectGetMinY(dirtyRect) ||
+            location.y > CGRectGetMaxY(dirtyRect)) {
+            // string is outside dirtyRect, don't bother drawing it
+            continue;
+        }
         if (!isDrawingToScreen) {
             // When we try to literally print to the whole page, the generated
             // PDF is shifted up and clips off the bottom, so let's enforce a
