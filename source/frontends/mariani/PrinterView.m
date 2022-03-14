@@ -33,6 +33,7 @@
 @property (assign) CGFloat lineHeight;
 @property (strong) NSDictionary *fontAttributes;
 @property (strong) NSMutableArray<PrinterPage *> *pages;
+@property (assign) NSInteger currentPage;
 
 @end
 
@@ -42,6 +43,7 @@
     PrinterPage *page = [[PrinterPage alloc] init];
     page.strings = [NSMutableArray array];
     self.pages = [NSMutableArray arrayWithObject:page];
+    self.currentPage = -1;
     
     self.font = [NSFont fontWithName:@"FXMatrix105MonoEliteRegular" size:9];
     self.lineHeight = self.font.ascender + self.font.descender + self.font.leading;
@@ -77,7 +79,12 @@
     
     PrinterPage *page;
     if (isDrawingToScreen) {
-        page = [self.pages lastObject];
+        if (self.currentPage < 0) {
+            page = [self.pages lastObject];
+        }
+        else {
+            page = [self.pages objectAtIndex:self.currentPage];
+        }
     }
     else {
         NSInteger pageNumber = [[NSPrintOperation currentOperation] currentPage];
@@ -106,6 +113,8 @@
     }
 }
 
+#pragma mark - NSPrinting
+
 - (NSRect)rectForPage:(NSInteger)page {
     return [self bounds];
 }
@@ -114,6 +123,8 @@
     *range = NSMakeRange(1, self.pages.count);
     return YES;
 }
+
+#pragma mark -
 
 - (void)addString:(NSString *)string atPoint:(CGPoint)location {
     PrinterString *printerString = [[PrinterString alloc] init];
@@ -130,6 +141,17 @@
     page.strings = [NSMutableArray array];
     [self.pages addObject:page];
     
+    [self setNeedsDisplay:YES];
+    
+    [self.delegate printerViewPageAdded:self];
+}
+
+- (NSInteger)pageCount {
+    return self.pages.count;
+}
+
+- (void)showPage:(NSInteger)pageNumber {
+    self.currentPage = pageNumber;
     [self setNeedsDisplay:YES];
 }
 

@@ -50,6 +50,7 @@
 #import "MarianiJoystick.h"
 #import "MarianiWriter.h"
 #import "EmulatorRenderer.h"
+#import "PrinterPageViewController.h"
 #import "UserDefaults.h"
 
 #define SCREEN_RECORDING_FILE_NAME  NSLocalizedString(@"Mariani Recording", @"default name for new screen recording")
@@ -84,6 +85,7 @@
 @property (strong) IBOutlet PrinterView *printerView;
 @property AncientPrinterEmulationLibrary::AppleWriterPrinter *printer;
 @property AncientPrinterEmulationLibrary::MarianiWriter *printerWriter;
+@property (strong) IBOutlet PrinterPageViewController *printerPageVC;
 
 @end
 

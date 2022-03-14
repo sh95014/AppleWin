@@ -426,6 +426,10 @@
 		B0689D0D2780C85F0029EB7D /* programoptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E84B277B6DE300FC14A3 /* programoptions.cpp */; };
 		B0689D182781984F0029EB7D /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = B0689D162781984F0029EB7D /* UserDefaults.m */; };
 		B07612302789E4BE009E79BE /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07612332789E4BE009E79BE /* About.xib */; };
+		B0859AF227DFF53900E7D41B /* PrinterPageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0859AF027DFF53900E7D41B /* PrinterPageViewController.h */; };
+		B0859AF327DFF53900E7D41B /* PrinterPageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0859AF027DFF53900E7D41B /* PrinterPageViewController.h */; };
+		B0859AF427DFF53900E7D41B /* PrinterPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0859AF127DFF53900E7D41B /* PrinterPageViewController.m */; };
+		B0859AF527DFF53900E7D41B /* PrinterPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0859AF127DFF53900E7D41B /* PrinterPageViewController.m */; };
 		B089EF2E27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF2F27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF3327BB051900BDC415 /* StrFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = B089EF3127BB051900BDC415 /* StrFormat.h */; };
@@ -820,6 +824,8 @@
 		B0689D162781984F0029EB7D /* UserDefaults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
 		B07612322789E4BE009E79BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/About.xib; sourceTree = "<group>"; };
 		B07612352789E4C2009E79BE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/About.strings"; sourceTree = "<group>"; };
+		B0859AF027DFF53900E7D41B /* PrinterPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrinterPageViewController.h; sourceTree = "<group>"; };
+		B0859AF127DFF53900E7D41B /* PrinterPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrinterPageViewController.m; sourceTree = "<group>"; };
 		B089EF2D27BADA5200BDC415 /* Mariani.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Mariani.help; sourceTree = "<group>"; };
 		B089EF3027BADA8100BDC415 /* Mariani-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mariani-Info.plist"; sourceTree = "<group>"; };
 		B089EF3127BB051900BDC415 /* StrFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrFormat.h; path = source/StrFormat.h; sourceTree = "<group>"; };
@@ -1407,6 +1413,8 @@
 				B0927415277D9399003FFB79 /* PreferencesViewController.mm */,
 				B0927418277D9403003FFB79 /* PreferencesWindowController.h */,
 				B0927419277D9403003FFB79 /* PreferencesWindowController.m */,
+				B0859AF027DFF53900E7D41B /* PrinterPageViewController.h */,
+				B0859AF127DFF53900E7D41B /* PrinterPageViewController.m */,
 				B00F4EC827DDA67D000F55BF /* PrinterView.h */,
 				B00F4EC927DDA67D000F55BF /* PrinterView.m */,
 				B049E8A4277C4F0E00FC14A3 /* ShaderTypes.h */,
@@ -2118,6 +2126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B00F4ECB27DDA67D000F55BF /* PrinterView.h in Headers */,
+				B0859AF327DFF53900E7D41B /* PrinterPageViewController.h in Headers */,
 				B00F4ED327DDB098000F55BF /* MarianiWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2182,6 +2191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B00F4ECA27DDA67D000F55BF /* PrinterView.h in Headers */,
+				B0859AF227DFF53900E7D41B /* PrinterPageViewController.h in Headers */,
 				B00F4ED227DDB098000F55BF /* MarianiWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2699,6 +2709,7 @@
 				B00ECB8B279EEB600041E16C /* Debugger_Commands.cpp in Sources */,
 				B00ECB8C279EEB600041E16C /* utils.cpp in Sources */,
 				B00ECB8D279EEB600041E16C /* winnls.cpp in Sources */,
+				B0859AF527DFF53900E7D41B /* PrinterPageViewController.m in Sources */,
 				B00ECB8E279EEB600041E16C /* misc.cpp in Sources */,
 				B00ECB8F279EEB600041E16C /* utils.cpp in Sources */,
 				B00ECB90279EEB600041E16C /* DiskImageBrowserWindowController.mm in Sources */,
@@ -2769,6 +2780,7 @@
 				B09AB732277A1BA40002A6C3 /* Debugger_Commands.cpp in Sources */,
 				B049E83F277B61AC00FC14A3 /* utils.cpp in Sources */,
 				B09AB81A277A21410002A6C3 /* winnls.cpp in Sources */,
+				B0859AF427DFF53900E7D41B /* PrinterPageViewController.m in Sources */,
 				B09AB80F277A21410002A6C3 /* misc.cpp in Sources */,
 				B049E83A277B61A100FC14A3 /* utils.cpp in Sources */,
 				B08CFE56278949F2002B841D /* DiskImageBrowserWindowController.mm in Sources */,
