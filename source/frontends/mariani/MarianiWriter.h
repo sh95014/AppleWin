@@ -17,6 +17,7 @@ namespace AncientPrinterEmulationLibrary
     {
     public:
         MarianiWriter(PrinterView *printerView);
+        virtual void EndPage();
         virtual int WriteCharacter(int x, int y, char character, bool isAdjacent = false);
         
     private:
@@ -24,5 +25,7 @@ namespace AncientPrinterEmulationLibrary
         int stringX;
         int stringY;
         NSString *string;
+        
+        void Flush();
     };
 }

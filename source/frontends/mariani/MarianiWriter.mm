@@ -23,6 +23,12 @@ namespace AncientPrinterEmulationLibrary
         
     }
 
+    void MarianiWriter::EndPage()
+    {
+        Flush();
+        [myPrinterView addPage];
+    }
+
     int MarianiWriter::WriteCharacter(int x, int y, char character, bool isAdjacent)
     {
         if (myPrinterView) {
@@ -30,27 +36,38 @@ namespace AncientPrinterEmulationLibrary
             if (!isAdjacent)
 #endif
             {
-                // output the string accumulated so far to the Writer
-                if (string.length > 0) {
-                    [myPrinterView addString:string atPoint:CGPointMake((CGFloat)stringX / 20.0, (CGFloat)stringY / 20)];
-                }
-                string = nil;
+                Flush();
             }
-            if (string == nil) {
-                string = [NSString stringWithFormat:@"%c", character];
-                stringX = x;
-                stringY = y;
+            if (isprint(character)) {
+                if (string == nil) {
+                    string = [NSString stringWithFormat:@"%c", character];
+                    stringX = x;
+                    stringY = y;
+                }
+                else {
+                    string = [string stringByAppendingFormat:@"%c", character];
+                }
+                
+                // BasePrinter assumes its own width and ignores the return
+                // value, so don't bother computing yet. A small positive number
+                // should ensure ugly overlaps if we're paired with a Printer that
+                // actually does.
+                return 3;
             }
             else {
-                string = [string stringByAppendingFormat:@"%c", character];
+                return 1;
             }
-            
-            // BasePrinter assumes its own width and ignores the return
-            // value, so don't bother computing yet. A small positive number
-            // should ensure ugly overlaps if we're paired with a Printer that
-            // actually does.
-            return 3;
         }
         return 0;
+    }
+
+    void MarianiWriter::Flush()
+    {
+        // output the string accumulated so far to the Writer
+        if (string.length > 0) {
+            // BasePrinter coordinates are in 1/20pt
+            [myPrinterView addString:string atPoint:CGPointMake((CGFloat)stringX / 20.0, (CGFloat)stringY / 20.0)];
+        }
+        string = nil;
     }
 }

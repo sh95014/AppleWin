@@ -118,6 +118,7 @@ namespace AncientPrinterEmulationLibrary
     void BasePrinter::NewPage()
     {
         m_Output.EndPage(); // End old page, but don't start one explicitly - the Writer will do that on demand
+        CharacterIsAdjacent = false;
 
         PageX = PageLeftMarginTwips;
         PageY = PageTopMarginTwips;

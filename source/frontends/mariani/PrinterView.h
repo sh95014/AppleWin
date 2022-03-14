@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PrinterView : NSView
 
 - (void)addString:(NSString *)string atPoint:(CGPoint)point;
+- (void)addPage;
 
 @end
 
