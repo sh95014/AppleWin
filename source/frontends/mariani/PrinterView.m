@@ -7,6 +7,10 @@
 
 #import "PrinterView.h"
 
+#define PRINTER_DPI             72.0
+#define PAPER_WIDTH             8.5
+#define PAPER_HEIGHT            11
+
 @interface PrinterString : NSObject
 @property (strong) NSString *string;
 @property (assign) CGPoint location;
@@ -22,6 +26,7 @@
 
 @interface PrinterPage : NSObject
 @property (strong) NSMutableArray<PrinterString *> *strings;
+@property (strong) NSMutableArray *bitmaps;
 @end
 
 @implementation PrinterPage
@@ -42,6 +47,10 @@
 - (void)awakeFromNib {
     PrinterPage *page = [[PrinterPage alloc] init];
     page.strings = [NSMutableArray array];
+    page.bitmaps = [NSMutableArray arrayWithCapacity:PAPER_HEIGHT];
+    for (NSInteger i = 0; i < PAPER_HEIGHT; i++) {
+        [page.bitmaps addObject:[NSNull null]];
+    }
     self.pages = [NSMutableArray arrayWithObject:page];
     self.currentPage = -1;
     
@@ -52,7 +61,7 @@
     // the default Elite font is 12 cpi, so we want our character spacing to
     // fit 12 characters per "inch" on the screen.
     const CGFloat fontWidth = self.font.maximumAdvancement.width;
-    const CGFloat characterWidth = (self.bounds.size.width / 8.5) / 12.0;
+    const CGFloat characterWidth = (self.bounds.size.width / PAPER_WIDTH) / 12.0;
     
     // But unfortunately, that math seems to be slightly off, possibly because
     // maximumAdvancement is lying, so let's fudge  it based on real
@@ -89,6 +98,20 @@
     else {
         NSInteger pageNumber = [[NSPrintOperation currentOperation] currentPage];
         page = [self.pages objectAtIndex:pageNumber - 1];
+    }
+    
+    CGFloat dirtyRectTop = CGRectGetMinY(dirtyRect);
+    CGFloat dirtyRectBottom = CGRectGetMaxY(dirtyRect);
+    for (NSInteger i = floorf(dirtyRectTop / PRINTER_DPI); i < ceilf(dirtyRectBottom / PRINTER_DPI); i++) {
+        if ([page.bitmaps[i] isKindOfClass:[NSBitmapImageRep class]]) {
+            NSBitmapImageRep *bitmap = (NSBitmapImageRep *)page.bitmaps[i];
+            [bitmap drawInRect:CGRectMake(0, i * PRINTER_DPI, bitmap.pixelsWide, bitmap.pixelsHigh)
+                      fromRect:NSZeroRect
+                     operation:NSCompositingOperationCopy
+                      fraction:1.0
+                respectFlipped:YES
+                         hints:@{ NSImageHintInterpolation: @(NSImageInterpolationNone) }];
+        }
     }
     
     for (PrinterString *ps in page.strings) {
@@ -132,6 +155,35 @@
     printerString.location = location;
     PrinterPage *page = [self.pages lastObject];
     [page.strings addObject:printerString];
+    
+    [self setNeedsDisplay:YES];
+}
+
+- (void)plotAtPoint:(CGPoint)location {
+    PrinterPage *page = [self.pages lastObject];
+    NSInteger pageIndex = floorf(location.y / PRINTER_DPI);
+    NSBitmapImageRep *bitmap;
+    if ([page.bitmaps[pageIndex] isKindOfClass:[NSBitmapImageRep class]]) {
+        bitmap = (NSBitmapImageRep *)page.bitmaps[pageIndex];
+    }
+    else {
+        bitmap = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+                                                         pixelsWide:PRINTER_DPI * PAPER_WIDTH
+                                                         pixelsHigh:PRINTER_DPI
+                                                      bitsPerSample:8
+                                                    samplesPerPixel:1
+                                                           hasAlpha:NO
+                                                           isPlanar:NO
+                                                     colorSpaceName:NSDeviceWhiteColorSpace
+                                                        bytesPerRow:PRINTER_DPI * PAPER_WIDTH
+                                                       bitsPerPixel:8];
+        // fill with white
+        memset(bitmap.bitmapData, ~0, bitmap.bytesPerRow * bitmap.pixelsHigh);
+        page.bitmaps[pageIndex] = bitmap;
+    }
+    
+    NSUInteger black = 0;
+    [bitmap setPixel:&black atX:location.x y:fmod(location.y, bitmap.pixelsHigh)];
     
     [self setNeedsDisplay:YES];
 }

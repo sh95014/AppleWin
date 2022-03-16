@@ -20,7 +20,6 @@ namespace AncientPrinterEmulationLibrary
     MarianiWriter::MarianiWriter(PrinterView *printerView) :
         myPrinterView(printerView)
     {
-        
     }
 
     void MarianiWriter::EndPage()
@@ -69,5 +68,11 @@ namespace AncientPrinterEmulationLibrary
             [myPrinterView addString:string atPoint:CGPointMake((CGFloat)stringX / 20.0, (CGFloat)stringY / 20.0)];
         }
         string = nil;
+    }
+
+    int MarianiWriter::Plot(int x, int y)
+    {
+        [myPrinterView plotAtPoint:CGPointMake((CGFloat)x / 20.0, (CGFloat)y / 20.0)];
+        return 1;
     }
 }

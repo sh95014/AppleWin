@@ -160,7 +160,6 @@ namespace AncientPrinterEmulationLibrary
     void BasePrinter::AddX(int x)
     {
         PageX += x * HorizontalPitchTwips;
-        WrapX();
     }
 
     void BasePrinter::PlotPixel(int offsetX, int offsetY)
