@@ -218,13 +218,11 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         
         // pcap
         if (PCapBackend::tfe_enumadapter_open()) {
-            char *name;
-            char *description;
+            std::string name;
+            std::string description;
             
-            while (PCapBackend::tfe_enumadapter(&name, &description)) {
-                [self.computerPcapSlotButton addItemWithTitle:[NSString stringWithUTF8String:name]];
-                lib_free(name);
-                lib_free(description);
+            while (PCapBackend::tfe_enumadapter(name, description)) {
+                [self.computerPcapSlotButton addItemWithTitle:[NSString stringWithUTF8String:name.c_str()]];
             }
             PCapBackend::tfe_enumadapter_close();
             

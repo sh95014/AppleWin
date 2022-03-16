@@ -99,6 +99,9 @@ enum {
         case kVK_Escape:
             ch = ASCII_ESC;
             break;
+        case kVK_Tab:
+            ch = ASCII_HT;
+            break;
         default: {
             unichar raw = [event.charactersIgnoringModifiers characterAtIndex:0];
             if (event.modifierFlags & NSEventModifierFlagControl) {
