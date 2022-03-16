@@ -105,7 +105,22 @@
     for (NSInteger i = floorf(dirtyRectTop / PRINTER_DPI); i < ceilf(dirtyRectBottom / PRINTER_DPI); i++) {
         if ([page.bitmaps[i] isKindOfClass:[NSBitmapImageRep class]]) {
             NSBitmapImageRep *bitmap = (NSBitmapImageRep *)page.bitmaps[i];
-            [bitmap drawInRect:CGRectMake(0, i * PRINTER_DPI, bitmap.pixelsWide, bitmap.pixelsHigh)
+            CGRect destRect = CGRectMake(0, i * PRINTER_DPI, bitmap.pixelsWide, bitmap.pixelsHigh);
+            if (!isDrawingToScreen) {
+                NSRect printableRect = [[[NSPrintOperation currentOperation] printInfo] imageablePageBounds];
+                NSRect bounds = self.bounds;
+                destRect.origin.x = printableRect.origin.x + destRect.origin.x * (printableRect.size.width / bounds.size.width);
+                destRect.origin.y = printableRect.origin.y + destRect.origin.y * (printableRect.size.height / bounds.size.height);
+                CGFloat nextY = printableRect.origin.y + ((i + 1) * PRINTER_DPI) * (printableRect.size.height / bounds.size.height);
+                NSAssert(bitmap.pixelsWide - bounds.size.width < FLT_EPSILON, @"bitmap expected to be as wide as paper");
+                // actual formula is destRect.size.width = destRect.size.width * (printableRect.size.width / bounds.size.width)
+                // but thanks to the assert above we can simplify to:
+                destRect.size.width = printableRect.size.width;
+                // actual formula is destRect.size.height = destRect.size.height * (printableRect.size.height / bounds.size.height)
+                // but we want to make sure there are no gaps caused by floating point math
+                destRect.size.height = nextY - destRect.origin.y;
+            }
+            [bitmap drawInRect:destRect
                       fromRect:NSZeroRect
                      operation:NSCompositingOperationCopy
                       fraction:1.0
@@ -122,15 +137,10 @@
             continue;
         }
         if (!isDrawingToScreen) {
-            // When we try to literally print to the whole page, the generated
-            // PDF is shifted up and clips off the bottom, so let's enforce a
-            // top and bottom margin and shrink to fit.
-            const CGFloat margin = 20;
-            const CGFloat printableHeight = self.bounds.size.height - margin * 2;
-            const CGFloat printableRatio = printableHeight / self.bounds.size.height;
-            // The 1.5 fudge factor is because the print coordinates seem to be
-            // shifted up past the top of the page for some reason.
-            location.y = roundf(margin * 1.5 + location.y * printableRatio);
+            NSRect printableRect = [[[NSPrintOperation currentOperation] printInfo] imageablePageBounds];
+            NSRect bounds = self.bounds;
+            location.x = printableRect.origin.x + location.x * (printableRect.size.width / bounds.size.width);
+            location.y = printableRect.origin.y + location.y * (printableRect.size.height / bounds.size.height);
         }
         [ps.string drawAtPoint:location withAttributes:self.fontAttributes];
     }

@@ -464,6 +464,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     printOperation.printInfo.leftMargin = 0;
     printOperation.printInfo.rightMargin = 0;
     printOperation.printInfo.bottomMargin = 0;
+    [printOperation setCanSpawnSeparateThread:YES];
     [printOperation runOperation];
 }
 
