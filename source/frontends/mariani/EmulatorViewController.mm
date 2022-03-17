@@ -121,6 +121,7 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     self.printerWriter = new AncientPrinterEmulationLibrary::MarianiWriter(self.printerView);
     self.printer = new AncientPrinterEmulationLibrary::AppleWriterPrinter(*self.printerWriter);
     Printer_SetPrinter(*self.printer);
+    self.printerWindow.title = @(self.printer->Name().c_str());
     [self.printerWindow orderFront:self];
     
     frame->Begin();

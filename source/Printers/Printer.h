@@ -26,6 +26,8 @@ namespace AncientPrinterEmulationLibrary
         Printer(Writer& output) : m_Output(output) {};
         virtual ~Printer() { Close(); };
 
+        virtual std::string Name() = 0;
+
         virtual void Close() { m_Output.Close(); };
         virtual int  Send(unsigned char byte) = 0;
 

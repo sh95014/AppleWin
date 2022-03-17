@@ -26,6 +26,8 @@ namespace AncientPrinterEmulationLibrary
     public:
         AppleWriterPrinter(Writer& output);
 
+        virtual std::string Name() { return "Apple Imagewriter"; }
+
         virtual int Send(unsigned char byte);
 
     protected:
