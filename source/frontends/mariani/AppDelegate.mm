@@ -446,7 +446,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     CardManager &cardManager = GetCardMgr();
     if (cardManager.QuerySlot(slot) == CT_Disk2) {
         Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
-        NSString *diskName = [NSString stringWithUTF8String:card->GetFullDiskFilename(drive).c_str()];
+        NSString *diskName = @(card->GetFullDiskFilename(drive).c_str());
         if ([diskName length] > 0) {
             [menu addItemWithTitle:diskName action:nil keyEquivalent:@""];
             
@@ -458,7 +458,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Examine…", @"browse disk image")
                                                                   action:@selector(browseDisk:)
                                                            keyEquivalent:@""];
-                NSString *pathString = [NSString stringWithUTF8String:diskPathname.c_str()];
+                NSString *pathString = @(diskPathname.c_str());
                 menuItem.representedObject = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
                 [menu addItem:menuItem];
             }
@@ -482,7 +482,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     else if (cardManager.QuerySlot(slot) == CT_GenericHDD) {
         HarddiskInterfaceCard *card = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
         const char *path = card->HarddiskGetFullPathName(0).c_str();
-        NSString *pathString = [NSString stringWithUTF8String:path];
+        NSString *pathString = @(path);
         NSString *diskName = [pathString lastPathComponent];
         if ([diskName length] > 0) {
             [menu addItemWithTitle:diskName action:nil keyEquivalent:@""];
@@ -1013,8 +1013,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 int ShowModalAlertOfType(int type, const char *message, const char *information) {
     return [theAppDelegate showModalAlertofType:type
-                                    withMessage:[NSString stringWithUTF8String:message]
-                                    information:[NSString stringWithUTF8String:information]];
+                                    withMessage:@(message)
+                                    information:@(information)];
 }
 
 void UpdateDriveLights() {
@@ -1023,7 +1023,7 @@ void UpdateDriveLights() {
 
 const char *PathToResourceNamed(const char *name) {
     NSBundle *bundle = [NSBundle mainBundle];
-    NSString *path = [bundle pathForResource:[NSString stringWithUTF8String:name] ofType:nil];
+    NSString *path = [bundle pathForResource:@(name) ofType:nil];
     return (path != nil) ? path.UTF8String : NULL;
 }
 

@@ -246,7 +246,7 @@ NSArray *fileTypeStrings = @[
         FSItem *fsItem = [self newFSItemFromA2File:file];
         if (file->IsDirectory()) {
             fsItem.children = [NSMutableArray array];
-            [directories setObject:fsItem forKey:[NSString stringWithUTF8String:file->GetPathName()]];
+            [directories setObject:fsItem forKey:@(file->GetPathName())];
             if (file->IsVolumeDirectory()) {
                 self.rootDirectory = fsItem;
             }
@@ -254,7 +254,7 @@ NSArray *fileTypeStrings = @[
         A2File *parent = file->GetParent();
         if (parent != NULL) {
             // add myself to my parent's list of children
-            parentFsItem = [directories objectForKey:[NSString stringWithUTF8String:parent->GetPathName()]];
+            parentFsItem = [directories objectForKey:@(parent->GetPathName())];
         }
         [parentFsItem.children addObject:fsItem];
         
@@ -271,7 +271,7 @@ NSArray *fileTypeStrings = @[
     
     FSItem *fsItem = [[FSItem alloc] init];
     
-    fsItem.name = [NSString stringWithUTF8String:file->GetFileName()];
+    fsItem.name = @(file->GetFileName());
     if ([fsItem.name length] == 0) {
         fsItem.name = blankFilename;
     }

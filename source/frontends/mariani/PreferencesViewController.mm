@@ -222,11 +222,11 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
             std::string description;
             
             while (PCapBackend::tfe_enumadapter(name, description)) {
-                [self.computerPcapSlotButton addItemWithTitle:[NSString stringWithUTF8String:name.c_str()]];
+                [self.computerPcapSlotButton addItemWithTitle:@(name.c_str())];
             }
             PCapBackend::tfe_enumadapter_close();
             
-            [self.computerPcapSlotButton selectItemWithTitle:[NSString stringWithUTF8String:PCapBackend::tfe_interface.c_str()]];
+            [self.computerPcapSlotButton selectItemWithTitle:@(PCapBackend::tfe_interface.c_str())];
         }
     }
 }
@@ -281,7 +281,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     self.storageHardDiskFolderButton.enabled = (hddCard != nil);
     self.storageCreateHardDiskButton.enabled = (hddCard != nil);
     if (hddCard != nil) {
-        NSString *path = [NSString stringWithUTF8String:hddCard->HarddiskGetFullPathName(0).c_str()];
+        NSString *path = @(hddCard->HarddiskGetFullPathName(0).c_str());
         path = [path stringByAbbreviatingWithTildeInPath];
         self.storageHardDiskFolderButton.title = path;
     }
@@ -547,14 +547,14 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         if (error != kDIErrNone) {
             [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
                                      withMessage:@"Unable to Create Image"
-                                     information:[NSString stringWithUTF8String:DIStrError(error)]];
+                                     information:@(DIStrError(error))];
         }
         
         error = diskImg->FormatImage(DiskImg::kFormatProDOS, "MARIANI");
         if (error != kDIErrNone) {
             [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
                                      withMessage:@"Unable to Format Disk"
-                                     information:[NSString stringWithUTF8String:DIStrError(error)]];
+                                     information:@(DIStrError(error))];
             delete diskImg;
             return;
         }
@@ -572,7 +572,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         if (error != kDIErrNone) {
             [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
                                      withMessage:@"Unable to Format Disk"
-                                     information:[NSString stringWithUTF8String:DIStrError(error)]];
+                                     information:@(DIStrError(error))];
             delete diskImg;
             delete diskFS;
             return;
