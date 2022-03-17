@@ -460,13 +460,15 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (IBAction)print:(id)sender {
-    NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:self.printerView];
-    printOperation.printInfo.topMargin = 0;
-    printOperation.printInfo.leftMargin = 0;
-    printOperation.printInfo.rightMargin = 0;
-    printOperation.printInfo.bottomMargin = 0;
-    [printOperation setCanSpawnSeparateThread:YES];
-    [printOperation runOperation];
+    if ([self.printerWindow isKeyWindow]) {
+        NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:self.printerView];
+        printOperation.printInfo.topMargin = 0;
+        printOperation.printInfo.leftMargin = 0;
+        printOperation.printInfo.rightMargin = 0;
+        printOperation.printInfo.bottomMargin = 0;
+        [printOperation setCanSpawnSeparateThread:YES];
+        [printOperation runOperation];
+    }
 }
 
 #pragma mark - EmulatorRendererProtocol
