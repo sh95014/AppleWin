@@ -77,7 +77,7 @@ namespace AncientPrinterEmulationLibrary
         void AddX(int x);
         void CarriageReturn(bool lineFeed = false);
         bool LineFeed(bool carriageReturn = false);
-        void NewPage();
+        void NewPage(int offsetY);
         void PlotPixel(int offsetX, int offsetY);
         void PrintCharacter(unsigned char byte);
         void UpdateFontSize();

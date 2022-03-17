@@ -30,6 +30,21 @@
 @end
 
 @implementation PrinterPage
+
+- (instancetype)init {
+    if ((self = [super init]) != nil) {
+        self.strings = [NSMutableArray array];
+        // It's possible for a row of graphics to straddle two pages, so we
+        // +1 for an overflow area that we then give to the next page when
+        // it's created.
+        self.bitmaps = [NSMutableArray arrayWithCapacity:PAPER_HEIGHT + 1];
+        for (NSInteger i = 0; i < PAPER_HEIGHT + 1; i++) {
+            [self.bitmaps addObject:[NSNull null]];
+        }
+    }
+    return self;
+}
+
 @end
 
 @interface PrinterView ()
@@ -45,13 +60,7 @@
 @implementation PrinterView
 
 - (void)awakeFromNib {
-    PrinterPage *page = [[PrinterPage alloc] init];
-    page.strings = [NSMutableArray array];
-    page.bitmaps = [NSMutableArray arrayWithCapacity:PAPER_HEIGHT];
-    for (NSInteger i = 0; i < PAPER_HEIGHT; i++) {
-        [page.bitmaps addObject:[NSNull null]];
-    }
-    self.pages = [NSMutableArray arrayWithObject:page];
+    self.pages = [NSMutableArray arrayWithObject:[[PrinterPage alloc] init]];
     self.currentPage = -1;
     
     self.font = [NSFont fontWithName:@"FXMatrix105MonoEliteRegular" size:9];
@@ -89,7 +98,7 @@
     PrinterPage *page;
     if (isDrawingToScreen) {
         if (self.currentPage < 0) {
-            page = [self.pages lastObject];
+            page = self.pages.lastObject;
         }
         else {
             page = [self.pages objectAtIndex:self.currentPage];
@@ -163,14 +172,14 @@
     PrinterString *printerString = [[PrinterString alloc] init];
     printerString.string = string;
     printerString.location = location;
-    PrinterPage *page = [self.pages lastObject];
+    PrinterPage *page = self.pages.lastObject;
     [page.strings addObject:printerString];
     
     [self setNeedsDisplay:YES];
 }
 
 - (void)plotAtPoint:(CGPoint)location {
-    PrinterPage *page = [self.pages lastObject];
+    PrinterPage *page = self.pages.lastObject;
     NSInteger pageIndex = floorf(location.y / PRINTER_DPI);
     NSBitmapImageRep *bitmap;
     if ([page.bitmaps[pageIndex] isKindOfClass:[NSBitmapImageRep class]]) {
@@ -199,9 +208,16 @@
 }
 
 - (void)addPage {
-    PrinterPage *page = [[PrinterPage alloc] init];
-    page.strings = [NSMutableArray array];
-    [self.pages addObject:page];
+    PrinterPage *lastPage = self.pages.lastObject;
+    PrinterPage *newPage = [[PrinterPage alloc] init];
+    if ([lastPage.bitmaps.lastObject isKindOfClass:[NSBitmapImageRep class]]) {
+        // the last page printed into the overflow bitmap, let's grab it and
+        // use it as our top bitmap
+        NSBitmapImageRep *bitmap = (NSBitmapImageRep *)lastPage.bitmaps.lastObject;
+        [lastPage.bitmaps removeLastObject];
+        newPage.bitmaps[0] = bitmap;
+    }
+    [self.pages addObject:newPage];
     
     [self setNeedsDisplay:YES];
     

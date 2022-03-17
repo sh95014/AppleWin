@@ -115,13 +115,13 @@ namespace AncientPrinterEmulationLibrary
             (int)(VerticalDotsPerChar * TwipsPerDot));
     }
 
-    void BasePrinter::NewPage()
+    void BasePrinter::NewPage(int offsetY)
     {
         m_Output.EndPage(); // End old page, but don't start one explicitly - the Writer will do that on demand
         CharacterIsAdjacent = false;
 
         PageX = PageLeftMarginTwips;
-        PageY = PageTopMarginTwips;
+        PageY = (PageTopMarginTwips > offsetY) ? PageTopMarginTwips : offsetY;
     }
 
     void BasePrinter::CarriageReturn(bool lineFeed /* = false*/)
@@ -139,7 +139,13 @@ namespace AncientPrinterEmulationLibrary
         PageY += LineFeedPitchTwips;
         if (PageY >= PageHeightTwips - PageBottomMarginTwips)
         {
-            NewPage();
+            // If the LF took us beyond PageHeightTwips, that means we printed
+            // past the bottom of this page (not a big deal for text, but a
+            // problem for graphics meant for continuous forms). We rely on the
+            // Writer to plot any such overflow pixels on the next page, but
+            // the LF now straddles the page boundary and we need to start the
+            // new page with the fraction of the LF it should have.
+            NewPage(PageY - PageHeightTwips);
             return true;
         }
         if (carriageReturn)
