@@ -122,7 +122,9 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     self.printer = new AncientPrinterEmulationLibrary::AppleWriterPrinter(*self.printerWriter);
     Printer_SetPrinter(*self.printer);
     self.printerWindow.title = @(self.printer->Name().c_str());
-    [self.printerWindow orderFront:self];
+    self.printerWindow.delegate = self;
+    self.printerWindow.excludedFromWindowsMenu = YES;
+    [self.printerWindow orderOut:self];
     
     frame->Begin();
 }
@@ -323,6 +325,18 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (BOOL)emulationHardwareChanged {
+    BOOL hasPrinter = NO;
+    CardManager &cardManager = GetCardMgr();
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        if (cardManager.QuerySlot(slot) == CT_GenericPrinter) {
+            hasPrinter = YES;
+            break;
+        }
+    }
+    if (!hasPrinter && self.printerWindow) {
+        [self.printerWindow orderOut:self];
+    }
+    
     return frame->HardwareChanged();
 }
 
@@ -443,6 +457,21 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     }];
 }
 
+- (NSString *)printerName {
+    return @(self.printer->Name().c_str());
+}
+
+- (BOOL)togglePrinterWindow {
+    if (self.printerWindow.isVisible) {
+        [self.printerWindow orderOut:self];
+        return NO;
+    }
+    else {
+        [self.printerWindow orderFront:self];
+        return YES;
+    }
+}
+
 - (IBAction)copy:(id)sender {
     [self takeScreenshotWithCompletion:^(NSData *pngData) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
@@ -469,6 +498,18 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [printOperation setCanSpawnSeparateThread:YES];
         [printOperation runOperation];
     }
+}
+
+#pragma mark - NSWindowDelegate
+
+- (BOOL)windowShouldClose:(NSWindow *)sender {
+    if (sender == self.printerWindow) {
+        // just hide, don't actually close
+        [self.printerWindow orderOut:sender];
+        [self.delegate printerWindowDidClose];
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark - EmulatorRendererProtocol

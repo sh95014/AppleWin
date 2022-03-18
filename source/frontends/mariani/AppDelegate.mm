@@ -54,18 +54,25 @@ using namespace DiskImgLib;
 
 @property (strong) IBOutlet EmulatorViewController *emulatorVC;
 @property (strong) IBOutlet NSWindow *window;
+
+@property (strong) IBOutlet NSMenuItem *aboutMarianiMenuItem;
+// File
 @property (strong) IBOutlet NSMenu *createDiskImageMenu;
 @property (strong) IBOutlet NSMenu *openDiskImageMenu;
+// Edit
 @property (strong) IBOutlet NSMenuItem *editCopyMenu;
+// View
 @property (strong) IBOutlet NSMenuItem *showHideStatusBarMenuItem;
 @property (strong) IBOutlet NSMenu *displayTypeMenu;
+// Window
+@property (strong) IBOutlet NSMenuItem *printerSeparator;
+@property (strong) NSMenuItem *printerMenu;
+
 @property (strong) IBOutlet NSView *statusBarView;
 @property (strong) IBOutlet NSButton *driveLightButtonTemplate;
 @property (strong) IBOutlet NSTextField *statusLabel;
 @property (strong) IBOutlet NSButton *volumeToggleButton;
 @property (strong) IBOutlet NSButton *screenRecordingButton;
-
-@property (strong) IBOutlet NSMenuItem *aboutMarianiMenuItem;
 
 @property (strong) IBOutlet NSWindow *aboutWindow;
 @property (strong) IBOutlet NSImageView *aboutImage;
@@ -130,6 +137,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     if ([[editMenu itemAtIndex:lastItemIndex] isSeparatorItem]) {
         [editMenu removeItemAtIndex:lastItemIndex];
     }
+    
+    [self showOrHidePrinterMenu];
     
     // populate the Display Type menu with options
     Video &video = GetVideo();
@@ -243,6 +252,10 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 - (void)screenRecordingDidStop {
     self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
     self.screenRecordingButton.contentTintColor = [NSColor secondaryLabelColor];
+}
+
+- (void)printerWindowDidClose {
+    self.printerMenu.state = NSControlStateValueOff;
 }
 
 - (void)updateStatus:(NSString *)status {
@@ -428,6 +441,14 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     [self scaleWindowByFactor:0.8];
+}
+
+#pragma mark - Window menu actions:
+
+- (void)togglePrinterWindow:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    self.printerMenu.state = [self.emulatorVC togglePrinterWindow] ? NSControlStateValueOn : NSControlStateValueOff;
 }
 
 #pragma mark - Main window actions
@@ -642,6 +663,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 - (BOOL)emulationHardwareChanged {
+    [self showOrHidePrinterMenu];
     return [self.emulatorVC emulationHardwareChanged];
 }
 
@@ -978,6 +1000,41 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     frame.origin.y = windowFrame.origin.y + (windowFrame.size.height - frame.size.height) / 2;
     
     [self.window setFrame:frame display:YES animate:NO];
+}
+
+- (void)showOrHidePrinterMenu {
+    BOOL hasPrinter = NO;
+    CardManager &cardManager = GetCardMgr();
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        if (cardManager.QuerySlot(slot) == CT_GenericPrinter) {
+            hasPrinter = YES;
+            break;
+        }
+    }
+    
+    if (hasPrinter) {
+        if (self.printerMenu == nil) {
+            // add the printer item and a separator
+            self.printerMenu = [[NSMenuItem alloc] initWithTitle:self.emulatorVC.printerName
+                                                          action:@selector(togglePrinterWindow:)
+                                                   keyEquivalent:@""];
+            self.printerMenu.enabled = YES;
+            NSMenu *windowMenu = self.printerSeparator.menu;
+            NSInteger separatorIndex = [windowMenu indexOfItem:self.printerSeparator];
+            [windowMenu insertItem:[NSMenuItem separatorItem] atIndex:separatorIndex + 1];
+            [windowMenu insertItem:self.printerMenu atIndex:separatorIndex + 1];
+        }
+    }
+    else {
+        if (self.printerMenu != nil) {
+            // remove the printer item and separator
+            NSMenu *windowMenu = self.printerSeparator.menu;
+            NSInteger separatorIndex = [windowMenu indexOfItem:self.printerSeparator];
+            [windowMenu removeItemAtIndex:separatorIndex + 1];
+            [windowMenu removeItemAtIndex:separatorIndex + 1];
+            self.printerMenu = nil;
+        }
+    }
 }
 
 - (double)statusBarHeight {

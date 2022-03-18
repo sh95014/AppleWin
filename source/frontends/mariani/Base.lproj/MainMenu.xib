@@ -22,6 +22,7 @@
                 <outlet property="editCopyMenu" destination="wcB-ZJ-Gew" id="XXg-bZ-pNS"/>
                 <outlet property="emulatorVC" destination="S0z-N3-T9h" id="XAc-8o-NgU"/>
                 <outlet property="openDiskImageMenu" destination="aVZ-wx-6ML" id="h5M-nh-kdR"/>
+                <outlet property="printerSeparator" destination="X44-mn-AYa" id="MQQ-H7-Jlg"/>
                 <outlet property="screenRecordingButton" destination="DSR-xi-Jep" id="NmW-pv-4Ab"/>
                 <outlet property="showHideStatusBarMenuItem" destination="Qa1-0n-abD" id="jQF-tx-pGh"/>
                 <outlet property="statusBarView" destination="Mnw-rf-Y9b" id="vHG-8g-HKh"/>
