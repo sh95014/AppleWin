@@ -30,6 +30,7 @@
 
 #import "CommonTypes.h"
 #import "EmulatorViewController.h"
+#import "PrinterWindowController.h"
 #import "PreferencesWindowController.h"
 #import "UserDefaults.h"
 
@@ -89,6 +90,8 @@ using namespace DiskImgLib;
 
 @property (strong) NSMutableDictionary *browserWindowControllers;
 
+@property (strong) PrinterWindowController *printerWC;
+
 @property (strong) NSProcessInfo *processInfo;
 
 @end
@@ -138,6 +141,10 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         [editMenu removeItemAtIndex:lastItemIndex];
     }
     
+    self.printerWC = [[PrinterWindowController alloc] init];
+    self.printerWC.delegate = self;
+    [[NSBundle mainBundle] loadNibNamed:@"Printer" owner:self.printerWC topLevelObjects:nil];
+    [self.printerWC.window orderOut:self];
     [self showOrHidePrinterMenu];
     
     // populate the Display Type menu with options
@@ -309,7 +316,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 infoDictionary[@"CFBundleVersion"]];
         }
     }
-    [self.aboutWindow orderFront:sender];
+    [self.aboutWindow makeKeyAndOrderFront:sender];
 }
 
 - (IBAction)aboutLinkAction:(id)sender {
@@ -448,7 +455,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 - (void)togglePrinterWindow:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    self.printerMenu.state = [self.emulatorVC togglePrinterWindow] ? NSControlStateValueOn : NSControlStateValueOff;
+    self.printerMenu.state = [self.printerWC togglePrinterWindow] ? NSControlStateValueOn : NSControlStateValueOff;
 }
 
 #pragma mark - Main window actions
@@ -549,7 +556,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 }
             }
             else {
-                [browserWC.window orderFront:self];
+                [browserWC.window makeKeyAndOrderFront:self];
             }
         }
     }
@@ -664,6 +671,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 - (BOOL)emulationHardwareChanged {
     [self showOrHidePrinterMenu];
+    [self.printerWC emulationHardwareChanged];
     return [self.emulatorVC emulationHardwareChanged];
 }
 
@@ -1015,7 +1023,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     if (hasPrinter) {
         if (self.printerMenu == nil) {
             // add the printer item and a separator
-            self.printerMenu = [[NSMenuItem alloc] initWithTitle:self.emulatorVC.printerName
+            self.printerMenu = [[NSMenuItem alloc] initWithTitle:self.printerWC.printerName
                                                           action:@selector(togglePrinterWindow:)
                                                    keyEquivalent:@""];
             self.printerMenu.enabled = YES;

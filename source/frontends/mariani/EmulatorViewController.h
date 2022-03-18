@@ -60,9 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)toggleScreenRecording;
 - (void)saveScreenshot;
 
-@property (readonly) NSString *printerName;
-- (BOOL)togglePrinterWindow;
-
 - (void)displayTypeDidChange;
 - (void)videoModeDidChange;
 - (BOOL)emulationHardwareChanged;

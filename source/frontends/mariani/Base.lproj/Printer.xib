@@ -7,11 +7,11 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="EmulatorViewController">
+        <customObject id="-2" userLabel="File's Owner" customClass="PrinterWindowController">
             <connections>
-                <outlet property="printerPageVC" destination="tcf-uW-yo7" id="rSV-gV-m45"/>
-                <outlet property="printerView" destination="67h-KH-kuV" id="FYU-We-7pj"/>
-                <outlet property="printerWindow" destination="QvC-M9-y7g" id="EJH-pp-0H3"/>
+                <outlet property="printerView" destination="67h-KH-kuV" id="Esz-j4-8MM"/>
+                <outlet property="tableView" destination="qsK-HR-b1G" id="1zC-oX-O5D"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="Adc-HT-EuL"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -71,8 +71,8 @@
                                         </tableColumn>
                                     </tableColumns>
                                     <connections>
-                                        <outlet property="dataSource" destination="tcf-uW-yo7" id="kaB-nF-lad"/>
-                                        <outlet property="delegate" destination="tcf-uW-yo7" id="xWE-j8-Cvz"/>
+                                        <outlet property="dataSource" destination="-2" id="rom-jU-uLa"/>
+                                        <outlet property="delegate" destination="-2" id="Xbb-Bl-0Oi"/>
                                     </connections>
                                 </tableView>
                             </subviews>
@@ -97,7 +97,7 @@
                                     <rect key="frame" x="0.0" y="141" width="612" height="792"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <connections>
-                                        <outlet property="delegate" destination="tcf-uW-yo7" id="SCm-wo-fzw"/>
+                                        <outlet property="delegate" destination="-2" id="k72-nr-RsX"/>
                                     </connections>
                                 </customView>
                             </subviews>
@@ -116,12 +116,6 @@
             </view>
             <point key="canvasLocation" x="138.5" y="104"/>
         </window>
-        <viewController id="tcf-uW-yo7" customClass="PrinterPageViewController">
-            <connections>
-                <outlet property="printerView" destination="67h-KH-kuV" id="2RS-am-Mrv"/>
-                <outlet property="tableView" destination="qsK-HR-b1G" id="YP8-JX-X0t"/>
-            </connections>
-        </viewController>
     </objects>
     <resources>
         <image name="doc.text" catalog="system" width="18" height="21"/>

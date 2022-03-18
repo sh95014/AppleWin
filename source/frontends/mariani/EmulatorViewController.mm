@@ -34,8 +34,6 @@
 #import "windows.h"
 
 #import "context.h"
-#import "ParallelInterface.h"
-#import "Printers/AppleWriterPrinter.h"
 
 #import <SDL.h>
 #import "benchmark.h"
@@ -50,7 +48,6 @@
 #import "MarianiJoystick.h"
 #import "MarianiWriter.h"
 #import "EmulatorRenderer.h"
-#import "PrinterPageViewController.h"
 #import "UserDefaults.h"
 
 #define SCREEN_RECORDING_FILE_NAME  NSLocalizedString(@"Mariani Recording", @"default name for new screen recording")
@@ -81,12 +78,6 @@
 @property (getter=isRecordingScreen) BOOL recordingScreen;
 @property (strong) NSTimer *recordingTimer;
 
-@property (strong) IBOutlet NSWindow *printerWindow;
-@property (strong) IBOutlet PrinterView *printerView;
-@property AncientPrinterEmulationLibrary::AppleWriterPrinter *printer;
-@property AncientPrinterEmulationLibrary::MarianiWriter *printerWriter;
-@property (strong) IBOutlet PrinterPageViewController *printerPageVC;
-
 @end
 
 @implementation EmulatorViewController {
@@ -111,20 +102,6 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     std::shared_ptr<Paddle> paddle(new mariani::Gamepad());
     self.initialisation = new Initialisation(frame, paddle);
     applyOptions(options);
-    
-    if (self.printerWindow == nil) {
-        if (![[NSBundle mainBundle] loadNibNamed:@"Printer" owner:self topLevelObjects:nil]) {
-            NSLog(@"failed to load Printer nib");
-            return;
-        }
-    }
-    self.printerWriter = new AncientPrinterEmulationLibrary::MarianiWriter(self.printerView);
-    self.printer = new AncientPrinterEmulationLibrary::AppleWriterPrinter(*self.printerWriter);
-    Printer_SetPrinter(*self.printer);
-    self.printerWindow.title = @(self.printer->Name().c_str());
-    self.printerWindow.delegate = self;
-    self.printerWindow.excludedFromWindowsMenu = YES;
-    [self.printerWindow orderOut:self];
     
     frame->Begin();
 }
@@ -325,18 +302,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (BOOL)emulationHardwareChanged {
-    BOOL hasPrinter = NO;
-    CardManager &cardManager = GetCardMgr();
-    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
-        if (cardManager.QuerySlot(slot) == CT_GenericPrinter) {
-            hasPrinter = YES;
-            break;
-        }
-    }
-    if (!hasPrinter && self.printerWindow) {
-        [self.printerWindow orderOut:self];
-    }
-    
     return frame->HardwareChanged();
 }
 
@@ -457,21 +422,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     }];
 }
 
-- (NSString *)printerName {
-    return @(self.printer->Name().c_str());
-}
-
-- (BOOL)togglePrinterWindow {
-    if (self.printerWindow.isVisible) {
-        [self.printerWindow orderOut:self];
-        return NO;
-    }
-    else {
-        [self.printerWindow orderFront:self];
-        return YES;
-    }
-}
-
 - (IBAction)copy:(id)sender {
     [self takeScreenshotWithCompletion:^(NSData *pngData) {
         NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
@@ -486,30 +436,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSString *string = [pasteboard stringForType:NSPasteboardTypeString];
     [(EmulatorView *)self.view addStringToKeyboardBuffer:string];
-}
-
-- (IBAction)print:(id)sender {
-    if ([self.printerWindow isKeyWindow]) {
-        NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:self.printerView];
-        printOperation.printInfo.topMargin = 0;
-        printOperation.printInfo.leftMargin = 0;
-        printOperation.printInfo.rightMargin = 0;
-        printOperation.printInfo.bottomMargin = 0;
-        [printOperation setCanSpawnSeparateThread:YES];
-        [printOperation runOperation];
-    }
-}
-
-#pragma mark - NSWindowDelegate
-
-- (BOOL)windowShouldClose:(NSWindow *)sender {
-    if (sender == self.printerWindow) {
-        // just hide, don't actually close
-        [self.printerWindow orderOut:sender];
-        [self.delegate printerWindowDidClose];
-        return NO;
-    }
-    return YES;
 }
 
 #pragma mark - EmulatorRendererProtocol

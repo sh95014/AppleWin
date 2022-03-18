@@ -381,7 +381,7 @@ NSArray *fileTypeStrings = @[
     [layoutView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     [self.filePreviewPanel.contentView addSubview:layoutView];
     
-    [self.filePreviewPanel orderFront:self];
+    [self.filePreviewPanel makeKeyAndOrderFront:self];
 }
 
 @end

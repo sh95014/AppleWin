@@ -9,8 +9,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import "EmulatorViewController.h"
+#import "PrinterWindowController.h"
 
-@interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate, NSOpenSavePanelDelegate, EmulatorViewControllerDelegate>
+@interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate, NSOpenSavePanelDelegate, EmulatorViewControllerDelegate, PrinterWindowControllerDelegate>
 
 - (void)applyVideoModeChange;
 - (void)browserWindowWillClose:(NSString *)path;

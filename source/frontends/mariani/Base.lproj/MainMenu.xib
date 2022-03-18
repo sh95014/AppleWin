@@ -121,7 +121,7 @@
                             <menuItem isSeparatorItem="YES" id="ZGI-li-5WS"/>
                             <menuItem title="Print…" keyEquivalent="p" id="G3j-Lj-xc0">
                                 <connections>
-                                    <action selector="print:" target="S0z-N3-T9h" id="zyR-AE-t1P"/>
+                                    <action selector="printWindow:" target="-1" id="GIu-cP-p0e"/>
                                 </connections>
                             </menuItem>
                         </items>
@@ -284,7 +284,7 @@
                                 </textFieldCell>
                             </textField>
                             <button toolTip="Record screen" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DSR-xi-Jep">
-                                <rect key="frame" x="758" y="1" width="32.5" height="32.5"/>
+                                <rect key="frame" x="758" y="1.5" width="33" height="32.5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="record.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="SSU-IM-3QB">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
