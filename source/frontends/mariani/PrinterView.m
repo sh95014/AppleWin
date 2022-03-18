@@ -11,6 +11,9 @@
 #define PAPER_WIDTH             8.5
 #define PAPER_HEIGHT            11
 
+#define FONT_CPI                12.0  // characters per inch
+#define FONT_LPI                6.0   // lines per inch
+
 @interface PrinterString : NSObject
 @property (strong) NSString *string;
 @property (assign) CGPoint location;
@@ -70,7 +73,7 @@
     // the default Elite font is 12 cpi, so we want our character spacing to
     // fit 12 characters per "inch" on the screen.
     const CGFloat fontWidth = self.font.maximumAdvancement.width;
-    const CGFloat characterWidth = (self.bounds.size.width / PAPER_WIDTH) / 12.0;
+    const CGFloat characterWidth = (self.bounds.size.width / PAPER_WIDTH) / FONT_CPI;
     
     // But unfortunately, that math seems to be slightly off, possibly because
     // maximumAdvancement is lying, so let's fudge  it based on real
@@ -263,6 +266,21 @@
                          hints:@{ NSImageHintInterpolation: @(NSImageInterpolationHigh) }];
         }
     }
+    
+    CGFloat scale = dpi / PRINTER_DPI;
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    [[NSColor colorWithWhite:0 alpha:0.3] setStroke];
+    [path setLineWidth:(dpi / FONT_LPI) * 0.6];
+    for (PrinterString *ps in page.strings) {
+        CGFloat x = ps.location.x * scale;
+        CGFloat y = ps.location.y * scale;
+        CGFloat width = (ps.string.length / FONT_CPI) * dpi;
+        
+        [path moveToPoint:CGPointMake(x, y)];
+        [path lineToPoint:CGPointMake(x + width, y)];
+    }
+    [path stroke];
+
     [image unlockFocus];
     
     return image;
