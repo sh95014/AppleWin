@@ -72,6 +72,7 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSView *statusBarView;
 @property (strong) IBOutlet NSButton *driveLightButtonTemplate;
 @property (strong) IBOutlet NSTextField *statusLabel;
+@property (strong) IBOutlet NSButton *printerButton;
 @property (strong) IBOutlet NSButton *volumeToggleButton;
 @property (strong) IBOutlet NSButton *screenRecordingButton;
 
@@ -452,10 +453,17 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 #pragma mark - Window menu actions:
 
-- (void)togglePrinterWindow:(id)sender {
+- (IBAction)togglePrinterWindow:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    self.printerMenu.state = [self.printerWC togglePrinterWindow] ? NSControlStateValueOn : NSControlStateValueOff;
+    if ([self.printerWC togglePrinterWindow]) {
+        self.printerMenu.state = NSControlStateValueOn;
+        self.printerButton.image = [NSImage imageWithSystemSymbolName:@"printer.dotmatrix.fill" accessibilityDescription:@""];
+    }
+    else {
+        self.printerMenu.state = NSControlStateValueOff;
+        self.printerButton.image = [NSImage imageWithSystemSymbolName:@"printer.dotmatrix" accessibilityDescription:@""];
+    }
 }
 
 #pragma mark - Main window actions
@@ -1032,6 +1040,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             [windowMenu insertItem:[NSMenuItem separatorItem] atIndex:separatorIndex + 1];
             [windowMenu insertItem:self.printerMenu atIndex:separatorIndex + 1];
         }
+        self.printerButton.hidden = NO;
     }
     else {
         if (self.printerMenu != nil) {
@@ -1042,6 +1051,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             [windowMenu removeItemAtIndex:separatorIndex + 1];
             self.printerMenu = nil;
         }
+        self.printerButton.hidden = YES;
     }
 }
 
