@@ -175,7 +175,11 @@
     PrinterPage *page = self.pages.lastObject;
     [page.strings addObject:printerString];
     
-    [self setNeedsDisplay:YES];
+    if (self.currentPage == -1 || self.currentPage == self.pages.count - 1) {
+        [self setNeedsDisplay:YES];
+    }
+
+    [self.delegate printerView:self printedToPage:self.pages.count - 1];
 }
 
 - (void)plotAtPoint:(CGPoint)location {
@@ -204,7 +208,11 @@
     NSUInteger black = 0;
     [bitmap setPixel:&black atX:location.x y:fmod(location.y, bitmap.pixelsHigh)];
     
-    [self setNeedsDisplay:YES];
+    if (self.currentPage == -1 || self.currentPage == self.pages.count - 1) {
+        [self setNeedsDisplay:YES];
+    }
+    
+    [self.delegate printerView:self printedToPage:self.pages.count - 1];
 }
 
 - (void)addPage {
@@ -222,6 +230,42 @@
     [self setNeedsDisplay:YES];
     
     [self.delegate printerViewPageAdded:self];
+}
+
+- (NSImage *)imageThumbnailOfPage:(NSInteger)pageNumber withDPI:(NSInteger)dpi {
+    NSBitmapImageRep *thumbnail =
+        [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL
+                                                pixelsWide:dpi * PAPER_WIDTH
+                                                pixelsHigh:dpi * PAPER_HEIGHT
+                                             bitsPerSample:8
+                                           samplesPerPixel:1
+                                                  hasAlpha:NO
+                                                  isPlanar:NO
+                                            colorSpaceName:NSDeviceWhiteColorSpace
+                                               bytesPerRow:PRINTER_DPI * PAPER_WIDTH
+                                              bitsPerPixel:8];
+    // fill with white
+    memset(thumbnail.bitmapData, ~0, thumbnail.bytesPerRow * thumbnail.pixelsHigh);
+    NSImage *image = [[NSImage alloc] initWithSize:thumbnail.size];
+    [image addRepresentation:thumbnail];
+
+    [image lockFocusFlipped:YES];
+    PrinterPage *page = self.pages[pageNumber];
+    for (NSInteger i = 0; i < PAPER_HEIGHT; i++) {
+        if ([page.bitmaps[i] isKindOfClass:[NSBitmapImageRep class]]) {
+            NSBitmapImageRep *bitmap = (NSBitmapImageRep *)page.bitmaps[i];
+            CGRect destRect = CGRectMake(0, i * dpi, dpi * PAPER_WIDTH, dpi);
+            [bitmap drawInRect:destRect
+                      fromRect:NSZeroRect
+                     operation:NSCompositingOperationCopy
+                      fraction:1.0
+                respectFlipped:YES
+                         hints:@{ NSImageHintInterpolation: @(NSImageInterpolationHigh) }];
+        }
+    }
+    [image unlockFocus];
+    
+    return image;
 }
 
 - (NSInteger)pageCount {

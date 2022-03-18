@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol PrinterViewDelegate
 
+- (void)printerView:(PrinterView *)printerView printedToPage:(NSInteger)pageNumber;
 - (void)printerViewPageAdded:(PrinterView *)printerView;
 
 @end
@@ -24,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addPage;
 
 - (void)showPage:(NSInteger)pageNumber;
+
+- (NSImage *)imageThumbnailOfPage:(NSInteger)pageNumber withDPI:(NSInteger)dpi;
 
 @property (weak) IBOutlet id<PrinterViewDelegate> delegate;
 @property (readonly) NSInteger pageCount;
