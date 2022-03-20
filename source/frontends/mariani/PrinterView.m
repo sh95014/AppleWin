@@ -11,9 +11,6 @@
 #define PAPER_WIDTH             8.5
 #define PAPER_HEIGHT            11
 
-#define FONT_CPI                12.0  // characters per inch
-#define FONT_LPI                6.0   // lines per inch
-
 @interface PrinterString : NSObject
 @property (strong) NSString *string;
 @property (assign) CGPoint location;
@@ -53,6 +50,7 @@
 @interface PrinterView ()
 
 @property (strong) NSFont *font;
+@property (assign) CGFloat characterWidth;
 @property (assign) CGFloat lineHeight;
 @property (strong) NSDictionary *fontAttributes;
 @property (strong) NSMutableArray<PrinterPage *> *pages;
@@ -65,25 +63,6 @@
 - (void)awakeFromNib {
     self.pages = [NSMutableArray arrayWithObject:[[PrinterPage alloc] init]];
     self.currentPage = -1;
-    
-    self.font = [NSFont fontWithName:@"FXMatrix105MonoEliteRegular" size:9];
-    self.lineHeight = self.font.ascender + self.font.descender + self.font.leading;
-
-    // To match the resolution of AppleWriterPrinter, we assume 72 dpi and
-    // the default Elite font is 12 cpi, so we want our character spacing to
-    // fit 12 characters per "inch" on the screen.
-    const CGFloat fontWidth = self.font.maximumAdvancement.width;
-    const CGFloat characterWidth = (self.bounds.size.width / PAPER_WIDTH) / FONT_CPI;
-    
-    // But unfortunately, that math seems to be slightly off, possibly because
-    // maximumAdvancement is lying, so let's fudge  it based on real
-    // measurements:
-    const CGFloat kerning = (characterWidth - fontWidth) * 0.925;
-    
-    self.fontAttributes = @{
-        NSFontAttributeName: self.font,
-        NSKernAttributeName: @(kerning),
-    };
 }
 
 - (BOOL)isFlipped {
@@ -185,6 +164,29 @@
     [self.delegate printerView:self printedToPage:self.pages.count - 1];
 }
 
+- (void)setFontSize:(CGSize)size {
+    // BasePrinter calculates the position of each character, but we draw them
+    // as a string so need to fudge the spacing to match. self.characterWidth
+    // is also fudged to make the thumbnail account for the kerning.
+    CGFloat kerning = 0;
+    if (size.width > 5.5) {
+        self.font = [NSFont fontWithName:@"FXMatrix105MonoPicaRegular" size:9];
+        kerning = 1.2;
+        self.characterWidth = self.font.maximumAdvancement.width * 1.28;
+    }
+    else {
+        self.font = [NSFont fontWithName:@"FXMatrix105MonoEliteRegular" size:9];
+        kerning = 0.99;
+        self.characterWidth = self.font.maximumAdvancement.width * 1.22;
+    }
+    self.lineHeight = self.font.ascender + self.font.descender + self.font.leading;
+    
+    self.fontAttributes = @{
+        NSFontAttributeName: self.font,
+        NSKernAttributeName: @(kerning),
+    };
+}
+
 - (void)plotAtPoint:(CGPoint)location {
     PrinterPage *page = self.pages.lastObject;
     NSInteger pageIndex = floorf(location.y / PRINTER_DPI);
@@ -270,11 +272,11 @@
     CGFloat scale = dpi / PRINTER_DPI;
     NSBezierPath *path = [NSBezierPath bezierPath];
     [[NSColor colorWithWhite:0 alpha:0.3] setStroke];
-    [path setLineWidth:(dpi / FONT_LPI) * 0.6];
+    [path setLineWidth:(dpi / self.lineHeight) * 0.6];
     for (PrinterString *ps in page.strings) {
         CGFloat x = ps.location.x * scale;
         CGFloat y = ps.location.y * scale;
-        CGFloat width = (ps.string.length / FONT_CPI) * dpi;
+        CGFloat width = ps.string.length * self.characterWidth * scale;
         
         [path moveToPoint:CGPointMake(x, y)];
         [path lineToPoint:CGPointMake(x + width, y)];

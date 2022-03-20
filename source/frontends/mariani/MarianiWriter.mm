@@ -15,6 +15,9 @@
 // for accuracy.
 #define COLLATE_STRINGS
 
+// "Twips per point": BasePrinter uses integer "twips", which is 1/20 of a point
+#define TWIPS_TO_PT(x)      ((CGFloat)x / 20.0)
+
 namespace AncientPrinterEmulationLibrary
 {
     MarianiWriter::MarianiWriter(PrinterView *printerView) :
@@ -60,19 +63,25 @@ namespace AncientPrinterEmulationLibrary
         return 0;
     }
 
+    int MarianiWriter::SetFont(int textWidth, int textHeight)
+    {
+        [myPrinterView setFontSize:CGSizeMake(TWIPS_TO_PT(textWidth), TWIPS_TO_PT(textHeight))];
+        return 0;
+    }
+
     void MarianiWriter::Flush()
     {
         // output the string accumulated so far to the Writer
         if (string.length > 0) {
             // BasePrinter coordinates are in 1/20pt
-            [myPrinterView addString:string atPoint:CGPointMake((CGFloat)stringX / 20.0, (CGFloat)stringY / 20.0)];
+            [myPrinterView addString:string atPoint:CGPointMake(TWIPS_TO_PT(stringX), TWIPS_TO_PT(stringY))];
         }
         string = nil;
     }
 
     int MarianiWriter::Plot(int x, int y)
     {
-        [myPrinterView plotAtPoint:CGPointMake((CGFloat)x / 20.0, (CGFloat)y / 20.0)];
-        return 1;
+        [myPrinterView plotAtPoint:CGPointMake(TWIPS_TO_PT(x), TWIPS_TO_PT(y))];
+        return 0;
     }
 }

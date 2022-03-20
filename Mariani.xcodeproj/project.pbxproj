@@ -432,6 +432,8 @@
 		B0859AF527DFF53900E7D41B /* PrinterWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0859AF127DFF53900E7D41B /* PrinterWindowController.mm */; };
 		B0859B0A27E6A26200E7D41B /* EpsonFX80Printer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0859B0827E6A26200E7D41B /* EpsonFX80Printer.cpp */; };
 		B0859B0B27E6A26200E7D41B /* EpsonFX80Printer.h in Headers */ = {isa = PBXBuildFile; fileRef = B0859B0927E6A26200E7D41B /* EpsonFX80Printer.h */; };
+		B0859B0D27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0859B0C27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf */; };
+		B0859B0E27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0859B0C27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf */; };
 		B089EF2E27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF2F27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF3327BB051900BDC415 /* StrFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = B089EF3127BB051900BDC415 /* StrFormat.h */; };
@@ -830,6 +832,7 @@
 		B0859AF127DFF53900E7D41B /* PrinterWindowController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = PrinterWindowController.mm; sourceTree = "<group>"; };
 		B0859B0827E6A26200E7D41B /* EpsonFX80Printer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EpsonFX80Printer.cpp; path = source/Printers/EpsonFX80Printer.cpp; sourceTree = "<group>"; };
 		B0859B0927E6A26200E7D41B /* EpsonFX80Printer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EpsonFX80Printer.h; path = source/Printers/EpsonFX80Printer.h; sourceTree = "<group>"; };
+		B0859B0C27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FXMatrix105MonoPicaRegular.otf; path = Fonts/FXMatrix105MonoPicaRegular.otf; sourceTree = "<group>"; };
 		B089EF2D27BADA5200BDC415 /* Mariani.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Mariani.help; sourceTree = "<group>"; };
 		B089EF3027BADA8100BDC415 /* Mariani-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mariani-Info.plist"; sourceTree = "<group>"; };
 		B089EF3127BB051900BDC415 /* StrFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrFormat.h; path = source/StrFormat.h; sourceTree = "<group>"; };
@@ -1317,6 +1320,7 @@
 			isa = PBXGroup;
 			children = (
 				B00F4ED627DDFFE8000F55BF /* FXMatrix105MonoEliteRegular.otf */,
+				B0859B0C27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -2544,6 +2548,7 @@
 				B00ECBDB279EEB600041E16C /* SSC.rom in Resources */,
 				B00ECBDC279EEB600041E16C /* Apple2.rom in Resources */,
 				B00ECBDD279EEB600041E16C /* Parallel.rom in Resources */,
+				B0859B0E27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf in Resources */,
 				B00ECBDE279EEB600041E16C /* Apple2e_Enhanced.rom in Resources */,
 				B00ECBDF279EEB600041E16C /* Apple2_JPlus.rom in Resources */,
 				B00ECBE0279EEB600041E16C /* CHARSET82.bmp in Resources */,
@@ -2585,6 +2590,7 @@
 				B045FE812782984F006E36F9 /* SSC.rom in Resources */,
 				B045FE852782984F006E36F9 /* Apple2.rom in Resources */,
 				B045FE832782984F006E36F9 /* Parallel.rom in Resources */,
+				B0859B0D27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf in Resources */,
 				B045FE862782984F006E36F9 /* Apple2e_Enhanced.rom in Resources */,
 				B045FE7D2782984F006E36F9 /* Apple2_JPlus.rom in Resources */,
 				B045FE8E2782B9B3006E36F9 /* CHARSET82.bmp in Resources */,

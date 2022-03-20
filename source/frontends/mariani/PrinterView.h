@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addString:(NSString *)string atPoint:(CGPoint)point;
 - (void)plotAtPoint:(CGPoint)location;
 - (void)addPage;
+- (void)setFontSize:(CGSize)size;
 
 - (void)showPage:(NSInteger)pageNumber;
 

@@ -15,6 +15,7 @@
 #import "MarianiWriter.h"
 #import "ParallelInterface.h"
 #import "Printers/AppleWriterPrinter.h"
+#import "Printers/EpsonFX80Printer.h"
 
 @interface PrinterWindowController ()
 
@@ -25,8 +26,8 @@
 @property (strong) NSTimer *updateTimer;
 
 @property (strong) IBOutlet PrinterView *printerView;
-@property AncientPrinterEmulationLibrary::AppleWriterPrinter *printer;
-@property AncientPrinterEmulationLibrary::MarianiWriter *printerWriter;
+@property AncientPrinterEmulationLibrary::Printer *printer;
+@property AncientPrinterEmulationLibrary::Writer *printerWriter;
 
 @end
 
@@ -41,7 +42,11 @@
     self.lastUpdate = [NSDate date];
     
     self.printerWriter = new AncientPrinterEmulationLibrary::MarianiWriter(self.printerView);
+#if 1
     self.printer = new AncientPrinterEmulationLibrary::AppleWriterPrinter(*self.printerWriter);
+#else
+    self.printer = new AncientPrinterEmulationLibrary::EpsonFX80Printer(*self.printerWriter);
+#endif
     Printer_SetPrinter(*self.printer);
     self.window.title = @(self.printer->Name().c_str());
     self.window.delegate = self;

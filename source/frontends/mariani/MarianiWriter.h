@@ -18,8 +18,9 @@ namespace AncientPrinterEmulationLibrary
     public:
         MarianiWriter(PrinterView *printerView);
         virtual void EndPage();
-        virtual int WriteCharacter(int x, int y, char character, bool isAdjacent = false);
-        virtual int Plot(int x, int y);
+        virtual int  WriteCharacter(int x, int y, char character, bool isAdjacent = false);
+        virtual int  Plot(int x, int y);
+        virtual int  SetFont(int textWidth, int textHeight);
 
     private:
         PrinterView *myPrinterView;
