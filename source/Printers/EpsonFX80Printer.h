@@ -41,7 +41,6 @@ namespace AncientPrinterEmulationLibrary
             CODE,
             ARG,
             DATA,
-            SKIP,
         };
 
         void HandleData(unsigned char byte);
@@ -50,6 +49,10 @@ namespace AncientPrinterEmulationLibrary
         void ExpectData(unsigned int length);
         void ConsumeData();
         void PlotGraphics(unsigned char byte);
+
+        void ErrorUnknown(std::string command);
+        void ErrorUnparsed(std::string command);
+        void ErrorUnsupported(std::string command);
 
         Mode          m_Mode;
         unsigned char m_Code;
