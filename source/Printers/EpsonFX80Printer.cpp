@@ -96,10 +96,18 @@ namespace AncientPrinterEmulationLibrary
         switch (m_Code)
         {
         case '!': // Master Select
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code) + " " + std::string(1, m_Arg));
+            }
             break;
         case '#': // Accepts eighth bit as is from computer
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            // This "returns the system to normal by turning the high-order control off"
+            // but I don't really understand what that means in our context.
+            // Manual page 310
+            ExpectText();
             break;
         case '%': // Selects a character set
             ErrorUnparsed("ESC " + std::string(1, m_Code));
@@ -108,7 +116,49 @@ namespace AncientPrinterEmulationLibrary
             ErrorUnparsed("ESC " + std::string(1, m_Code));
             break;
         case '*': // Selects graphics mode
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            switch (m_Mode)
+            {
+            case Mode::CODE:
+                m_SavedHorizontalPitchTwips = HorizontalPitchTwips;
+                ExpectArg(3);
+                break;
+            case Mode::ARG:
+                // first byte is graphics mode
+                switch (m_Arg & 0xFF) {
+                case 0:
+                    SetDpi(60); // Single density
+                    break;
+                case 1:
+                    SetDpi(120); // Low-speed double density
+                    break;
+                case 2:
+                    SetDpi(120); // High-speed double density
+                    break;
+                case 3:
+                    SetDpi(240); // Quadruple density
+                    break;
+                case 4:
+                    SetDpi(80); // Epson QX-10
+                    break;
+                case 5:
+                    SetDpi(72); // One-to-one (plotter)
+                    break;
+                case 6:
+                    SetDpi(90); // Other CRT screens
+                    break;
+                }
+                // bytes 2 and 3 are length
+                ExpectData(m_Arg >> 8);
+                break;
+            case Mode::DATA:
+                PlotGraphics(byte);
+                ConsumeData();
+                if (m_Mode != Mode::DATA)
+                    HorizontalPitchTwips = m_SavedHorizontalPitchTwips;
+                break;
+            default:
+                break;
+            }
             break;
         case '-': // Selects underline mode
             if (m_Mode == Mode::CODE)
@@ -278,7 +328,7 @@ namespace AncientPrinterEmulationLibrary
             ErrorUnparsed("ESC " + std::string(1, m_Code));
             break;
         case 'P': // Turns elite mode off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            SetCpi(10);
             break;
         case 'Q': // Sets the right margin
             ErrorUnparsed("ESC " + std::string(1, m_Code));
@@ -320,7 +370,7 @@ namespace AncientPrinterEmulationLibrary
             case Mode::ARG:
                 // first arg byte is density, which we ignore so we can ignore
                 // the data
-                ExpectData(m_Arg << 8);
+                ExpectData(m_Arg >> 8);
                 break;
             case Mode::DATA:
                 ConsumeData();
