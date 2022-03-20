@@ -430,6 +430,8 @@
 		B0859AF327DFF53900E7D41B /* PrinterWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0859AF027DFF53900E7D41B /* PrinterWindowController.h */; };
 		B0859AF427DFF53900E7D41B /* PrinterWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0859AF127DFF53900E7D41B /* PrinterWindowController.mm */; };
 		B0859AF527DFF53900E7D41B /* PrinterWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0859AF127DFF53900E7D41B /* PrinterWindowController.mm */; };
+		B0859B0A27E6A26200E7D41B /* EpsonFX80Printer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0859B0827E6A26200E7D41B /* EpsonFX80Printer.cpp */; };
+		B0859B0B27E6A26200E7D41B /* EpsonFX80Printer.h in Headers */ = {isa = PBXBuildFile; fileRef = B0859B0927E6A26200E7D41B /* EpsonFX80Printer.h */; };
 		B089EF2E27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF2F27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF3327BB051900BDC415 /* StrFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = B089EF3127BB051900BDC415 /* StrFormat.h */; };
@@ -826,6 +828,8 @@
 		B07612352789E4C2009E79BE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/About.strings"; sourceTree = "<group>"; };
 		B0859AF027DFF53900E7D41B /* PrinterWindowController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = PrinterWindowController.h; sourceTree = "<group>"; };
 		B0859AF127DFF53900E7D41B /* PrinterWindowController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = PrinterWindowController.mm; sourceTree = "<group>"; };
+		B0859B0827E6A26200E7D41B /* EpsonFX80Printer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EpsonFX80Printer.cpp; path = source/Printers/EpsonFX80Printer.cpp; sourceTree = "<group>"; };
+		B0859B0927E6A26200E7D41B /* EpsonFX80Printer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EpsonFX80Printer.h; path = source/Printers/EpsonFX80Printer.h; sourceTree = "<group>"; };
 		B089EF2D27BADA5200BDC415 /* Mariani.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Mariani.help; sourceTree = "<group>"; };
 		B089EF3027BADA8100BDC415 /* Mariani-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mariani-Info.plist"; sourceTree = "<group>"; };
 		B089EF3127BB051900BDC415 /* StrFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrFormat.h; path = source/StrFormat.h; sourceTree = "<group>"; };
@@ -1298,6 +1302,8 @@
 				B00F4EAB27DD8093000F55BF /* AppleWriterPrinter.h */,
 				B00F4EA927DD8093000F55BF /* BasePrinter.cpp */,
 				B00F4EA527DD8093000F55BF /* BasePrinter.h */,
+				B0859B0827E6A26200E7D41B /* EpsonFX80Printer.cpp */,
+				B0859B0927E6A26200E7D41B /* EpsonFX80Printer.h */,
 				B00F4EB527DD90A5000F55BF /* GenericPrinter.h */,
 				B00F4EA827DD8093000F55BF /* Printer.h */,
 				B00F4EA427DD8093000F55BF /* TextFileWriter.cpp */,
@@ -2086,6 +2092,7 @@
 				B0098CBD277E171100F38E0C /* LanguageCard.h in Headers */,
 				B0098CCB277E171100F38E0C /* 6821.h in Headers */,
 				B0098CB7277E171100F38E0C /* SSI263Phonemes.h in Headers */,
+				B0859B0B27E6A26200E7D41B /* EpsonFX80Printer.h in Headers */,
 				B0098CE9277E171200F38E0C /* Disk.h in Headers */,
 				B0098CEE277E171200F38E0C /* NoSlotClock.h in Headers */,
 				B0098CD7277E171100F38E0C /* daa.h in Headers */,
@@ -2665,6 +2672,7 @@
 				B0098C93277E140100F38E0C /* LanguageCard.cpp in Sources */,
 				B0098CAA277E147500F38E0C /* FourPlay.cpp in Sources */,
 				B0098C90277E140100F38E0C /* Speaker.cpp in Sources */,
+				B0859B0A27E6A26200E7D41B /* EpsonFX80Printer.cpp in Sources */,
 				B0098C8E277E140100F38E0C /* 6821.cpp in Sources */,
 				B0098D04277E1D4F00F38E0C /* mztools.c in Sources */,
 				B0098C8C277E140100F38E0C /* MouseInterface.cpp in Sources */,
