@@ -247,7 +247,7 @@
                                                   hasAlpha:NO
                                                   isPlanar:NO
                                             colorSpaceName:NSDeviceWhiteColorSpace
-                                               bytesPerRow:PRINTER_DPI * PAPER_WIDTH
+                                               bytesPerRow:dpi * PAPER_WIDTH
                                               bitsPerPixel:8];
     // fill with white
     memset(thumbnail.bitmapData, ~0, thumbnail.bytesPerRow * thumbnail.pixelsHigh);
