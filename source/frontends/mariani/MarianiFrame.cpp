@@ -8,7 +8,6 @@
 #include "StdAfx.h"
 #include "MarianiFrame.h"
 #include "linux/resources.h"
-#include "ParallelInterface.h"
 #include "AppDelegate.h"
 
 namespace mariani

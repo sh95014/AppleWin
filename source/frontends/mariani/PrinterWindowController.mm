@@ -13,7 +13,7 @@
 #import "Core.h"
 
 #import "MarianiWriter.h"
-#import "ParallelInterface.h"
+#import "ParallelPrinter.h"
 #import "Printers/AppleWriterPrinter.h"
 #import "Printers/EpsonFX80Printer.h"
 
@@ -47,7 +47,13 @@
 #else
     self.printer = new AncientPrinterEmulationLibrary::EpsonFX80Printer(*self.printerWriter);
 #endif
-    Printer_SetPrinter(*self.printer);
+	CardManager &cardManager = GetCardMgr();
+	for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+		if (cardManager.QuerySlot(slot) == CT_GenericPrinter) {
+			ParallelPrinterCard *card = dynamic_cast<ParallelPrinterCard*>(cardManager.GetObj(slot));
+			card->SetPrinter(*self.printer);
+		}
+	}
     self.window.title = @(self.printer->Name().c_str());
     self.window.delegate = self;
     self.window.excludedFromWindowsMenu = YES;

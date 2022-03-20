@@ -231,7 +231,6 @@
 		B00ECBE9279EEBDC0041E16C /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE7279EEBD30041E16C /* SDL2.framework */; };
 		B00ECBEA279EEBDC0041E16C /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE7279EEBD30041E16C /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B00F4EA127DD7CF5000F55BF /* ParallelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4E9F27DD7CF5000F55BF /* ParallelInterface.cpp */; };
-		B00F4EA227DD7CF5000F55BF /* ParallelInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EA027DD7CF5000F55BF /* ParallelInterface.h */; };
 		B00F4EAC27DD8093000F55BF /* TextFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EA427DD8093000F55BF /* TextFileWriter.cpp */; };
 		B00F4EAD27DD8093000F55BF /* BasePrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B00F4EA527DD8093000F55BF /* BasePrinter.h */; };
 		B00F4EAE27DD8093000F55BF /* AppleWriterPrinter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EA627DD8093000F55BF /* AppleWriterPrinter.cpp */; };
@@ -434,6 +433,7 @@
 		B0859B0B27E6A26200E7D41B /* EpsonFX80Printer.h in Headers */ = {isa = PBXBuildFile; fileRef = B0859B0927E6A26200E7D41B /* EpsonFX80Printer.h */; };
 		B0859B0D27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0859B0C27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf */; };
 		B0859B0E27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0859B0C27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf */; };
+		B0859B2527E7EDF700E7D41B /* ParallelPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = B0859B1D27E7EDF700E7D41B /* ParallelPrinter.h */; };
 		B089EF2E27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF2F27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF3327BB051900BDC415 /* StrFormat.h in Headers */ = {isa = PBXBuildFile; fileRef = B089EF3127BB051900BDC415 /* StrFormat.h */; };
@@ -685,7 +685,6 @@
 		B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../boost_1_78_0/universal/libboost_program_options.a; sourceTree = "<group>"; };
 		B00ECBE7279EEBD30041E16C /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../SDL2.framework; sourceTree = "<group>"; };
 		B00F4E9F27DD7CF5000F55BF /* ParallelInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParallelInterface.cpp; path = source/ParallelInterface.cpp; sourceTree = "<group>"; };
-		B00F4EA027DD7CF5000F55BF /* ParallelInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParallelInterface.h; path = source/ParallelInterface.h; sourceTree = "<group>"; };
 		B00F4EA427DD8093000F55BF /* TextFileWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextFileWriter.cpp; path = source/Printers/TextFileWriter.cpp; sourceTree = "<group>"; };
 		B00F4EA527DD8093000F55BF /* BasePrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasePrinter.h; path = source/Printers/BasePrinter.h; sourceTree = "<group>"; };
 		B00F4EA627DD8093000F55BF /* AppleWriterPrinter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppleWriterPrinter.cpp; path = source/Printers/AppleWriterPrinter.cpp; sourceTree = "<group>"; };
@@ -833,6 +832,7 @@
 		B0859B0827E6A26200E7D41B /* EpsonFX80Printer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EpsonFX80Printer.cpp; path = source/Printers/EpsonFX80Printer.cpp; sourceTree = "<group>"; };
 		B0859B0927E6A26200E7D41B /* EpsonFX80Printer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EpsonFX80Printer.h; path = source/Printers/EpsonFX80Printer.h; sourceTree = "<group>"; };
 		B0859B0C27E6E92F00E7D41B /* FXMatrix105MonoPicaRegular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FXMatrix105MonoPicaRegular.otf; path = Fonts/FXMatrix105MonoPicaRegular.otf; sourceTree = "<group>"; };
+		B0859B1D27E7EDF700E7D41B /* ParallelPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParallelPrinter.h; path = source/ParallelPrinter.h; sourceTree = "<group>"; };
 		B089EF2D27BADA5200BDC415 /* Mariani.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Mariani.help; sourceTree = "<group>"; };
 		B089EF3027BADA8100BDC415 /* Mariani-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mariani-Info.plist"; sourceTree = "<group>"; };
 		B089EF3127BB051900BDC415 /* StrFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrFormat.h; path = source/StrFormat.h; sourceTree = "<group>"; };
@@ -1641,7 +1641,7 @@
 				B09AB64F277A14DB0002A6C3 /* NTSC.cpp */,
 				B09AB624277A14DB0002A6C3 /* NTSC.h */,
 				B00F4E9F27DD7CF5000F55BF /* ParallelInterface.cpp */,
-				B00F4EA027DD7CF5000F55BF /* ParallelInterface.h */,
+				B0859B1D27E7EDF700E7D41B /* ParallelPrinter.h */,
 				B09AB5E5277A14DA0002A6C3 /* Peripheral_Clock_Generic.cpp */,
 				B09AB63F277A14DB0002A6C3 /* Peripheral_Clock_Generic.h */,
 				B09AB631277A14DB0002A6C3 /* Peripheral_Clock_ThunderClockPlus.cpp */,
@@ -2054,6 +2054,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0859B2527E7EDF700E7D41B /* ParallelPrinter.h in Headers */,
 				B0A8D66727B1119D00D4314F /* 6522.h in Headers */,
 				B0098CC2277E171100F38E0C /* keyboard.h in Headers */,
 				B0098CC8277E171100F38E0C /* RGBMonitor.h in Headers */,
@@ -2085,7 +2086,6 @@
 				B0098CCC277E171100F38E0C /* version.h in Headers */,
 				B00F4EB227DD8093000F55BF /* Writer.h in Headers */,
 				B0098CDE277E171100F38E0C /* benchmark.h in Headers */,
-				B00F4EA227DD7CF5000F55BF /* ParallelInterface.h in Headers */,
 				B0098CDB277E171100F38E0C /* PropertySheetHelper.h in Headers */,
 				B0098CE0277E171100F38E0C /* DiskImage.h in Headers */,
 				B0098CCA277E171100F38E0C /* VidHD.h in Headers */,

@@ -2,6 +2,7 @@
 
 #include "Card.h"
 #include "Memory.h"
+#include "Printers/Printer.h"
 
 class ParallelPrinterCard : public Card
 {
@@ -18,6 +19,8 @@ public:
 		m_bFilterUnprintable = false;
 		m_bPrinterAppend = false;
 		m_bEnableDumpToRealPrinter = false;
+		
+		m_printer = NULL;
 	}
 	virtual ~ParallelPrinterCard(void) {}
 
@@ -37,6 +40,8 @@ public:
 	void SetFilename(const std::string& prtFilename);
 	UINT GetIdleLimit(void);
 	void SetIdleLimit(UINT Duration);
+
+	void SetPrinter(AncientPrinterEmulationLibrary::Printer & printer);
 
 	bool GetDumpToPrinter(void) { return m_bDumpToPrinter; }
 	void SetDumpToPrinter(bool value) { m_bDumpToPrinter = value; }
@@ -66,4 +71,6 @@ private:
 	bool m_bFilterUnprintable;
 	bool m_bPrinterAppend;
 	bool m_bEnableDumpToRealPrinter;	// Set by cmd-line: -printer-real
+	
+	AncientPrinterEmulationLibrary::Printer* m_printer;
 };
