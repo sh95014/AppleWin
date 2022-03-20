@@ -110,7 +110,12 @@ namespace AncientPrinterEmulationLibrary
             ExpectText();
             break;
         case '%': // Selects a character set
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(2);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case '&': // Selects characters to be defined
             ErrorUnparsed("ESC " + std::string(1, m_Code));
@@ -169,7 +174,12 @@ namespace AncientPrinterEmulationLibrary
             }
             break;
         case '/': // Selects channel
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case '0': // Sets line spacing to 1/8"
             if (m_Mode == Mode::CODE)
@@ -193,25 +203,32 @@ namespace AncientPrinterEmulationLibrary
             }
             break;
         case '3': // Sets line spacing to n/216"
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case '4': // Turns italic mode on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case '5': // Turns italic mode off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case '6': // Enables printing of control codes 128-159
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case '7': // Returns codes 128-159 to control codes
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case '8': // Turns paper-out sensor off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            // not applicable, we're not going to run out of paper
+            ExpectText();
             break;
         case '9': // Turns paper-out sensor on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            // not applicable, we're not going to run out of paper
+            ExpectText();
             break;
         case ':': // Copies ROM characters to the RAM area
             ErrorUnparsed("ESC " + std::string(1, m_Code));
@@ -222,16 +239,21 @@ namespace AncientPrinterEmulationLibrary
             ExpectText();
             break;
         case '=': // Sets high-order bit off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case '>': // Sets high-order bit on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case '?': // Reassigns an alternate graphics code
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(2);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case '@': // Reset code
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'A': // Sets line spacing to n/72"
             switch (m_Mode)
@@ -259,22 +281,32 @@ namespace AncientPrinterEmulationLibrary
             ErrorUnparsed("ESC " + std::string(1, m_Code));
             break;
         case 'E': // Turns emphasized mode on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'F': // Turns emphasized mode off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'G': // Turns double-strike mode on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'H': // Turns double-strike mode off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'I': // Returns codes 0-31 to control codes
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'J': // Produces an immediate one-time line feed of n/216" without a carriage return
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'K': // Turns single-density graphics mode on
             switch (m_Mode)
@@ -298,6 +330,7 @@ namespace AncientPrinterEmulationLibrary
             }
             break;
         case 'L': // Turns low-speed double-density graphics mode on
+        case 'Y': // Turns high-speed double-density graphics mode on
             switch (m_Mode)
             {
             case Mode::CODE:
@@ -319,28 +352,49 @@ namespace AncientPrinterEmulationLibrary
             }
             break;
         case 'M': // Turns elite mode on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'N': // Sets skip-over-perforation
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'O': // Turns skip-over-perforation off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'P': // Turns elite mode off
+            // Manual page 277 says this shouldn't happen if compressed mode is on
             SetCpi(10);
             break;
         case 'Q': // Sets the right margin
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'R': // Selects an international character set
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'S': // Turns superscript/subscript mode on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'T': // Turns either script mode off
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            ErrorUnsupported("ESC " + std::string(1, m_Code));
             break;
         case 'U': // Sets continuous unidirectional mode
             if (m_Mode == Mode::CODE)
@@ -353,13 +407,36 @@ namespace AncientPrinterEmulationLibrary
             }
             break;
         case 'W': // Sets expanded mode
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
-        case 'Y': // Turns high-speed double-density graphics mode on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
-            break;
+//      case 'Y':
+//          apparently "same density as L but cannot print two adjacent dots
+//          in the same row, so handled above at case 'L'.
         case 'Z': // Turns quadruple-density graphics mode on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            switch (m_Mode)
+            {
+            case Mode::CODE:
+                m_SavedHorizontalPitchTwips = HorizontalPitchTwips;
+                SetDpi(240);
+                ExpectArg(2);
+                break;
+            case Mode::ARG:
+                ExpectData(m_Arg);
+                break;
+            case Mode::DATA:
+                PlotGraphics(byte);
+                ConsumeData();
+                if (m_Mode != Mode::DATA)
+                    HorizontalPitchTwips = m_SavedHorizontalPitchTwips;
+                break;
+            default:
+                break;
+            }
             break;
         case '^': // Enters nine-pin graphics mode
             switch (m_Mode)
@@ -381,22 +458,54 @@ namespace AncientPrinterEmulationLibrary
             }
             break;
         case 'b': // Stores channels of vertical tab stops
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'i': // Sets immediate-print mode
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                // doesn't seem relevant to our context
+                ExpectText();
+            }
             break;
         case 'j': // Turns reverse feed on
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'l': // Sets left margin
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 'p': // Sets proportional mode
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                ErrorUnsupported("ESC " + std::string(1, m_Code));
+            }
             break;
         case 's': // Sets half-speed mode
-            ErrorUnparsed("ESC " + std::string(1, m_Code));
+            if (m_Mode == Mode::CODE)
+                ExpectArg(1);
+            else
+            {
+                // noise reduction, irrelevant to our context
+                ExpectText();
+            }
             break;
         default:
             break;
