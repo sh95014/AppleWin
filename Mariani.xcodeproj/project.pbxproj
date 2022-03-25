@@ -446,6 +446,8 @@
 		B090CF2427B5A2A900C6C23D /* MarianiJoystick.mm in Sources */ = {isa = PBXBuildFile; fileRef = B090CF2027B5A2A900C6C23D /* MarianiJoystick.mm */; };
 		B0927417277D9399003FFB79 /* PreferencesViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0927415277D9399003FFB79 /* PreferencesViewController.mm */; };
 		B092741B277D9403003FFB79 /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0927419277D9403003FFB79 /* PreferencesWindowController.m */; };
+		B095D52F27ED7D0000498D51 /* IPRaw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B095D52627ED7D0000498D51 /* IPRaw.cpp */; };
+		B095D53027ED7D0000498D51 /* IPRaw.h in Headers */ = {isa = PBXBuildFile; fileRef = B095D52E27ED7D0000498D51 /* IPRaw.h */; };
 		B09AB674277A14DB0002A6C3 /* Speech.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB626277A14DB0002A6C3 /* Speech.cpp */; };
 		B09AB680277A14DB0002A6C3 /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB63A277A14DB0002A6C3 /* StdAfx.cpp */; };
 		B09AB724277A1BA40002A6C3 /* Debugger_Disassembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB706277A1BA30002A6C3 /* Debugger_Disassembler.cpp */; };
@@ -849,6 +851,8 @@
 		B0927415277D9399003FFB79 /* PreferencesViewController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = PreferencesViewController.mm; sourceTree = "<group>"; };
 		B0927418277D9403003FFB79 /* PreferencesWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PreferencesWindowController.h; sourceTree = "<group>"; };
 		B0927419277D9403003FFB79 /* PreferencesWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PreferencesWindowController.m; sourceTree = "<group>"; };
+		B095D52627ED7D0000498D51 /* IPRaw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IPRaw.cpp; path = source/Tfe/IPRaw.cpp; sourceTree = "<group>"; };
+		B095D52E27ED7D0000498D51 /* IPRaw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IPRaw.h; path = source/Tfe/IPRaw.h; sourceTree = "<group>"; };
 		B09AB5E5277A14DA0002A6C3 /* Peripheral_Clock_Generic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Peripheral_Clock_Generic.cpp; path = source/Peripheral_Clock_Generic.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB5E6277A14DA0002A6C3 /* SerialComms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SerialComms.cpp; path = source/SerialComms.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB5E7277A14DA0002A6C3 /* Core.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Core.cpp; path = source/Core.cpp; sourceTree = SOURCE_ROOT; };
@@ -1875,6 +1879,8 @@
 			children = (
 				B09AB832277A22530002A6C3 /* Bpf.h */,
 				B09AB834277A22530002A6C3 /* Ip6_misc.h */,
+				B095D52627ED7D0000498D51 /* IPRaw.cpp */,
+				B095D52E27ED7D0000498D51 /* IPRaw.h */,
 				B0F84FFE27D1B44F0015F642 /* NetworkBackend.cpp */,
 				B0F8500027D1B44F0015F642 /* NetworkBackend.h */,
 				B09AB837277A22530002A6C3 /* Pcap.h */,
@@ -2124,6 +2130,7 @@
 				B0098D08277E244F00F38E0C /* Registry.h in Headers */,
 				B0F84FFA27D1B3F30015F642 /* Uthernet1.h in Headers */,
 				B0098CBA277E171100F38E0C /* SoundCore.h in Headers */,
+				B095D53027ED7D0000498D51 /* IPRaw.h in Headers */,
 				B0098CE4277E171100F38E0C /* Log.h in Headers */,
 				B0098CE3277E171100F38E0C /* Utilities.h in Headers */,
 				B0098CF2277E171200F38E0C /* FourPlay.h in Headers */,
@@ -2666,6 +2673,7 @@
 				B00F4EB127DD8093000F55BF /* BasePrinter.cpp in Sources */,
 				B089EF3427BB051900BDC415 /* StrFormat.cpp in Sources */,
 				B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */,
+				B095D52F27ED7D0000498D51 /* IPRaw.cpp in Sources */,
 				B0098C9F277E144E00F38E0C /* linuxframe.cpp in Sources */,
 				B0098C76277E140100F38E0C /* CmdLine.cpp in Sources */,
 				B0098D03277E1D4E00F38E0C /* zip.c in Sources */,
