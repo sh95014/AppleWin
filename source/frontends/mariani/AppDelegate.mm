@@ -99,13 +99,6 @@ using namespace DiskImgLib;
 
 static void DiskImgMsgHandler(const char *file, int line, const char *msg);
 
-@interface NSAlert (Synchronous)
-
-- (NSModalResponse)runModalSheetForWindow:(NSWindow *)aWindow;
-- (NSModalResponse)runModalSheet;
-
-@end // NSAlert (Synchronous)
-
 @implementation AppDelegate
 
 Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
@@ -833,7 +826,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             break;
     }
     
-    NSModalResponse returnCode = [alert runModalSheet];
+    NSModalResponse returnCode = [alert runModal];
     
     switch (type & 0x0000000F) {
         case MB_YESNO:
@@ -1060,25 +1053,6 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 @end
-
-#pragma mark - Categories
-
-@implementation NSAlert (Synchronous)
-
-- (NSModalResponse)runModalSheetForWindow:(NSWindow *)aWindow
-{
-    [self beginSheetModalForWindow:aWindow completionHandler:^(NSModalResponse returnCode) {
-        [NSApp stopModalWithCode:returnCode];
-    }];
-    NSModalResponse modalCode = [NSApp runModalForWindow:[self window]];
-    return modalCode;
-}
-
-- (NSModalResponse)runModalSheet {
-    return [self runModalSheetForWindow:[NSApp mainWindow]];
-}
-
-@end // NSAlert (Synchronous)
 
 #pragma mark - C++ Helpers
 
