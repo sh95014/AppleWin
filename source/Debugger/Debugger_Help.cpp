@@ -249,8 +249,8 @@ void Help_Operators()
 	ConsolePrintFormat( "    %s#%s   Designate number in hex"             , CHC_USAGE, CHC_DEFAULT );
 //	ConsoleBufferPush( "  Operators: (Range)"                            );
 	ConsolePrintFormat( "  Operators: (%sRange%s)"                        , CHC_USAGE, CHC_DEFAULT );
-	ConsolePrintFormat( "    %s,%s   range seperator (2nd address is relative)", CHC_USAGE, CHC_DEFAULT );
-	ConsolePrintFormat( "    %s:%s   range seperator (2nd address is absolute)", CHC_USAGE, CHC_DEFAULT );
+	ConsolePrintFormat( "    %s,%s   range separator (2nd address is relative)", CHC_USAGE, CHC_DEFAULT );
+	ConsolePrintFormat( "    %s:%s   range separator (2nd address is absolute)", CHC_USAGE, CHC_DEFAULT );
 //	ConsolePrintFormat( "  Operators: (Misc)"                             );
 	ConsolePrintFormat( "  Operators: (%sMisc%s)"                         , CHC_USAGE, CHC_DEFAULT );
 	ConsolePrintFormat( "    %s//%s  comment until end of line"           , CHC_USAGE, CHC_DEFAULT );
@@ -261,7 +261,7 @@ void Help_Operators()
 	_tcscpy( sText, "    " );
 	strcat( sText, CHC_USAGE );
 	int iBreakOp = 0;
-	for( iBreakOp = 0; iBreakOp < NUM_BREAKPOINT_OPERATORS; iBreakOp++ )
+	for ( iBreakOp = 0; iBreakOp < NUM_BREAKPOINT_OPERATORS; iBreakOp++ )
 	{
 		if ((iBreakOp >= PARAM_BP_LESS_EQUAL) &&
 			(iBreakOp <= PARAM_BP_GREATER_EQUAL))
@@ -452,7 +452,7 @@ bool Colorize( char * pDst, size_t /*nDstSz*/, const char* pSrc)
 			const char *start = pSrc;
 			const char *end   = pSrc;
 
-			while( isHexDigit( *end ) )
+			while ( isHexDigit( *end ) )
 				end++;
 
 			size_t nDigits = end - start;
@@ -580,11 +580,11 @@ Update_t CmdHelpSpecific (int nArgs)
 		{
 	//		int nFoundCategory = FindParam( g_aArgs[ iArg ].sArg, MATCH_EXACT, iParam, _PARAM_HELPCATEGORIES_BEGIN, _PARAM_HELPCATEGORIES_END );
 			int nFoundCategory = FindParam( g_aArgs[ iArg ].sArg, MATCH_FUZZY, iParam, _PARAM_HELPCATEGORIES_BEGIN, _PARAM_HELPCATEGORIES_END );
-			if( nFoundCategory )
+			if ( nFoundCategory )
 				bCategory = true;
 			else
 				bCategory = false;
-			switch( iParam )
+			switch ( iParam )
 			{
 				case PARAM_CAT_BOOKMARKS  : iCmdBegin = CMD_BOOKMARK        ; iCmdEnd = CMD_BOOKMARK_SAVE        ; break;
 				case PARAM_CAT_BREAKPOINTS: iCmdBegin = CMD_BREAK_INVALID   ; iCmdEnd = CMD_BREAKPOINT_SAVE      ; break;
@@ -646,7 +646,7 @@ Update_t CmdHelpSpecific (int nArgs)
 					if (nFound) {
 						bCategory = false; 
 					} else  // 2.7.0.17: HELP <category> wasn't displaying when category was one of: FLAGS, OUTPUT, WATCHES
-						if( nFoundCategory )
+						if ( nFoundCategory )
 						{
 							iCmdBegin = CMD_WATCH_ADD       ; iCmdEnd = CMD_WATCH_LIST           ;
 						}
@@ -735,62 +735,62 @@ Update_t CmdHelpSpecific (int nArgs)
 //		if (nFound && (! bAllCommands) && (! bCategory))
 		if (nFound && (! bAllCommands) && bDisplayCategory)
 		{
-			const char* pszCategory = "";
+			const char* pCategory = "";
 			int iCmd = g_aCommands[ iCommand ].iCommand; // Unaliased command
 
 			// HACK: Major kludge to display category!!!
 			if (iCmd <= CMD_UNASSEMBLE)
-				pszCategory = g_aParameters[ PARAM_CAT_CPU ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_CPU ].m_sName;
 			else
 			if (iCmd <= CMD_BOOKMARK_SAVE)
-				pszCategory = g_aParameters[ PARAM_CAT_BOOKMARKS ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_BOOKMARKS ].m_sName;
 			else
 			if (iCmd <= CMD_BREAKPOINT_SAVE)
-				pszCategory = g_aParameters[ PARAM_CAT_BREAKPOINTS ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_BREAKPOINTS ].m_sName;
 			else
 			if (iCmd <= CMD_CONFIG_SET_DEBUG_DIR)
-				pszCategory = g_aParameters[ PARAM_CAT_CONFIG ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_CONFIG ].m_sName;
 			else
 			if (iCmd <= CMD_CURSOR_PAGE_DOWN_4K)
-				pszCategory = "Scrolling";
+				pCategory = "Scrolling";
 			else
 			if (iCmd <= CMD_FLAG_SET_N)
-				pszCategory = g_aParameters[ PARAM_CAT_FLAGS ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_FLAGS ].m_sName;
 			else
 			if (iCmd <= CMD_MOTD)
-				pszCategory = g_aParameters[ PARAM_CAT_HELP ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_HELP ].m_sName;
 			else
 			if (iCmd <= CMD_MEMORY_FILL)
-				pszCategory = g_aParameters[ PARAM_CAT_MEMORY ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_MEMORY ].m_sName;
 			else
 			if (iCmd <= CMD_OUTPUT_RUN)
-				pszCategory = g_aParameters[ PARAM_CAT_OUTPUT ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_OUTPUT ].m_sName;
 			else
 			if (iCmd <= CMD_SYNC)
-				pszCategory = "Source";
+				pCategory = "Source";
 			else
 			if (iCmd <= CMD_SYMBOLS_LIST)
-				pszCategory = g_aParameters[ PARAM_CAT_SYMBOLS ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_SYMBOLS ].m_sName;
 			else
 			if (iCmd <= CMD_VIEW_DHGR2)
-				pszCategory = g_aParameters[ PARAM_CAT_VIEW ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_VIEW ].m_sName;
 			else
 			if (iCmd <= CMD_WATCH_SAVE)
-				pszCategory = g_aParameters[ PARAM_CAT_WATCHES ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_WATCHES ].m_sName;
 			else
 			if (iCmd <= CMD_WINDOW_OUTPUT)
-				pszCategory = g_aParameters[ PARAM_CAT_WINDOW ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_WINDOW ].m_sName;
 			else
 			if (iCmd <= CMD_ZEROPAGE_POINTER_SAVE)
-				pszCategory = g_aParameters[ PARAM_CAT_ZEROPAGE ].m_sName;
+				pCategory = g_aParameters[ PARAM_CAT_ZEROPAGE ].m_sName;
 			else
-				pszCategory = "Unknown!";
+				pCategory = "Unknown!";
 
 			ConsolePrintFormat( "%sCategory%s: %s%s"
 				, CHC_USAGE
 				, CHC_DEFAULT
 				, CHC_CATEGORY
-				, pszCategory );
+				, pCategory );
 
 			if (bCategory)
 				bDisplayCategory = false;
@@ -1513,7 +1513,7 @@ Update_t CmdHelpList (int nArgs)
 		        StringCat( sText, CHC_DEFAULT, nBuf );
 		nLen += StringCat( sText, ": " , nBuf );
 
-	for( iCommand = 0; iCommand < NUM_COMMANDS_WITH_ALIASES; iCommand++ ) // aliases are not printed
+	for ( iCommand = 0; iCommand < NUM_COMMANDS_WITH_ALIASES; iCommand++ ) // aliases are not printed
 	{
 		Command_t *pCommand = & g_vSortedCommands.at( iCommand );
 //		Command_t *pCommand = & g_aCommands[ iCommand ];

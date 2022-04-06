@@ -60,7 +60,7 @@ namespace common2
       ("help,h", "Print this help message")
       ;
 
-    po::options_description configDesc("configuration");
+    po::options_description configDesc("Configuration");
     configDesc.add_options()
       ("conf", po::value<std::string>()->default_value(options.configurationFile), "Select configuration file")
       ("registry,r", po::value<std::vector<std::string>>(), "Registry options section.path=value")
@@ -215,7 +215,7 @@ namespace common2
 
     if (!options.disk1.empty())
     {
-      szImageName_drive[DRIVE_2] = options.disk1.c_str();
+      szImageName_drive[DRIVE_1] = options.disk1.c_str();
     }
 
     if (!options.disk2.empty())

@@ -41,7 +41,7 @@ namespace
 
     if (should_be_zero)
     {
-      throw std::runtime_error(SDL_GetError());
+      throw std::runtime_error(sa2::decorateSDLError("SDL_GetCurrentDisplayMode"));
     }
 
     return current.refresh_rate;
@@ -91,6 +91,8 @@ void run_sdl(int argc, const char * argv [])
     frame.reset(new sa2::SDLRendererFrame(options));
   }
 
+  std::cerr << "Default GL swap interval: " << SDL_GL_GetSwapInterval() << std::endl;
+
   std::shared_ptr<Paddle> paddle(new sa2::Gamepad(0));
   const Initialisation init(frame, paddle);
   common2::applyOptions(options);
@@ -101,8 +103,6 @@ void run_sdl(int argc, const char * argv [])
   {
     frame->LoadSnapshot();
   }
-
-  std::cerr << "Default GL swap interval: " << SDL_GL_GetSwapInterval() << std::endl;
 
   const int fps = getRefreshRate();
   std::cerr << "Video refresh rate: " << fps << " Hz, " << 1000.0 / fps << " ms" << std::endl;
