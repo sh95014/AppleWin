@@ -268,7 +268,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager]
         enumeratorAtURL:folder
         includingPropertiesForKeys:nil
-        options:(NSDirectoryEnumerationSkipsPackageDescendants | NSDirectoryEnumerationSkipsHiddenFiles)
+        options:(NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsPackageDescendants | NSDirectoryEnumerationSkipsHiddenFiles)
         errorHandler:^(NSURL *url, NSError *error) { return YES; }];
     NSMutableSet *set = [NSMutableSet set];
     for (NSURL *url in enumerator) {
