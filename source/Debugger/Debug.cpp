@@ -238,8 +238,30 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	bool ProfileSave   ();
 	void ProfileFormat( bool bSeperateColumns, ProfileFormat_e eFormatMode );
 
-	char * ProfileLinePeek ( int iLine );
-	char * ProfileLinePush ();
+	// TODO: Things would be much simpler if g_aProfileLine is just a container of std::string.
+	struct ProfileLine_t
+	{
+		ProfileLine_t() : buf(NULL), bufsz(0) {}
+		ProfileLine_t(char* _buf, size_t _bufsz) : buf(_buf), bufsz(_bufsz) {}
+		void Assign(std::string const& str)
+		{
+			if (!buf || bufsz <= 0) return;
+			strncpy_s(buf, bufsz, str.c_str(), _TRUNCATE);
+		}
+		ATTRIBUTE_FORMAT_PRINTF(2, 3) /* 1 is "this" */
+		void Format(const char* fmt, ...)
+		{
+			if (!buf || bufsz <= 0) return;
+			va_list va;
+			va_start(va, fmt);
+			Assign(StrFormatV(fmt, va));
+			va_end(va);
+		}
+		char* buf;
+		size_t bufsz;
+	};
+	ProfileLine_t ProfileLinePeek ( int iLine );
+	ProfileLine_t ProfileLinePush ();
 	void ProfileLineReset  ();
 
 // Soft-switches __________________________________________________________________________________
@@ -751,7 +773,7 @@ Update_t CmdProfile (int nArgs)
 {
 	if (! nArgs)
 	{
-		sprintf( g_aArgs[ 1 ].sArg, "%s", g_aParameters[ PARAM_RESET ].m_sName );
+		strncpy_s( g_aArgs[ 1 ].sArg, g_aParameters[ PARAM_RESET ].m_sName, _TRUNCATE );
 		nArgs = 1;
 	}
 
@@ -786,18 +808,15 @@ Update_t CmdProfile (int nArgs)
 			// Dump to console
 			if (iParam == PARAM_LIST)
 			{
-				char *pText;
-				char  sText[ CONSOLE_WIDTH ];
+				const int nLine = g_nProfileLine;
 
-				int   nLine = g_nProfileLine;
-				int   iLine;
-				
-				for ( iLine = 0; iLine < nLine; iLine++ )
+				for ( int iLine = 0; iLine < nLine; iLine++ )
 				{
-					pText = ProfileLinePeek( iLine );
-					if (pText)
+					ProfileLine_t prfline = ProfileLinePeek( iLine );
+					if (prfline.buf)
 					{
-						TextConvertTabsToSpaces( sText, pText, CONSOLE_WIDTH, 4 );
+						char sText[ CONSOLE_WIDTH ];
+						TextConvertTabsToSpaces( sText, prfline.buf, CONSOLE_WIDTH, 4 );
 						// ConsoleBufferPush( sText );
 						ConsolePrint( sText );
 					}
@@ -811,7 +830,7 @@ Update_t CmdProfile (int nArgs)
 					ConsoleBufferPushFormat( " Saved: %s", g_FileNameProfile.c_str() );
 				}
 				else
-					ConsoleBufferPush( TEXT(" ERROR: Couldn't save file. (In use?)" ) );
+					ConsoleBufferPush( " ERROR: Couldn't save file. (In use?)" );
 			}
 		}
 	}
@@ -2400,13 +2419,11 @@ bool ConfigSave_BufferToDisk ( const char *pFileName, ConfigSave_t eConfigSave )
 
 	if (hFile)
 	{
-		char *pText;
-		int   nLine = g_ConfigState.GetNumLines();
-		int   iLine;
+		const int nLine = g_ConfigState.GetNumLines();
 		
-		for ( iLine = 0; iLine < nLine; iLine++ )
+		for ( int iLine = 0; iLine < nLine; iLine++ )
 		{
-			pText = g_ConfigState.GetLine( iLine );
+			const char *pText = g_ConfigState.GetLine( iLine );
 			if ( pText )
 			{
 				fputs( pText, hFile );
@@ -2415,9 +2432,6 @@ bool ConfigSave_BufferToDisk ( const char *pFileName, ConfigSave_t eConfigSave )
 		
 		fclose( hFile );
 		bStatus = true;
-	}
-	else
-	{
 	}
 
 	return bStatus;
@@ -3454,7 +3468,7 @@ bool MemoryDumpCheck (int nArgs, WORD * pAddress_ )
 	if (bUpdate)
 	{
 		pArg->nValue = nAddress;
-		sprintf( pArg->sArg, "%04X", nAddress );
+		strncpy_s( pArg->sArg, WordToHexStr(nAddress).c_str(), _TRUNCATE );
 	}
 
 	if (pAddress_)
@@ -3871,8 +3885,7 @@ Update_t CmdMemoryLoad (int nArgs)
 		if (g_aArgs[ iArgComma1 ].eToken != TOKEN_COMMA)
 			return Help_Arg_1( CMD_MEMORY_SAVE );
 
-		TCHAR sLoadSaveFilePath[ MAX_PATH ];
-		_tcscpy( sLoadSaveFilePath, g_sCurrentDir ); // TODO: g_sDebugDir
+		std::string sLoadSaveFilePath = g_sCurrentDir; // TODO: g_sDebugDir
 
 		WORD nAddressStart;
 		WORD nAddress2   = 0;
@@ -3901,11 +3914,11 @@ Update_t CmdMemoryLoad (int nArgs)
 
 		if (bHaveFileName)
 		{
-			_tcscpy( g_sMemoryLoadSaveFileName, g_aArgs[ 1 ].sArg );
+			g_sMemoryLoadSaveFileName = g_aArgs[ 1 ].sArg;
 		}
-		strcat( sLoadSaveFilePath, g_sMemoryLoadSaveFileName );
+		sLoadSaveFilePath += g_sMemoryLoadSaveFileName;
 		
-		FILE *hFile = fopen( sLoadSaveFilePath, "rb" );
+		FILE *hFile = fopen( sLoadSaveFilePath.c_str(), "rb" );
 		if (hFile)
 		{
 			int nFileBytes = _GetFileSize( hFile );
@@ -3922,8 +3935,7 @@ Update_t CmdMemoryLoad (int nArgs)
 			size_t nRead = fread( pMemory, nAddressLen, 1, hFile );
 			if (nRead == 1) // (size_t)nLen)
 			{
-				int iByte;
-				for ( iByte = 0; iByte < nAddressLen; iByte++ )
+				for ( int iByte = 0; iByte < nAddressLen; iByte++ )
 				{
 					*pDst++ = *pSrc++;
 				}
@@ -3937,7 +3949,7 @@ Update_t CmdMemoryLoad (int nArgs)
 
 			CmdConfigGetDebugDir( 0 );
 
-			ConsoleBufferPushFormat( "File: %s", g_sMemoryLoadSaveFileName );
+			ConsoleBufferPushFormat( "File: %s", g_sMemoryLoadSaveFileName.c_str() );
 		}
 		
 		delete [] pMemory;
@@ -4029,9 +4041,9 @@ Update_t CmdMemoryLoad (int nArgs)
 	const int              nFileTypes = sizeof( aFileTypes ) / sizeof( KnownFileType_t );
 	const KnownFileType_t *pFileType = NULL;
 
-	char *pFileName = g_aArgs[ 1 ].sArg;
+	const char *pFileName = g_aArgs[ 1 ].sArg;
 	int   nLen = strlen( pFileName );
-	char *pEnd = pFileName + nLen - 1;
+	const char *pEnd = pFileName + nLen - 1;
 	while ( pEnd > pFileName )
 	{
 		if ( *pEnd == '.' )
@@ -4272,11 +4284,11 @@ Update_t CmdMemorySave (int nArgs)
 		{
 			if (! bHaveFileName)
 			{
-				sprintf( g_sMemoryLoadSaveFileName, "%04X.%04X.bin", nAddressStart, nAddressLen ); // nAddressEnd );
+				g_sMemoryLoadSaveFileName = StrFormat( "%04X.%04X.bin", nAddressStart, nAddressLen ); // nAddressEnd );
 			}
 			else
 			{
-				_tcscpy( g_sMemoryLoadSaveFileName, g_aArgs[ 1 ].sArg );
+				g_sMemoryLoadSaveFileName = g_aArgs[ 1 ].sArg;
 			}
 			strcat( sLoadSaveFilePath, g_sMemoryLoadSaveFileName );
 
@@ -4287,8 +4299,7 @@ Update_t CmdMemorySave (int nArgs)
 				BYTE *pSrc = mem + nAddressStart;
 				
 				// memcpy -- copy out of active memory bank
-				int iByte;
-				for ( iByte = 0; iByte < nAddressLen; iByte++ )
+				for ( int iByte = 0; iByte < nAddressLen; iByte++ )
 				{
 					*pDst++ = *pSrc++;
 				}
@@ -4423,12 +4434,9 @@ Update_t CmdMemorySave (int nArgs)
 		{
 			if (! bHaveFileName)
 			{
-				TCHAR sMemoryLoadSaveFileName[MAX_PATH];
-				if (! bBankSpecified)
-					sprintf( sMemoryLoadSaveFileName, "%04X.%04X.bin", nAddressStart, nAddressLen );
-				else
-					sprintf( sMemoryLoadSaveFileName, "%04X.%04X.bank%02X.bin", nAddressStart, nAddressLen, nBank );
-				g_sMemoryLoadSaveFileName = sMemoryLoadSaveFileName;
+				g_sMemoryLoadSaveFileName = (bBankSpecified)
+					? StrFormat( "%04X.%04X.bank%02X.bin", nAddressStart, nAddressLen, nBank )
+					: StrFormat( "%04X.%04X.bin", nAddressStart, nAddressLen );
 			}
 			else
 			{
@@ -5058,7 +5066,6 @@ Update_t CmdNTSC (int nArgs)
 	bool bColorTV = (GetVideo().GetVideoType() == VT_COLOR_TV);
 
 	uint32_t* pChromaTable = NTSC_VideoGetChromaTable( false, bColorTV );
-	char aStatusText[ CONSOLE_WIDTH*2 ] = "Loaded";
 
 	//uint8_t* pTmp = (uint8_t*) pChromaTable;
 	//*pTmp++ = 0xFF; // b
@@ -5119,10 +5126,12 @@ Update_t CmdNTSC (int nArgs)
 		else
 		if (iParam == PARAM_LOAD)
 		{
+			std::string sStatusText;
+
 			FILE *pFile = fopen( sPaletteFilePath.c_str(), "rb" );
 			if ( pFile )
 			{
-				strcpy( aStatusText, "Loaded" );
+				sStatusText = "Loaded";
 
 				// Get File Size
 				size_t  nFileSize  = _GetFileSize( pFile );
@@ -5138,13 +5147,13 @@ Update_t CmdNTSC (int nArgs)
 
 					if (bmp.nBitsPerPixel != 32)
 					{
-						strcpy( aStatusText, "Bitmap not 32-bit RGBA" );
+						sStatusText = "Bitmap not 32-bit RGBA";
 						goto _error;
 					}
 
 					if (bmp.nOffsetData > nFileSize)
 					{
-						strcpy( aStatusText, "Bad BITMAP: Data > file size !?" );
+						sStatusText = "Bad BITMAP: Data > file size !?";
 						goto _error;
 					}
 
@@ -5154,7 +5163,7 @@ Update_t CmdNTSC (int nArgs)
 					|| ((bmp.nWidthPixels  == 16 ) && (bmp.nHeightPixels == 1))
 					))
 					{
-						strcpy( aStatusText, "Bitmap not 64x256, 64x1, or 16x1" );
+						sStatusText = "Bitmap not 64x256, 64x1, or 16x1";
 						goto _error;
 					}
 
@@ -5177,7 +5186,7 @@ Update_t CmdNTSC (int nArgs)
 				else
 					if ( nFileSize != g_nChromaSize )
 					{
-						sprintf( aStatusText, "Raw size != %d", 64*256*4 );
+						sStatusText = StrFormat( "Raw size != %d", 64 * 256 * 4 );
 						goto _error;
 					}
 
@@ -5222,11 +5231,11 @@ _error:
 			}
 			else
 			{
-				strcpy( aStatusText, "File: " );
-				ConsoleBufferPush( TEXT( "Error couldn't open file for reading." ) );
+				sStatusText = "File: ";
+				ConsoleBufferPush( "Error couldn't open file for reading." );
 			}
 
-			ConsoleFilename::update( aStatusText );
+			ConsoleFilename::update( sStatusText.c_str() );
 		}
 		else
 			return HelpLastCommand();
@@ -5404,90 +5413,49 @@ int _SearchMemoryFind(
 //===========================================================================
 Update_t _SearchMemoryDisplay (int nArgs)
 {
-	const UINT nBuf = CONSOLE_WIDTH * 2;
-
-	int nFound = g_vMemorySearchResults.size() - 1;
-
-	int nLen = 0; // temp
-	int nLineLen = 0; // string length of matches for this line, for word-wrap
-
-	TCHAR sMatches[ nBuf ] = TEXT("");
-	TCHAR sResult[ nBuf ];
-	TCHAR sText[ nBuf ] = TEXT("");
+	int const nFound = g_vMemorySearchResults.size() - 1;
 
 	if (nFound > 0)
 	{
+		std::string sMatches;
+
 		int iFound = 1;
 		while (iFound <= nFound)
 		{
-			WORD nAddress = g_vMemorySearchResults.at( iFound );
+			WORD const nAddress = g_vMemorySearchResults.at( iFound );
 
-//			sprintf( sText, "%2d:$%04X ", iFound, nAddress );
-//			int nLen = _tcslen( sText );
+			// 2.6.2.17 Search Results: The n'th result now using correct color (was command, now number decimal)
+			// BUGFIX: 2.6.2.32 n'th Search results were being displayed in dec, yet parser takes hex numbers. i.e. SH D000:FFFF A9 00
+			// Intentional default instead of CHC_ARG_SEP for better readability
+			// 2.6.2.16 Fixed: Search Results: The hex specify for target address results now colorized properly
+			// 2.6.2.15 Fixed: Search Results: Added space between results for better readability
 
-			sResult[0] = 0;
-			nLen = 0;
-
-			        StringCat( sResult, CHC_NUM_DEC, nBuf ); // 2.6.2.17 Search Results: The n'th result now using correct color (was command, now number decimal)
-			sprintf( sText, "%02X", iFound ); // BUGFIX: 2.6.2.32 n'th Search results were being displayed in dec, yet parser takes hex numbers. i.e. SH D000:FFFF A9 00
-			nLen += StringCat( sResult, sText , nBuf );
-
-			        StringCat( sResult, CHC_DEFAULT, nBuf ); // intentional default instead of CHC_ARG_SEP for better readability
-			nLen += StringCat( sResult, ":" , nBuf );
-
-			        StringCat( sResult, CHC_ARG_SEP, nBuf );
-			nLen += StringCat( sResult, "$" , nBuf ); // 2.6.2.16 Fixed: Search Results: The hex specify for target address results now colorized properly
-
-			        StringCat( sResult, CHC_ADDRESS, nBuf );
-			sprintf( sText, "%04X ", nAddress ); // 2.6.2.15 Fixed: Search Results: Added space between results for better readability
-			nLen += StringCat( sResult, sText, nBuf );
+			// FIXME: Color is DEC whereas the format is "%X". What's the real intention?
+			std::string sResult = StrFormat( CHC_NUM_DEC "%02X" CHC_DEFAULT ":" CHC_ARG_SEP "$" CHC_ADDRESS "%04X ",
+											 iFound, nAddress );
 
 			// Fit on same line?
-			if ((nLineLen + nLen) > (g_nConsoleDisplayWidth - 1)) // CONSOLE_WIDTH
+			if ((sMatches.length() + sResult.length()) > (size_t(g_nConsoleDisplayWidth) - 1)) // CONSOLE_WIDTH
 			{
-				//ConsoleDisplayPush( sMatches );
-				ConsolePrint( sMatches );
-				_tcscpy( sMatches, sResult );
-				nLineLen = nLen;
+				//ConsoleDisplayPush( sMatches.c_str() );
+				ConsolePrint( sMatches.c_str() );
+				sMatches = sResult;
 			}
 			else
 			{
-				StringCat( sMatches, sResult, nBuf );
-				nLineLen += nLen;
+				sMatches += sResult;
 			}
 
 			iFound++;
 		}
-		ConsolePrint( sMatches );
+
+		ConsolePrint( sMatches.c_str() );
 	}
 
-//	ConsoleDisplayPushFormat( "Total: %d  (#$%04X)", nFound, nFound );
-		sResult[0] = 0;
+	//ConsoleDisplayPushFormat( "Total: %d  (#$%04X)", nFound, nFound );
 
-		        StringCat( sResult, CHC_USAGE , nBuf );
-		nLen += StringCat( sResult, "Total", nBuf );
-
-		        StringCat( sResult, CHC_DEFAULT, nBuf );
-		nLen += StringCat( sResult, ": " , nBuf );
-
-		        StringCat( sResult, CHC_NUM_DEC, nBuf ); // intentional CHC_DEFAULT instead of 
-		sprintf( sText, "%d  ", nFound );
-		nLen += StringCat( sResult, sText, nBuf );
-
-		        StringCat( sResult, CHC_ARG_SEP, nBuf ); // CHC_ARC_OPT -> CHC_ARG_SEP
-		nLen += StringCat( sResult, "(" , nBuf );
-
-		        StringCat( sResult, CHC_ARG_SEP, nBuf ); // CHC_DEFAULT
-		nLen += StringCat( sResult, "#$", nBuf );
-
-		        StringCat( sResult, CHC_NUM_HEX, nBuf );
-		sprintf( sText, "%04X", nFound );
-		nLen += StringCat( sResult, sText, nBuf );
-
-		        StringCat( sResult, CHC_ARG_SEP, nBuf );
-		nLen += StringCat( sResult, ")" , nBuf );
-		
-		ConsolePrint( sResult );
+	ConsolePrintFormat( CHC_USAGE "Total" CHC_DEFAULT ": " CHC_NUM_DEC "%d  " CHC_ARG_SEP "(" CHC_ARG_SEP "#$" CHC_NUM_HEX "%04X" CHC_ARG_SEP ")",
+						nFound /*dec*/, nFound /*hex*/ );
 
 	// g_vMemorySearchResults is cleared in DebugEnd()
 
@@ -5845,56 +5813,26 @@ Update_t CmdOutputPrint (int nArgs)
 {
 	// PRINT "A:",A," X:",X
 	// Removed: PRINT "A:%d",A," X: %d",X
-	TCHAR sText[ CONSOLE_WIDTH ] = TEXT("");
-	int nLen = 0;
+	std::string sText;
 
-	int nValue;
-
-	if (! nArgs)
+	if (nArgs <= 0)
 		goto _Help;
 
-	int iArg;
-	for (iArg = 1; iArg <= nArgs; iArg++ )
+	for ( int iArg = 1; iArg <= nArgs; iArg++ )
 	{
-		if (g_aArgs[ iArg ].bType & TYPE_QUOTED_2)
-		{
-			int iChar;
-			int nChar = _tcslen( g_aArgs[ iArg ].sArg );
-			for ( iChar = 0; iChar < nChar; iChar++ )
-			{
-				TCHAR c = g_aArgs[ iArg ].sArg[ iChar ];
-				sText[ nLen++ ] = c;
-			}
+		sText += (!!(g_aArgs[ iArg ].bType & TYPE_QUOTED_2))
+			? g_aArgs[ iArg ].sArg
+			: WordToHexStr( g_aArgs[ iArg ].nValue );
 
-			iArg++;
-//			if (iArg > nArgs)
-//				goto _Help;
-			if (iArg <= nArgs)
-				if (g_aArgs[ iArg ].eToken != TOKEN_COMMA)
-					goto _Help;
-		}
-		else
-		{			
-			nValue = g_aArgs[ iArg ].nValue;
-			sprintf( &sText[ nLen ], "%04X", nValue );
-
-			while (sText[ nLen ])
-				nLen++;
-
-			iArg++;
-			if (iArg <= nArgs)
-				if (g_aArgs[ iArg ].eToken != TOKEN_COMMA)
-					goto _Help;
-		}		
-#if 0
-		sprintf( &sText[ nLen ], "%04X", nValue );
-		sprintf( &sText[ nLen ], "%d", nValue );
-		sprintf( &sText[ nLen ], "%c", nValue );
-#endif
+		iArg++;
+		//if (iArg > nArgs)
+		//	goto _Help;
+		if (iArg <= nArgs && g_aArgs[ iArg ].eToken != TOKEN_COMMA)
+			goto _Help;
 	}
 
-	if (nLen)
-		ConsoleBufferPush( sText );
+	if (!sText.empty())
+		ConsoleBufferPush( sText.c_str() );
 
 	return ConsoleUpdate();
 
@@ -5909,24 +5847,12 @@ Update_t CmdOutputPrintf (int nArgs)
 	// PRINTF "A:%d X:%d",A,X
 	// PRINTF "Hex:%x  Dec:%d  Bin:%z",A,A,A
 
-	TCHAR sText[ CONSOLE_WIDTH ] = TEXT("");
-
-	std::vector<Arg_t> aValues;
-	Arg_t entry;
-	int iValue = 0;
-	int nValue = 0;
-
 	if (! nArgs)
 		return Help_Arg_1( CMD_OUTPUT_PRINTF );
 
-	int nLen = 0;
+	std::vector<Arg_t> aValues;
 
-	PrintState_e eThis = PS_LITERAL;
-
-	int nWidth = 0;
-
-	int iArg;
-	for (iArg = 1; iArg <= nArgs; iArg++ )
+	for ( int iArg = 1; iArg <= nArgs; iArg++ )
 	{
 		if (g_aArgs[ iArg ].bType & TYPE_QUOTED_2)
 			continue;
@@ -5935,21 +5861,28 @@ Update_t CmdOutputPrintf (int nArgs)
 			continue;
 		else
 		{
+			Arg_t entry;
 			entry.nValue = g_aArgs[ iArg ].nValue;
 			aValues.push_back( entry );
 		}
 	}
-	const int nParamValues = (int) aValues.size();
 
-	for (iArg = 1; iArg <= nArgs; iArg++ )
+	std::string sText;
+	sText.reserve(CONSOLE_WIDTH);
+
+	PrintState_e eThis = PS_LITERAL;
+	int nWidth = 0;
+
+	const size_t nParamValues = aValues.size();
+	size_t iValue = 0;
+
+	for ( int iArg = 1; iArg <= nArgs; iArg++ )
 	{
 		if (g_aArgs[ iArg ].bType & TYPE_QUOTED_2)
 		{
-			int iChar;
-			int nChar = _tcslen( g_aArgs[ iArg ].sArg );
-			for ( iChar = 0; iChar < nChar; iChar++ )
+			for ( const char* cp = g_aArgs[iArg].sArg, *ep = cp + strlen(g_aArgs[iArg].sArg); cp < ep; ++cp )
 			{
-				TCHAR c = g_aArgs[ iArg ].sArg[ iChar ];
+				const char c = *cp;
 				switch ( eThis )
 				{
 					case PS_LITERAL:
@@ -5962,7 +5895,7 @@ Update_t CmdOutputPrintf (int nArgs)
 								eThis = PS_TYPE;
 								break;
 							default:
-								sText[ nLen++ ] = c;
+								sText += c;
 								break;
 						}
 						break;
@@ -5972,60 +5905,52 @@ Update_t CmdOutputPrintf (int nArgs)
 							case 'n':
 							case 'r':
 								eThis = PS_LITERAL;
-								sText[ nLen++ ] = '\n';
+								sText += '\n';
 								break;
 						}
 						break;
 					case PS_TYPE:
 						if (iValue >= nParamValues)
 						{
-							ConsoleBufferPushFormat( "Error: Missing value arg: %d", iValue + 1 );
+							ConsoleBufferPushFormat( "Error: Missing value arg: %" SIZE_T_FMT, iValue + 1 );
 							return ConsoleUpdate();
 						}
 						switch ( c )
 						{
 							case 'X':
 							case 'x': // PS_NEXT_ARG_HEX
-								nValue = aValues[ iValue ].nValue;
-								sprintf( &sText[ nLen ], "%04X", nValue );
+								sText += WordToHexStr( aValues[ iValue ].nValue );
 								iValue++;
 								break;
 							case 'D':
 							case 'd': // PS_NEXT_ARG_DEC
-								nValue = aValues[ iValue ].nValue;
-								sprintf( &sText[ nLen ], "%d", nValue );
+								sText += StrFormat( "%d", aValues[ iValue ].nValue );
 								iValue++;
 								break;
 							break;
 							case 'Z':
 							case 'z':
 							{
-								nValue = aValues[ iValue ].nValue;
+								const int nValue = aValues[ iValue ].nValue;
 								if (!nWidth)
 									nWidth = 8;
 								int nBits = nWidth;
 								while (nBits-- > 0)
 								{
-									if ((nValue >> nBits) & 1)
-										sText[ nLen++ ] = '1';
-									else
-										sText[ nLen++ ] = '0';
+									sText += ((nValue >> nBits) & 1) ? '1' : '0';
 								}
 								iValue++;
 								break;
 							}
 							case 'c': // PS_NEXT_ARG_CHR;
-								nValue = aValues[ iValue ].nValue;
-								sprintf( &sText[ nLen ], "%c", nValue );
+								sText += char(  aValues[ iValue ].nValue );
 								iValue++;
 								break;
 							case '%':
 							default:
-								sText[ nLen++ ] = c;
+								sText += c;
 								break;
 						}
-						while (sText[ nLen ])
-							nLen++;
 						eThis = PS_LITERAL;
 						break;
 					default:
@@ -6044,8 +5969,8 @@ Update_t CmdOutputPrintf (int nArgs)
 			goto _Help;
 	}
 
-	if (nLen)
-		ConsoleBufferPush( sText );
+	if (!sText.empty())
+		ConsoleBufferPush( sText.c_str() );
 
 	return ConsoleUpdate();
 
@@ -7459,35 +7384,29 @@ int FindCommand( LPCTSTR pName, CmdFuncPtr_t & pFunction_, int * iCommand_ )
 //===========================================================================
 void DisplayAmbigiousCommands( int nFound )
 {
-	ConsolePrintFormat("Ambiguous %s%" SIZE_T_FMT "%s Commands:"
-		, CHC_NUM_DEC
+	ConsolePrintFormat("Ambiguous " CHC_NUM_DEC "%" SIZE_T_FMT CHC_DEFAULT " Commands:"
 		, g_vPotentialCommands.size()
-		, CHC_DEFAULT
 	);
 
 	int iCommand = 0;
 	while (iCommand < nFound)
 	{
-		char sPotentialCommands[ CONSOLE_WIDTH ];
-		sprintf( sPotentialCommands, "%s ", CHC_COMMAND );
+		std::string sPotentialCommands = CHC_COMMAND " ";
 
-		int iWidth = strlen( sPotentialCommands );
-		while ((iCommand < nFound) && (iWidth < g_nConsoleDisplayWidth))
+		while ((iCommand < nFound) && (sPotentialCommands.length() < size_t(g_nConsoleDisplayWidth)))
 		{
-			int   nCommand = g_vPotentialCommands[ iCommand ];
-			char *pName = g_aCommands[ nCommand ].m_sName;
-			int   nLen = strlen( pName );
+			int const nCommand = g_vPotentialCommands[ iCommand ];
+			const char *const pName = g_aCommands[ nCommand ].m_sName;
+			size_t const nLen = strlen( pName );
 
-			if ((iWidth + nLen) >= (CONSOLE_WIDTH - 1))
+			if ((sPotentialCommands.length() + nLen) >= (CONSOLE_WIDTH - 1))
 				break;
-				
-			char sText[ CONSOLE_WIDTH * 2 ];
-			sprintf( sText, "%s ", pName );
-			strcat( sPotentialCommands, sText );
-			iWidth += nLen + 1;
+
+			sPotentialCommands.append(pName, nLen).append(1, ' ');
+
 			iCommand++;
 		}
-		ConsolePrint( sPotentialCommands );
+		ConsolePrint( sPotentialCommands.c_str() );
 	}
 }
 
@@ -7728,8 +7647,8 @@ void OutputTraceLine ()
 	DisasmLine_t line;
 	GetDisassemblyLine( regs.pc, line );
 
-	char sDisassembly[ CONSOLE_WIDTH ]; // DrawDisassemblyLine( 0,regs.pc, sDisassembly); // Get Disasm String
-	FormatDisassemblyLine( line, sDisassembly, CONSOLE_WIDTH );
+	// DrawDisassemblyLine( 0,regs.pc, sDisassembly); // Get Disasm String
+	std::string sDisassembly = FormatDisassemblyLine( line );
 
 	char sFlags[] = "........";
 	WORD nRegFlags = regs.ps;
@@ -7761,14 +7680,9 @@ void OutputTraceLine ()
 		}
 	}
 
-	char sTarget[ 16 ];
-	if (line.bTargetValue)
-	{
-		sprintf( sTarget, "%s:%s"
-			, line.sTargetPointer
-			, line.sTargetValue
-		);
-	}
+	//std::string const sTarget = (line.bTargetValue)
+	//	? StrFormat( "%s:%s", line.sTargetPointer , line.sTargetValue )
+	//	: std::string();
 
 	if (g_bTraceFileWithVideoScanner)
 	{
@@ -7785,9 +7699,9 @@ void OutputTraceLine ()
 			(unsigned)regs.x,
 			(unsigned)regs.y,
 			(unsigned)regs.sp,
-			(char*) sFlags
-			, sDisassembly
-			//, sTarget // TODO: Show target?
+			sFlags
+			, sDisassembly.c_str()
+			//, sTarget.c_str() // TODO: Show target?
 		);
 	}
 	else
@@ -7800,9 +7714,9 @@ void OutputTraceLine ()
 			(unsigned)regs.x,
 			(unsigned)regs.y,
 			(unsigned)regs.sp,
-			(char*) sFlags
-			, sDisassembly
-			//, sTarget // TODO: Show target?
+			sFlags
+			, sDisassembly.c_str()
+			//, sTarget.c_str() // TODO: Show target?
 		);
 	}
 }
@@ -7834,24 +7748,18 @@ void ParseParameter( )
 
 // Return address of next line to write to.
 //===========================================================================
-char * ProfileLinePeek ( int iLine )
+ProfileLine_t ProfileLinePeek ( int iLine )
 {
-	char *pText = NULL;
-
 	if (iLine < 0)
 		iLine = 0;
 	
-	if (! g_nProfileLine)
-		pText = & g_aProfileLine[ iLine ][ 0 ];
-
-	if (iLine <= g_nProfileLine)
-		pText = & g_aProfileLine[ iLine ][ 0 ];
-	
-	return pText;
+	return ( g_nProfileLine == 0 || iLine <= g_nProfileLine )
+		? ProfileLine_t( g_aProfileLine[ iLine ], sizeof(g_aProfileLine[iLine]) )
+		: ProfileLine_t();
 }
 
 //===========================================================================
-char * ProfileLinePush ()
+ProfileLine_t ProfileLinePush ()
 {
 	if (g_nProfileLine < NUM_PROFILE_LINES)
 	{
@@ -7871,31 +7779,31 @@ void ProfileLineReset()
 //===========================================================================
 void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 {
-	char sSeparator7[ 32 ] = "\t";
-	char sSeparator2[ 32 ] = "\t";
-	char sSeparator1[ 32 ] = "\t";
-	char sOpcode [ 8 ]; // 2 chars for opcode in hex, plus quotes on either side
-	char sAddress[MAX_OPMODE_NAME];
+	std::string sSeparator7;
+	std::string sSeparator2;
+	std::string sSeparator1;
 
 	if (eFormatMode == PROFILE_FORMAT_COMMA)
 	{
-		sSeparator7[0] = ',';
-		sSeparator2[0] = ',';
-		sSeparator1[0] = ',';
+		sSeparator7 = ',';
+		sSeparator2 = ',';
+		sSeparator1 = ',';
 	}
 	else
 	if (eFormatMode == PROFILE_FORMAT_SPACE)
 	{
-		sprintf( sSeparator7, "       " ); // 7
-		sprintf( sSeparator2, "  "      ); // 2
-		sprintf( sSeparator1, " "       ); // 1
+		sSeparator7.assign(7, ' ');
+		sSeparator2.assign(2, ' ');
+		sSeparator1 = ' ';
+	}
+	else
+	{
+		sSeparator7 = '\t';
+		sSeparator2 = '\t';
+		sSeparator1 = '\t';
 	}
 
 	ProfileLineReset();
-	char *pText = ProfileLinePeek( 0 );
-
-	int iOpcode;
-	int iOpmode;
 
 	bool bOpcodeGood = true;
 	bool bOpmodeGood = true;
@@ -7910,12 +7818,12 @@ void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 	Profile_t nOpcodeTotal = 0;
 	Profile_t nOpmodeTotal = 0;
 
-	for (iOpcode = 0; iOpcode < NUM_OPCODES; ++iOpcode )
+	for ( int iOpcode = 0; iOpcode < NUM_OPCODES; ++iOpcode )
 	{
 		nOpcodeTotal += vProfileOpcode[ iOpcode ].m_nCount;
 	}
 
-	for (iOpmode = 0; iOpmode < NUM_OPMODES; ++iOpmode )
+	for ( int iOpmode = 0; iOpmode < NUM_OPMODES; ++iOpmode )
 	{
 		nOpmodeTotal += vProfileOpmode[ iOpmode ].m_nCount;
 	}
@@ -7942,19 +7850,18 @@ void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 		pColorTotal    = CHC_DEFAULT; // white
 	}
 	
+	ProfileLine_t prfline = ProfileLinePeek(0);
+
 	// Opcode
 	if (bExport) // Export = SeperateColumns
-		sprintf( pText
-			, "\"Percent\"" DELIM "\"Count\"" DELIM "\"Opcode\"" DELIM "\"Mnemonic\"" DELIM "\"Addressing Mode\"\n"
-			, sSeparator7, sSeparator2, sSeparator1, sSeparator1 );
+		prfline.Format( "\"Percent\"" DELIM "\"Count\"" DELIM "\"Opcode\"" DELIM "\"Mnemonic\"" DELIM "\"Addressing Mode\"\n",
+						sSeparator7.c_str(), sSeparator2.c_str(), sSeparator1.c_str(), sSeparator1.c_str() );
 	else
-		sprintf( pText
-			, "Percent" DELIM "Count" DELIM "Mnemonic" DELIM "Addressing Mode\n"
-			, sSeparator7, sSeparator2, sSeparator1 );
-
-	pText = ProfileLinePush();
+		prfline.Format( "Percent" DELIM "Count" DELIM "Mnemonic" DELIM "Addressing Mode\n",
+						sSeparator7.c_str(), sSeparator2.c_str(), sSeparator1.c_str() );
+	prfline = ProfileLinePush();
 			
-	for (iOpcode = 0; iOpcode < NUM_OPCODES; ++iOpcode )
+	for ( int iOpcode = 0; iOpcode < NUM_OPCODES; ++iOpcode )
 	{
 		ProfileOpcode_t tProfileOpcode = vProfileOpcode.at( iOpcode );
 
@@ -7968,76 +7875,65 @@ void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 		int       nOpmode = g_aOpcodes[ nOpcode ].nAddressMode;
 		double    nPercent = (100. * nCount) / nOpcodeTotal;
 		
-		char sOpmode[ MAX_OPMODE_FORMAT ];
-		sprintf( sOpmode, g_aOpmodes[ nOpmode ].m_sFormat, 0 );
+		//std::string sOpmode = StrFormat( g_aOpmodes[ nOpmode ].m_sFormat, 0 );
 
-		if (bExport)
-		{
-			// Excel Bug: Quoted numbers are NOT treated as strings in .csv! WTF?
-			// @reference: http://support.microsoft.com/default.aspx?scid=kb;EN-US;Q214233
-			//
-			// Workaround: Prefix with (') apostrophe -- this doesn't break HEX2DEC()
-			// This works properly in Openoffice.
-			// In Excel, this ONLY works IF you TYPE it in!
-			// 
-			// Solution: Quote the numbers, but you must select the "TEXT" Column data format for the "Opcode" column.
-			// We don't use .csv, since you aren't given the Import Dialog in Excel!
-			sprintf( sOpcode, "\"%02X\"", nOpcode ); // Works with Excel, IF using Import dialog & choose Text. (also works with OpenOffice)
-//			sprintf( sOpcode, "'%02X", nOpcode ); // SHOULD work with Excel, but only works with OpenOffice.
-			sprintf( sAddress, "\"%s\"", g_aOpmodes[ nOpmode ].m_sName );
-		}
-		else // not qouted if dumping to console
-		{
-			sprintf( sOpcode, "%02X", nOpcode ); 
-			strcpy( sAddress, g_aOpmodes[ nOpmode ].m_sName );
-		}
+		// Excel Bug: Quoted numbers are NOT treated as strings in .csv! WTF?
+		// @reference: http://support.microsoft.com/default.aspx?scid=kb;EN-US;Q214233
+		//
+		// Workaround: Prefix with (') apostrophe -- this doesn't break HEX2DEC()
+		// This works properly in Openoffice.
+		// In Excel, this ONLY works IF you TYPE it in!
+		// 
+		// Solution: Quote the numbers, but you must select the "TEXT" Column data format for the "Opcode" column.
+		// We don't use .csv, since you aren't given the Import Dialog in Excel!
+		// StrFormat( "'%02X", nOpcode ); // SHOULD work with Excel, but only works with OpenOffice.
+		const std::string sOpcode = (bExport)
+			? StrFormat("\"%02X\"", nOpcode) // Works with Excel, IF using Import dialog & choose Text. (also works with OpenOffice)
+			: ByteToHexStr(nOpcode);
+		const std::string sAddress = (bExport)
+			? ( '"' + std::string(g_aOpmodes[nOpmode].m_sName) + '"' )
+			: std::string(g_aOpmodes[ nOpmode ].m_sName);
 		
 		// BUG: Yeah 100% is off by 1 char. Profiling only one opcode isn't worth fixing this visual alignment bug.
-		sprintf( pText,
-			"%s%7.4f%s%%" DELIM "%s%9u" DELIM "%s%s" DELIM "%s%s" DELIM "%s%s\n"
+		prfline.Format( "%s%7.4f%s%%" DELIM "%s%9u" DELIM "%s%s" DELIM "%s%s" DELIM "%s%s\n"
 			, pColorNumber
 			, nPercent
 			, pColorOperator
-			, sSeparator2
+			, sSeparator2.c_str()
 			, pColorNumber
-			, static_cast<unsigned int>(nCount), sSeparator2
+			, static_cast<unsigned int>(nCount), sSeparator2.c_str()
 			, pColorOpcode
-			, sOpcode, sSeparator2
+			, sOpcode.c_str(), sSeparator2.c_str()
 			, pColorMnemonic
-			, g_aOpcodes[ nOpcode ].sMnemonic, sSeparator2
+			, g_aOpcodes[ nOpcode ].sMnemonic, sSeparator2.c_str()
 			, pColorOpmode
-			, sAddress
+			, sAddress.c_str()
 		);
-		pText = ProfileLinePush();
+		prfline = ProfileLinePush();
 	}
 
 	if (! bOpcodeGood)
 		nOpcodeTotal = 0;
 
-	sprintf( pText
-		, "Total:  " DELIM "%s%9u\n"
-		, sSeparator2
+	prfline.Format( "Total:  " DELIM "%s%9u\n"
+		, sSeparator2.c_str()
 		, pColorTotal
 		, static_cast<unsigned int>(nOpcodeTotal) );
-	pText = ProfileLinePush();
+	prfline = ProfileLinePush();
 
-	sprintf( pText, "\n" );
-	pText = ProfileLinePush();
+	prfline.Assign( "\n" );
+	prfline = ProfileLinePush();
 
 // Opmode
 	//	"Percent     Count  Adressing Mode\n" );
 	if (bExport)
 		// Note: 2 extra dummy columns are inserted to keep Addressing Mode in same column
-		sprintf( pText
-			, "\"Percent\"" DELIM "\"Count\"" DELIM DELIM DELIM "\"Addressing Mode\"\n"
-			, sSeparator7, sSeparator2, sSeparator2, sSeparator2 );
+		prfline.Format( "\"Percent\"" DELIM "\"Count\"" DELIM DELIM DELIM "\"Addressing Mode\"\n",
+						sSeparator7.c_str(), sSeparator2.c_str(), sSeparator2.c_str(), sSeparator2.c_str() );
 	else
-	{
-		sprintf( pText
-			, "Percent" DELIM "Count" DELIM "Addressing Mode\n"
-			, sSeparator7, sSeparator2 );
-	}
-	pText = ProfileLinePush();
+		prfline.Format( "Percent" DELIM "Count" DELIM "Addressing Mode\n",
+						sSeparator7.c_str(), sSeparator2.c_str() );
+	prfline = ProfileLinePush();
 
 	if (nOpmodeTotal < 1)
 	{
@@ -8045,7 +7941,7 @@ void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 		bOpmodeGood = false;
 	}
 
-	for (iOpmode = 0; iOpmode < NUM_OPMODES; ++iOpmode )
+	for ( int iOpmode = 0; iOpmode < NUM_OPMODES; ++iOpmode )
 	{
 		ProfileOpmode_t tProfileOpmode = vProfileOpmode.at( iOpmode );
 		Profile_t nCount  = tProfileOpmode.m_nCount;
@@ -8057,51 +7953,44 @@ void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 		int       nOpmode = tProfileOpmode.m_iOpmode;
 		double    nPercent = (100. * nCount) / nOpmodeTotal;
 
-		if (bExport)
-		{
+		const std::string sAddress = (bExport)
 			// Note: 2 extra dummy columns are inserted to keep Addressing Mode in same column
-			sprintf( sAddress, "%s%s\"%s\"", sSeparator1, sSeparator1, g_aOpmodes[ nOpmode ].m_sName );
-		}
-		else // not qouted if dumping to console
-		{
-			strcpy( sAddress, g_aOpmodes[ nOpmode ].m_sName );
-		}
+			? StrFormat( "%s%s\"%s\"", sSeparator1.c_str(), sSeparator1.c_str(), g_aOpmodes[ nOpmode ].m_sName )
+			// not qouted if dumping to console
+			: std::string( g_aOpmodes[ nOpmode ].m_sName );
 
 		// BUG: Yeah 100% is off by 1 char. Profiling only one opcode isn't worth fixing this visual alignment bug.
-		sprintf( pText
-			, "%s%7.4f%s%%" DELIM "%s%9u" DELIM "%s%s\n"
+		prfline.Format( "%s%7.4f%s%%" DELIM "%s%9u" DELIM "%s%s\n"
 			, pColorNumber
 			, nPercent
 			, pColorOperator
-			, sSeparator2
+			, sSeparator2.c_str()
 			, pColorNumber
-			, static_cast<unsigned int>(nCount), sSeparator2
+			, static_cast<unsigned int>(nCount), sSeparator2.c_str()
 			, pColorOpmode
-			, sAddress
+			, sAddress.c_str()
 		);
-		pText = ProfileLinePush();
+		prfline = ProfileLinePush();
 	}
 
 	if (! bOpmodeGood)
 		nOpmodeTotal = 0;
 
-	sprintf( pText
-		, "Total:  " DELIM "%s%9u\n"
-		, sSeparator2 
+	prfline.Format( "Total:  " DELIM "%s%9u\n"
+		, sSeparator2.c_str()
 		, pColorTotal
 		, static_cast<unsigned int>(nOpmodeTotal) );
-	pText = ProfileLinePush();
+	prfline = ProfileLinePush();
 
-	sprintf( pText, "===================\n" );
-	pText = ProfileLinePush();
+	prfline.Assign( "===================\n" );
+	prfline = ProfileLinePush();
 
 	unsigned int cycles = static_cast<unsigned int>(g_nCumulativeCycles - g_nProfileBeginCycles);
-	sprintf( pText
-		, "Cycles: " DELIM "%s%9u\n"
-		, sSeparator2
+	prfline.Format( "Cycles: " DELIM "%s%9u\n"
+		, sSeparator2.c_str()
 		, pColorNumber
 		, cycles );
-	pText = ProfileLinePush();
+	prfline = ProfileLinePush();
 }
 #undef DELIM
 
@@ -8109,16 +7998,13 @@ void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 //===========================================================================
 void ProfileReset()
 {
-	int iOpcode;
-	int iOpmode;
-
-	for (iOpcode = 0; iOpcode < NUM_OPCODES; iOpcode++ )
+	for ( int iOpcode = 0; iOpcode < NUM_OPCODES; iOpcode++ )
 	{
 		g_aProfileOpcodes[ iOpcode ].m_iOpcode = iOpcode;
 		g_aProfileOpcodes[ iOpcode ].m_nCount = 0;
 	}
 
-	for (iOpmode = 0; iOpmode < NUM_OPMODES; iOpmode++ )
+	for ( int iOpmode = 0; iOpmode < NUM_OPMODES; iOpmode++ )
 	{
 		g_aProfileOpmodes[ iOpmode ].m_iOpmode = iOpmode;
 		g_aProfileOpmodes[ iOpmode ].m_nCount = 0;
@@ -8139,16 +8025,14 @@ bool ProfileSave()
 
 	if (hFile)
 	{
-		char *pText;
-		int   nLine = g_nProfileLine;
-		int   iLine;
-		
-		for ( iLine = 0; iLine < nLine; iLine++ )
+		const int nLine = g_nProfileLine;
+
+		for ( int iLine = 0; iLine < nLine; iLine++ )
 		{
-			pText = ProfileLinePeek( iLine );
-			if ( pText )
+			ProfileLine_t prfline = ProfileLinePeek( iLine );
+			if ( prfline.buf )
 			{
-				fputs( pText, hFile );
+				fputs( prfline.buf, hFile );
 			}
 		}
 		
@@ -8669,7 +8553,7 @@ void DebugInitialize ()
 	{
 		doneAutoRun = true;
 		std::string pathname = g_sProgramDir + "DebuggerAutoRun.txt";
-		strcpy_s(g_aArgs[1].sArg, MAX_ARG_LEN, pathname.c_str());
+		strncpy_s(g_aArgs[1].sArg, MAX_ARG_LEN, pathname.c_str(), _TRUNCATE);
 		CmdOutputRun(1);
 	}
 

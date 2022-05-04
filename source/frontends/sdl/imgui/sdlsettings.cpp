@@ -477,7 +477,7 @@ namespace sa2
                   }
 
                   ImGui::TableNextColumn();
-                  if (ImGui::RadioButton("", (dragAndDropSlot == slot) && (dragAndDropDrive == drive)))
+                  if (ImGui::RadioButton("##Sel", (dragAndDropSlot == slot) && (dragAndDropDrive == drive)))
                   {
                     frame->setDragDropSlotAndDrive(slot, drive);
                   }
@@ -523,7 +523,7 @@ namespace sa2
                   pHarddiskCard->ImageSwap();
                 }
                 ImGui::TableNextColumn();
-                if (ImGui::RadioButton("", (dragAndDropSlot == SLOT7) && (dragAndDropDrive == drive)))
+                if (ImGui::RadioButton("##Sel", (dragAndDropSlot == SLOT7) && (dragAndDropDrive == drive)))
                 {
                   frame->setDragDropSlotAndDrive(SLOT7, drive);
                 }
@@ -606,15 +606,15 @@ namespace sa2
             for (SoundInfo & device : myAudioInfo)
             {
               ImGui::TableNextColumn();
-              ImGui::Checkbox("", &device.running);
+              ImGui::Checkbox("##Running", &device.running);
               ImGui::TableNextColumn();
               ImGui::Text("%d", device.channels);
               ImGui::TableNextColumn();
-              ImGui::SliderFloat("", &device.volume, 0.0f, 1.0f, "%.2f");
+              ImGui::SliderFloat("##Volume", &device.volume, 0.0f, 1.0f, "%.2f");
               ImGui::TableNextColumn();
-              ImGui::SliderFloat("", &device.buffer, 0.0f, device.size, "%.3f");
+              ImGui::SliderFloat("##Buffer", &device.buffer, 0.0f, device.size, "%.3f");
               ImGui::TableNextColumn();
-              ImGui::SliderFloat("", &device.queue, 0.0f, device.size, "%.3f");
+              ImGui::SliderFloat("##Queue", &device.queue, 0.0f, device.size, "%.3f");
             }
             ImGui::EndDisabled();
 
@@ -956,7 +956,7 @@ namespace sa2
           ImGui::TableNextColumn();
 
           ImGui::BeginDisabled(g_nAppMode != MODE_DEBUG);
-          if (ImGui::CheckBoxTristate("", &state))
+          if (ImGui::CheckBoxTristate("##State", &state))
           {
             if (!breakpointActive && state == 1)
             {
@@ -1092,6 +1092,48 @@ namespace sa2
     printBoolean("0C", video.VideoGetSW80COL(), "Col 40", "Col 80");
     printBoolean("0E", video.VideoGetSWAltCharSet(), "ASC", "MOUS");
     ImGui::EndDisabled();
+  }
+
+  void ImGuiSettings::drawBreakpoints()
+  {
+    if (ImGui::BeginTable("Breakpoints", 7, ImGuiTableFlags_RowBg))
+    {
+      ImGui::TableSetupColumn("ID");
+      ImGui::TableSetupColumn("First");
+      ImGui::TableSetupColumn("Last");
+      ImGui::TableSetupColumn("Source");
+      ImGui::TableSetupColumn("Operator");
+      ImGui::TableSetupColumn("Enabled");
+      ImGui::TableSetupColumn("Temporary");
+      ImGui::TableHeadersRow();
+
+      for (int i = 0; i < MAX_BREAKPOINTS; ++i)
+      {
+        Breakpoint_t & bp = g_aBreakpoints[i];
+        if (bp.bSet)
+        {
+          ImGui::PushID(i);
+          ImGui::TableNextRow();
+          ImGui::TableNextColumn();
+          ImGui::Text("%2d", i);
+          ImGui::TableNextColumn();
+          ImGui::Text("%04X", bp.nAddress);
+          ImGui::TableNextColumn();
+          ImGui::Text("%04X", bp.nAddress + bp.nLength - 1);
+          ImGui::TableNextColumn();
+          ImGui::Text("%2d", bp.eSource);
+          ImGui::TableNextColumn();
+          ImGui::Text("%2d", bp.eOperator);
+          ImGui::TableNextColumn();
+          ImGui::Checkbox("##Enabled", &bp.bEnabled);
+          ImGui::TableNextColumn();
+          ImGui::Checkbox("##Temp", &bp.bTemp);
+          ImGui::PopID();
+        }
+      }
+
+      ImGui::EndTable();
+    }
   }
 
   void ImGuiSettings::drawConsole()
@@ -1236,6 +1278,11 @@ namespace sa2
         if (ImGui::BeginTabItem("Console"))
         {
           drawConsole();
+          ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Breakpoints"))
+        {
+          drawBreakpoints();
           ImGui::EndTabItem();
         }
         ImGui::EndTabBar();
