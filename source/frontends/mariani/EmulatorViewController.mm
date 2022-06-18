@@ -50,6 +50,9 @@
 #import "EmulatorRenderer.h"
 #import "UserDefaults.h"
 
+// FIXME: figure out how best to declare this. #import "Interface.h" seems to break other things
+Video& GetVideo();
+
 #define SCREEN_RECORDING_FILE_NAME  NSLocalizedString(@"Mariani Recording", @"default name for new screen recording")
 #define SCREENSHOT_FILE_NAME        NSLocalizedString(@"Mariani Screen Shot", @"default name for new screenshot")
 

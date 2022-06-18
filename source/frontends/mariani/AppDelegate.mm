@@ -22,6 +22,7 @@
 
 // AppleWin
 #import "Card.h"
+#import "CardManager.h"
 #import "CPU.h"
 #import "Interface.h"
 #import "NTSC.h"

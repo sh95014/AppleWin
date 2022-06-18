@@ -462,6 +462,7 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 
 	CpuCalcCycles(nExecutedCycles);
 	const UINT CYCLES_FOR_DMA_RW_BLOCK = HD_BLOCK_SIZE;
+	const UINT PAGE_SIZE = 256;
 
 	BYTE r = DEVICE_OK;
 	pHDD->m_status_next = DISK_STATUS_READ;
@@ -486,17 +487,15 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 					case 0x01: //read
 						if ((pHDD->m_diskblock * HD_BLOCK_SIZE) < ImageGetImageSize(pHDD->m_imagehandle))
 						{
+							bool breakpointHit = false;
+
 							bool bRes = ImageReadBlock(pHDD->m_imagehandle, pHDD->m_diskblock, pHDD->m_buf);
 							if (bRes)
 							{
-								pHDD->m_error = 0;
-								r = 0;
-								pCard->m_notBusyCycle = g_nCumulativeCycles + (UINT64)CYCLES_FOR_DMA_RW_BLOCK;
 								pHDD->m_buf_ptr = 0;
 
 								// Apple II's MMU could be setup so that read & write memory is different,
 								// so can't use 'mem' (like we can for HDD block writes)
-								const UINT PAGE_SIZE = 256;
 								WORD dstAddr = pHDD->m_memblock;
 								UINT remaining = HD_BLOCK_SIZE;
 								BYTE* pSrc = pHDD->m_buf;
@@ -511,7 +510,6 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 											DebuggerBreakOnDmaToOrFromIoMemory(dstAddr, true);	//  GH#1007
 										//else // Show MessageBox?
 
-										pCard->m_notBusyCycle = 0;	// DMA complete
 										bRes = false;
 										break;
 									}
@@ -520,15 +518,26 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 									UINT size = PAGE_SIZE - (dstAddr & 0xff);
 									if (size > remaining) size = remaining;	// clip the last memcpy for the unaligned case
 
+									if (g_nAppMode == MODE_STEPPING)
+										breakpointHit = DebuggerCheckMemBreakpoints(dstAddr, size, true);	// GH#1103
+
 									memcpy(page + (dstAddr & 0xff), pSrc, size);
 									pSrc += size;
-									dstAddr += size;
+									dstAddr = (dstAddr + size) & (MEMORY_LENGTH-1);	// wraps at 64KiB boundary
 
 									remaining -= size;
 								}
 							}
 
-							if (!bRes)
+							if (bRes)
+							{
+								pHDD->m_error = 0;
+								r = 0;
+
+								if (!breakpointHit)
+									pCard->m_notBusyCycle = g_nCumulativeCycles + (UINT64)CYCLES_FOR_DMA_RW_BLOCK;
+							}
+							else
 							{
 								pHDD->m_error = 1;
 								r = DEVICE_IO_ERROR;
@@ -545,6 +554,7 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 							pHDD->m_status_next = DISK_STATUS_WRITE;	// or DISK_STATUS_PROT if we ever enable write-protect on HDD
 							bool bRes = true;
 							const bool bAppendBlocks = (pHDD->m_diskblock * HD_BLOCK_SIZE) >= ImageGetImageSize(pHDD->m_imagehandle);
+							bool breakpointHit = false;
 
 							if (bAppendBlocks)
 							{
@@ -571,20 +581,28 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 									DebuggerBreakOnDmaToOrFromIoMemory(dstAddr, false);
 								//else // Show MessageBox?
 
-								pCard->m_notBusyCycle = 0;	// DMA complete
 								bRes = false;
 							}
 							else
 							{
-								if (pHDD->m_memblock <= (MEMORY_LENGTH - HD_BLOCK_SIZE))
+								// NB. Do the writes in units of PAGE_SIZE so that DMA breakpoints are consistent with reads
+								WORD srcAddr = pHDD->m_memblock;
+								UINT remaining = HD_BLOCK_SIZE;
+								BYTE* pDst = pHDD->m_buf;
+
+								while (remaining)
 								{
-									memcpy(pHDD->m_buf, mem + pHDD->m_memblock, HD_BLOCK_SIZE);
-								}
-								else // wraps on 64KiB boundary (GH#1007)
-								{
-									const UINT size = MEMORY_LENGTH - pHDD->m_memblock;
-									memcpy(pHDD->m_buf, mem + pHDD->m_memblock, size);
-									memcpy(pHDD->m_buf + size, mem, HD_BLOCK_SIZE - size);
+									UINT size = PAGE_SIZE - (srcAddr & 0xff);
+									if (size > remaining) size = remaining;	// clip the last memcpy for the unaligned case
+
+									if (g_nAppMode == MODE_STEPPING)
+										breakpointHit = DebuggerCheckMemBreakpoints(srcAddr, size, false);
+
+									memcpy(pDst, mem + srcAddr, size);
+									pDst += size;
+									srcAddr = (srcAddr + size) & (MEMORY_LENGTH - 1);	// wraps at 64KiB boundary
+
+									remaining -= size;
 								}
 							}
 
@@ -595,7 +613,9 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 							{
 								pHDD->m_error = 0;
 								r = 0;
-								pCard->m_notBusyCycle = g_nCumulativeCycles + (UINT64)CYCLES_FOR_DMA_RW_BLOCK;
+
+								if (!breakpointHit)
+									pCard->m_notBusyCycle = g_nCumulativeCycles + (UINT64)CYCLES_FOR_DMA_RW_BLOCK;
 							}
 							else
 							{

@@ -312,6 +312,10 @@
 		B049E8A7277C4F6D00FC14A3 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B049E8A6277C4F6D00FC14A3 /* Shaders.metal */; };
 		B049E8AD277C880800FC14A3 /* EmulatorView.mm in Sources */ = {isa = PBXBuildFile; fileRef = B049E8AB277C880800FC14A3 /* EmulatorView.mm */; };
 		B049E8AF277C9A8000FC14A3 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B049E8AE277C9A8000FC14A3 /* MetalKit.framework */; };
+		B05778DA285D7E7F00614907 /* Config.h in Headers */ = {isa = PBXBuildFile; fileRef = B049E7F9277A36CE00FC14A3 /* Config.h */; };
+		B05778E3285D7F0E00614907 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B05778E2285D7F0E00614907 /* Config.cpp */; };
+		B05778E6285D7F5B00614907 /* DNS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B05778E4285D7F5B00614907 /* DNS.cpp */; };
+		B05778E7285D7F5B00614907 /* DNS.h in Headers */ = {isa = PBXBuildFile; fileRef = B05778E5285D7F5B00614907 /* DNS.h */; };
 		B06184BB27B7577D00B6D04C /* Gutenberg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37027B45D0700C0BF71 /* Gutenberg.cpp */; };
 		B06184BC27B7577D00B6D04C /* MacPart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37927B45D0800C0BF71 /* MacPart.cpp */; };
 		B06184BD27B7577D00B6D04C /* VolumeUsage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37F27B45D0800C0BF71 /* VolumeUsage.cpp */; };
@@ -816,6 +820,9 @@
 		B049E8AA277C880800FC14A3 /* EmulatorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmulatorView.h; sourceTree = "<group>"; };
 		B049E8AB277C880800FC14A3 /* EmulatorView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = EmulatorView.mm; sourceTree = "<group>"; };
 		B049E8AE277C9A8000FC14A3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		B05778E2285D7F0E00614907 /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Config.cpp; path = source/Configuration/Config.cpp; sourceTree = "<group>"; };
+		B05778E4285D7F5B00614907 /* DNS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DNS.cpp; path = source/Tfe/DNS.cpp; sourceTree = "<group>"; };
+		B05778E5285D7F5B00614907 /* DNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNS.h; path = source/Tfe/DNS.h; sourceTree = "<group>"; };
 		B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HexFiend_2.xcodeproj; path = source/frontends/mariani/HexFiend/HexFiend_2.xcodeproj; sourceTree = "<group>"; };
 		B06184B727B7575E00B6D04C /* libdiskimg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdiskimg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B06184FE27B75AE900B6D04C /* libhfs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhfs.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1501,6 +1508,7 @@
 			children = (
 				B049E7F8277A36CE00FC14A3 /* About.cpp */,
 				B049E7E8277A36CE00FC14A3 /* About.h */,
+				B05778E2285D7F0E00614907 /* Config.cpp */,
 				B049E7F9277A36CE00FC14A3 /* Config.h */,
 				B049E7EE277A36CE00FC14A3 /* IPropertySheet.h */,
 				B049E7F4277A36CE00FC14A3 /* IPropertySheetPage.h */,
@@ -1878,6 +1886,8 @@
 			isa = PBXGroup;
 			children = (
 				B09AB832277A22530002A6C3 /* Bpf.h */,
+				B05778E4285D7F5B00614907 /* DNS.cpp */,
+				B05778E5285D7F5B00614907 /* DNS.h */,
 				B09AB834277A22530002A6C3 /* Ip6_misc.h */,
 				B095D52627ED7D0000498D51 /* IPRaw.cpp */,
 				B095D52E27ED7D0000498D51 /* IPRaw.h */,
@@ -2071,6 +2081,7 @@
 				B0098CE2277E171100F38E0C /* YamlHelper.h in Headers */,
 				B0098CD9277E171100F38E0C /* SaveState_Structs_v1.h in Headers */,
 				B0098CE5277E171100F38E0C /* CPU.h in Headers */,
+				B05778DA285D7E7F00614907 /* Config.h in Headers */,
 				B0098CB9277E171100F38E0C /* SaveState_Structs_common.h in Headers */,
 				B0098CE6277E171100F38E0C /* z80regs.h in Headers */,
 				B0098CD3277E171100F38E0C /* FrameBase.h in Headers */,
@@ -2127,6 +2138,7 @@
 				B0098CCE277E171100F38E0C /* CardManager.h in Headers */,
 				B0098CC3277E171100F38E0C /* DiskDefs.h in Headers */,
 				B0098CEB277E171200F38E0C /* Disk2CardManager.h in Headers */,
+				B05778E7285D7F5B00614907 /* DNS.h in Headers */,
 				B0098D08277E244F00F38E0C /* Registry.h in Headers */,
 				B0F84FFA27D1B3F30015F642 /* Uthernet1.h in Headers */,
 				B0098CBA277E171100F38E0C /* SoundCore.h in Headers */,
@@ -2665,6 +2677,7 @@
 				B0098CA7277E144E00F38E0C /* paddle.cpp in Sources */,
 				B0098CB0277E147500F38E0C /* Debugger_Win32.cpp in Sources */,
 				B0F84FFB27D1B3F30015F642 /* Uthernet1.cpp in Sources */,
+				B05778E6285D7F5B00614907 /* DNS.cpp in Sources */,
 				B0F8500527D1B44F0015F642 /* PCapBackend.cpp in Sources */,
 				B0F84FFC27D1B3F30015F642 /* Uthernet2.cpp in Sources */,
 				B0098C8B277E140100F38E0C /* z80emu.cpp in Sources */,
@@ -2688,6 +2701,7 @@
 				B0098C90277E140100F38E0C /* Speaker.cpp in Sources */,
 				B0859B0A27E6A26200E7D41B /* EpsonFX80Printer.cpp in Sources */,
 				B0098C8E277E140100F38E0C /* 6821.cpp in Sources */,
+				B05778E3285D7F0E00614907 /* Config.cpp in Sources */,
 				B0098D04277E1D4F00F38E0C /* mztools.c in Sources */,
 				B0098C8C277E140100F38E0C /* MouseInterface.cpp in Sources */,
 				B0098C85277E140100F38E0C /* Card.cpp in Sources */,
