@@ -174,6 +174,13 @@ bool ProcessCmdLine(LPSTR lpCmdLine)
 					else
 						LogFileOutput("Parallel Printer card currently only supported in slot 1\n");
 				}
+				if (strcmp(lpCmdLine, "ssc") == 0)
+				{
+					if (slot == SLOT2)
+						g_cmdLine.slotInsert[slot] = CT_SSC;
+					else
+						LogFileOutput("SSC currently only supported in slot 2\n");
+				}
 				if (strcmp(lpCmdLine, "vidhd") == 0)
 				{
 					if (slot == SLOT3)
@@ -548,6 +555,10 @@ bool ProcessCmdLine(LPSTR lpCmdLine)
 			lpCmdLine = GetCurrArg(lpNextArg);
 			lpNextArg = GetNextArg(lpNextArg);
 			g_cmdLine.wavFileMockingboard = lpCmdLine;
+		}
+		else if (strcmp(lpCmdLine, "-no-disk2-stepper-defer") == 0)	// a debug switch (likely to be removed in a future version)
+		{
+			g_cmdLine.noDisk2StepperDefer = true;
 		}
 		else	// unsupported
 		{

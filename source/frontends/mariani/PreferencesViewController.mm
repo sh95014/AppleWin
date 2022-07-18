@@ -28,7 +28,9 @@
 void CreateLanguageCard(void); // FIXME should be in Memory.h
 #import "Mockingboard.h"
 #import "Speaker.h"
+#ifndef U2_USE_SLIRP
 #import "PCapBackend.h"
+#endif
 #import "tfesupp.h"
 
 // Objective-C typedefs BOOL to be bool, but wincompat.h typedefs it to be
@@ -216,6 +218,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         }
         [self.computerExansionSlotButton selectItemWithTag:GetCurrentExpansionMemType()];
         
+#ifndef U2_USE_SLIRP
         // pcap
         if (PCapBackend::tfe_enumadapter_open()) {
             std::string name;
@@ -226,11 +229,11 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
             }
             PCapBackend::tfe_enumadapter_close();
             
-// FIXME: PCAP Configuration
-#if 0
-            [self.computerPcapSlotButton selectItemWithTitle:[NSString stringWithUTF8String:PCapBackend::tfe_interface.c_str()]];
-#endif
+            [self.computerPcapSlotButton selectItemWithTitle:[NSString stringWithUTF8String:PCapBackend::GetRegistryInterface(SLOT3).c_str()]];
         }
+#else
+        self.computerPcapSlotButton.enabled = false;
+#endif // U2_USE_SLIRP
     }
 }
 
@@ -420,18 +423,17 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 }
 
 - (IBAction)pcapSlotAction:(id)sender {
+#ifndef U2_USE_SLIRP
     NSLog(@"%s", __PRETTY_FUNCTION__);
     if ([sender isKindOfClass:[NSPopUpButton class]]) {
         NSPopUpButton *slotButton = (NSPopUpButton *)sender;
         const std::string newInterface([slotButton.selectedItem.title cStringUsingEncoding:NSUTF8StringEncoding]);
 
-// FIXME: PCAP Configuration
-#if 0
-        PCapBackend::tfe_SetRegistryInterface(SLOT3, newInterface);
-#endif
+        PCapBackend::SetRegistryInterface(SLOT3, newInterface);
     }
     
     self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
+#endif // U2_USE_SLIRP
 }
 
 - (IBAction)rebootEmulatorAction:(id)sender {

@@ -756,6 +756,11 @@ static void RepeatInitialization(void)
 			GetCardMgr().Insert(SLOT1, g_cmdLine.slotInsert[SLOT1]);
 		}
 
+		if (g_cmdLine.slotInsert[SLOT2] != CT_Empty && g_cmdLine.slotInsert[SLOT2] == CT_SSC)	// For now just support SSC in slot 2
+		{
+			GetCardMgr().Insert(SLOT2, g_cmdLine.slotInsert[SLOT2]);
+		}
+
 		if (g_cmdLine.enableDumpToRealPrinter && GetCardMgr().IsParallelPrinterCardInstalled())
 		{
 			GetCardMgr().GetParallelPrinterCard()->SetEnableDumpToRealPrinter(true);
@@ -801,7 +806,7 @@ static void RepeatInitialization(void)
 				res = GetFrame().GetBestDisplayResolutionForFullScreen(bestWidth, bestHeight, g_cmdLine.userSpecifiedWidth, g_cmdLine.userSpecifiedHeight);
 
 			if (res)
-				LogFileOutput("Best resolution for -fs-height/height=x switch(es): Width=%d, Height=%d\n", bestWidth, bestHeight);
+				LogFileOutput("Best resolution for -fs-width/height=x switch(es): Width=%d, Height=%d\n", bestWidth, bestHeight);
 			else
 				LogFileOutput("Failed to set parameter for -fs-width/height=x switch(es)\n");
 		}
@@ -832,6 +837,9 @@ static void RepeatInitialization(void)
 
 		if (g_cmdLine.bRemoveNoSlotClock)
 			MemRemoveNoSlotClock();
+
+		if (g_cmdLine.noDisk2StepperDefer)
+			GetCardMgr().GetDisk2CardMgr().SetStepperDefer(false);
 
 		// Call DebugInitialize() after SetCurrentImageDir()
 		DebugInitialize();

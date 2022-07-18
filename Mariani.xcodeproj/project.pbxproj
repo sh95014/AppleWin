@@ -316,6 +316,7 @@
 		B05778E3285D7F0E00614907 /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B05778E2285D7F0E00614907 /* Config.cpp */; };
 		B05778E6285D7F5B00614907 /* DNS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B05778E4285D7F5B00614907 /* DNS.cpp */; };
 		B05778E7285D7F5B00614907 /* DNS.h in Headers */ = {isa = PBXBuildFile; fileRef = B05778E5285D7F5B00614907 /* DNS.h */; };
+		B05779072886047E00614907 /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B05779062886047E00614907 /* libslirp.a */; };
 		B06184BB27B7577D00B6D04C /* Gutenberg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37027B45D0700C0BF71 /* Gutenberg.cpp */; };
 		B06184BC27B7577D00B6D04C /* MacPart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37927B45D0800C0BF71 /* MacPart.cpp */; };
 		B06184BD27B7577D00B6D04C /* VolumeUsage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37F27B45D0800C0BF71 /* VolumeUsage.cpp */; };
@@ -823,6 +824,7 @@
 		B05778E2285D7F0E00614907 /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Config.cpp; path = source/Configuration/Config.cpp; sourceTree = "<group>"; };
 		B05778E4285D7F5B00614907 /* DNS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DNS.cpp; path = source/Tfe/DNS.cpp; sourceTree = "<group>"; };
 		B05778E5285D7F5B00614907 /* DNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNS.h; path = source/Tfe/DNS.h; sourceTree = "<group>"; };
+		B05779062886047E00614907 /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../../../../opt/homebrew/Cellar/libslirp/4.6.1/lib/libslirp.a; sourceTree = "<group>"; };
 		B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HexFiend_2.xcodeproj; path = source/frontends/mariani/HexFiend/HexFiend_2.xcodeproj; sourceTree = "<group>"; };
 		B06184B727B7575E00B6D04C /* libdiskimg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdiskimg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B06184FE27B75AE900B6D04C /* libhfs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhfs.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1261,6 +1263,7 @@
 				B061852127B75C5B00B6D04C /* libhfs.a in Frameworks */,
 				B0A6BB77277A31F7008813DE /* libpcap.tbd in Frameworks */,
 				B049E823277B517700FC14A3 /* libSDL2.a in Frameworks */,
+				B05779072886047E00614907 /* libslirp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1909,6 +1912,7 @@
 		B09AB844277A282A0002A6C3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B05779062886047E00614907 /* libslirp.a */,
 				B090CF1C27B5A04F00C6C23D /* GameController.framework */,
 				B00ECBE7279EEBD30041E16C /* SDL2.framework */,
 				B020F8AA2785F3920071D3C7 /* CoreMedia.framework */,
@@ -3279,6 +3283,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"MARIANI=1",
+					"U2_USE_SLIRP=1",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -3387,6 +3392,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/opt/homebrew/lib,
 					/usr/local/lib,
+					/opt/homebrew/Cellar/libslirp/4.6.1/lib,
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.mariani;
@@ -3406,7 +3412,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"U2_USE_SLIRP=1",
+					"$(inherited)",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					source,
@@ -3427,6 +3436,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/opt/homebrew/lib,
 					/usr/local/lib,
+					/opt/homebrew/Cellar/libslirp/4.6.1/lib,
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.mariani;
