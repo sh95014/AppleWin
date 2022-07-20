@@ -34,6 +34,7 @@
 namespace
 {
 
+#ifndef MARIANI
   void processAppleKey(const SDL_KeyboardEvent & key, const bool forceCapsLock)
   {
     // using keycode (or scan code) one takes a physical view of the keyboard
@@ -120,6 +121,7 @@ namespace
 #endif
     }
   }
+#endif // MARIANI
 
 }
 
@@ -178,7 +180,9 @@ namespace sa2
     if (drawflags & DRAW_TITLE)
     {
       GetAppleWindowTitle();
+#ifndef MARIANI
       SDL_SetWindowTitle(myWindow.get(), g_pAppTitle.c_str());
+#endif
     }
   }
 
@@ -194,6 +198,7 @@ namespace sa2
 #endif // MARIANI
   }
 
+#ifndef MARIANI
   const std::shared_ptr<SDL_Window> & SDLFrame::GetWindow() const
   {
     return myWindow;
@@ -236,26 +241,32 @@ namespace sa2
       CommonFrame::GetBitmap(lpBitmapName, cb, lpvBits);
     }
   }
+#endif // MARIANI
 
   int SDLFrame::FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType)
   {
+#ifndef MARIANI
     // tabs do not render properly
     std::string s(lpText);
     std::replace(s.begin(), s.end(), '\t', ' ');
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, lpCaption, s.c_str(), nullptr);
     ResetSpeed();
+#endif // MARIANI
     return IDOK;
   }
 
   void SDLFrame::ProcessEvents(bool &quit)
   {
+#ifndef MARIANI
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0)
     {
       ProcessSingleEvent(e, quit);
     }
+#endif // MARIANI
   }
 
+#ifndef MARIANI
   void SDLFrame::ProcessSingleEvent(const SDL_Event & e, bool &quit)
   {
     switch (e.type)
@@ -573,6 +584,7 @@ namespace sa2
       }
     }
   }
+#endif // MARIANI
 
   void SDLFrame::Execute(const DWORD cyclesToExecute)
   {

@@ -154,7 +154,6 @@
 		B00ECB8C279EEB600041E16C /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E83D277B61AC00FC14A3 /* utils.cpp */; };
 		B00ECB8D279EEB600041E16C /* winnls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7FA277A21410002A6C3 /* winnls.cpp */; };
 		B00ECB8E279EEB600041E16C /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7EF277A21400002A6C3 /* misc.cpp */; };
-		B00ECB8F279EEB600041E16C /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E838277B61A100FC14A3 /* utils.cpp */; };
 		B00ECB90279EEB600041E16C /* DiskImageBrowserWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B08CFE54278949F2002B841D /* DiskImageBrowserWindowController.mm */; };
 		B00ECB91279EEB600041E16C /* PropertySheet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7CE277A21180002A6C3 /* PropertySheet.cpp */; };
 		B00ECB92279EEB600041E16C /* Speech.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB626277A14DB0002A6C3 /* Speech.cpp */; };
@@ -228,7 +227,6 @@
 		B00ECBDF279EEB600041E16C /* Apple2_JPlus.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE672782984E006E36F9 /* Apple2_JPlus.rom */; };
 		B00ECBE0279EEB600041E16C /* CHARSET82.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B045FE8A2782B9B3006E36F9 /* CHARSET82.bmp */; };
 		B00ECBE6279EEBAB0041E16C /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */; };
-		B00ECBE9279EEBDC0041E16C /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE7279EEBD30041E16C /* SDL2.framework */; };
 		B00ECBEA279EEBDC0041E16C /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE7279EEBD30041E16C /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B00F4EA127DD7CF5000F55BF /* ParallelInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4E9F27DD7CF5000F55BF /* ParallelInterface.cpp */; };
 		B00F4EAC27DD8093000F55BF /* TextFileWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B00F4EA427DD8093000F55BF /* TextFileWriter.cpp */; };
@@ -297,11 +295,8 @@
 		B045FE8F2782B9B3006E36F9 /* CHARSET8M.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B045FE8B2782B9B3006E36F9 /* CHARSET8M.bmp */; };
 		B049E800277A36CE00FC14A3 /* PropertySheetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E7EA277A36CE00FC14A3 /* PropertySheetHelper.cpp */; };
 		B049E820277B512500FC14A3 /* sdirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E81E277B512500FC14A3 /* sdirectsound.cpp */; };
-		B049E823277B517700FC14A3 /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B049E822277B517700FC14A3 /* libSDL2.a */; };
 		B049E826277B52B200FC14A3 /* sdlframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E824277B52B200FC14A3 /* sdlframe.cpp */; };
 		B049E832277B5E3700FC14A3 /* commonframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E830277B5E3700FC14A3 /* commonframe.cpp */; };
-		B049E836277B614900FC14A3 /* processfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E834277B614900FC14A3 /* processfile.cpp */; };
-		B049E83A277B61A100FC14A3 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E838277B61A100FC14A3 /* utils.cpp */; };
 		B049E83F277B61AC00FC14A3 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E83D277B61AC00FC14A3 /* utils.cpp */; };
 		B049E843277B61CB00FC14A3 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E841277B61CB00FC14A3 /* speed.cpp */; };
 		B049E84E277B6F4A00FC14A3 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B049E84D277B6F4A00FC14A3 /* libboost_program_options.a */; };
@@ -317,6 +312,8 @@
 		B05778E6285D7F5B00614907 /* DNS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B05778E4285D7F5B00614907 /* DNS.cpp */; };
 		B05778E7285D7F5B00614907 /* DNS.h in Headers */ = {isa = PBXBuildFile; fileRef = B05778E5285D7F5B00614907 /* DNS.h */; };
 		B05779072886047E00614907 /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B05779062886047E00614907 /* libslirp.a */; };
+		B057791A2887D51D00614907 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B05779192887D51D00614907 /* AudioToolbox.framework */; };
+		B057792528888BC600614907 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B05779192887D51D00614907 /* AudioToolbox.framework */; };
 		B06184BB27B7577D00B6D04C /* Gutenberg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37027B45D0700C0BF71 /* Gutenberg.cpp */; };
 		B06184BC27B7577D00B6D04C /* MacPart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37927B45D0800C0BF71 /* MacPart.cpp */; };
 		B06184BD27B7577D00B6D04C /* VolumeUsage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0D1C37F27B45D0800C0BF71 /* VolumeUsage.cpp */; };
@@ -825,6 +822,7 @@
 		B05778E4285D7F5B00614907 /* DNS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DNS.cpp; path = source/Tfe/DNS.cpp; sourceTree = "<group>"; };
 		B05778E5285D7F5B00614907 /* DNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNS.h; path = source/Tfe/DNS.h; sourceTree = "<group>"; };
 		B05779062886047E00614907 /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../../../../opt/homebrew/Cellar/libslirp/4.6.1/lib/libslirp.a; sourceTree = "<group>"; };
+		B05779192887D51D00614907 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HexFiend_2.xcodeproj; path = source/frontends/mariani/HexFiend/HexFiend_2.xcodeproj; sourceTree = "<group>"; };
 		B06184B727B7575E00B6D04C /* libdiskimg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdiskimg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B06184FE27B75AE900B6D04C /* libhfs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhfs.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1234,10 +1232,10 @@
 			files = (
 				B090CF1F27B5A05A00C6C23D /* GameController.framework in Frameworks */,
 				B04365D727BAD29500329469 /* HexFiend.framework in Frameworks */,
+				B057792528888BC600614907 /* AudioToolbox.framework in Frameworks */,
 				B00ECBBA279EEB600041E16C /* AVFoundation.framework in Frameworks */,
 				B00ECBB9279EEB600041E16C /* CoreMedia.framework in Frameworks */,
 				B00ECBBC279EEB600041E16C /* MetalKit.framework in Frameworks */,
-				B00ECBE9279EEBDC0041E16C /* SDL2.framework in Frameworks */,
 				B00ECBBB279EEB600041E16C /* libAppleWin.a in Frameworks */,
 				B061853527B7798700B6D04C /* libnufx.a in Frameworks */,
 				B061852227B75C7300B6D04C /* libdiskimg.a in Frameworks */,
@@ -1253,6 +1251,7 @@
 			files = (
 				B090CF1D27B5A04F00C6C23D /* GameController.framework in Frameworks */,
 				B04365D427BAD27A00329469 /* HexFiend.framework in Frameworks */,
+				B057791A2887D51D00614907 /* AudioToolbox.framework in Frameworks */,
 				B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */,
 				B020F8AB2785F3920071D3C7 /* CoreMedia.framework in Frameworks */,
 				B049E8AF277C9A8000FC14A3 /* MetalKit.framework in Frameworks */,
@@ -1262,7 +1261,6 @@
 				B06184EB27B7591500B6D04C /* libdiskimg.a in Frameworks */,
 				B061852127B75C5B00B6D04C /* libhfs.a in Frameworks */,
 				B0A6BB77277A31F7008813DE /* libpcap.tbd in Frameworks */,
-				B049E823277B517700FC14A3 /* libSDL2.a in Frameworks */,
 				B05779072886047E00614907 /* libslirp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1912,6 +1910,7 @@
 		B09AB844277A282A0002A6C3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B05779192887D51D00614907 /* AudioToolbox.framework */,
 				B05779062886047E00614907 /* libslirp.a */,
 				B090CF1C27B5A04F00C6C23D /* GameController.framework */,
 				B00ECBE7279EEBD30041E16C /* SDL2.framework */,
@@ -2751,7 +2750,6 @@
 				B00ECB8D279EEB600041E16C /* winnls.cpp in Sources */,
 				B0859AF527DFF53900E7D41B /* PrinterWindowController.mm in Sources */,
 				B00ECB8E279EEB600041E16C /* misc.cpp in Sources */,
-				B00ECB8F279EEB600041E16C /* utils.cpp in Sources */,
 				B00ECB90279EEB600041E16C /* DiskImageBrowserWindowController.mm in Sources */,
 				B00ECB91279EEB600041E16C /* PropertySheet.cpp in Sources */,
 				B00ECB92279EEB600041E16C /* Speech.cpp in Sources */,
@@ -2822,7 +2820,6 @@
 				B09AB81A277A21410002A6C3 /* winnls.cpp in Sources */,
 				B0859AF427DFF53900E7D41B /* PrinterWindowController.mm in Sources */,
 				B09AB80F277A21410002A6C3 /* misc.cpp in Sources */,
-				B049E83A277B61A100FC14A3 /* utils.cpp in Sources */,
 				B08CFE56278949F2002B841D /* DiskImageBrowserWindowController.mm in Sources */,
 				B09AB7D8277A21180002A6C3 /* PropertySheet.cpp in Sources */,
 				B09AB674277A14DB0002A6C3 /* Speech.cpp in Sources */,
@@ -2845,7 +2842,6 @@
 				B09AB812277A21410002A6C3 /* strsafe.cpp in Sources */,
 				B09AB811277A21410002A6C3 /* winhandles.cpp in Sources */,
 				B09AB72A277A1BA40002A6C3 /* Debugger_Symbols.cpp in Sources */,
-				B049E836277B614900FC14A3 /* processfile.cpp in Sources */,
 				B09AB803277A21410002A6C3 /* winuser.cpp in Sources */,
 				B09AB804277A21410002A6C3 /* timeapi.cpp in Sources */,
 				B09AB728277A1BA40002A6C3 /* Debugger_DisassemblerData.cpp in Sources */,
@@ -3284,6 +3280,7 @@
 					"DEBUG=1",
 					"MARIANI=1",
 					"U2_USE_SLIRP=1",
+					"USE_COREAUDIO=1",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -3343,6 +3340,8 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"MARIANI=1",
+					"U2_USE_SLIRP=1",
+					"USE_COREAUDIO=1",
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -3412,10 +3411,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"U2_USE_SLIRP=1",
-					"$(inherited)",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					source,

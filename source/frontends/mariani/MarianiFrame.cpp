@@ -28,18 +28,6 @@ namespace mariani
   {
   }
 
-  void MarianiFrame::GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, double & x, double & y) const
-  {
-  }
-
-  void MarianiFrame::ProcessKeyDown(const SDL_KeyboardEvent & key)
-  {
-  }
-
-  void MarianiFrame::ProcessText(const SDL_TextInputEvent & text)
-  {
-  }
-
   int MarianiFrame::FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType)
   {
     int returnValue = ShowModalAlertOfType(uType, lpCaption, lpText);

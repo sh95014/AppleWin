@@ -39,7 +39,7 @@ I plan to spend some time building (graphical) printer support, but I don't expe
 The easiest way to build Mariani is to satisfy the dependencies using [Homebrew](https://brew.sh). After you install Homebrew, pick up the required packages below:
 
 ```
-brew install Boost sdl2 libslirp
+brew install Boost libslirp
 ```
 
 ### Checkout
@@ -52,7 +52,7 @@ git clone https://github.com/sh95014/AppleWin.git --recursive
 
 Load up the Xcode project, and build the "Mariani" target for "My Mac".
 
-"Mariani Universal" is the target used to build a universal (x86 and ARM) app, and will *not* build out of the box. Homebrew does not support universal (x86 and ARM) libraries, so you'll have to grab the [Development Library for SDL](https://www.libsdl.org/download-2.0.php) and also download/build [Boost](https://www.boost.org/users/download/) yourself. Here's a script that should help stitch the Boost binaries from both x86 and ARM builds together into an universal static library:
+"Mariani Universal" is the target used to build a universal (x86 and ARM) app, and will *not* build out of the box. Homebrew does not support universal (x86 and ARM) libraries, so you'll have to download/build [Boost](https://www.boost.org/users/download/) yourself. Here's a script that should help stitch the Boost binaries from both x86 and ARM builds together into an universal static library:
 
 ```
 #!/bin/sh

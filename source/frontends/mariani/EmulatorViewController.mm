@@ -93,11 +93,6 @@ std::shared_ptr<mariani::MarianiFrame> frame;
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    const Uint32 flags = SDL_INIT_AUDIO;
-    if (SDL_Init(flags) != 0) {
-        NSLog(@"SDL_Init error %s", SDL_GetError());
-    }
-    
     common2::EmulatorOptions options;
     self.registryContext = new RegistryContext(CreateFileRegistry(options));
     frame.reset(new mariani::MarianiFrame(options));
@@ -290,7 +285,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     if (frame != NULL) {
         frame->End();
     }
-    SDL_Quit();
 }
 
 - (void)displayTypeDidChange {

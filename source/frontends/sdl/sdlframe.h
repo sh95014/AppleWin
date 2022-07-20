@@ -25,7 +25,9 @@ namespace sa2
 
     void FrameRefreshStatus(int drawflags) override;
     int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
+#ifndef MARIANI
     void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
+#endif
 
     void ProcessEvents(bool &quit);
 
@@ -47,6 +49,7 @@ namespace sa2
   protected:
     void SetApplicationIcon();
 
+#ifndef MARIANI
     virtual void ProcessSingleEvent(const SDL_Event & event, bool & quit);
     virtual void GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, double & x, double & y) const = 0;
 
@@ -56,6 +59,7 @@ namespace sa2
     void ProcessDropEvent(const SDL_DropEvent & drop);
     void ProcessMouseButton(const SDL_MouseButtonEvent & button);
     void ProcessMouseMotion(const SDL_MouseMotionEvent & motion);
+#endif // MARIANI
 
     void ExecuteInRunningMode(const size_t msNextFrame);
     void ExecuteInDebugMode(const size_t msNextFrame);

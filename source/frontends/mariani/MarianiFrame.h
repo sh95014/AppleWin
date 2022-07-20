@@ -25,9 +25,6 @@ namespace mariani
     void VideoPresentScreen() override;
     void Initialize(bool resetVideoState) override;
 
-    void ProcessKeyDown(const SDL_KeyboardEvent & key);
-    void ProcessText(const SDL_TextInputEvent & text);
-
     int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
 
     void FrameDrawDiskLEDS() override;
@@ -38,8 +35,6 @@ namespace mariani
     void *FrameBufferData();
 
   protected:
-    void GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, double & x, double & y) const override;
-
     virtual std::string getResourcePath(const std::string & filename) override;
 
   private:
