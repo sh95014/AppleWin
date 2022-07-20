@@ -26,6 +26,7 @@ namespace mariani
     void Initialize(bool resetVideoState) override;
 
     int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
+    void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
 
     void FrameDrawDiskLEDS() override;
     void FrameRefreshStatus(int flags) override;
