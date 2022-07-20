@@ -38,45 +38,45 @@ namespace mariani
     return returnValue;
   }
 
-void MarianiFrame::GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits)
-{
-  // reads a monochrome BMP file, then combines eight pixels into an octet
-  // and writes it to lpvBits
-  
-  const std::string filename = getBitmapFilename(lpBitmapName);
-  const std::string path = getResourcePath(filename);
-  const CFStringRef cfPath = CFStringCreateWithCString(NULL, path.c_str(), kCFStringEncodingUTF8);
-  const CFURLRef imageURL = CFURLCreateWithFileSystemPath(NULL, cfPath, kCFURLPOSIXPathStyle, false);
-  const CGImageSourceRef imageSource = CGImageSourceCreateWithURL(imageURL, NULL);
-  const CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
-  const CFDataRef rawData = CGDataProviderCopyData(CGImageGetDataProvider(image));
-  
-  const UInt8 * source = CFDataGetBytePtr(rawData);
-  const size_t size = CGImageGetHeight(image) * CGImageGetWidth(image) / 8;
-  const size_t requested = cb;
-  
-  const size_t copied = std::min(requested, size);
-  
-  char * dest = static_cast<char *>(lpvBits);
-  
-  for (size_t i = 0; i < copied; ++i)
+  void MarianiFrame::GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits)
   {
-    const size_t offset = i * 8;
-    char val = 0;
-    for (size_t j = 0; j < 8; ++j)
+    // reads a monochrome BMP file, then combines eight pixels into an octet
+    // and writes it to lpvBits
+    
+    const std::string filename = getBitmapFilename(lpBitmapName);
+    const std::string path = getResourcePath(filename);
+    const CFStringRef cfPath = CFStringCreateWithCString(NULL, path.c_str(), kCFStringEncodingUTF8);
+    const CFURLRef imageURL = CFURLCreateWithFileSystemPath(NULL, cfPath, kCFURLPOSIXPathStyle, false);
+    const CGImageSourceRef imageSource = CGImageSourceCreateWithURL(imageURL, NULL);
+    const CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
+    const CFDataRef rawData = CGDataProviderCopyData(CGImageGetDataProvider(image));
+    
+    const UInt8 * source = CFDataGetBytePtr(rawData);
+    const size_t size = CGImageGetHeight(image) * CGImageGetWidth(image) / 8;
+    const size_t requested = cb;
+    
+    const size_t copied = std::min(requested, size);
+    
+    char * dest = static_cast<char *>(lpvBits);
+    
+    for (size_t i = 0; i < copied; ++i)
     {
-      const char pixel = *(source + offset + j);
-      val = (val << 1) | (pixel != 0);
+      const size_t offset = i * 8;
+      char val = 0;
+      for (size_t j = 0; j < 8; ++j)
+      {
+        const char pixel = *(source + offset + j);
+        val = (val << 1) | (pixel != 0);
+      }
+      dest[i] = val;
     }
-    dest[i] = val;
+    
+    if (rawData) { CFRelease(rawData); }
+    if (image) { CFRelease(image); }
+    if (imageSource) { CFRelease(imageSource); }
+    if (imageURL) { CFRelease(imageURL); }
+    if (cfPath) { CFRelease(cfPath); }
   }
-  
-  if (rawData) { CFRelease(rawData); }
-  if (image) { CFRelease(image); }
-  if (imageSource) { CFRelease(imageSource); }
-  if (imageURL) { CFRelease(imageURL); }
-  if (cfPath) { CFRelease(cfPath); }
-}
 
   void MarianiFrame::FrameDrawDiskLEDS()
   {
