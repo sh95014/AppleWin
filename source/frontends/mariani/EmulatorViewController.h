@@ -58,7 +58,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stop;
 
 - (void)toggleScreenRecording;
+@property (getter=isRecordingScreen) BOOL recordingScreen;
 - (void)saveScreenshot;
+- (int)registerAudioOutputWithChannels:(UInt32)channels sampleRate:(UInt32)sampleRate;
+- (void)submitOutput:(int)output audioData:(NSData *)data;
 
 - (void)displayTypeDidChange;
 - (void)videoModeDidChange;

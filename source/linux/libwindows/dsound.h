@@ -115,6 +115,10 @@ class IDirectSoundBuffer : public IUnknown
 
   HRESULT GetStatus( LPDWORD lpdwStatus );
   HRESULT Restore();
+
+#ifdef MARIANI
+  int audioOutput;
+#endif
 };
 typedef class IDirectSoundBuffer *LPDIRECTSOUNDBUFFER,**LPLPDIRECTSOUNDBUFFER;
 

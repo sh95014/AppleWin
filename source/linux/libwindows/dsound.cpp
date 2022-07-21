@@ -3,6 +3,10 @@
 
 #include <cstring>
 
+#ifdef MARIANI
+#include "AppDelegate.h"
+#endif
+
 HRESULT IDirectSoundNotify::SetNotificationPositions(DWORD cPositionNotifies, LPCDSBPOSITIONNOTIFY lpcPositionNotifies)
 {
   return DS_OK;
@@ -44,6 +48,12 @@ HRESULT IDirectSoundBuffer::Unlock( LPVOID lpvAudioPtr1, DWORD dwAudioBytes1, LP
 {
   const size_t totalWrittenBytes = dwAudioBytes1 + dwAudioBytes2;
   this->myWritePosition = (this->myWritePosition + totalWrittenBytes) % this->mySoundBuffer.size();
+#ifdef MARIANI
+  if (totalWrittenBytes)
+  {
+    SubmitAudio(this->audioOutput, lpvAudioPtr1, dwAudioBytes1, lpvAudioPtr2, dwAudioBytes2);
+  }
+#endif // MARIANI
   return DS_OK;
 }
 
@@ -201,6 +211,10 @@ HRESULT IDirectSound::CreateSoundBuffer( LPCDSBUFFERDESC lpcDSBufferDesc, IDirec
   IDirectSoundBuffer * dsb = new IDirectSoundBuffer(bufferSize, channels, sampleRate, bitsPerSample, flags);
 
   registerSoundBuffer(dsb);
+
+#ifdef MARIANI
+  dsb->audioOutput = RegisterAudioOutput(channels, sampleRate);
+#endif
 
   *lplpDirectSoundBuffer = dsb;
   return DS_OK;

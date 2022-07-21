@@ -1093,6 +1093,20 @@ const char *GetSupportDirectory() {
     return supportDirectoryPath.UTF8String;
 }
 
+int RegisterAudioOutput(size_t channels, size_t sampleRate) {
+    return [theAppDelegate.emulatorVC registerAudioOutputWithChannels:(UInt32)channels sampleRate:(UInt32)sampleRate];
+}
+
+void SubmitAudio(int output, void *p1, size_t len1, void *p2, size_t len2) {
+    if (theAppDelegate.emulatorVC.isRecordingScreen) {
+        NSMutableData *data = [NSMutableData dataWithBytes:p1 length:len1];
+        if (len2 > 0) {
+            [data appendBytes:p2 length:len2];
+        }
+        [theAppDelegate.emulatorVC submitOutput:output audioData:data];
+    }
+}
+
 static void
 DiskImgMsgHandler(const char *file, int line, const char *msg)
 {
