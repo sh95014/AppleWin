@@ -138,6 +138,8 @@ I don't know why `imgui_impl_sdl2.cpp` doesn't exist, but the following hack see
 -#include "imgui_impl_sdl2.h"
 +#include "imgui_impl_sdl.h"
 ```
+
+https://github.com/audetto/AppleWin/issues/39#issuecomment-1454994587
 ---
 
 Note that some of the settings (most of the ones stored in `~/.applewin/applewin.conf`) will affect both Mariani and sa2.
