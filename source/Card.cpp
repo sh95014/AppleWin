@@ -27,13 +27,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "ParallelPrinter.h"
 #include "z80emu.h"
 #include "FourPlay.h"
-#include "Joystick.h"
 #include "LanguageCard.h"
 #include "MouseInterface.h"
 #include "SAM.h"
 #include "SerialComms.h"
 #include "SNESMAX.h"
 #include "VidHD.h"
+#include "z80emu.h"
 
 #include <sstream>
 
@@ -70,18 +70,9 @@ void DummyCard::InitializeIO(LPBYTE pCxRomPeripheral)
 	switch (QueryType())
 	{
 	case CT_GenericClock:
-		break; // nothing to do
-	case CT_MockingboardC:
-	case CT_Phasor:
-		// only in slot 4
-		if (m_slot == SLOT4)
-		{
-			MB_InitializeIO(pCxRomPeripheral, SLOT4, SLOT5);
-		}
-		break;
-	case CT_Z80:
-		Z80_InitializeIO(pCxRomPeripheral, m_slot);
-		break;
+	case CT_Echo:
+	default:
+		_ASSERT(0);
 	}
 }
 
@@ -89,13 +80,10 @@ void DummyCard::Update(const ULONG nExecutedCycles)
 {
 	switch (QueryType())
 	{
-	case CT_MockingboardC:
-	case CT_Phasor:
-		// only in slot 4
-		if (m_slot == SLOT4)
-		{
-			MB_PeriodicUpdate(nExecutedCycles);
-		}
+	case CT_GenericClock:
+	case CT_Echo:
+	default:
+		_ASSERT(0);
 		break;
 	}
 }
@@ -104,14 +92,10 @@ void DummyCard::SaveSnapshot(YamlSaveHelper& yamlSaveHelper)
 {
 	switch (QueryType())
 	{
-	case CT_MockingboardC:
-		MB_SaveSnapshot(yamlSaveHelper, m_slot);
-		break;
-	case CT_Phasor:
-		Phasor_SaveSnapshot(yamlSaveHelper, m_slot);
-		break;
-	case CT_Z80:
-		Z80_SaveSnapshot(yamlSaveHelper, m_slot);
+	case CT_GenericClock:
+	case CT_Echo:
+	default:
+		_ASSERT(0);
 		break;
 	}
 }
@@ -120,12 +104,10 @@ bool DummyCard::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT version)
 {
 	switch (QueryType())
 	{
-	case CT_MockingboardC:
-		return MB_LoadSnapshot(yamlLoadHelper, m_slot, version);
-	case CT_Phasor:
-		return Phasor_LoadSnapshot(yamlLoadHelper, m_slot, version);
-	case CT_Z80:
-		return Z80_LoadSnapshot(yamlLoadHelper, m_slot, version);
+	case CT_GenericClock:
+	case CT_Echo:
+	default:
+		_ASSERT(0);
 	}
 	return false;
 }
@@ -150,7 +132,7 @@ std::string Card::GetCardName(const SS_CARDTYPE cardType)
 	case CT_SSC:
 		return CSuperSerialCard::GetSnapshotCardName();
 	case CT_MockingboardC:
-		return MB_GetSnapshotCardName();
+		return MockingboardCard::GetSnapshotCardName();
 	case CT_GenericPrinter:
 		return ParallelPrinterCard::GetSnapshotCardName();
 	case CT_GenericHDD:
@@ -160,9 +142,9 @@ std::string Card::GetCardName(const SS_CARDTYPE cardType)
 	case CT_MouseInterface:
 		return CMouseInterface::GetSnapshotCardName();
 	case CT_Z80:
-		return Z80_GetSnapshotCardName();
+		return Z80Card::GetSnapshotCardName();
 	case CT_Phasor:
-		return Phasor_GetSnapshotCardName();
+		return MockingboardCard::GetSnapshotCardNamePhasor();
 	case CT_Echo:
 		return "Echo";
 	case CT_SAM:
@@ -196,15 +178,15 @@ SS_CARDTYPE Card::GetCardType(const std::string & card)
 	{
 		return CT_MouseInterface;
 	}
-	else if (card == Z80_GetSnapshotCardName())
+	else if (card == Z80Card::GetSnapshotCardName())
 	{
 		return CT_Z80;
 	}
-	else if (card == MB_GetSnapshotCardName())
+	else if (card == MockingboardCard::GetSnapshotCardName())
 	{
 		return CT_MockingboardC;
 	}
-	else if (card == Phasor_GetSnapshotCardName())
+	else if (card == MockingboardCard::GetSnapshotCardNamePhasor())
 	{
 		return CT_Phasor;
 	}

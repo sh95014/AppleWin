@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StdAfx.h"
 
 #include "6522.h"
+#include "CardManager.h"
 #include "Core.h"
 #include "CPU.h"
 #include "Memory.h"
@@ -115,8 +116,6 @@ USHORT SY6522::SetTimerSyncEvent(BYTE reg, USHORT timerLatch)
 
 //-----------------------------------------------------------------------------
 
-extern void MB_UpdateIRQ(void);
-
 void SY6522::UpdateIFR(BYTE clr_ifr, BYTE set_ifr /*= 0*/)
 {
 	m_regs.IFR &= ~clr_ifr;
@@ -127,7 +126,8 @@ void SY6522::UpdateIFR(BYTE clr_ifr, BYTE set_ifr /*= 0*/)
 	else
 		m_regs.IFR &= ~IFR_IRQ;
 
-	MB_UpdateIRQ();
+	if (GetCardMgr().GetObj(m_slot))	// If called from MockingboardCard ctor, then CardManager::m_slot[slot] == NULL
+		GetCardMgr().GetMockingboardCardMgr().UpdateIRQ();
 }
 
 //-----------------------------------------------------------------------------
@@ -201,6 +201,10 @@ void SY6522::Write(BYTE nReg, BYTE nValue)
 			nValue &= 0x7F;
 			m_regs.IER |= nValue;
 		}
+		if (m_syncEvent[0])
+			m_syncEvent[0]->m_canAssertIRQ = (m_regs.IER & IxR_TIMER1) ? true : false;
+		if (m_syncEvent[1])
+			m_syncEvent[1]->m_canAssertIRQ = (m_regs.IER & IxR_TIMER2) ? true : false;
 		UpdateIFR(0);
 		break;
 	case 0x0f:	// ORA_NO_HS
@@ -668,12 +672,14 @@ void SY6522::SetTimersActiveFromSnapshot(bool timer1Active, bool timer2Active, U
 	{
 		SyncEvent* syncEvent = m_syncEvent[0];
 		syncEvent->SetCycles(GetRegT1C() + kExtraTimerCycles);	// NB. use COUNTER, not LATCH
+		syncEvent->m_canAssertIRQ = (m_regs.IER & IxR_TIMER1) ? true : false;
 		g_SynchronousEventMgr.Insert(syncEvent);
 	}
 	if (IsTimer2Active())
 	{
 		SyncEvent* syncEvent = m_syncEvent[1];
 		syncEvent->SetCycles(GetRegT2C() + kExtraTimerCycles);	// NB. use COUNTER, not LATCH
+		syncEvent->m_canAssertIRQ = (m_regs.IER & IxR_TIMER2) ? true : false;
 		g_SynchronousEventMgr.Insert(syncEvent);
 	}
 }

@@ -106,17 +106,6 @@ void Disk2CardManager::LoadLastDiskImage(void)
 	}
 }
 
-void Disk2CardManager::Destroy(void)
-{
-	for (UINT i = 0; i < NUM_SLOTS; i++)
-	{
-		if (GetCardMgr().QuerySlot(i) == CT_Disk2)
-		{
-			dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(i)).Destroy();
-		}
-	}
-}
-
 bool Disk2CardManager::IsAnyFirmware13Sector(void)
 {
 	for (UINT i = 0; i < NUM_SLOTS; i++)

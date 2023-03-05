@@ -38,7 +38,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Joystick.h"
 #include "Keyboard.h"
 #include "Memory.h"
-#include "Mockingboard.h"
 #include "Pravets.h"
 #include "Speaker.h"
 #include "Speech.h"
@@ -388,7 +387,7 @@ static void Snapshot_LoadState_v2(void)
 		GetVideo().SetVidHD(false);			// Set true later only if VidHDCard is instantiated
 		GetVideo().VideoResetState();
 		GetVideo().SetVideoRefreshRate(VR_60HZ);	// Default to 60Hz as older save-states won't contain refresh rate
-		MB_InitializeForLoadingSnapshot();	// GH#609
+		GetCardMgr().GetMockingboardCardMgr().InitializeForLoadingSnapshot();	// GH#609
 #ifdef USE_SPEECH_API
 		g_Speech.Reset();
 #endif
@@ -402,7 +401,7 @@ static void Snapshot_LoadState_v2(void)
 				throw std::runtime_error("Unknown top-level scalar: " + scalar);
 		}
 
-		MB_SetCumulativeCycles();
+		GetCardMgr().GetMockingboardCardMgr().SetCumulativeCycles();
 		frame.SetLoadedSaveStateFlag(true);
 
 		// NB. The following disparity should be resolved:
