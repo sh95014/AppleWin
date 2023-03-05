@@ -247,8 +247,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         self.audioSpeakerVolumeSlider.intValue = volumeMax - SpkrGetVolume();
         
         // Mockingboard volume slider
+        CardManager &cardManager = GetCardMgr();
         self.audioMockingboardVolumeSlider.maxValue = volumeMax;
-        self.audioMockingboardVolumeSlider.intValue = volumeMax - MB_GetVolume();
+        self.audioMockingboardVolumeSlider.intValue = volumeMax - cardManager.GetMockingboardCardMgr().GetVolume();
         [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
     }
 }
@@ -479,7 +480,8 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     NSLog(@"%s", __PRETTY_FUNCTION__);
     const int volumeMax = GetPropertySheet().GetVolumeMax();
     const int volume = volumeMax - self.audioMockingboardVolumeSlider.intValue;
-    MB_SetVolume(volume, volumeMax);
+    CardManager &cardManager = GetCardMgr();
+    cardManager.GetMockingboardCardMgr().SetVolume(volume, volumeMax);
     RegSaveValue(REG_CONFIG, REGVALUE_MB_VOLUME, true, volume);
     NSLog(@"Set Mockingboard volume to %d", volume);
 }
