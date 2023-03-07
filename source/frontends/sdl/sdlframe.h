@@ -48,6 +48,8 @@ namespace sa2
     void getDragDropSlotAndDrive(size_t & slot, size_t & drive) const;
     void setDragDropSlotAndDrive(const size_t slot, const size_t drive);
 
+    bool & getPreserveAspectRatio();
+
     static void setGLSwapInterval(const int interval);
 
   protected:
@@ -79,6 +81,7 @@ namespace sa2
     static double GetRelativePosition(const int value, const int width);
 
     int myTargetGLSwap;
+    bool myPreserveAspectRatio;
     bool myForceCapsLock;
     int myMultiplier;
     bool myFullscreen;

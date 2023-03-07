@@ -64,8 +64,7 @@ private:
 		SSI263 ssi263;
 		BYTE nAY8910Number;
 		BYTE nAYCurrentRegister[2];
-		MockingboardUnitState_e state;	// Where a unit is a 6522+AY8910 pair
-		MockingboardUnitState_e stateB;	// Phasor: 6522 & 2nd AY8910
+		MockingboardUnitState_e state[2];	// AY's PSG function
 		bool isAYLatchedAddressValid[2];
 		bool isChipSelected[2];
 
@@ -73,15 +72,16 @@ private:
 		{
 			nAY8910Number = 0;
 			// sy6522 & ssi263 have already been default constructed
+			// Reset() called from MockingboardCard ctor
 		}
 
-		void Reset(void)
+		void Reset(SS_CARDTYPE type)
 		{
 			nAYCurrentRegister[0] = nAYCurrentRegister[1] = 0;	// not valid
-			state = AY_INACTIVE;
-			stateB = AY_INACTIVE;
+			state[0] = state[1] = AY_INACTIVE;
 			isAYLatchedAddressValid[0] = isAYLatchedAddressValid[1] = false;	// after AY reset
-			isChipSelected[0] = isChipSelected[1] = false;
+			isChipSelected[0] = type == CT_MockingboardC ? true : false;
+			isChipSelected[1] = false;
 		}
 	};
 
