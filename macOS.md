@@ -112,35 +112,4 @@ cmake -DCMAKE_BUILD_TYPE=RELEASE -DBUILD_SA2=ON ..
 make
 ```
 
----
-### WARNING
-
-sa2 currently fails to build with the following error message:
-
-```
-CMake Error at source/frontends/sdl/CMakeLists.txt:4 (add_executable):
-  Cannot find source file:
-
-    imgui/imgui/backends/imgui_impl_sdl2.cpp
-
-  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .mpp .m .M .mm .ixx .cppm .h
-  .hh .h++ .hm .hpp .hxx .in .txx .f .F .for .f77 .f90 .f95 .f03 .hip .ispc
-```
-
-I don't know why `imgui_impl_sdl2.cpp` doesn't exist, but the following hack seems to work around the problem:
-
-```diff
-/source/frontends/sdl/CMakeLists.txt
--  ${IMGUI_PATH}/backends/imgui_impl_sdl2.cpp
-+  ${IMGUI_PATH}/backends/imgui_impl_sdl.cpp
-
-/source/frontends/sdl/imgui/glselector.h
--#include "imgui_impl_sdl2.h"
-+#include "imgui_impl_sdl.h"
-```
-
-Further discussions would be at https://github.com/audetto/AppleWin/issues/39#issuecomment-1454994587
-
----
-
 Note that some of the settings (most of the ones stored in `~/.applewin/applewin.conf`) will affect both Mariani and sa2.
