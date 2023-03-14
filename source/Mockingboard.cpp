@@ -185,7 +185,7 @@ void MockingboardCard::Get6522IrqDescription(std::string& desc)
 //
 // AFAICT, inputs to the Phasor GAL are:
 // . ORB.b4:3 = Chip Select (CS) for AY1 & AY2 (active low)
-// . ORB.b2:0 = PSG Function (RESET, INACTIVE, READ, WRITE, LATCH)
+// . ORB.b2:0 = PSG Function (RESET, INACTIVE, READ, WRITE, LATCH) [Or since LATCH=%111, then maybe a 3-input AND: b2.b1.b0 -> GAL?]
 // . Phasor mode (Mockingboard, Echo+, Phasor-native)
 // . Slot inputs (address, reset, etc)
 // And outputs from the GAL are:
@@ -195,8 +195,9 @@ void MockingboardCard::Get6522IrqDescription(std::string& desc)
 // In Phasor-native mode, GAL logic:
 // . AY2 LATCH func selects AY2 and AY1; sets latch addr for AY2 and AY1
 // . AY1 LATCH func selects AY1; deselects AY2; sets latch addr for AY1
-// . AY2 WRITE func writes AY2 if it's selected
-// . AY1 WRITE func writes AY1; writes AY2 if it's selected
+// . AY2 & AY1 LATCH func selects AY2 and AY1; sets latch addr for AY2 and AY1
+// . AY2 WRITE(READ) func writes(reads) AY2 if it's selected
+// . AY1 WRITE(READ) func writes(reads) AY1; writes(reads) AY2 if it's selected. NB. If both chips, then the READ is the OR-sum.
 //
 // EG, to do a "AY1 LATCH", then write 6522 ORB with b4:3=%01, b2:0=%111
 //
@@ -220,21 +221,23 @@ void MockingboardCard::WriteToORB(BYTE subunit)
 #else
 	if (m_phasorEnable)
 	{
-		const int kAY0 = 2;		// Phasor mode: bit4=0 (active low)  selects the 1st AY8913, ie. the only AY8913 in Mockingboard mode (confirmed on real Phasor h/w)
+		const int kAY1 = 2;		// Phasor mode: bit4=0 (active low)  selects the 1st AY8913, ie. the only AY8913 in Mockingboard mode (confirmed on real Phasor h/w)
 								// Echo+  mode: bit3=1 (active high) selects the 1st AY8913
-		const int kAY1 = 1;		// Phasor mode: bit3=0 (active low)  selects the 2nd AY8913 attached to this 6522 (unavailable in Mockingboard mode)
+		const int kAY2 = 1;		// Phasor mode: bit3=0 (active low)  selects the 2nd AY8913 attached to this 6522 (unavailable in Mockingboard mode)
 								// Echo+  mode: bit4=1 (active high) selects the 2nd AY8913
 		const int nAY_CS =	(m_phasorMode == PH_EchoPlus) ? ((value >> 4) & 1) | ((value >> 2) & 2)	// swap bits 4 & 3
 							: (m_phasorMode == PH_Phasor) ? (~(value >> 3) & 3)
-							: kAY0; // Anything else is Mockingboard
+							: kAY1; // Anything else is Mockingboard
 
 		if (m_phasorMode == PH_EchoPlus)
 			subunit = SY6522_DEVICE_B;
 
-		if (nAY_CS & kAY0)
+		// NB. For PH_Phasor, when selecting *both* AYs, then order matters: first do AY8913_DEVICE_A then AY8913_DEVICE_B
+		// Reason: from GAL logic: 'AY1 LATCH func' deselects AY2, then 'AY2 LATCH func' selects AY2 and AY1. (And we want both selected)
+		if (nAY_CS & kAY1)
 			AY8910_Write(subunit, AY8913_DEVICE_A, value);
 
-		if (nAY_CS & kAY1)
+		if (nAY_CS & kAY2)
 			AY8910_Write(subunit, AY8913_DEVICE_B, value);
 
 		if (nAY_CS == 0)
@@ -290,6 +293,15 @@ void MockingboardCard::AY8910_Write(BYTE subunit, BYTE ay, BYTE value)
 						r6522.SetRegORA(AYReadReg(subunit, ay, pMB->nAYCurrentRegister[ay]) & (r6522.GetReg(SY6522::rDDRA) ^ 0xff));
 					else
 						r6522.UpdatePortAForHiZ();
+
+					if (m_phasorEnable && m_phasorMode == PH_Phasor)	// GH#1192
+					{
+						if (ay == AY8913_DEVICE_A)
+						{
+							if (pMB->isChipSelected[AY8913_DEVICE_B] && pMB->isAYLatchedAddressValid[AY8913_DEVICE_B])
+								r6522.SetRegORA(r6522.GetReg(SY6522::rORA) | (AYReadReg(subunit, AY8913_DEVICE_B, pMB->nAYCurrentRegister[AY8913_DEVICE_B]) & (r6522.GetReg(SY6522::rDDRA) ^ 0xff)));
+						}
+					}
 					break;
 
 				case AY_WRITE:		// 6: WRITE TO PSG
@@ -339,7 +351,7 @@ void MockingboardCard::AY8910_Write(BYTE subunit, BYTE ay, BYTE value)
 
 		state = nAYFunc;
 
-		if (state == AY_INACTIVE && m_phasorEnable)		// Assume Phasor(even in MB mode) will read PortA inputs as high.
+		if (state == AY_INACTIVE && m_phasorEnable)		// Phasor(even in MB mode) will read PortA inputs as high.
 			r6522.UpdatePortAForHiZ();	// Float high any PortA input bits (GH#1193)
 	}
 }
@@ -961,38 +973,38 @@ void MockingboardCard::SetVolume(DWORD volume, DWORD volumeMax)
 
 //===========================================================================
 
-#include "SaveState_Structs_v1.h"
-
-// Called by debugger - Debugger_Display.cpp
-void MockingboardCard::GetSnapshot_v1(SS_CARD_MOCKINGBOARD_v1* const pSS)
+void MockingboardCard::GetSnapshotForDebugger(DEBUGGER_MB_CARD* const pMBForDebugger)
 {
-	pSS->Hdr.UnitHdr.hdr.v2.Length = sizeof(SS_CARD_MOCKINGBOARD_v1);
-	pSS->Hdr.UnitHdr.hdr.v2.Type = UT_Card;
-	pSS->Hdr.UnitHdr.hdr.v2.Version = 1;
+	pMBForDebugger->type = QueryType();
 
-	pSS->Hdr.Slot = m_slot;
-	pSS->Hdr.Type = CT_MockingboardC;
-
-	MB_SUBUNIT* pMB = &m_MBSubUnit[0];
-
-	for (UINT i=0; i<MB_UNITS_PER_CARD_v1; i++)
+	for (UINT i = 0; i < NUM_SUBUNITS_PER_MB; i++)
 	{
-		// 6522
-		pMB->sy6522.GetRegs((BYTE*)&pSS->Unit[i].RegsSY6522);	// continuous 16-byte array
+		MB_SUBUNIT* pMB = &m_MBSubUnit[i];
 
-		// AY8913
-		for (UINT j=0; j<16; j++)
+		pMB->sy6522.GetRegs(pMBForDebugger->subUnit[i].regsSY6522);	// continuous 16-byte array
+		pMBForDebugger->subUnit[i].timer1Active = pMB->sy6522.IsTimer1Active();
+		pMBForDebugger->subUnit[i].timer2Active = pMB->sy6522.IsTimer2Active();
+
+		for (UINT j = 0; j < NUM_AY8913_PER_SUBUNIT; j++)
 		{
-			pSS->Unit[i].RegsAY8910[j] = AYReadReg(i, 0, j);	// FIXME: also support Phasor's 2nd AY8913
+			for (UINT k = 0; k < 16; k++)
+				pMBForDebugger->subUnit[i].regsAY8913[j][k] = AYReadReg(i, j, k);
+
+			pMBForDebugger->subUnit[i].nAYCurrentRegister[j] = pMB->nAYCurrentRegister[j];
+			pMBForDebugger->subUnit[i].isAYLatchedAddressValid[j] = pMB->isAYLatchedAddressValid[j];
+
+			switch (pMB->state[j])
+			{
+			case AY_READ:
+				strcpy((char*)&pMBForDebugger->subUnit[i].szState[j], "RD"); break;
+			case AY_WRITE:
+				strcpy((char*)&pMBForDebugger->subUnit[i].szState[j], "WR"); break;
+			case AY_LATCH:
+				strcpy((char*)&pMBForDebugger->subUnit[i].szState[j], "LA"); break;
+			default: //AY_INACTIVE
+				strcpy((char*)&pMBForDebugger->subUnit[i].szState[j], "--"); break;
+			}
 		}
-
-		memset(&pSS->Unit[i].RegsSSI263, 0, sizeof(SSI263A));	// Not used by debugger
-		pSS->Unit[i].nAYCurrentRegister = pMB->isAYLatchedAddressValid[0] ? pMB->nAYCurrentRegister[0] : 0xff;
-		pSS->Unit[i].bTimer1Active = pMB->sy6522.IsTimer1Active();
-		pSS->Unit[i].bTimer2Active = pMB->sy6522.IsTimer2Active();
-		pSS->Unit[i].bSpeechIrqPending = false;
-
-		pMB++;
 	}
 }
 
