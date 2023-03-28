@@ -208,13 +208,16 @@
 
 	struct Breakpoint_t
 	{
-		WORD                 nAddress; // for registers, functions as nValue
-		UINT                 nLength ;
+		WORD                 nAddress ; // for registers, functions as nValue
+		UINT                 nLength  ;
 		BreakpointSource_t   eSource;
 		BreakpointOperator_t eOperator;
-		bool                 bSet    ; // used to be called enabled pre 2.0
+		bool                 bSet     ; // used to be called enabled pre 2.0
 		bool                 bEnabled;
-		bool                 bTemp;    // If true then remove BP when hit or stepping cancelled (eg. G xxxx)
+		bool                 bTemp    ; // If true then remove BP when hit or stepping cancelled (eg. G xxxx)
+		bool                 bHit     ; // true when the breakpoint has just been hit
+		bool                 bStop    ; // true if the debugger stops when it is hit
+		DWORD                nHitCount; // number of times the breakpoint was hit
 	};
 
 	typedef Breakpoint_t Bookmark_t;
@@ -345,6 +348,7 @@
 		, CMD_BREAKPOINT_LIST
 //		, CMD_BREAKPOINT_LOAD
 		, CMD_BREAKPOINT_SAVE
+		, CMD_BREAKPOINT_CHANGE
 // Benchmark / Timing
 //		, CMD_BENCHMARK_START
 //		, CMD_BENCHMARK_STOP
@@ -648,6 +652,7 @@
 	Update_t CmdBreakpointDisable  (int nArgs);
 	Update_t CmdBreakpointEdit     (int nArgs);
 	Update_t CmdBreakpointEnable   (int nArgs);
+	Update_t CmdBreakpointChange   (int nArgs);
 	Update_t CmdBreakpointList     (int nArgs);
 //	Update_t CmdBreakpointLoad     (int nArgs);
 	Update_t CmdBreakpointSave     (int nArgs);
@@ -1361,8 +1366,18 @@ const	DisasmData_t* pDisasmData; // If != NULL then bytes are marked up as data 
 
 //		, PARAM_SIZE  // TODO: used by FONT SIZE
 
+	, _PARAM_BP_CHANGE_BEGIN = _PARAM_BREAKPOINT_END // Daisy Chain
+		, PARAM_BP_CHANGE_ENABLE = _PARAM_BP_CHANGE_BEGIN // E
+		, PARAM_BP_CHANGE_DISABLE  // e
+		, PARAM_BP_CHANGE_TEMP_ON  // T
+		, PARAM_BP_CHANGE_TEMP_OFF // t
+		, PARAM_BP_CHANGE_STOP_ON  // S
+		, PARAM_BP_CHANGE_STOP_OFF // s
+	, _PARAM_BP_CHANGE_END
+	,  PARAM_BP_CHANGE_NUM = _PARAM_BP_CHANGE_END - _PARAM_BP_CHANGE_BEGIN
+
 	// Note: Order must match BreakpointSource_t
-	, _PARAM_REGS_BEGIN = _PARAM_BREAKPOINT_END // Daisy Chain
+	, _PARAM_REGS_BEGIN = _PARAM_BP_CHANGE_END // Daisy Chain
 // Regs
 		, PARAM_REG_A = _PARAM_REGS_BEGIN
 		, PARAM_REG_X

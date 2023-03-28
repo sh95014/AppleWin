@@ -99,6 +99,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		{TEXT("BPL")         , CmdBreakpointList    , CMD_BREAKPOINT_LIST      , "List all breakpoints"                  }, // SoftICE
 //		{TEXT("BPLOAD")      , CmdBreakpointLoad    , CMD_BREAKPOINT_LOAD      , "Loads breakpoints" },
 		{TEXT("BPSAVE")      , CmdBreakpointSave    , CMD_BREAKPOINT_SAVE      , "Saves breakpoints" },
+		{TEXT("BPCHANGE")    , CmdBreakpointChange  , CMD_BREAKPOINT_CHANGE    , "Change breakpoint" },
 	// Config
 		{TEXT("BENCHMARK")   , CmdBenchmark         , CMD_BENCHMARK            , "Benchmark the emulator" },
 		{TEXT("BW")          , CmdConfigColorMono   , CMD_CONFIG_BW            , "Sets/Shows RGB for Black & White scheme" },
@@ -417,6 +418,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		{TEXT("W")          , NULL, PARAM_BP_WRITE          },
 		{TEXT("@")          , NULL, PARAM_BP_WRITE          },
 		{TEXT("*")          , NULL, PARAM_BP_READ_WRITE     },
+// Breakpoint Change, See: CmdBreakpointChange ()
+		{TEXT("E")          , NULL, PARAM_BP_CHANGE_ENABLE   },
+		{TEXT("e")          , NULL, PARAM_BP_CHANGE_DISABLE  },
+		{TEXT("T")          , NULL, PARAM_BP_CHANGE_TEMP_ON  },
+		{TEXT("t")          , NULL, PARAM_BP_CHANGE_TEMP_OFF },
+		{TEXT("S")          , NULL, PARAM_BP_CHANGE_STOP_ON  },
+		{TEXT("s")          , NULL, PARAM_BP_CHANGE_STOP_OFF },
 // Regs (for PUSH / POP)
 		{TEXT("A")          , NULL, PARAM_REG_A          },
 		{TEXT("X")          , NULL, PARAM_REG_X          },

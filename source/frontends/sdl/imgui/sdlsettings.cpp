@@ -793,6 +793,10 @@ namespace sa2
       ImGui::TextUnformatted("sa2: Apple ][ emulator for Linux");
       ImGui::Text("Based on AppleWin %s", getVersion().c_str());
 
+      int nMajor, nMinor, nFixMajor, nFixMinor;
+      UnpackVersion(DEBUGGER_VERSION, nMajor, nMinor, nFixMajor, nFixMinor);
+      ImGui::Text("Debugger %d.%d.%d.%d", nMajor, nMinor, nFixMajor, nFixMinor);
+
       ImGui::Separator();
       SDL_version sdl;
       SDL_GetVersion(&sdl);
@@ -1109,7 +1113,7 @@ namespace sa2
 
   void ImGuiSettings::drawBreakpoints()
   {
-    if (ImGui::BeginTable("Breakpoints", 7, ImGuiTableFlags_RowBg))
+    if (ImGui::BeginTable("Breakpoints", 10, ImGuiTableFlags_RowBg))
     {
       ImGui::TableSetupColumn("ID");
       ImGui::TableSetupColumn("First");
@@ -1117,7 +1121,10 @@ namespace sa2
       ImGui::TableSetupColumn("Source");
       ImGui::TableSetupColumn("Operator");
       ImGui::TableSetupColumn("Enabled");
+      ImGui::TableSetupColumn("Stop");
       ImGui::TableSetupColumn("Temporary");
+      ImGui::TableSetupColumn("Counter");
+      ImGui::TableSetupColumn("Hit");
       ImGui::TableHeadersRow();
 
       for (int i = 0; i < MAX_BREAKPOINTS; ++i)
@@ -1140,7 +1147,15 @@ namespace sa2
           ImGui::TableNextColumn();
           ImGui::Checkbox("##Enabled", &bp.bEnabled);
           ImGui::TableNextColumn();
+          ImGui::Checkbox("##Stop", &bp.bStop);
+          ImGui::TableNextColumn();
           ImGui::Checkbox("##Temp", &bp.bTemp);
+          ImGui::TableNextColumn();
+          ImGui::Text("%08X", bp.nHitCount);
+          ImGui::TableNextColumn();
+          ImGui::BeginDisabled();
+          ImGui::Checkbox("##Hit", &bp.bHit);
+          ImGui::EndDisabled();
           ImGui::PopID();
         }
       }

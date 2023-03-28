@@ -53,7 +53,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MAKE_VERSION(a,b,c,d) ((a<<24) | (b<<16) | (c<<8) | (d))
 
 	// See /docs/Debugger_Changelog.txt for full details
-	const int DEBUGGER_VERSION = MAKE_VERSION(2,9,1,14);
+	const int DEBUGGER_VERSION = MAKE_VERSION(2,9,1,15);
 
 
 // Public _________________________________________________________________________________________
@@ -85,9 +85,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	static DebugBreakOnDMA g_DebugBreakOnDMA[NUM_BREAK_ON_DMA];
 	static DebugBreakOnDMA g_DebugBreakOnDMAIO;
 
-	static int  g_bDebugBreakpointHit = 0;	// See: BreakpointHit_t
+	int                  g_bDebugBreakpointHit = 0;       // See: BreakpointHit_t
+	static Breakpoint_t *g_pDebugBreakpointHit = nullptr; // NOTE: Only valid for BP_HIT_REG, see: CheckBreakpointsReg()
 
-	int  g_nBreakpoints          = 0;
+	int          g_nBreakpoints = 0;
 	Breakpoint_t g_aBreakpoints[ MAX_BREAKPOINTS ];
 
 	// NOTE: BreakpointSource_t and g_aBreakpointSource must match!
@@ -370,13 +371,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	static	Update_t ExecuteCommand ( int nArgs );
 
 // Breakpoints
+	Update_t _BP_InfoNone ();
+	void _BWZ_ClearViaArgs ( int nArgs, Breakpoint_t * aBreakWatchZero, const int nMax, int & nTotal );
+	void _BWZ_EnableDisableViaArgs ( int nArgs, Breakpoint_t * aBreakWatchZero, const int nMax, const bool bEnabled );
 	void _BWZ_List ( const Breakpoint_t * aBreakWatchZero, const int iBWZ ); // bool bZeroBased = true );
 	void _BWZ_ListAll ( const Breakpoint_t * aBreakWatchZero, const int nMax );
+	void _BWZ_RemoveOne ( Breakpoint_t *aBreakWatchZero, const int iSlot, int & nTotal );
+	void _BWZ_RemoveAll ( Breakpoint_t *aBreakWatchZero, const int nMax, int & nTotal );
 
 //	bool CheckBreakpoint (WORD address, BOOL memory);
 	bool _CmdBreakpointAddReg ( Breakpoint_t *pBP, BreakpointSource_t iSrc, BreakpointOperator_t iCmp, WORD nAddress, int nLen, bool bIsTempBreakpoint );
 	int  _CmdBreakpointAddCommonArg ( int iArg, int nArg, BreakpointSource_t iSrc, BreakpointOperator_t iCmp, bool bIsTempBreakpoint=false );
-	void _BWZ_Clear( Breakpoint_t * aBreakWatchZero, int iSlot );
 
 // Config - Save
 	bool ConfigSave_BufferToDisk ( const char *pFileName, ConfigSave_t eConfigSave );
@@ -864,17 +869,23 @@ _Help:
 
 // Breakpoints ____________________________________________________________________________________
 
+//===========================================================================
+Update_t _BP_InfoNone ()
+{
+		ConsolePrintFormat( "There are no " CHC_ARG_SEP "(" CHC_CATEGORY "PC" CHC_ARG_SEP ")" CHC_DEFAULT " Breakpoints defined.");
+		return ConsoleDisplayError( "" );
+}
 
 //===========================================================================
 
 // iOpcodeType = AM_IMPLIED (BRK), AM_1, AM_2, AM_3
-static bool IsDebugBreakOnInvalid(int iOpcodeType)
+static bool IsDebugBreakOnInvalid (int iOpcodeType)
 {
 	return ((g_nDebugBreakOnInvalid >> iOpcodeType) & 1) ? true : false;
 }
 
 // iOpcodeType = AM_IMPLIED (BRK), AM_1, AM_2, AM_3
-static void SetDebugBreakOnInvalid( int iOpcodeType, int nValue )
+static void SetDebugBreakOnInvalid ( int iOpcodeType, int nValue )
 {
 	if (iOpcodeType <= AM_3)
 	{
@@ -1030,7 +1041,7 @@ Update_t CmdBreakOpcode (int nArgs) // Breakpoint IFF Full-speed!
 
 
 //===========================================================================
-Update_t CmdBreakOnInterrupt(int nArgs)
+Update_t CmdBreakOnInterrupt (int nArgs)
 {
 	if (nArgs > 1)
 		return HelpLastCommand();
@@ -1096,10 +1107,18 @@ bool GetBreakpointInfo ( WORD nOffset, bool & bBreakpointActive_, bool & bBreakp
 	return false;
 }
 
+// returns the hit type if the breakpoint stops
+static BreakpointHit_t hitBreakpoint(Breakpoint_t * pBP, BreakpointHit_t eHitType)
+{
+	pBP->bHit = true;
+	++pBP->nHitCount;
+	return pBP->bStop ? eHitType : BP_HIT_NONE;
+}
+
 
 // Returns true if we should continue checking breakpoint details, else false
 //===========================================================================
-bool _BreakpointValid( Breakpoint_t *pBP ) //, BreakpointSource_t iSrc )
+bool _BreakpointValid ( Breakpoint_t *pBP ) //, BreakpointSource_t iSrc )
 {
 	bool bStatus = false;
 
@@ -1115,9 +1134,32 @@ bool _BreakpointValid( Breakpoint_t *pBP ) //, BreakpointSource_t iSrc )
 	return true;
 }
 
+// Stepping
+void ClearTempBreakpoints ()
+{
+	for (int iBreakpoint = 0; iBreakpoint < MAX_BREAKPOINTS; iBreakpoint++)
+	{
+		Breakpoint_t *pBP = &g_aBreakpoints[iBreakpoint];
+
+		if (! _BreakpointValid( pBP ))
+			continue;
+
+		if (pBP->bHit && pBP->bTemp)
+			_BWZ_RemoveOne(g_aBreakpoints, iBreakpoint, g_nBreakpoints);
+
+		pBP->bHit = false;
+	}
+}
+
+static void DebugEnterStepping()
+{
+	ClearTempBreakpoints();
+	g_nAppMode = MODE_STEPPING;
+	GetFrame().FrameRefreshStatus(DRAW_TITLE | DRAW_DISK_STATUS);
+}
 
 //===========================================================================
-bool _CheckBreakpointValue( Breakpoint_t *pBP, int nVal )
+bool _CheckBreakpointValue ( Breakpoint_t *pBP, int nVal )
 {
 	bool bStatus = false;
 
@@ -1156,7 +1198,7 @@ bool _CheckBreakpointValue( Breakpoint_t *pBP, int nVal )
 }
 
 //===========================================================================
-bool _CheckBreakpointRange(Breakpoint_t* pBP, int nVal, int nSize)
+bool _CheckBreakpointRange (Breakpoint_t* pBP, int nVal, int nSize)
 {
 	bool bStatus = false;
 
@@ -1178,9 +1220,9 @@ bool _CheckBreakpointRange(Breakpoint_t* pBP, int nVal, int nSize)
 
 //===========================================================================
 
-static void DebuggerBreakOnDma(WORD nAddress, WORD nSize, bool isDmaToMemory, int iBreakpoint);
+static void DebuggerBreakOnDma (WORD nAddress, WORD nSize, bool isDmaToMemory, int iBreakpoint);
 
-bool DebuggerCheckMemBreakpoints(WORD nAddress, WORD nSize, bool isDmaToMemory)
+bool DebuggerCheckMemBreakpoints (WORD nAddress, WORD nSize, bool isDmaToMemory)
 {
 	// NB. Caller handles when (addr+size) wraps on 64K
 
@@ -1215,7 +1257,7 @@ int CheckBreakpointsIO ()
 		NO_6502_TARGET
 	};
 	int  nBytes;
-	bool bBreakpointHit = 0;
+	int  bBreakpointHit = 0;
 
 	int  iTarget;
 	int  nAddress;
@@ -1246,17 +1288,21 @@ int CheckBreakpointsIO ()
 
 								if (pBP->eSource == BP_SRC_MEM_RW)
 								{
-									return BP_HIT_MEM;
+									bBreakpointHit |= hitBreakpoint(pBP, BP_HIT_MEM);
 								}
 								else if (pBP->eSource == BP_SRC_MEM_READ_ONLY)
 								{
 									if (g_aOpcodes[opcode].nMemoryAccess & (MEM_RI|MEM_R))
-										return BP_HIT_MEMR;
+									{
+										bBreakpointHit |= hitBreakpoint(pBP, BP_HIT_MEMR);
+									}
 								}
 								else if (pBP->eSource == BP_SRC_MEM_WRITE_ONLY)
 								{
 									if (g_aOpcodes[opcode].nMemoryAccess & (MEM_WI|MEM_W))
-										return BP_HIT_MEMW;
+									{
+										bBreakpointHit |= hitBreakpoint(pBP, BP_HIT_MEMW);
+									}
 								}
 								else
 								{
@@ -1276,7 +1322,9 @@ int CheckBreakpointsIO ()
 //===========================================================================
 int CheckBreakpointsReg ()
 {
-	int bBreakpointHit = 0;
+	g_pDebugBreakpointHit = nullptr;
+
+	int iAnyBreakpointHit = 0;
 
 	for (int iBreakpoint = 0; iBreakpoint < MAX_BREAKPOINTS; iBreakpoint++)
 	{
@@ -1285,9 +1333,11 @@ int CheckBreakpointsReg ()
 		if (! _BreakpointValid( pBP ))
 			continue;
 
+		bool bBreakpointHit = 0;
+
 		switch (pBP->eSource)
 		{
-			case BP_SRC_REG_PC: 
+			case BP_SRC_REG_PC:
 				bBreakpointHit = _CheckBreakpointValue( pBP, regs.pc );
 				break;
 			case BP_SRC_REG_A:
@@ -1311,36 +1361,19 @@ int CheckBreakpointsReg ()
 
 		if (bBreakpointHit)
 		{
-			bBreakpointHit = BP_HIT_REG;
-			if (pBP->bTemp)
-				_BWZ_Clear(pBP, iBreakpoint);
-
-			break;
+			iAnyBreakpointHit = hitBreakpoint(pBP, BP_HIT_REG);
+			g_pDebugBreakpointHit = pBP; // Save breakpoint so we can display which register triggered the breakpoint.
 		}
 	}
 
-	return bBreakpointHit;
-}
-
-void ClearTempBreakpoints ()
-{
-	for (int iBreakpoint = 0; iBreakpoint < MAX_BREAKPOINTS; iBreakpoint++)
-	{
-		Breakpoint_t *pBP = &g_aBreakpoints[iBreakpoint];
-
-		if (! _BreakpointValid( pBP ))
-			continue;
-
-		if (pBP->bTemp)
-			_BWZ_Clear(pBP, iBreakpoint);
-	}
+	return iAnyBreakpointHit;
 }
 
 // Returns true if a video breakpoint is triggered
 //===========================================================================
-int CheckBreakpointsVideo()
+int CheckBreakpointsVideo ()
 {
-	int bBreakpointHit = 0;
+	int iBreakpointHit = 0;
 
 	for (int iBreakpoint = 0; iBreakpoint < MAX_BREAKPOINTS; iBreakpoint++)
 	{
@@ -1355,30 +1388,29 @@ int CheckBreakpointsVideo()
 		uint16_t vert = NTSC_GetVideoVertForDebugger();	// update video scanner's vert/horz position - needed for when in fullspeed (GH#1164)
 		if (_CheckBreakpointValue(pBP, vert))
 		{
-			bBreakpointHit = BP_HIT_VIDEO_POS;
+			iBreakpointHit = hitBreakpoint(pBP, BP_HIT_VIDEO_POS);
 			pBP->bEnabled = false;	// Disable, otherwise it'll trigger many times on this scan-line
-			break;
 		}
 	}
 
-	return bBreakpointHit;
+	return iBreakpointHit;
 }
 
 //===========================================================================
-static int CheckBreakpointsDmaToOrFromIOMemory(void)
+static int CheckBreakpointsDmaToOrFromIOMemory (void)
 {
 	int res = g_DebugBreakOnDMAIO.isToOrFromMemory;
 	g_DebugBreakOnDMAIO.isToOrFromMemory = 0;
 	return res;
 }
 
-void DebuggerBreakOnDmaToOrFromIoMemory(WORD nAddress, bool isDmaToMemory)
+void DebuggerBreakOnDmaToOrFromIoMemory (WORD nAddress, bool isDmaToMemory)
 {
 	g_DebugBreakOnDMAIO.isToOrFromMemory = isDmaToMemory ? BP_DMA_TO_IO_MEM : BP_DMA_FROM_IO_MEM;
 	g_DebugBreakOnDMAIO.memoryAddr = nAddress;
 }
 
-static int CheckBreakpointsDmaToOrFromMemory(int idx)
+static int CheckBreakpointsDmaToOrFromMemory (int idx)
 {
 	if (idx == -1)
 	{
@@ -1397,7 +1429,7 @@ static int CheckBreakpointsDmaToOrFromMemory(int idx)
 	return res;
 }
 
-static void DebuggerBreakOnDma(WORD nAddress, WORD nSize, bool isDmaToMemory, int iBreakpoint)
+static void DebuggerBreakOnDma (WORD nAddress, WORD nSize, bool isDmaToMemory, int iBreakpoint)
 {
 	for (int i = 0; i < NUM_BREAK_ON_DMA; i++)
 	{
@@ -1522,7 +1554,7 @@ Update_t CmdBreakpointAddReg (int nArgs)
 
 
 //===========================================================================
-bool _CmdBreakpointAddReg( Breakpoint_t *pBP, BreakpointSource_t iSrc, BreakpointOperator_t iCmp, WORD nAddress, int nLen, bool bIsTempBreakpoint )
+bool _CmdBreakpointAddReg ( Breakpoint_t *pBP, BreakpointSource_t iSrc, BreakpointOperator_t iCmp, WORD nAddress, int nLen, bool bIsTempBreakpoint )
 {
 	bool bStatus = false;
 
@@ -1547,6 +1579,9 @@ bool _CmdBreakpointAddReg( Breakpoint_t *pBP, BreakpointSource_t iSrc, Breakpoin
 		pBP->bSet      = true;
 		pBP->bEnabled  = true;
 		pBP->bTemp     = bIsTempBreakpoint;
+		pBP->bStop     = true;
+		pBP->bHit      = false;
+		pBP->nHitCount = 0;
 		bStatus = true;
 	}
 
@@ -1667,29 +1702,29 @@ Update_t CmdBreakpointAddPC (int nArgs)
 
 
 //===========================================================================
-Update_t CmdBreakpointAddIO   (int nArgs)
+Update_t CmdBreakpointAddIO (int nArgs)
 {
 	return CmdBreakpointAddMem( nArgs );
 //	return UPDATE_BREAKPOINTS | UPDATE_CONSOLE_DISPLAY;
 }
 
 //===========================================================================
-Update_t CmdBreakpointAddMemA(int nArgs)
+Update_t CmdBreakpointAddMemA (int nArgs)
 {
 	return CmdBreakpointAddMem(nArgs);
 }
 //===========================================================================
-Update_t CmdBreakpointAddMemR(int nArgs)
+Update_t CmdBreakpointAddMemR (int nArgs)
 {
 	return CmdBreakpointAddMem(nArgs, BP_SRC_MEM_READ_ONLY);
 }
 //===========================================================================
-Update_t CmdBreakpointAddMemW(int nArgs)
+Update_t CmdBreakpointAddMemW (int nArgs)
 {
 	return CmdBreakpointAddMem(nArgs, BP_SRC_MEM_WRITE_ONLY);
 }
 //===========================================================================
-Update_t CmdBreakpointAddMem(int nArgs, BreakpointSource_t bpSrc /*= BP_SRC_MEM_RW*/)
+Update_t CmdBreakpointAddMem (int nArgs, BreakpointSource_t bpSrc /*= BP_SRC_MEM_RW*/)
 {
 	BreakpointSource_t   iSrc = bpSrc;
 	BreakpointOperator_t iCmp = BP_OP_EQUAL;
@@ -1717,7 +1752,7 @@ Update_t CmdBreakpointAddMem(int nArgs, BreakpointSource_t bpSrc /*= BP_SRC_MEM_
 }
 
 //===========================================================================
-Update_t CmdBreakpointAddVideo(int nArgs)
+Update_t CmdBreakpointAddVideo (int nArgs)
 {
 	BreakpointSource_t   iSrc = BP_SRC_VIDEO_SCANNER;
 	BreakpointOperator_t iCmp = BP_OP_EQUAL;
@@ -1745,36 +1780,101 @@ Update_t CmdBreakpointAddVideo(int nArgs)
 }
 
 //===========================================================================
-void _BWZ_Clear( Breakpoint_t * aBreakWatchZero, int iSlot )
+Update_t CmdBreakpointClear (int nArgs)
 {
-	aBreakWatchZero[ iSlot ].bSet     = false;
-	aBreakWatchZero[ iSlot ].bEnabled = false;
-	aBreakWatchZero[ iSlot ].nLength  = 0;
+	if (!g_nBreakpoints)
+		return _BP_InfoNone();
+
+	if (!nArgs)
+	{
+		_BWZ_RemoveAll( g_aBreakpoints, MAX_BREAKPOINTS, g_nBreakpoints );
+	}
+	else
+	{
+		_BWZ_ClearViaArgs( nArgs, g_aBreakpoints, MAX_BREAKPOINTS, g_nBreakpoints );
+	}
+
+	return UPDATE_DISASM | UPDATE_BREAKPOINTS | UPDATE_CONSOLE_DISPLAY;
 }
 
-void _BWZ_RemoveOne( Breakpoint_t *aBreakWatchZero, const int iSlot, int & nTotal )
+//===========================================================================
+Update_t CmdBreakpointDisable (int nArgs)
 {
-	if (aBreakWatchZero[iSlot].bSet)
-	{
-		_BWZ_Clear( aBreakWatchZero, iSlot );
-		nTotal--;
-	}
+	if (! g_nBreakpoints)
+		return _BP_InfoNone();
+
+	if (! nArgs)
+		return Help_Arg_1( CMD_BREAKPOINT_DISABLE );
+
+	_BWZ_EnableDisableViaArgs( nArgs, g_aBreakpoints, MAX_BREAKPOINTS, false );
+
+	return UPDATE_BREAKPOINTS;
 }
 
-void _BWZ_RemoveAll( Breakpoint_t *aBreakWatchZero, const int nMax, int & nTotal )
+//===========================================================================
+Update_t CmdBreakpointEdit (int nArgs)
 {
-	for ( int iSlot = 0; iSlot < nMax; iSlot++ )
+	return (UPDATE_DISASM | UPDATE_BREAKPOINTS);
+}
+
+
+//===========================================================================
+Update_t CmdBreakpointEnable (int nArgs) {
+
+	if (! g_nBreakpoints)
+		return _BP_InfoNone();
+
+	if (! nArgs)
+		return Help_Arg_1( CMD_BREAKPOINT_ENABLE );
+
+	_BWZ_EnableDisableViaArgs( nArgs, g_aBreakpoints, MAX_BREAKPOINTS, true );
+
+	return UPDATE_BREAKPOINTS;
+}
+
+// bpchange # <[E e T t S s]>
+Update_t CmdBreakpointChange (int nArgs)
+{
+	if (! g_nBreakpoints)
+		return _BP_InfoNone();
+
+	if (nArgs < 2)
+		return Help_Arg_1( CMD_BREAKPOINT_CHANGE );
+
+	const int iSlot = g_aArgs[1].nValue;
+	if (iSlot >= 0 && iSlot < MAX_BREAKPOINTS && g_aBreakpoints[iSlot].bSet)
 	{
-		_BWZ_RemoveOne( aBreakWatchZero, iSlot, nTotal );
+		Breakpoint_t & bp = g_aBreakpoints[iSlot];
+		int iParam;
+		int iParamArg;
+
+		for (iParamArg = 2; iParamArg <= nArgs; ++iParamArg)
+		{
+			int bFound = FindParam( g_aArgs[ iParamArg ].sArg, MATCH_EXACT, iParam, _PARAM_BP_CHANGE_BEGIN, _PARAM_BP_CHANGE_END, true );
+			if (! bFound)
+				return Help_Arg_1( CMD_BREAKPOINT_CHANGE );
+
+			switch (iParam)
+			{
+				case PARAM_BP_CHANGE_ENABLE  : bp.bEnabled = true ; break;
+				case PARAM_BP_CHANGE_DISABLE : bp.bEnabled = false; break;
+				case PARAM_BP_CHANGE_TEMP_ON : bp.bTemp    = true ; break;
+				case PARAM_BP_CHANGE_TEMP_OFF: bp.bTemp    = false; break;
+				case PARAM_BP_CHANGE_STOP_ON : bp.bStop    = true ; break;
+				case PARAM_BP_CHANGE_STOP_OFF: bp.bStop    = false; break;
+			}
+		}
 	}
+
+	return UPDATE_BREAKPOINTS;
 }
 
 // called by BreakpointsClear, WatchesClear, ZeroPagePointersClear
 //===========================================================================
-void _BWZ_ClearViaArgs( int nArgs, Breakpoint_t * aBreakWatchZero, const int nMax, int & nTotal )
+void _BWZ_ClearViaArgs ( int nArgs, Breakpoint_t * aBreakWatchZero, const int nMax, int & nTotal )
 {
 	int iSlot = 0;
-	
+
 	// Clear specified breakpoints
 	while (nArgs)
 	{
@@ -1797,7 +1897,8 @@ void _BWZ_ClearViaArgs( int nArgs, Breakpoint_t * aBreakWatchZero, const int nMa
 
 // called by BreakpointsEnable, WatchesEnable, ZeroPagePointersEnable
 // called by BreakpointsDisable, WatchesDisable, ZeroPagePointersDisable
-void _BWZ_EnableDisableViaArgs( int nArgs, Breakpoint_t * aBreakWatchZero, const int nMax, const bool bEnabled )
+//===========================================================================
+void _BWZ_EnableDisableViaArgs ( int nArgs, Breakpoint_t * aBreakWatchZero, const int nMax, const bool bEnabled )
 {
 	int iSlot = 0;
 
@@ -1811,7 +1912,7 @@ void _BWZ_EnableDisableViaArgs( int nArgs, Breakpoint_t * aBreakWatchZero, const
 			for ( ; iSlot < nMax; iSlot++ )
 			{
 				aBreakWatchZero[ iSlot ].bEnabled = bEnabled;
-			}			
+			}
 		}
 		else
 		if ((iSlot >= 0) && (iSlot < nMax))
@@ -1824,82 +1925,52 @@ void _BWZ_EnableDisableViaArgs( int nArgs, Breakpoint_t * aBreakWatchZero, const
 }
 
 //===========================================================================
-Update_t CmdBreakpointClear (int nArgs)
+void _BWZ_List ( const Breakpoint_t * aBreakWatchZero, const int iBWZ ) //, bool bZeroBased )
 {
-	if (!g_nBreakpoints)
-		return ConsoleDisplayError("There are no breakpoints defined.");
-
-	if (!nArgs)
-	{
-		_BWZ_RemoveAll( g_aBreakpoints, MAX_BREAKPOINTS, g_nBreakpoints );
-	}
-	else
-	{
-		_BWZ_ClearViaArgs( nArgs, g_aBreakpoints, MAX_BREAKPOINTS, g_nBreakpoints );
-	}
-
-	return UPDATE_DISASM | UPDATE_BREAKPOINTS | UPDATE_CONSOLE_DISPLAY;
-}
-
-//===========================================================================
-Update_t CmdBreakpointDisable (int nArgs)
-{
-	if (! g_nBreakpoints)
-		return ConsoleDisplayError("There are no (PC) Breakpoints defined.");
-
-	if (! nArgs)
-		return Help_Arg_1( CMD_BREAKPOINT_DISABLE );
-
-	_BWZ_EnableDisableViaArgs( nArgs, g_aBreakpoints, MAX_BREAKPOINTS, false );
-
-	return UPDATE_BREAKPOINTS;
-}
-
-//===========================================================================
-Update_t CmdBreakpointEdit (int nArgs)
-{
-	return (UPDATE_DISASM | UPDATE_BREAKPOINTS);
-}
-
-
-//===========================================================================
-Update_t CmdBreakpointEnable (int nArgs) {
-
-	if (! g_nBreakpoints)
-		return ConsoleDisplayError("There are no (PC) Breakpoints defined.");
-
-	if (! nArgs)
-		return Help_Arg_1( CMD_BREAKPOINT_ENABLE );
-
-	_BWZ_EnableDisableViaArgs( nArgs, g_aBreakpoints, MAX_BREAKPOINTS, true );
-
-	return UPDATE_BREAKPOINTS;
-}
-
-
-void _BWZ_List( const Breakpoint_t * aBreakWatchZero, const int iBWZ ) //, bool bZeroBased )
-{
-	static const char sFlags[] = "-*";
+	static const char sEnabledFlags[] = "-E";
+	static const char sStopFlags[]    = "-S";
+	static const char sTempFlags[]    = "-T";
+	static const char sHitFlags[]     = " *";
 
 	std::string sAddressBuf;
 	std::string const& sSymbol = GetSymbol(aBreakWatchZero[iBWZ].nAddress, 2, sAddressBuf);
 
-	char cBPM = aBreakWatchZero[iBWZ].eSource == BP_SRC_MEM_READ_ONLY ? 'R'
-				: aBreakWatchZero[iBWZ].eSource == BP_SRC_MEM_WRITE_ONLY ? 'W'
-				: ' ';
+	const char *aMemAccess[4] =
+	{
+		 "R  "
+		,"W  "
+		,"R/W"
+		,"   "
+	};
 
-	ConsoleBufferPushFormat( "  #%d %c %04X %c %s",
+	int iBPM;
+	switch (aBreakWatchZero[iBWZ].eSource)
+	{
+		case BP_SRC_MEM_READ_ONLY : iBPM = 0; break;
+		case BP_SRC_MEM_WRITE_ONLY: iBPM = 1; break;
+		case BP_SRC_MEM_RW        : iBPM = 2; break;
+		default                   : iBPM = 3; break;
+	}
+
+	// ID On Stop Temp HitCounter  Addr Mem Symbol
+	ConsolePrintFormat( "  #%X %c  %c    %c  %c   %08X " CHC_ADDRESS " %04X " CHC_INFO "%s" CHC_SYMBOL " %s",
 //		(bZeroBased ? iBWZ + 1 : iBWZ),
 		iBWZ,
-		sFlags[ aBreakWatchZero[ iBWZ ].bEnabled ? 1 : 0 ],
-		aBreakWatchZero[ iBWZ ].nAddress,
-		cBPM,
+		sEnabledFlags[ aBreakWatchZero[ iBWZ ].bEnabled ? 1 : 0 ],
+		sStopFlags   [ aBreakWatchZero[ iBWZ ].bStop    ? 1 : 0 ],
+		sTempFlags   [ aBreakWatchZero[ iBWZ ].bTemp    ? 1 : 0 ],
+		sHitFlags    [ aBreakWatchZero[ iBWZ ].bHit     ? 1 : 0 ],
+		               aBreakWatchZero[ iBWZ ].nHitCount,
+		               aBreakWatchZero[ iBWZ ].nAddress,
+		aMemAccess[ iBPM ],
 		sSymbol.c_str()
 	);
 }
 
-void _BWZ_ListAll( const Breakpoint_t * aBreakWatchZero, const int nMax )
+void _BWZ_ListAll ( const Breakpoint_t * aBreakWatchZero, const int nMax )
 {
+	ConsolePrintFormat( "  ID On Stop Temp HitCounter  Addr Mem Symbol" );
+
 	int iBWZ = 0;
 	while (iBWZ < nMax) // 
 	{
@@ -1908,6 +1979,27 @@ void _BWZ_ListAll( const Breakpoint_t * aBreakWatchZero, const int nMax )
 			_BWZ_List( aBreakWatchZero, iBWZ );
 		}
 		iBWZ++;
+	}
+}
+
+//===========================================================================
+void _BWZ_RemoveOne ( Breakpoint_t *aBreakWatchZero, const int iSlot, int & nTotal )
+{
+	if (aBreakWatchZero[iSlot].bSet)
+	{
+		aBreakWatchZero[ iSlot ].bSet     = false;
+		aBreakWatchZero[ iSlot ].bEnabled = false;
+		aBreakWatchZero[ iSlot ].nLength  = 0;
+		nTotal--;
+	}
+}
+
+//===========================================================================
+void _BWZ_RemoveAll ( Breakpoint_t *aBreakWatchZero, const int nMax, int & nTotal )
+{
+	for ( int iSlot = 0; iSlot < nMax; iSlot++ )
+	{
+		_BWZ_RemoveOne( aBreakWatchZero, iSlot, nTotal );
 	}
 }
 
@@ -1993,7 +2085,7 @@ Update_t CmdBreakpointSave (int nArgs)
 // Assembler ______________________________________________________________________________________
 
 //===========================================================================
-Update_t _CmdAssemble( WORD nAddress, int iArg, int nArgs )
+Update_t _CmdAssemble ( WORD nAddress, int iArg, int nArgs )
 {
 	// if AlphaNumeric
 	ArgToken_e iTokenSrc = NO_TOKEN;
@@ -2175,8 +2267,7 @@ static Update_t CmdGo (int nArgs, const bool bFullSpeed)
 	g_bLastGoCmdWasFullSpeed = bFullSpeed;
 	g_bGoCmd_ReinitFlag = true;
 
-	g_nAppMode = MODE_STEPPING;
-	GetFrame().FrameRefreshStatus(DRAW_TITLE | DRAW_DISK_STATUS);
+	DebugEnterStepping();
 
 	SoundCore_SetFade(FADE_IN);
 
@@ -2244,8 +2335,8 @@ Update_t CmdTrace (int nArgs)
 	g_nDebugStepCycles  = 0;
 	g_nDebugStepStart = regs.pc;
 	g_nDebugStepUntil = -1;
-	g_nAppMode = MODE_STEPPING;
-	GetFrame().FrameRefreshStatus(DRAW_TITLE | DRAW_DISK_STATUS);
+
+	DebugEnterStepping();
 	DebugContinueStepping(true);
 
 	return UPDATE_ALL; // TODO: Verify // 0
@@ -2302,8 +2393,7 @@ Update_t CmdTraceLine (int nArgs)
 	g_nDebugStepStart = regs.pc;
 	g_nDebugStepUntil = -1;
 
-	g_nAppMode = MODE_STEPPING;
-	GetFrame().FrameRefreshStatus(DRAW_TITLE | DRAW_DISK_STATUS);
+	DebugEnterStepping();
 	DebugContinueStepping(true);
 
 	return UPDATE_ALL; // TODO: Verify // 0
@@ -2423,7 +2513,7 @@ Update_t CmdLBR(int nArgs)
 
 // Color __________________________________________________________________________________________
 
-void _ColorPrint( int iColor, COLORREF nColor )
+void _ColorPrint ( int iColor, COLORREF nColor )
 {
 	int R = (nColor >>  0) & 0xFF;
 	int G = (nColor >>  8) & 0xFF;
@@ -2432,7 +2522,7 @@ void _ColorPrint( int iColor, COLORREF nColor )
 	ConsoleBufferPushFormat( " Color %01X: %02X %02X %02X", iColor, R, G, B ); // TODO: print name of colors!
 }
 
-void _CmdColorGet( const int iScheme, const int iColor )
+void _CmdColorGet ( const int iScheme, const int iColor )
 {
 	if (iColor < NUM_DEBUG_COLORS)
 	{
@@ -2689,7 +2779,7 @@ Update_t CmdConfigSave (int nArgs)
 // Config - Disasm ________________________________________________________________________________
 
 //===========================================================================
-Update_t CmdConfigDisasm( int nArgs )
+Update_t CmdConfigDisasm (int nArgs)
 {
 	int iParam = 0;
 
@@ -3236,7 +3326,7 @@ Update_t CmdCursorRunUntil (int nArgs)
 
 // nDelta must be a power of 2
 //===========================================================================
-void _CursorMoveDownAligned( int nDelta )
+void _CursorMoveDownAligned ( int nDelta )
 {
 	if (g_iWindowThis == WINDOW_DATA)
 	{
@@ -3261,7 +3351,7 @@ void _CursorMoveDownAligned( int nDelta )
 
 // nDelta must be a power of 2
 //===========================================================================
-void _CursorMoveUpAligned( int nDelta )
+void _CursorMoveUpAligned ( int nDelta )
 {
 	if (g_iWindowThis == WINDOW_DATA)
 	{
@@ -3387,7 +3477,7 @@ Update_t CmdCursorPageUp4K (int nArgs)
 }
 
 //===========================================================================
-Update_t CmdCursorSetPC(int)
+Update_t CmdCursorSetPC (int nArgs)
 {
 	regs.pc = g_nDisasmCurAddress; // set PC to current cursor address
 	return UPDATE_DISASM;
@@ -3860,7 +3950,7 @@ Update_t CmdMemoryEnterWord (int nArgs)
 }
 
 //===========================================================================
-void MemMarkDirty( WORD nAddressStart, WORD nAddressEnd )
+void MemMarkDirty ( WORD nAddressStart, WORD nAddressEnd )
 {
 	for ( int iPage = (nAddressStart >> 8); iPage <= (nAddressEnd >> 8); iPage++ )
 	{
@@ -4744,7 +4834,7 @@ int  g_nTextScreen = 0;
 
 // Convert ctrl characters to displayable
 // Note: FormatCharTxtCtrl() and RemapChar()
-static char RemapChar(const char c)
+static char RemapChar (const char c)
 {
 	if ( c < 0x20 )
 		return c + '@'; // Remap INVERSE control character to NORMAL
@@ -4755,7 +4845,7 @@ static char RemapChar(const char c)
 }
 
 
-size_t Util_GetDebuggerText( char* &pText_ )
+size_t Util_GetDebuggerText ( char* &pText_ )
 {
 	char  *pBeg = &g_aTextScreen[0];
 	char  *pEnd = &g_aTextScreen[0];
@@ -5514,7 +5604,7 @@ int CmdTextSave (int nArgs)
 }
 
 //===========================================================================
-int _SearchMemoryFind(
+int _SearchMemoryFind (
 	MemorySearchValues_t vMemorySearchValues,
 	WORD nAddressStart,
 	WORD nAddressEnd )
@@ -6252,7 +6342,7 @@ Update_t CmdOutputRun (int nArgs)
 // Source Level Debugging _________________________________________________________________________
 
 //===========================================================================
-bool BufferAssemblyListing( const std::string & pFileName )
+bool BufferAssemblyListing ( const std::string & pFileName )
 {
 	bool bStatus = false; // true = loaded
 
@@ -6273,7 +6363,7 @@ bool BufferAssemblyListing( const std::string & pFileName )
 
 
 //===========================================================================
-int FindSourceLine( WORD nAddress )
+int FindSourceLine ( WORD nAddress )
 {
 	int iAddress = 0;
 	int iLine = 0;
@@ -6316,7 +6406,7 @@ int FindSourceLine( WORD nAddress )
 }
 
 //===========================================================================
-bool ParseAssemblyListing( bool bBytesToMemory, bool bAddSymbols )
+bool ParseAssemblyListing ( bool bBytesToMemory, bool bAddSymbols )
 {
 	bool bStatus = false; // true = loaded
 
@@ -6553,7 +6643,7 @@ Update_t CmdStackPopPseudo (int nArgs)
 
 // Video __________________________________________________________________________________________
 
-Update_t CmdVideoScannerInfo(int nArgs)
+Update_t CmdVideoScannerInfo (int nArgs)
 {
 	if (nArgs != 1)
 	{
@@ -6581,7 +6671,7 @@ Update_t CmdVideoScannerInfo(int nArgs)
 
 // Cycles __________________________________________________________________________________________
 
-Update_t CmdCyclesInfo(int nArgs)
+Update_t CmdCyclesInfo (int nArgs)
 {
 	if (nArgs != 1)
 	{
@@ -6608,7 +6698,7 @@ Update_t CmdCyclesInfo(int nArgs)
 	return UPDATE_ALL;
 }
 
-Update_t CmdCyclesReset(int /*nArgs*/)
+Update_t CmdCyclesReset (int /*nArgs*/)
 {
 	g_videoScannerDisplayInfo.savedCumulativeCycles = g_nCumulativeCycles;
 	return UPDATE_ALL;
@@ -6628,7 +6718,7 @@ enum ViewVideoPage_t
 	VIEW_PAGE_5  // Pseudo
 };
 
-Update_t _ViewOutput( ViewVideoPage_t iPage, int bVideoModeFlags )
+Update_t _ViewOutput ( ViewVideoPage_t iPage, int bVideoModeFlags )
 {
 	switch ( iPage ) 
 	{
@@ -6981,7 +7071,7 @@ Update_t _CmdWindowViewFull ( int iNewWindow )
 }
 
 //===========================================================================
-void WindowUpdateConsoleDisplayedSize()
+void WindowUpdateConsoleDisplayedSize ()
 {
 	g_nConsoleDisplayLines = MIN_DISPLAY_CONSOLE_LINES;
 #if USE_APPLE_FONT
@@ -7018,7 +7108,7 @@ int WindowGetHeight( int iWindow )
 }
 
 //===========================================================================
-void WindowUpdateDisasmSize()
+void WindowUpdateDisasmSize ()
 {
 	if (g_aWindowConfig[ g_iWindowThis ].bSplit)
 	{
@@ -7034,7 +7124,7 @@ void WindowUpdateDisasmSize()
 }
 
 //===========================================================================
-void WindowUpdateSizes()
+void WindowUpdateSizes ()
 {
 	WindowUpdateDisasmSize();
 	WindowUpdateConsoleDisplayedSize();
@@ -7042,7 +7132,7 @@ void WindowUpdateSizes()
 
 
 //===========================================================================
-Update_t CmdWindowCycleNext( int nArgs )
+Update_t CmdWindowCycleNext (int nArgs)
 {
 	g_iWindowThis++;
 	if (g_iWindowThis >= NUM_WINDOWS)
@@ -7054,7 +7144,7 @@ Update_t CmdWindowCycleNext( int nArgs )
 }
 
 //===========================================================================
-Update_t CmdWindowCyclePrev( int nArgs )
+Update_t CmdWindowCyclePrev (int nArgs)
 {
 	g_iWindowThis--;
 	if (g_iWindowThis < 0)
@@ -7441,7 +7531,7 @@ Update_t CmdZeroPageLoad    (int nArgs)
 */
 
 //===========================================================================
-Update_t CmdZeroPageSave    (int nArgs)
+Update_t CmdZeroPageSave (int nArgs)
 {
 	return UPDATE_CONSOLE_DISPLAY;
 }
@@ -7485,7 +7575,7 @@ Update_t CmdZeroPagePointer (int nArgs)
 
 // Note: Range is [iParamBegin,iParamEnd], not the usually (STL) expected [iParamBegin,iParamEnd)
 //===========================================================================
-int FindParam(LPCTSTR pLookupName, Match_e eMatch, int & iParam_, int iParamBegin, int iParamEnd )
+int FindParam (LPCTSTR pLookupName, Match_e eMatch, int & iParam_, int iParamBegin, int iParamEnd, const bool bCaseSensitive /* false */ )
 {
 	int nFound = 0;
 	int nLen     = _tcslen( pLookupName );
@@ -7495,7 +7585,8 @@ int FindParam(LPCTSTR pLookupName, Match_e eMatch, int & iParam_, int iParamBegi
 		return nFound;
 
 #if ALLOW_INPUT_LOWERCASE
-	eMatch = MATCH_FUZZY;
+	if (! bCaseSensitive) // HACK: Until We fixup all callers using MATCH_EXACT with MATCH_ANYCASE we need to preserve behavior of ALLOW_INPUT_LOWERCASE always being MATCH_FUZZY
+		eMatch = MATCH_FUZZY;
 #endif
 
 	if (eMatch == MATCH_EXACT)
@@ -7504,7 +7595,7 @@ int FindParam(LPCTSTR pLookupName, Match_e eMatch, int & iParam_, int iParamBegi
 		for (iParam = iParamBegin; iParam <= iParamEnd; iParam++ )
 		{
 			TCHAR *pParamName = g_aParameters[iParam].m_sName;
-			int eCompare = _tcsicmp(pLookupName, pParamName);
+			int eCompare = _tcscmp(pLookupName, pParamName);
 			if (! eCompare) // exact match?
 			{
 				nFound++;
@@ -7549,7 +7640,7 @@ int FindParam(LPCTSTR pLookupName, Match_e eMatch, int & iParam_, int iParamBegi
 }
 
 //===========================================================================
-int FindCommand( LPCTSTR pName, CmdFuncPtr_t & pFunction_, int * iCommand_ )
+int FindCommand ( LPCTSTR pName, CmdFuncPtr_t & pFunction_, int * iCommand_ )
 {
 	g_vPotentialCommands.clear();
 
@@ -7608,7 +7699,7 @@ int FindCommand( LPCTSTR pName, CmdFuncPtr_t & pFunction_, int * iCommand_ )
 }
 
 //===========================================================================
-void DisplayAmbigiousCommands( int nFound )
+void DisplayAmbigiousCommands ( int nFound )
 {
 	ConsolePrintFormat("Ambiguous " CHC_NUM_DEC "%" SIZE_T_FMT CHC_DEFAULT " Commands:"
 		, g_vPotentialCommands.size()
@@ -7971,11 +8062,6 @@ int ParseInput ( LPTSTR pConsoleInput, bool bCook )
 	return nArg;
 }
 
-//===========================================================================
-void ParseParameter( )
-{
-}
-
 // Return address of next line to write to.
 //===========================================================================
 ProfileLine_t ProfileLinePeek ( int iLine )
@@ -7999,7 +8085,7 @@ ProfileLine_t ProfileLinePush ()
 	return ProfileLinePeek( g_nProfileLine  );
 }
 
-void ProfileLineReset()
+void ProfileLineReset ()
 {
 	g_nProfileLine = 0;
 }
@@ -8007,7 +8093,7 @@ void ProfileLineReset()
 
 #define DELIM "%s"
 //===========================================================================
-void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
+void ProfileFormat ( bool bExport, ProfileFormat_e eFormatMode )
 {
 	std::string sSeparator7;
 	std::string sSeparator2;
@@ -8226,7 +8312,7 @@ void ProfileFormat( bool bExport, ProfileFormat_e eFormatMode )
 
 
 //===========================================================================
-void ProfileReset()
+void ProfileReset ()
 {
 	for ( int iOpcode = 0; iOpcode < NUM_OPCODES; iOpcode++ )
 	{
@@ -8245,7 +8331,7 @@ void ProfileReset()
 
 
 //===========================================================================
-bool ProfileSave()
+bool ProfileSave ()
 {
 	bool bStatus = false;
 
@@ -8273,7 +8359,7 @@ bool ProfileSave()
 }
 
 
-static void InitDisasm(void)
+static void InitDisasm (void)
 {
 	g_nDisasmCurAddress = regs.pc;
 	DisasmCalcTopBotAddress();
@@ -8343,6 +8429,7 @@ void DebugBegin ()
 //===========================================================================
 void DebugExitDebugger ()
 {
+	ClearTempBreakpoints();  // make sure we remove temp breakpoints before checking
 	if (g_nBreakpoints == 0 && g_hTraceFile == NULL)
 	{
 		DebugEnd();
@@ -8359,7 +8446,7 @@ void DebugExitDebugger ()
 
 //===========================================================================
 
-static void CheckBreakOpcode( int iOpcode )
+static void CheckBreakOpcode ( int iOpcode )
 {
 	if (iOpcode == 0x00)	// BRK
 		g_bDebugBreakpointHit |= IsDebugBreakOnInvalid(AM_IMPLIED) ? BP_HIT_INVALID : 0;
@@ -8404,7 +8491,7 @@ static void CheckBreakOpcode( int iOpcode )
 		g_bDebugBreakpointHit |= BP_HIT_OPCODE;
 }
 
-static void UpdateLBR(void)
+static void UpdateLBR (void)
 {
 	const BYTE nOpcode = *(mem + regs.pc);
 
@@ -8437,7 +8524,7 @@ static void UpdateLBR(void)
 		g_LBR = regs.pc;
 }
 
-void DebugContinueStepping(const bool bCallerWillUpdateDisplay/*=false*/)
+void DebugContinueStepping (const bool bCallerWillUpdateDisplay/*=false*/)
 {
 	static bool bForceSingleStepNext = false; // Allow at least one instruction to execute so we don't trigger on the same invalid opcode
 
@@ -8526,7 +8613,22 @@ void DebugContinueStepping(const bool bCallerWillUpdateDisplay/*=false*/)
 			else if (g_bDebugBreakpointHit & BP_HIT_OPCODE)
 				stopReason = "Opcode match";
 			else if (g_bDebugBreakpointHit & BP_HIT_REG)
-				stopReason = "Register matches value";
+			{
+					if (g_pDebugBreakpointHit)
+					{
+						int iBreakpoint = (g_pDebugBreakpointHit - g_aBreakpoints);
+						stopReason = StrFormat( "Register %s%s%s matches breakpoint %s#%s%d",
+							CHC_REGS,
+							g_aBreakpointSource[ g_pDebugBreakpointHit->eSource ],
+							CHC_DEFAULT,
+							CHC_ARG_SEP,
+							CHC_NUM_HEX,
+							iBreakpoint
+						);
+					}
+					else
+						stopReason = "Register matches value";
+			}
 			else if (g_bDebugBreakpointHit & BP_HIT_MEM)
 				stopReason = StrFormat("Memory access at $%04X", g_uBreakMemoryAddress);
 			else if (g_bDebugBreakpointHit & BP_HIT_MEMW)
@@ -8548,7 +8650,7 @@ void DebugContinueStepping(const bool bCallerWillUpdateDisplay/*=false*/)
 				skipStopReason = true;
 
 			if (!skipStopReason)
-				ConsoleBufferPushFormat( "Stop reason: %s", stopReason.c_str() );
+				ConsolePrintFormat( CHC_INFO "Stop reason: " CHC_DEFAULT "%s", stopReason.c_str() );
 
 			for (int i = 0; i < NUM_BREAK_ON_DMA; i++)
 			{
@@ -8559,7 +8661,7 @@ void DebugContinueStepping(const bool bCallerWillUpdateDisplay/*=false*/)
 						stopReason = StrFormat("HDD DMA to memory $%04X-%04X (BP#%d)", g_DebugBreakOnDMA[i].memoryAddr, g_DebugBreakOnDMA[i].memoryAddrEnd, g_DebugBreakOnDMA[i].BPid);
 					else if (nDebugBreakpointHit & BP_DMA_FROM_MEM)
 						stopReason = StrFormat("HDD DMA from memory $%04X-%04X (BP#%d)", g_DebugBreakOnDMA[i].memoryAddr, g_DebugBreakOnDMA[i].memoryAddrEnd, g_DebugBreakOnDMA[i].BPid);
-					ConsoleBufferPushFormat("Stop reason: %s", stopReason.c_str());
+					ConsolePrintFormat( CHC_INFO "Stop reason: " CHC_DEFAULT "%s", stopReason.c_str() );
 				}
 			}
 
@@ -8590,7 +8692,7 @@ void DebugContinueStepping(const bool bCallerWillUpdateDisplay/*=false*/)
 }
 
 //===========================================================================
-void DebugStopStepping(void)
+void DebugStopStepping (void)
 {
 	_ASSERT(g_nAppMode == MODE_STEPPING);
 
@@ -8598,7 +8700,6 @@ void DebugStopStepping(void)
 		return;
 
 	g_nDebugSteps = 0; // On next DebugContinueStepping(), stop single-stepping and transition to MODE_DEBUG
-	ClearTempBreakpoints();
 }
 
 //===========================================================================
@@ -8829,7 +8930,7 @@ void DebugInitialize ()
 }
 
 //===========================================================================
-void DebugReset(void)
+void DebugReset (void)
 {
 	g_videoScannerDisplayInfo.Reset();
 	g_LBR = LBR_UNDEFINED;
@@ -8837,7 +8938,7 @@ void DebugReset(void)
 
 // Add character to the input line
 //===========================================================================
-void DebuggerInputConsoleChar( TCHAR ch )
+void DebuggerInputConsoleChar ( TCHAR ch )
 {
 	_ASSERT(g_nAppMode == MODE_DEBUG);
 
@@ -8954,7 +9055,7 @@ Update_t DebuggerProcessCommand ( const bool bEchoConsoleInput )
 	return bUpdateDisplay;
 }
 
-void ToggleFullScreenConsole()
+void ToggleFullScreenConsole ()
 {
 	// Switch to Console Window
 	if (g_iWindowThis != WINDOW_CONSOLE)
@@ -8968,7 +9069,7 @@ void ToggleFullScreenConsole()
 }
 
 //===========================================================================
-void DebuggerProcessKey( int keycode )
+void DebuggerProcessKey ( int keycode )
 {
 	if (g_nAppMode != MODE_DEBUG)
 		return;
@@ -9349,7 +9450,7 @@ void DebuggerProcessKey( int keycode )
 		UpdateDisplay( bUpdateDisplay );
 }
 
-void DebugDisplay( BOOL bInitDisasm/*=FALSE*/ )
+void DebugDisplay ( BOOL bInitDisasm/*=FALSE*/ )
 {
 	if (bInitDisasm)
 		InitDisasm();
@@ -9367,14 +9468,14 @@ void DebugDisplay( BOOL bInitDisasm/*=FALSE*/ )
 
 
 //===========================================================================
-void DebuggerUpdate()
+void DebuggerUpdate ()
 {
 	DebuggerCursorUpdate();
 }
 
 
 //===========================================================================
-void DebuggerCursorUpdate()
+void DebuggerCursorUpdate ()
 {
 	if (g_nAppMode != MODE_DEBUG)
 		return;
@@ -9401,7 +9502,7 @@ void DebuggerCursorUpdate()
 
 
 //===========================================================================
-void DebuggerCursorNext()
+void DebuggerCursorNext ()
 {
 	g_bInputCursor ^= true;
 	if (g_bInputCursor)
@@ -9412,14 +9513,14 @@ void DebuggerCursorNext()
 
 
 //===========================================================================
-//char DebuggerCursorGet()
+//char DebuggerCursorGet ()
 //{
 //	return g_aInputCursor[ g_iInputCursor ];
 //}
 
 
 //===========================================================================
-bool IsDebugSteppingAtFullSpeed(void)
+bool IsDebugSteppingAtFullSpeed (void)
 {
 	return (g_nAppMode == MODE_STEPPING) && g_bDebugFullSpeed;
 }
