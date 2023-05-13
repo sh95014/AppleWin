@@ -1,4 +1,28 @@
 /*
+2.9.1.20 Fixed: Changed DISK INFO to have 1 line abbreviation for disk state
+2.9.1.19 Added: QoL to DISK INFO.
+    Colorized numbers and status to improve readability.
+    Also shows the .WOZ current shift register.
+2.9.1.18 Fixed: NTSC LOAD was failing to import BMPs exported from GIMP.
+    To export a 64x256 bitmap from GIMP:
+      1. File, Export As...
+      2. Use a file extension of .bmp
+      3. Export Image as BMP
+         Compatibility Options
+           [x] Do not write color space information
+         Advanced Options
+           32 Bits
+             (x) X8 R8 G8 B8
+    In the debugger load your .bmp file:
+      NTSC LOAD palette.bmp
+2.9.1.17 Fixed: Ctrl-Space failing to step over a long sub-routine (and wasn't providing any feedback on why it failed.) GH #1194
+    Increased the max steps to 0xFFFFF (from 0xFFFF)
+    If step-over succeeds the debugger's feedback is:
+        "Stop reason: Register PC matches 'Go until' address $nnnn"
+    If step-over fails (3 possible states), new (QoL) feedback from the debugger is:
+        "INFO: Didn't step over JSR! (RTS $nnnn on top of stack.)"
+        "WARN: Didn't step over JSR! (Stack has RTS $nnnn but needs fixup: $xx bytes)"
+        "ERROR: Didn't step over JSR! (RTS $nnnn not found!)"
 2.9.1.16 Added: QoL to BPL. Header and colorized address, mem, and symbols.
 2.9.1.15 Added: QoL when a breakpoint register is hit display which register and breakpoint triggered it.
     Example:

@@ -53,7 +53,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MAKE_VERSION(a,b,c,d) ((a<<24) | (b<<16) | (c<<8) | (d))
 
 	// See /docs/Debugger_Changelog.txt for full details
-	const int DEBUGGER_VERSION = MAKE_VERSION(2,9,1,15);
+	const int DEBUGGER_VERSION = MAKE_VERSION(2,9,1,20);
 
 
 // Public _________________________________________________________________________________________
@@ -2294,7 +2294,8 @@ Update_t CmdStepOver (int nArgs)
 
 	while (nDebugSteps -- > 0)
 	{
-		int nOpcode = *(mem + regs.pc); // g_nDisasmCurAddress
+		int nOpcode = *(mem + regs.pc);
+		WORD nExpectedAddr = (regs.pc + 3) & _6502_MEM_END; // Wrap around 64K edge case when PC = $FFFD..$FFFF: 20 xx xx
 	//	int eMode = g_aOpcodes[ nOpcode ].addrmode;
 	//	int nByte = g_aOpmodes[eMode]._nBytes;
 	//	if ((eMode ==  AM_A) && 
@@ -2302,10 +2303,80 @@ Update_t CmdStepOver (int nArgs)
 		CmdTrace(0);
 		if (nOpcode == OPCODE_JSR)
 		{
+			/*
+				Repro #2 Test when SP <= 0x01 before JSR and _6502_GetStackReturnAddress() fetch return address
+				300:BA 86 FF A2 01 9A 20 0D 03 A6 FF 9A 60 A9 FF 20 A8 FC 60
+				BPX 306
+				MD1 100
+				MD2 1E0
+
+			        ORG $300
+			        TSX         ; 300
+			        STX $FF     ; 301
+			        LDX #1      ; 303
+			        TXS         ; 305
+			        JSR DelayFF ; 306
+			        LDX $FF     ; 309
+			        TXS         ; 30B
+			        RTS         ; 30C
+			DelayFF LDA #$FF    ; 30D
+			        JSR $FCA8   ; 30F
+			        RTS         ; 312
+			*/
 			CmdStepOut(0);
-			g_nDebugSteps = 0xFFFF;
+
+			int nMaxSteps = 0xFFFFF; // GH #1194
+			g_nDebugSteps = nMaxSteps;
+
 			while (g_nDebugSteps != 0)
+			{
 				DebugContinueStepping(true);
+			}
+
+			// If the PC isn't at the expected address after the JSR print a diagnostic so the user knows the stack may be buggered up
+			if (regs.pc != nExpectedAddr)
+			{
+				WORD nActualAddr  = _6502_GetStackReturnAddress();
+				bool bValidAddr   = (nActualAddr == nExpectedAddr);
+				int  nStackOffset = _6502_FindStackReturnAddress( nExpectedAddr ); // Trace stack to seee if our expected address is on it
+
+				/*
+				            ORG $300
+				Main        JSR HugeWait
+				            RTS
+				HugeWait    LDY #$FF
+				Loop        JSR Delay
+				            DEY
+				            BNE Loop
+				            RTS
+				Delay       LDA #$FF
+				            JSR $FCA8
+				            RTS
+
+				Repro #1
+				1. MSVC: Revert line to repro: int nMaxSteps = 0xFFFF;
+				2. MSVC: Set BP on line above: (regs.pc != nExpectedAddr)
+				3. AppleWin:
+				   F7
+				   300:A0 FF 20 09 03 88 D0 FA 60 A9 FF 20 A8 FC 60
+				   BPX 30B
+				   F7
+				   CALL 768
+				   <Ctrl>-<Space>
+				4. MSVC:Change regs.sp to one of 3 cases:
+				   Case   Addr On Stack   Top of Stack   Diagnostic   nStackOffset   R SP              Continue in emulator
+				   0      No              No             ERROR        -1             regs.sp = 0x1F3
+				   1      Yes             Yes            INFO          O             regs.sp = 0x1F2   R PC FCB3
+				   2      Yes             No             WARN         +1             regs.sp = 0x1F1   R S  F1
+				*/
+				/**/ if (nStackOffset <  0) ConsolePrintFormat( CHC_ERROR   "ERROR" CHC_ARG_SEP ":" CHC_ERROR   " Didn't step over JSR! " CHC_ARG_SEP "(" CHC_DEFAULT "RTS "           CHC_ARG_SEP "$" CHC_ADDRESS "%04X" CHC_DEFAULT " not found!"                                                                CHC_ARG_SEP ")", nExpectedAddr                      ); // Case 0
+				else if (nStackOffset == 0) ConsolePrintFormat( CHC_INFO    "INFO"  CHC_ARG_SEP ":" CHC_INFO    " Didn't step over JSR! " CHC_ARG_SEP "(" CHC_DEFAULT "RTS "           CHC_ARG_SEP "$" CHC_ADDRESS "%04X" CHC_DEFAULT " on top of stack."                                                          CHC_ARG_SEP ")", nExpectedAddr                      ); // Case 1
+				else /*                  */ ConsolePrintFormat( CHC_WARNING "WARN"  CHC_ARG_SEP ":" CHC_WARNING " Didn't step over JSR! " CHC_ARG_SEP "(" CHC_DEFAULT "Stack has RTS " CHC_ARG_SEP "$" CHC_ADDRESS "%04X" CHC_DEFAULT " but needs fixup: " CHC_ARG_SEP "$" CHC_NUM_HEX "%02X" CHC_DEFAULT " bytes" CHC_ARG_SEP ")", nExpectedAddr, nStackOffset & 0xFF ); // Case 2
+
+				ConsolePrintFormat( CHC_DEFAULT "  Please report '" CHC_SYMBOL "nMaxSteps" CHC_ARG_SEP " = " CHC_DEFAULT "0x" CHC_NUM_HEX "%04X" CHC_DEFAULT "' to:", nMaxSteps );
+				ConsolePrintFormat( CHC_PATH    "  https://github.com/AppleWin/AppleWin/issues/1194"               );
+				ConsoleUpdate();
+			}
 		}
 	}
 
@@ -2317,13 +2388,11 @@ Update_t CmdStepOut (int nArgs)
 {
 	// TODO: "RET" should probably pop the Call stack
 	// Also see: CmdCursorJumpRetAddr
-	WORD nAddress;
-	if (_6502_GetStackReturnAddress( nAddress ))
-	{
-		nArgs = _Arg_1( nAddress );
-		g_aArgs[1].sArg[0] = 0;
-		CmdGo( 1, true );
-	}
+	WORD nAddress = _6502_GetStackReturnAddress();
+
+	nArgs = _Arg_1( nAddress );
+	g_aArgs[1].sArg[0] = 0;
+	CmdGo( 1, true );
 
 	return UPDATE_ALL;
 }
@@ -3296,22 +3365,19 @@ Update_t CmdCursorJumpPC (int nArgs)
 //===========================================================================
 Update_t CmdCursorJumpRetAddr (int nArgs)
 {
-	WORD nAddress = 0;
-	if (_6502_GetStackReturnAddress( nAddress ))
-	{	
-		g_nDisasmCurAddress = nAddress;
+	WORD nAddress = _6502_GetStackReturnAddress();
+	g_nDisasmCurAddress = nAddress;
 
-		if (CURSOR_ALIGN_CENTER == nArgs)
-		{
-			WindowUpdateDisasmSize();
-		}
-		else
-		if (CURSOR_ALIGN_TOP == nArgs)
-		{
-			g_nDisasmCurLine = 0;
-		}
-		DisasmCalcTopBotAddress();
+	if (CURSOR_ALIGN_CENTER == nArgs)
+	{
+		WindowUpdateDisasmSize();
 	}
+	else
+	if (CURSOR_ALIGN_TOP == nArgs)
+	{
+		g_nDisasmCurLine = 0;
+	}
+	DisasmCalcTopBotAddress();
 
 	return UPDATE_ALL;
 }
@@ -3574,7 +3640,7 @@ Update_t CmdFlag (int nArgs)
 //     DISK # PROTECT #                              // Write-protect disk on/off
 //     DISK # "<filename>"                           // Mount filename as floppy disk
 // TODO:
-//     DISK # READ  <Track> <Sector> <NumSec> <Addr>	 // Read Track/Sector(s)
+//     DISK # READ  <Track> <Sector> <NumSec> <Addr>     // Read Track/Sector(s)
 //     DISK # READ  <Track> <Sector> Addr:Addr           // Read Track/Sector(s)
 //     DISK # WRITE <Track> <Sector> Addr:Addr           // Write Track/Sector(s)
 // Examples:
@@ -3615,17 +3681,43 @@ Update_t CmdDisk (int nArgs)
 
 	if (iParam == PARAM_DISK_INFO)
 	{
-		if (nArgs > 2)
+		if (nArgs > 1)
 			return HelpLastCommand();
 
-		ConsoleBufferPushFormat("FW%2d: D%d at T$%s, phase $%s, bitOffset $%04X, extraCycles %.2f, %s",
+		Disk_Status_e eDiskState;
+		LPCTSTR       sDiskState = diskCard.GetCurrentState(eDiskState);
+		BYTE          nShiftReg  = diskCard.GetCurrentShiftReg();
+
+		static const char *aDiskStatusCHC[NUM_DISK_STATUS] =
+		{
+			 CHC_INFO     "%s" CHC_DEFAULT  "    " CHC_NUM_HEX "    " // DISK_STATUS_OFF
+			,CHC_COMMAND  "%s" CHC_DEFAULT  " << " CHC_NUM_HEX "%02X" // DISK_STATUS_READ
+			,CHC_ERROR    "%s" CHC_DEFAULT  " >> " CHC_NUM_HEX "%02X" // DISK_STATUS_WRITE
+			,CHC_WARNING  "%s" CHC_DEFAULT  " >| " CHC_NUM_HEX "%02X" // DISK_STATUS_PROT
+			,CHC_INFO     "%s" CHC_DEFAULT "     " CHC_NUM_HEX "    " // DISK_STATUS_EMPTY
+			,CHC_INFO     "%s" CHC_DEFAULT "     " CHC_NUM_HEX "    " // DISK_STATUS_SPIN
+		};
+
+		std::string Format(
+			/*CHC_DEFAULT*/ "FW"           CHC_NUM_DEC "%2d"  CHC_ARG_SEP ":"
+			  CHC_DEFAULT   " D"           CHC_NUM_DEC "%d"
+			  CHC_DEFAULT   " T$"          CHC_NUM_HEX "%s"   CHC_ARG_SEP ","
+			  CHC_DEFAULT   " Phase $"     CHC_NUM_HEX "%s"   CHC_ARG_SEP ","
+			  CHC_DEFAULT   " bitOffset $" CHC_ADDRESS "%04X" CHC_ARG_SEP ","
+			  CHC_DEFAULT   " Cycles "     CHC_NUM_DEC "%.2f" CHC_ARG_SEP ", "
+		);
+		Format += aDiskStatusCHC[eDiskState];
+
+		ConsolePrintFormat(
+			Format.c_str(),
 			diskCard.GetCurrentFirmware(),
 			diskCard.GetCurrentDrive() + 1,
 			diskCard.GetCurrentTrackString().c_str(),
 			diskCard.GetCurrentPhaseString().c_str(),
 			diskCard.GetCurrentBitOffset(),
 			diskCard.GetCurrentExtraCycles(),
-			diskCard.GetCurrentState()
+			sDiskState,
+			nShiftReg
 		);
 
 		return ConsoleUpdate();
@@ -5476,6 +5568,10 @@ Update_t CmdNTSC (int nArgs)
 							&&  (bmp.nGreenMask == 0x00FF0000 )
 							&&  (bmp.nBlueMask  == 0x0000FF00 ))
 								bSwizzle = true;
+							if ((bmp.nRedMask   == 0x00FF0000 ) // Gimp 32 Bits, X8 R8 G8 B8
+							&&  (bmp.nGreenMask == 0x0000FF00 )
+							&&  (bmp.nBlueMask  == 0x000000FF ))
+								bSwizzle = false;
 						}
 					}
 				}
@@ -7084,6 +7180,9 @@ void WindowUpdateConsoleDisplayedSize ()
 		g_nConsoleDisplayWidth = CONSOLE_WIDTH - 1;
 		g_bConsoleFullWidth = true;
 	}
+
+	g_nConsoleInputMaxLen      = g_nConsoleDisplayWidth-1; // -1 prompt at Start-of-Line, -1 for cursor at End-of-Line
+	g_nConsoleInputScrollWidth = g_nConsoleDisplayWidth-1; // Maximum number of characters for the horizontol scrolling window on the input line
 #else
 	g_nConsoleDisplayWidth = (CONSOLE_WIDTH / 2) + 10;
 	g_bConsoleFullWidth = false;
@@ -8457,31 +8556,31 @@ static void CheckBreakOpcode ( int iOpcode )
 		int iOpcodeType = AM_1;
 		switch (g_aOpcodes[iOpcode].nAddressMode)
 		{
-		case AM_1:    //    Invalid 1 Byte
-		case AM_IMPLIED:
-			iOpcodeType = AM_1;
-			break;
-		case AM_2:    //    Invalid 2 Bytes
-		case AM_M:    //  4 #Immediate
-		case AM_Z:    //  6 Zeropage
-		case AM_ZX:   //  9 Zeropage, X
-		case AM_ZY:   // 10 Zeropage, Y
-		case AM_R:    // 11 Relative
-		case AM_IZX:  // 12 Indexed (Zeropage Indirect, X)
-		case AM_NZY:  // 14 Indirect (Zeropage) Indexed, Y
-		case AM_NZ:   // 15 Indirect (Zeropage)
-			iOpcodeType = AM_2;
-			break;
-		case AM_3:    //    Invalid 3 Bytes
-		case AM_A:    //  5 $Absolute
-		case AM_AX:   //  7 Absolute, X
-		case AM_AY:   //  8 Absolute, Y
-		case AM_IAX:  // 13 Indexed (Absolute Indirect, X)
-		case AM_NA:   // 16 Indirect (Absolute) i.e. JMP
-			iOpcodeType = AM_3;
-			break;
-		default:
-			_ASSERT(0);
+			case AM_1:    //    Invalid 1 Byte
+			case AM_IMPLIED:
+				iOpcodeType = AM_1;
+				break;
+			case AM_2:    //    Invalid 2 Bytes
+			case AM_M:    //  4 #Immediate
+			case AM_Z:    //  6 Zeropage
+			case AM_ZX:   //  9 Zeropage, X
+			case AM_ZY:   // 10 Zeropage, Y
+			case AM_R:    // 11 Relative
+			case AM_IZX:  // 12 Indexed (Zeropage Indirect, X)
+			case AM_NZY:  // 14 Indirect (Zeropage) Indexed, Y
+			case AM_NZ:   // 15 Indirect (Zeropage)
+				iOpcodeType = AM_2;
+				break;
+			case AM_3:    //    Invalid 3 Bytes
+			case AM_A:    //  5 $Absolute
+			case AM_AX:   //  7 Absolute, X
+			case AM_AY:   //  8 Absolute, Y
+			case AM_IAX:  // 13 Indexed (Absolute Indirect, X)
+			case AM_NA:   // 16 Indirect (Absolute) i.e. JMP
+				iOpcodeType = AM_3;
+				break;
+			default:
+				_ASSERT(0);
 		}
 		g_bDebugBreakpointHit |= IsDebugBreakOnInvalid(iOpcodeType) ? BP_HIT_INVALID : 0;
 	}
@@ -8508,16 +8607,18 @@ static void UpdateLBR (void)
 
 	if (g_aOpcodes[nOpcode].nAddressMode == AM_R)
 	{
-		if ( (nOpcode == OPCODE_BRA) ||
-			(nOpcode == OPCODE_BPL && !(regs.ps & AF_SIGN)) ||
-			(nOpcode == OPCODE_BMI && (regs.ps & AF_SIGN)) ||
-			(nOpcode == OPCODE_BVC && !(regs.ps & AF_OVERFLOW)) ||
-			(nOpcode == OPCODE_BVS && (regs.ps & AF_OVERFLOW)) ||
-			(nOpcode == OPCODE_BCC && !(regs.ps & AF_CARRY)) ||
-			(nOpcode == OPCODE_BCS && (regs.ps & AF_CARRY)) ||
-			(nOpcode == OPCODE_BNE && !(regs.ps & AF_ZERO)) ||
-			(nOpcode == OPCODE_BEQ && (regs.ps & AF_ZERO)) )
-			isControlFlowOpcode = true;		// Branch taken
+		if ((nOpcode == OPCODE_BRA)
+		||  (nOpcode == OPCODE_BPL && !(regs.ps & AF_SIGN)    )
+		||  (nOpcode == OPCODE_BMI &&  (regs.ps & AF_SIGN)    )
+		||  (nOpcode == OPCODE_BVC && !(regs.ps & AF_OVERFLOW))
+		||  (nOpcode == OPCODE_BVS &&  (regs.ps & AF_OVERFLOW))
+		||  (nOpcode == OPCODE_BCC && !(regs.ps & AF_CARRY)   )
+		||  (nOpcode == OPCODE_BCS &&  (regs.ps & AF_CARRY)   )
+		||  (nOpcode == OPCODE_BNE && !(regs.ps & AF_ZERO)    )
+		||  (nOpcode == OPCODE_BEQ &&  (regs.ps & AF_ZERO)    ))
+		{
+			isControlFlowOpcode = true; // Branch taken
+		}
 	}
 
 	if (isControlFlowOpcode)
@@ -8607,7 +8708,7 @@ void DebugContinueStepping (const bool bCallerWillUpdateDisplay/*=false*/)
 			bool skipStopReason = false;
 
 			if (regs.pc == g_nDebugStepUntil)
-				stopReason = "PC matches 'Go until' address";
+				stopReason = StrFormat( CHC_DEFAULT "Register " CHC_REGS "PC" CHC_DEFAULT " matches '" CHC_INFO "Go until" CHC_DEFAULT "' address $" CHC_ADDRESS "%04X", g_nDebugStepUntil);
 			else if (g_bDebugBreakpointHit & BP_HIT_INVALID)
 				stopReason = "Invalid opcode";
 			else if (g_bDebugBreakpointHit & BP_HIT_OPCODE)
@@ -8630,22 +8731,22 @@ void DebugContinueStepping (const bool bCallerWillUpdateDisplay/*=false*/)
 						stopReason = "Register matches value";
 			}
 			else if (g_bDebugBreakpointHit & BP_HIT_MEM)
-				stopReason = StrFormat("Memory access at $%04X", g_uBreakMemoryAddress);
+				stopReason = StrFormat("Memory access at " CHC_ARG_SEP "$" CHC_ADDRESS "%04X", g_uBreakMemoryAddress);
 			else if (g_bDebugBreakpointHit & BP_HIT_MEMW)
-				stopReason = StrFormat("Write access at $%04X", g_uBreakMemoryAddress);
+				stopReason = StrFormat("Write access at " CHC_ARG_SEP "$" CHC_ADDRESS "%04X", g_uBreakMemoryAddress);
 			else if (g_bDebugBreakpointHit & BP_HIT_MEMR)
-				stopReason = StrFormat("Read access at $%04X", g_uBreakMemoryAddress);
+				stopReason = StrFormat("Read access at " CHC_ARG_SEP "$" CHC_ADDRESS "%04X", g_uBreakMemoryAddress);
 			else if (g_bDebugBreakpointHit & BP_HIT_PC_READ_FLOATING_BUS_OR_IO_MEM)
 				stopReason = "PC reads from floating bus or I/O memory";
 			else if (g_bDebugBreakpointHit & BP_HIT_INTERRUPT)
 				stopReason = (g_LBR == LBR_UNDEFINED)	? StrFormat("Interrupt occurred (LBR unknown)")
-														: StrFormat("Interrupt occurred at $%04X", g_LBR);
+														: StrFormat("Interrupt occurred at " CHC_ARG_SEP "$" CHC_ADDRESS "%04X", g_LBR);
 			else if (g_bDebugBreakpointHit & BP_HIT_VIDEO_POS)
 				stopReason = StrFormat("Video scanner position matches at vpos=$%04X", NTSC_GetVideoVertForDebugger());
 			else if (g_bDebugBreakpointHit & BP_DMA_TO_IO_MEM)
-				stopReason = StrFormat("HDD DMA to I/O memory or ROM at $%04X", g_DebugBreakOnDMAIO.memoryAddr);
+				stopReason = StrFormat("HDD DMA to I/O memory or ROM at " CHC_ARG_SEP "$" CHC_ADDRESS "%04X", g_DebugBreakOnDMAIO.memoryAddr);
 			else if (g_bDebugBreakpointHit & BP_DMA_FROM_IO_MEM)
-				stopReason = StrFormat("HDD DMA from I/O memory at $%04X ", g_DebugBreakOnDMAIO.memoryAddr);
+				stopReason = StrFormat("HDD DMA from I/O memory at " CHC_ARG_SEP "$" CHC_ADDRESS "%04X ", g_DebugBreakOnDMAIO.memoryAddr);
 			else if (g_bDebugBreakpointHit & (BP_DMA_FROM_MEM | BP_DMA_TO_MEM))
 				skipStopReason = true;
 
@@ -8658,9 +8759,9 @@ void DebugContinueStepping (const bool bCallerWillUpdateDisplay/*=false*/)
 				if (nDebugBreakpointHit)
 				{
 					if (nDebugBreakpointHit & BP_DMA_TO_MEM)
-						stopReason = StrFormat("HDD DMA to memory $%04X-%04X (BP#%d)", g_DebugBreakOnDMA[i].memoryAddr, g_DebugBreakOnDMA[i].memoryAddrEnd, g_DebugBreakOnDMA[i].BPid);
+						stopReason = StrFormat("HDD DMA to memory " CHC_ARG_SEP "$" CHC_ADDRESS "%04X" CHC_ARG_SEP "-" CHC_ADDRESS "%04X" CHC_DEFAULT " (breakpoint %s#%s%d%s)", g_DebugBreakOnDMA[i].memoryAddr, g_DebugBreakOnDMA[i].memoryAddrEnd, CHC_ARG_SEP, CHC_NUM_HEX, g_DebugBreakOnDMA[i].BPid, CHC_DEFAULT);
 					else if (nDebugBreakpointHit & BP_DMA_FROM_MEM)
-						stopReason = StrFormat("HDD DMA from memory $%04X-%04X (BP#%d)", g_DebugBreakOnDMA[i].memoryAddr, g_DebugBreakOnDMA[i].memoryAddrEnd, g_DebugBreakOnDMA[i].BPid);
+						stopReason = StrFormat("HDD DMA from memory " CHC_ARG_SEP "$" CHC_ADDRESS "%04X" CHC_ARG_SEP "-" CHC_ADDRESS "%04X" CHC_DEFAULT " (breakpoint %s#%s%d%s)", g_DebugBreakOnDMA[i].memoryAddr, g_DebugBreakOnDMA[i].memoryAddrEnd, CHC_ARG_SEP, CHC_NUM_HEX, g_DebugBreakOnDMA[i].BPid, CHC_DEFAULT);
 					ConsolePrintFormat( CHC_INFO "Stop reason: " CHC_DEFAULT "%s", stopReason.c_str() );
 				}
 			}
@@ -8968,7 +9069,7 @@ void DebuggerInputConsoleChar ( TCHAR ch )
 			return;
 	}
 	
-	if (g_nConsoleInputChars > (g_nConsoleDisplayWidth-1))
+	if (g_nConsoleInputChars > g_nConsoleInputMaxLen)
 		return;
 
 	if ((ch >= CHAR_SPACE) && (ch <= 126)) // HACK MAGIC # 32 -> ' ', # 126 

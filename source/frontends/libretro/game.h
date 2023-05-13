@@ -4,11 +4,17 @@
 #include "frontends/libretro/environment.h"
 #include "frontends/libretro/diskcontrol.h"
 
-#include "linux/context.h"
-
 #include <chrono>
 #include <string>
 #include <vector>
+
+class LoggerContext;
+class RegistryContext;
+
+namespace common2
+{
+  class PTreeRegistry;
+}
 
 namespace ra2
 {
@@ -23,8 +29,12 @@ namespace ra2
 
     bool loadSnapshot(const std::string & path);
 
+    void reset();
+
+    void updateVariables();
     void executeOneFrame();
     void processInputEvents();
+    void writeAudio(const size_t ms);
 
     void drawVideoBuffer();
 
@@ -42,15 +52,17 @@ namespace ra2
   private:
     // keep them in this order!
     std::shared_ptr<LoggerContext> myLoggerContext;
+    std::shared_ptr<common2::PTreeRegistry> myRegistry;
     std::shared_ptr<RegistryContext> myRegistryContext;
     std::shared_ptr<RetroFrame> myFrame;
 
     common2::Speed mySpeed;  // fixed speed
 
-    std::chrono::steady_clock::time_point firstBtnPress; // for quit
-    int pressCount = 0;
+    std::chrono::steady_clock::time_point myFirstBtnPress;
 
     std::vector<int> myButtonStates;
+
+    size_t myAudioChannelsSelected;
 
     struct MousePosition_t
     {

@@ -632,7 +632,7 @@ static void OneTimeInitialization(HINSTANCE passinstance)
 	}
 	else if (!g_cmdLine.wavFileMockingboard.empty())
 	{
-		if (RiffInitWriteFile(g_cmdLine.wavFileMockingboard.c_str(), 44100, 2))
+		if (RiffInitWriteFile(g_cmdLine.wavFileMockingboard.c_str(), MockingboardCard::SAMPLE_RATE, MockingboardCard::NUM_MB_CHANNELS))
 			GetCardMgr().GetMockingboardCardMgr().OutputToRiff();
 	}
 
@@ -775,6 +775,11 @@ static void RepeatInitialization(void)
 			GetCardMgr().Insert(SLOT3, g_cmdLine.slotInsert[SLOT3]);
 		}
 
+		if (g_cmdLine.slotInsert[SLOT4] != CT_Empty)
+		{
+			GetCardMgr().Insert(SLOT4, g_cmdLine.slotInsert[SLOT4]);
+		}
+
 		if (g_cmdLine.slotInsert[SLOT5] != CT_Empty)
 		{
 			if (GetCardMgr().QuerySlot(SLOT5) != CT_Disk2)	// Ignore if already got Disk2 in slot 5
@@ -860,6 +865,9 @@ static void RepeatInitialization(void)
 
 		if (g_cmdLine.bRemoveNoSlotClock)
 			MemRemoveNoSlotClock();
+
+		if (g_cmdLine.supportExtraMBCardTypes)
+			GetCardMgr().GetMockingboardCardMgr().SetEnableExtraCardTypes(true);
 
 		if (g_cmdLine.noDisk2StepperDefer)
 			GetCardMgr().GetDisk2CardMgr().SetStepperDefer(false);

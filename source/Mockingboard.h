@@ -68,6 +68,11 @@ public:
 
 	static std::string GetSnapshotCardName(void);
 	static std::string GetSnapshotCardNamePhasor(void);
+	static std::string GetSnapshotCardNameMegaAudio(void);
+	static std::string GetSnapshotCardNameSDMusic(void);
+
+	static const unsigned short NUM_MB_CHANNELS = 2;
+	static const DWORD SAMPLE_RATE = 44100;	// Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
 
 private:
 	enum MockingboardUnitState_e { AY_NOP0, AY_NOP1, AY_INACTIVE, AY_READ, AY_NOP4, AY_NOP5, AY_WRITE, AY_LATCH };
@@ -83,7 +88,7 @@ private:
 		bool isAYLatchedAddressValid[NUM_AY8913_PER_SUBUNIT];
 		bool isChipSelected[NUM_AY8913_PER_SUBUNIT];
 
-		MB_SUBUNIT(UINT slot) : sy6522(slot), ssi263(slot)
+		MB_SUBUNIT(UINT slot, SS_CARDTYPE type) : sy6522(slot, type == CT_MegaAudio), ssi263(slot)
 		{
 			nAY8910Number = 0;
 			// sy6522 & ssi263 have already been default constructed
@@ -95,12 +100,12 @@ private:
 			nAYCurrentRegister[0] = nAYCurrentRegister[1] = 0;	// not valid
 			state[0] = state[1] = AY_INACTIVE;
 			isAYLatchedAddressValid[0] = isAYLatchedAddressValid[1] = false;	// after AY reset
-			isChipSelected[0] = type == CT_MockingboardC ? true : false;
+			isChipSelected[0] = type == CT_Phasor ? false : true;	// Only Phasor is false, all other MB variants are true
 			isChipSelected[1] = false;
 		}
 	};
 
-	void WriteToORB(BYTE subunit);
+	void WriteToORB(BYTE subunit, BYTE subunitForAY=0);
 	void AY8910_Write(BYTE subunit, BYTE ay, BYTE value);
 	void UpdateIFRandIRQ(MB_SUBUNIT* pMB, BYTE clr_mask, BYTE set_mask);
 
@@ -148,8 +153,6 @@ private:
 	SyncEvent* m_syncEvent[kNumSyncEvents];
 
 	UINT64 m_lastCumulativeCycle;
-
-	static const DWORD SAMPLE_RATE = 44100;	// Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
 
 	short* m_ppAYVoiceBuffer[NUM_VOICES];
 

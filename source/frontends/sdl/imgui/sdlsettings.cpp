@@ -358,6 +358,11 @@ namespace sa2
               }
               ImGui::EndCombo();
             }
+            int ramWorksMemorySize = GetRamWorksMemorySize();
+            if (ImGui::SliderInt("RamWorks size", &ramWorksMemorySize, 1, kMaxExMemoryBanks))
+            {
+              SetRamWorksMemorySize(ramWorksMemorySize);
+            }
           }
 
           ImGui::Separator();
@@ -596,11 +601,13 @@ namespace sa2
             REGSAVE(TEXT(REGVALUE_SPKR_VOLUME), SpkrGetVolume());
           }
 
-          myMockingboardVolume = volumeMax - cardManager.GetMockingboardCardMgr().GetVolume();
+          MockingboardCardManager& mockingboard = cardManager.GetMockingboardCardMgr();
+
+          myMockingboardVolume = volumeMax - mockingboard.GetVolume();
           if (ImGui::SliderInt("Mockingboard volume", &myMockingboardVolume, 0, volumeMax))
           {
-            cardManager.GetMockingboardCardMgr().SetVolume(volumeMax - myMockingboardVolume, volumeMax);
-            REGSAVE(TEXT(REGVALUE_MB_VOLUME), cardManager.GetMockingboardCardMgr().GetVolume());
+            mockingboard.SetVolume(volumeMax - myMockingboardVolume, volumeMax);
+            REGSAVE(TEXT(REGVALUE_MB_VOLUME), mockingboard.GetVolume());
           }
 
           ImGui::Separator();
@@ -660,10 +667,12 @@ namespace sa2
           }
 
           ImVec4 color = colorrefToImVec4(video.GetMonochromeRGB());
-          ImGui::ColorEdit3("Monochrome Color", (float*)&color, 0);
-          const COLORREF cr = imVec4ToColorref(color);
-          video.SetMonochromeRGB(cr);
-          frame->ApplyVideoModeChange();
+          if (ImGui::ColorEdit3("Monochrome Color", (float*)&color, 0))
+          {
+            const COLORREF cr = imVec4ToColorref(color);
+            video.SetMonochromeRGB(cr);
+            frame->ApplyVideoModeChange();
+          }
 
           bool scanLines = video.IsVideoStyle(VS_HALF_SCANLINES);
           if (ImGui::Checkbox("50% Scan lines", &scanLines))

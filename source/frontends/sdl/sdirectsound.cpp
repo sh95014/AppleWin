@@ -86,7 +86,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     , myBytesPerSecond(0)
   {
 #ifndef USE_COREAUDIO
-    SDL_memset(&myAudioSpec, 0, sizeof(myAudioSpec));
+    SDL_zero(myAudioSpec);
 #endif
   }
 
@@ -140,7 +140,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
 #ifndef USE_COREAUDIO
     SDL_AudioSpec want;
-    SDL_memset(&want, 0, sizeof(want));
+    SDL_zero(want);
 
     want.freq = myBuffer->sampleRate;
     want.format = AUDIO_S16LSB;

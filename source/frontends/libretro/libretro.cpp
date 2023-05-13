@@ -7,7 +7,6 @@
 #include "Video.h"
 #include "Interface.h"
 #include "Memory.h"
-#include "Utilities.h"
 #include "Debugger/DebugDefs.h"
 
 #include "linux/version.h"
@@ -121,7 +120,7 @@ unsigned retro_api_version(void)
 
 void retro_set_controller_port_device(unsigned port, unsigned device)
 {
-  ra2::log_cb(RETRO_LOG_INFO, "RA2: %s, Plugging device %u into port %u.\n", __FUNCTION__, device, port);
+  ra2::log_cb(RETRO_LOG_INFO, "RA2: %s, Plugging device %u into port %u\n", __FUNCTION__, device, port);
   if (port == 0)
   {
     ra2::Game::ourInputDevices[port] = device;
@@ -277,11 +276,12 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 
 void retro_run(void)
 {
+  ourGame->updateVariables();
   ourGame->processInputEvents();
   ourGame->executeOneFrame();
   GetFrame().VideoPresentScreen();
-  const size_t ms = (1000 + 60 - 1) / 60; // round up
-  ra2::writeAudio(ms);
+  constexpr size_t ms = (1000 + ra2::Game::FPS - 1) / ra2::Game::FPS; // round up to 17ms
+  ourGame->writeAudio(ms);
 }
 
 bool retro_load_game(const retro_game_info *info)
@@ -357,8 +357,12 @@ unsigned retro_get_region(void)
 
 void retro_reset(void)
 {
+  if (ourGame)
+  {
+    ourGame->updateVariables();
+    ourGame->reset();
+  }
   ra2::log_cb(RETRO_LOG_INFO, "RA2: %s\n", __FUNCTION__);
-  ResetMachineState();
 }
 
 bool retro_load_game_special(unsigned type, const struct retro_game_info *info, size_t num)

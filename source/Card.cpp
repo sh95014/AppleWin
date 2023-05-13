@@ -159,6 +159,10 @@ std::string Card::GetCardName(const SS_CARDTYPE cardType)
 		return VidHDCard::GetSnapshotCardName();
 	case CT_Uthernet2:
 		return Uthernet2::GetSnapshotCardName();
+	case CT_MegaAudio:
+		return MockingboardCard::GetSnapshotCardNameMegaAudio();
+	case CT_SDMusic:
+		return MockingboardCard::GetSnapshotCardNameSDMusic();
 	default:
 		return "Unknown";
 	}
@@ -229,6 +233,14 @@ SS_CARDTYPE Card::GetCardType(const std::string & card)
 	else if (card == Uthernet2::GetSnapshotCardName())
 	{
 		return CT_Uthernet2;
+	}
+	else if (card == MockingboardCard::GetSnapshotCardNameMegaAudio())
+	{
+		return CT_MegaAudio;
+	}
+	else if (card == MockingboardCard::GetSnapshotCardNameSDMusic())
+	{
+		return CT_SDMusic;
 	}
 	else
 	{

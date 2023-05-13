@@ -16,6 +16,8 @@ namespace
 {
 
   const std::string ourScope = "applewin_";
+  const char * REG_AUDIO_OUTPUT = "ra2\\audio";
+  const char * REGVALUE_AUDIO_OUTPUT_CHANNELS = "Number of Channels";
 
   struct Variable
   {
@@ -30,9 +32,9 @@ namespace
     {
      {
       "machine",
-      "Apple ][ type",
+      "Apple ][ Type",
       REG_CONFIG,
-      REGVALUE_APPLE2_TYPE,
+      REGVALUE_APPLE2_TYPE, // reset required
       {
        {"Enhanced Apple //e", A2TYPE_APPLE2EENHANCED},
        {"Apple ][ (Original)", A2TYPE_APPLE2},
@@ -48,9 +50,9 @@ namespace
      },
      {
       "slot3",
-      "Card in slot 3",
+      "Card in Slot 3",
       "Configuration\\Slot 3",
-      REGVALUE_CARD_TYPE,
+      REGVALUE_CARD_TYPE, // reset required
       {
        {"Empty", CT_Empty},
        {"Video HD", CT_VidHD},
@@ -58,9 +60,9 @@ namespace
      },
      {
       "slot4",
-      "Card in slot 4",
+      "Card in Slot 4",
       "Configuration\\Slot 4",
-      REGVALUE_CARD_TYPE,
+      REGVALUE_CARD_TYPE, // reset required
       {
        {"Empty", CT_Empty},
        {"Mouse", CT_MouseInterface},
@@ -70,19 +72,20 @@ namespace
      },
      {
       "slot5",
-      "Card in slot 5",
+      "Card in Slot 5",
       "Configuration\\Slot 5",
-      REGVALUE_CARD_TYPE,
+      REGVALUE_CARD_TYPE, // reset required
       {
        {"Empty", CT_Empty},
        {"CP/M", CT_Z80},
        {"Mockingboard", CT_MockingboardC},
+       {"Phasor", CT_Phasor},
        {"SAM/DAC", CT_SAM},
       }
      },
      {
-      "video",
-      "Video mode",
+      "video_mode",
+      "Video Mode",
       REG_CONFIG,
       REGVALUE_VIDEO_MODE,
       {
@@ -94,6 +97,36 @@ namespace
        {"Monochrome (Amber)", VT_MONO_AMBER},
        {"Monochrome (Green)", VT_MONO_GREEN},
        {"Monochrome (White)", VT_MONO_WHITE},
+      }
+     },
+     {
+      "video_style",
+      "Video Style",
+      REG_CONFIG,
+      REGVALUE_VIDEO_STYLE,
+      {
+       {"Half Scanlines", VS_HALF_SCANLINES},
+       {"None", VS_NONE},
+      }
+     },
+     {
+      "video_refresh_rate",
+      "Video Refresh Rate",
+      REG_CONFIG,
+      REGVALUE_VIDEO_REFRESH_RATE, // reset required
+      {
+       {"60Hz", VR_60HZ},
+       {"50Hz", VR_50HZ},
+      }
+     },
+     {
+      "audio_output",
+      "Audio Output",
+      REG_AUDIO_OUTPUT,
+      REGVALUE_AUDIO_OUTPUT_CHANNELS,
+      {
+       {"Speaker", 1},
+       {"Mockingboard", 2},
       }
      },
     };
@@ -143,10 +176,8 @@ namespace ra2
     environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, retroVariables.data());
   }
 
-  std::shared_ptr<Registry> CreateRetroRegistry()
+  void PopulateRegistry(const std::shared_ptr<Registry> & registry)
   {
-    const auto registry = std::make_shared<common2::PTreeRegistry>();
-
     for (const Variable & variable : ourVariables)
     {
       const std::string retroKey = ourScope + variable.name;
@@ -167,8 +198,19 @@ namespace ra2
         }
       }
     }
+  }
 
+  std::shared_ptr<common2::PTreeRegistry> CreateRetroRegistry()
+  {
+    const auto registry = std::make_shared<common2::PTreeRegistry>();
+    PopulateRegistry(registry);
     return registry;
   }
 
+  size_t GetAudioOutputChannels()
+  {
+    DWORD value = 1;
+    RegLoadValue(REG_AUDIO_OUTPUT, REGVALUE_AUDIO_OUTPUT_CHANNELS, TRUE, &value);
+    return value;
+  }
 }
