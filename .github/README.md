@@ -1,10 +1,12 @@
-# macOS
+# Mariani
 
 ## Introduction
 
 Mariani is a native macOS UI for [AppleWin](https://github.com/AppleWin/AppleWin), by way of [Andrea](https://github.com/audetto)'s [Raspberry Pi port](https://github.com/audetto/AppleWin).
 
-But if what you want is a macOS command-line app, you can build it with the instructions below.
+![Mariani Screenshot](https://github.com/sh95014/AppleWin/assets/95387068/d8e090d2-6e86-4a87-872d-5d588c3e47de)
+
+But if what you want is a macOS command-line app, you can build that too with the instructions below.
 
 ### Features
 
@@ -17,11 +19,7 @@ But if what you want is a macOS command-line app, you can build it with the inst
 
 ### Known Issues
 
-I consider Mariani to be at v1.0 in terms of functionality and stability. Here are the known issues:
-
-https://github.com/sh95014/AppleWin/issues
-
-Specifically, the following AppleWin features are not yet supported:
+I consider Mariani to be at v1.0 in terms of functionality and stability, despite some [known issues](https://github.com/sh95014/AppleWin/issues). Specifically, the following AppleWin features are not yet supported:
 
 - [Debugger and Memory viewer](https://github.com/sh95014/AppleWin/issues/12)
 - [Load/Save State](https://github.com/sh95014/AppleWin/issues/13)
