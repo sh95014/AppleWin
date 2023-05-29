@@ -72,7 +72,6 @@
 		B0098CB6277E171100F38E0C /* Card.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB618277A14DB0002A6C3 /* Card.h */; };
 		B0098CB7277E171100F38E0C /* SSI263Phonemes.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB61A277A14DB0002A6C3 /* SSI263Phonemes.h */; };
 		B0098CB8277E171100F38E0C /* linuxinterface.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB79B277A20FA0002A6C3 /* linuxinterface.h */; };
-		B0098CB9277E171100F38E0C /* SaveState_Structs_common.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB644277A14DB0002A6C3 /* SaveState_Structs_common.h */; };
 		B0098CBA277E171100F38E0C /* SoundCore.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB649277A14DB0002A6C3 /* SoundCore.h */; };
 		B0098CBB277E171100F38E0C /* DiskLog.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5EB277A14DA0002A6C3 /* DiskLog.h */; };
 		B0098CBC277E171100F38E0C /* registry.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A0277A20FA0002A6C3 /* registry.h */; };
@@ -103,7 +102,6 @@
 		B0098CD6277E171100F38E0C /* SAM.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB641277A14DB0002A6C3 /* SAM.h */; };
 		B0098CD7277E171100F38E0C /* daa.h in Headers */ = {isa = PBXBuildFile; fileRef = B049E7CB277A339600FC14A3 /* daa.h */; };
 		B0098CD8277E171100F38E0C /* resources.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7AD277A20FA0002A6C3 /* resources.h */; };
-		B0098CD9277E171100F38E0C /* SaveState_Structs_v1.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5F8277A14DA0002A6C3 /* SaveState_Structs_v1.h */; };
 		B0098CDA277E171100F38E0C /* SynchronousEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB650277A14DB0002A6C3 /* SynchronousEventManager.h */; };
 		B0098CDB277E171100F38E0C /* PropertySheetHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B049E7FA277A36CE00FC14A3 /* PropertySheetHelper.h */; };
 		B0098CDC277E171100F38E0C /* Interface.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB62C277A14DB0002A6C3 /* Interface.h */; };
@@ -477,6 +475,8 @@
 		B0F8500327D1B44F0015F642 /* PCapBackend.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F84FFF27D1B44F0015F642 /* PCapBackend.h */; };
 		B0F8500427D1B44F0015F642 /* NetworkBackend.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F8500027D1B44F0015F642 /* NetworkBackend.h */; };
 		B0F8500527D1B44F0015F642 /* PCapBackend.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0F8500127D1B44F0015F642 /* PCapBackend.cpp */; };
+		B0F97BA22A253DD500461923 /* portfwds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0F97BA02A253DD500461923 /* portfwds.cpp */; };
+		B0F97BA32A253DD500461923 /* portfwds.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F97BA12A253DD500461923 /* portfwds.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -823,7 +823,6 @@
 		B09AB5F4277A14DA0002A6C3 /* SSI263.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SSI263.cpp; path = source/SSI263.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB5F6277A14DA0002A6C3 /* 6821.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = 6821.h; path = source/6821.h; sourceTree = SOURCE_ROOT; };
 		B09AB5F7277A14DA0002A6C3 /* CPU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPU.h; path = source/CPU.h; sourceTree = SOURCE_ROOT; };
-		B09AB5F8277A14DA0002A6C3 /* SaveState_Structs_v1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveState_Structs_v1.h; path = source/SaveState_Structs_v1.h; sourceTree = SOURCE_ROOT; };
 		B09AB5F9277A14DA0002A6C3 /* SaveState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveState.h; path = source/SaveState.h; sourceTree = SOURCE_ROOT; };
 		B09AB5FA277A14DA0002A6C3 /* ParallelPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParallelPrinter.h; path = source/ParallelPrinter.h; sourceTree = SOURCE_ROOT; };
 		B09AB5FB277A14DA0002A6C3 /* SerialComms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SerialComms.h; path = source/SerialComms.h; sourceTree = SOURCE_ROOT; };
@@ -895,7 +894,6 @@
 		B09AB641277A14DB0002A6C3 /* SAM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SAM.h; path = source/SAM.h; sourceTree = SOURCE_ROOT; };
 		B09AB642277A14DB0002A6C3 /* YamlHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YamlHelper.h; path = source/YamlHelper.h; sourceTree = SOURCE_ROOT; };
 		B09AB643277A14DB0002A6C3 /* CmdLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CmdLine.cpp; path = source/CmdLine.cpp; sourceTree = SOURCE_ROOT; };
-		B09AB644277A14DB0002A6C3 /* SaveState_Structs_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveState_Structs_common.h; path = source/SaveState_Structs_common.h; sourceTree = SOURCE_ROOT; };
 		B09AB645277A14DB0002A6C3 /* Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Memory.h; path = source/Memory.h; sourceTree = SOURCE_ROOT; };
 		B09AB646277A14DB0002A6C3 /* DiskImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DiskImage.cpp; path = source/DiskImage.cpp; sourceTree = SOURCE_ROOT; };
 		B09AB647277A14DB0002A6C3 /* MouseInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MouseInterface.h; path = source/MouseInterface.h; sourceTree = SOURCE_ROOT; };
@@ -1183,6 +1181,8 @@
 		B0F84FFF27D1B44F0015F642 /* PCapBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PCapBackend.h; path = source/Tfe/PCapBackend.h; sourceTree = "<group>"; };
 		B0F8500027D1B44F0015F642 /* NetworkBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkBackend.h; path = source/Tfe/NetworkBackend.h; sourceTree = "<group>"; };
 		B0F8500127D1B44F0015F642 /* PCapBackend.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PCapBackend.cpp; path = source/Tfe/PCapBackend.cpp; sourceTree = "<group>"; };
+		B0F97BA02A253DD500461923 /* portfwds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = portfwds.cpp; path = source/linux/network/portfwds.cpp; sourceTree = "<group>"; };
+		B0F97BA12A253DD500461923 /* portfwds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = portfwds.h; path = source/linux/network/portfwds.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1613,8 +1613,6 @@
 				B09AB61E277A14DB0002A6C3 /* Riff.h */,
 				B09AB62E277A14DB0002A6C3 /* SAM.cpp */,
 				B09AB641277A14DB0002A6C3 /* SAM.h */,
-				B09AB644277A14DB0002A6C3 /* SaveState_Structs_common.h */,
-				B09AB5F8277A14DA0002A6C3 /* SaveState_Structs_v1.h */,
 				B09AB648277A14DB0002A6C3 /* SaveState.cpp */,
 				B09AB5F9277A14DA0002A6C3 /* SaveState.h */,
 				B09AB5E6277A14DA0002A6C3 /* SerialComms.cpp */,
@@ -1821,6 +1819,8 @@
 		B09AB81D277A21510002A6C3 /* network */ = {
 			isa = PBXGroup;
 			children = (
+				B0F97BA02A253DD500461923 /* portfwds.cpp */,
+				B0F97BA12A253DD500461923 /* portfwds.h */,
 				B09AB820277A21640002A6C3 /* slirp2.cpp */,
 				B09AB822277A21640002A6C3 /* slirp2.h */,
 			);
@@ -2029,15 +2029,14 @@
 				B0A8D66727B1119D00D4314F /* 6522.h in Headers */,
 				B0098CC2277E171100F38E0C /* keyboard.h in Headers */,
 				B0098CC8277E171100F38E0C /* RGBMonitor.h in Headers */,
+				B0F97BA32A253DD500461923 /* portfwds.h in Headers */,
 				B0098CF1277E171200F38E0C /* paddle.h in Headers */,
 				B0098CC1277E171100F38E0C /* Pravets.h in Headers */,
 				B0098CBC277E171100F38E0C /* registry.h in Headers */,
 				B0098CD5277E171100F38E0C /* MouseInterface.h in Headers */,
 				B0098CE2277E171100F38E0C /* YamlHelper.h in Headers */,
-				B0098CD9277E171100F38E0C /* SaveState_Structs_v1.h in Headers */,
 				B0098CE5277E171100F38E0C /* CPU.h in Headers */,
 				B05778DA285D7E7F00614907 /* Config.h in Headers */,
-				B0098CB9277E171100F38E0C /* SaveState_Structs_common.h in Headers */,
 				B0098CE6277E171100F38E0C /* z80regs.h in Headers */,
 				B0098CD3277E171100F38E0C /* FrameBase.h in Headers */,
 				B0098CC9277E171100F38E0C /* Riff.h in Headers */,
@@ -2655,6 +2654,7 @@
 				B0098C94277E140100F38E0C /* AY8910.cpp in Sources */,
 				B089EF3427BB051900BDC415 /* StrFormat.cpp in Sources */,
 				B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */,
+				B0F97BA22A253DD500461923 /* portfwds.cpp in Sources */,
 				B095D52F27ED7D0000498D51 /* IPRaw.cpp in Sources */,
 				B0098C9F277E144E00F38E0C /* linuxframe.cpp in Sources */,
 				B0098C76277E140100F38E0C /* CmdLine.cpp in Sources */,
