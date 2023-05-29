@@ -5,6 +5,7 @@
 #include "frontends/common2/commonframe.h"
 #include "frontends/common2/speed.h"
 #include "frontends/common2/programoptions.h"
+#include "linux/network/portfwds.h"
 #ifndef MARIANI
 #include <SDL.h>
 #endif
@@ -30,6 +31,7 @@ namespace sa2
 #ifndef MARIANI
     void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
 #endif
+    std::shared_ptr<NetworkBackend> CreateNetworkBackend(const std::string & interfaceName) override;
 
     void ProcessEvents(bool &quit);
 
@@ -92,6 +94,8 @@ namespace sa2
     bool myScrollLockFullSpeed;
 
     common2::Speed mySpeed;
+
+    std::vector<PortFwd> myPortFwds;
 
 #ifndef MARIANI
     std::shared_ptr<SDL_Window> myWindow;

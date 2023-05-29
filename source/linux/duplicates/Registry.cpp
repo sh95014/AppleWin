@@ -1,10 +1,9 @@
 #include "StdAfx.h"
 #include "Registry.h"
-#ifdef MARIANI
 #include "Common.h"
 #include "Card.h"
 #include "CopyProtectionDongles.h"
-#endif // MARIANI
+
 
 
 //===========================================================================

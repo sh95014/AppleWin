@@ -20,6 +20,7 @@
 
 #include "linux/paddle.h"
 #include "linux/keyboard.h"
+#include "linux/network/slirp2.h"
 
 #include <algorithm>
 
@@ -140,6 +141,7 @@ namespace sa2
     , myDragAndDropDrive(DRIVE_1)
     , myScrollLockFullSpeed(false)
     , mySpeed(options.fixedSpeed)
+    , myPortFwds(getPortFwds(options.natPortFwds))
   {
   }
 
@@ -773,6 +775,15 @@ namespace sa2
     return actual;
   }
 #endif // MARIANI
+
+  std::shared_ptr<NetworkBackend> SDLFrame::CreateNetworkBackend(const std::string & interfaceName)
+  {
+    #ifdef U2_USE_SLIRP
+      return std::make_shared<SlirpBackend>(myPortFwds);
+    #else
+      return std::make_shared<PCapBackend>(interfaceName);
+    #endif
+  }
 
 }
 
