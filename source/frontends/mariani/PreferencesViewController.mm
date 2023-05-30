@@ -38,7 +38,7 @@ void CreateLanguageCard(void); // FIXME should be in Memory.h
 // RegSaveValue() calls below.) This hack allows the function to be seen
 // with the correct signature and avoids the link error.
 #define BOOL int32_t
-#import "registry.h"
+#import "Registry.h"
 #undef BOOL
 
 #include "DiskImg.h"

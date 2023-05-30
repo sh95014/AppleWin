@@ -49,11 +49,11 @@
 		B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E7EA277A36CE00FC14A3 /* PropertySheetHelper.cpp */; };
 		B0098C9C277E143200F38E0C /* benchmark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB79F277A20FA0002A6C3 /* benchmark.cpp */; };
 		B0098C9D277E144E00F38E0C /* slirp2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB820277A21640002A6C3 /* slirp2.cpp */; };
-		B0098C9E277E144E00F38E0C /* tape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB799277A20FA0002A6C3 /* tape.cpp */; };
+		B0098C9E277E144E00F38E0C /* cassettetape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB799277A20FA0002A6C3 /* cassettetape.cpp */; };
 		B0098C9F277E144E00F38E0C /* linuxframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A8277A20FA0002A6C3 /* linuxframe.cpp */; };
 		B0098CA0277E144E00F38E0C /* version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A4277A20FA0002A6C3 /* version.cpp */; };
 		B0098CA1277E144E00F38E0C /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB79E277A20FA0002A6C3 /* context.cpp */; };
-		B0098CA2277E144E00F38E0C /* registry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A6277A20FA0002A6C3 /* registry.cpp */; };
+		B0098CA2277E144E00F38E0C /* registryclass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A6277A20FA0002A6C3 /* registryclass.cpp */; };
 		B0098CA4277E144E00F38E0C /* resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB798277A20FA0002A6C3 /* resources.cpp */; };
 		B0098CA5277E144E00F38E0C /* keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7AA277A20FA0002A6C3 /* keyboard.cpp */; };
 		B0098CA7277E144E00F38E0C /* paddle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A2277A20FA0002A6C3 /* paddle.cpp */; };
@@ -74,7 +74,7 @@
 		B0098CB8277E171100F38E0C /* linuxinterface.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB79B277A20FA0002A6C3 /* linuxinterface.h */; };
 		B0098CBA277E171100F38E0C /* SoundCore.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB649277A14DB0002A6C3 /* SoundCore.h */; };
 		B0098CBB277E171100F38E0C /* DiskLog.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5EB277A14DA0002A6C3 /* DiskLog.h */; };
-		B0098CBC277E171100F38E0C /* registry.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A0277A20FA0002A6C3 /* registry.h */; };
+		B0098CBC277E171100F38E0C /* registryclass.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A0277A20FA0002A6C3 /* registryclass.h */; };
 		B0098CBD277E171100F38E0C /* LanguageCard.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB608277A14DA0002A6C3 /* LanguageCard.h */; };
 		B0098CBE277E171100F38E0C /* linuxframe.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB79D277A20FA0002A6C3 /* linuxframe.h */; };
 		B0098CBF277E171100F38E0C /* NTSC_CharSet.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB638277A14DB0002A6C3 /* NTSC_CharSet.h */; };
@@ -83,7 +83,7 @@
 		B0098CC2277E171100F38E0C /* keyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A7277A20FA0002A6C3 /* keyboard.h */; };
 		B0098CC3277E171100F38E0C /* DiskDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5E8277A14DA0002A6C3 /* DiskDefs.h */; };
 		B0098CC5277E171100F38E0C /* NTSC.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB624277A14DB0002A6C3 /* NTSC.h */; };
-		B0098CC6277E171100F38E0C /* tape.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A1277A20FA0002A6C3 /* tape.h */; };
+		B0098CC6277E171100F38E0C /* cassettetape.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A1277A20FA0002A6C3 /* cassettetape.h */; };
 		B0098CC7277E171100F38E0C /* Mockingboard.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB63B277A14DB0002A6C3 /* Mockingboard.h */; };
 		B0098CC8277E171100F38E0C /* RGBMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB630277A14DB0002A6C3 /* RGBMonitor.h */; };
 		B0098CC9277E171100F38E0C /* Riff.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB61E277A14DB0002A6C3 /* Riff.h */; };
@@ -963,19 +963,19 @@
 		B09AB723277A1BA40002A6C3 /* DebugDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugDefs.h; path = source/Debugger/DebugDefs.h; sourceTree = "<group>"; };
 		B09AB763277A1E380002A6C3 /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resource.h; path = resource/resource.h; sourceTree = "<group>"; };
 		B09AB798277A20FA0002A6C3 /* resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resources.cpp; path = source/linux/resources.cpp; sourceTree = "<group>"; };
-		B09AB799277A20FA0002A6C3 /* tape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tape.cpp; path = source/linux/tape.cpp; sourceTree = "<group>"; };
+		B09AB799277A20FA0002A6C3 /* cassettetape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cassettetape.cpp; path = source/linux/cassettetape.cpp; sourceTree = "<group>"; };
 		B09AB79B277A20FA0002A6C3 /* linuxinterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linuxinterface.h; path = source/linux/linuxinterface.h; sourceTree = "<group>"; };
 		B09AB79C277A20FA0002A6C3 /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = context.h; path = source/linux/context.h; sourceTree = "<group>"; };
 		B09AB79D277A20FA0002A6C3 /* linuxframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linuxframe.h; path = source/linux/linuxframe.h; sourceTree = "<group>"; };
 		B09AB79E277A20FA0002A6C3 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = context.cpp; path = source/linux/context.cpp; sourceTree = "<group>"; };
 		B09AB79F277A20FA0002A6C3 /* benchmark.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = benchmark.cpp; path = source/linux/benchmark.cpp; sourceTree = "<group>"; };
-		B09AB7A0277A20FA0002A6C3 /* registry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = registry.h; path = source/linux/registry.h; sourceTree = "<group>"; };
-		B09AB7A1277A20FA0002A6C3 /* tape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tape.h; path = source/linux/tape.h; sourceTree = "<group>"; };
+		B09AB7A0277A20FA0002A6C3 /* registryclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = registryclass.h; path = source/linux/registryclass.h; sourceTree = "<group>"; };
+		B09AB7A1277A20FA0002A6C3 /* cassettetape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cassettetape.h; path = source/linux/cassettetape.h; sourceTree = "<group>"; };
 		B09AB7A2277A20FA0002A6C3 /* paddle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = paddle.cpp; path = source/linux/paddle.cpp; sourceTree = "<group>"; };
 		B09AB7A3277A20FA0002A6C3 /* paddle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = paddle.h; path = source/linux/paddle.h; sourceTree = "<group>"; };
 		B09AB7A4277A20FA0002A6C3 /* version.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = version.cpp; path = source/linux/version.cpp; sourceTree = "<group>"; };
 		B09AB7A5277A20FA0002A6C3 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = source/linux/version.h; sourceTree = "<group>"; };
-		B09AB7A6277A20FA0002A6C3 /* registry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = registry.cpp; path = source/linux/registry.cpp; sourceTree = "<group>"; };
+		B09AB7A6277A20FA0002A6C3 /* registryclass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = registryclass.cpp; path = source/linux/registryclass.cpp; sourceTree = "<group>"; };
 		B09AB7A7277A20FA0002A6C3 /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboard.h; path = source/linux/keyboard.h; sourceTree = "<group>"; };
 		B09AB7A8277A20FA0002A6C3 /* linuxframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = linuxframe.cpp; path = source/linux/linuxframe.cpp; sourceTree = "<group>"; };
 		B09AB7A9277A20FA0002A6C3 /* benchmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = benchmark.h; path = source/linux/benchmark.h; sourceTree = "<group>"; };
@@ -1748,12 +1748,12 @@
 				B09AB81D277A21510002A6C3 /* network */,
 				B09AB7A2277A20FA0002A6C3 /* paddle.cpp */,
 				B09AB7A3277A20FA0002A6C3 /* paddle.h */,
-				B09AB7A6277A20FA0002A6C3 /* registry.cpp */,
-				B09AB7A0277A20FA0002A6C3 /* registry.h */,
+				B09AB7A6277A20FA0002A6C3 /* registryclass.cpp */,
+				B09AB7A0277A20FA0002A6C3 /* registryclass.h */,
 				B09AB798277A20FA0002A6C3 /* resources.cpp */,
 				B09AB7AD277A20FA0002A6C3 /* resources.h */,
-				B09AB799277A20FA0002A6C3 /* tape.cpp */,
-				B09AB7A1277A20FA0002A6C3 /* tape.h */,
+				B09AB799277A20FA0002A6C3 /* cassettetape.cpp */,
+				B09AB7A1277A20FA0002A6C3 /* cassettetape.h */,
 				B09AB7A4277A20FA0002A6C3 /* version.cpp */,
 				B09AB7A5277A20FA0002A6C3 /* version.h */,
 			);
@@ -2032,7 +2032,7 @@
 				B0F97BA32A253DD500461923 /* portfwds.h in Headers */,
 				B0098CF1277E171200F38E0C /* paddle.h in Headers */,
 				B0098CC1277E171100F38E0C /* Pravets.h in Headers */,
-				B0098CBC277E171100F38E0C /* registry.h in Headers */,
+				B0098CBC277E171100F38E0C /* registryclass.h in Headers */,
 				B0098CD5277E171100F38E0C /* MouseInterface.h in Headers */,
 				B0098CE2277E171100F38E0C /* YamlHelper.h in Headers */,
 				B0098CE5277E171100F38E0C /* CPU.h in Headers */,
@@ -2072,7 +2072,7 @@
 				B0098CF0277E171200F38E0C /* AY8910.h in Headers */,
 				B0098CDA277E171100F38E0C /* SynchronousEventManager.h in Headers */,
 				B0098CD6277E171100F38E0C /* SAM.h in Headers */,
-				B0098CC6277E171100F38E0C /* tape.h in Headers */,
+				B0098CC6277E171100F38E0C /* cassettetape.h in Headers */,
 				B0F84FFD27D1B3F30015F642 /* W5100.h in Headers */,
 				B0098CD4277E171100F38E0C /* Tape.h in Headers */,
 				B0098CB8277E171100F38E0C /* linuxinterface.h in Headers */,
@@ -2650,7 +2650,7 @@
 				B0F8500527D1B44F0015F642 /* PCapBackend.cpp in Sources */,
 				B0F84FFC27D1B3F30015F642 /* Uthernet2.cpp in Sources */,
 				B0098C8B277E140100F38E0C /* z80emu.cpp in Sources */,
-				B0098CA2277E144E00F38E0C /* registry.cpp in Sources */,
+				B0098CA2277E144E00F38E0C /* registryclass.cpp in Sources */,
 				B0098C94277E140100F38E0C /* AY8910.cpp in Sources */,
 				B089EF3427BB051900BDC415 /* StrFormat.cpp in Sources */,
 				B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */,
@@ -2679,7 +2679,7 @@
 				B0098C96277E140100F38E0C /* VidHD.cpp in Sources */,
 				B0098C7A277E140100F38E0C /* CardManager.cpp in Sources */,
 				B0098C73277E133D00F38E0C /* tfearch.cpp in Sources */,
-				B0098C9E277E144E00F38E0C /* tape.cpp in Sources */,
+				B0098C9E277E144E00F38E0C /* cassettetape.cpp in Sources */,
 				B0098C97277E140100F38E0C /* FrameBase.cpp in Sources */,
 				B0098C7B277E140100F38E0C /* YamlHelper.cpp in Sources */,
 				B0098C74277E133D00F38E0C /* tfesupp.cpp in Sources */,

@@ -19,7 +19,7 @@
 #import "sdirectsound.h"
 #import "MarianiFrame.h"
 #import "utils.h"
-#import "linux/tape.h"
+#import "linux/cassettetape.h"
 
 // AppleWin
 #import "Card.h"
