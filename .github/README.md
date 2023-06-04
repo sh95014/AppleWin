@@ -20,7 +20,7 @@ But if what you want is a macOS command-line app, you can build that too with th
 
 ### Known Issues
 
-I consider Mariani to be at v1.0 in terms of functionality and stability, despite some [known issues](https://github.com/sh95014/AppleWin/issues). Specifically, the following AppleWin features are not yet supported:
+Mariani should be broadly useful, so please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into. The following AppleWin features are not yet supported:
 
 - [Memory viewer](https://github.com/sh95014/AppleWin/issues/12)
 - [Load/Save State](https://github.com/sh95014/AppleWin/issues/13)
@@ -28,7 +28,9 @@ I consider Mariani to be at v1.0 in terms of functionality and stability, despit
 
 ### Roadmap
 
-I plan to spend some time building (graphical) printer support, but I don't expect to spend a lot of time with the remaining known issues. The most generally useful one in the list is probably the joystick emulation.
+A [debugger](/source/frontends/mariani/debugger/README.md) is now available.
+
+Experimental support for printers is available in a [branch](https://github.com/sh95014/AppleWin/tree/printer-support). It needs considerable [upstream support](https://github.com/AppleWin/AppleWin/issues/1026) and is unmaintained.
 
 ## Build Mariani
 
