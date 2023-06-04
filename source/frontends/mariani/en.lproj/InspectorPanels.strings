@@ -1,0 +1,134 @@
+/* Class = "NSButton"; ibShadowedToolTip = "Interrupt Disable"; ObjectID = "4km-li-Oao"; */
+"4km-li-Oao.ibShadowedToolTip" = "Interrupt Disable";
+
+/* Class = "NSTextFieldCell"; title = "0E"; ObjectID = "6MU-sc-Ubf"; */
+"6MU-sc-Ubf.title" = "0E";
+
+/* Class = "NSTextField"; ibShadowedToolTip = "Processor Status"; ObjectID = "9aB-K1-tEC"; */
+"9aB-K1-tEC.ibShadowedToolTip" = "Processor Status";
+
+/* Class = "NSTextFieldCell"; title = "Y"; ObjectID = "9VH-Pu-Mdv"; */
+"9VH-Pu-Mdv.title" = "Y";
+
+/* Class = "NSTextFieldCell"; title = "Col"; ObjectID = "b5D-L0-tKD"; */
+"b5D-L0-tKD.title" = "Col";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Annunciator 0"; ObjectID = "cK4-u5-Ytx"; */
+"cK4-u5-Ytx.ibShadowedToolTip" = "Annunciator 0";
+
+/* Class = "NSTextFieldCell"; title = "W"; ObjectID = "Did-mr-4pK"; */
+"Did-mr-4pK.title" = "W";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Negative"; ObjectID = "dKu-g8-mId"; */
+"dKu-g8-mId.ibShadowedToolTip" = "Negative";
+
+/* Class = "NSTextFieldCell"; title = "56"; ObjectID = "ECH-pX-DU3"; */
+"ECH-pX-DU3.title" = "56";
+
+/* Class = "NSTextFieldCell"; title = "R"; ObjectID = "Ecy-Us-DmC"; */
+"Ecy-Us-DmC.title" = "R";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Overflow"; ObjectID = "EUa-ec-EcQ"; */
+"EUa-ec-EcQ.ibShadowedToolTip" = "Overflow";
+
+/* Class = "NSTextField"; ibShadowedToolTip = "Program Counter"; ObjectID = "fIe-Cf-3VJ"; */
+"fIe-Cf-3VJ.ibShadowedToolTip" = "Program Counter";
+
+/* Class = "NSTextFieldCell"; title = "\"A\""; ObjectID = "Gc4-wa-fc6"; */
+"Gc4-wa-fc6.title" = "\"A\"";
+
+/* Class = "NSTextFieldCell"; title = "00"; ObjectID = "GrK-cQ-uTe"; */
+"GrK-cQ-uTe.title" = "00";
+
+/* Class = "NSTextFieldCell"; title = "5E"; ObjectID = "gZO-e3-fkT"; */
+"gZO-e3-fkT.title" = "5E";
+
+/* Class = "NSTextField"; ibShadowedToolTip = "Index Register X"; ObjectID = "HCn-kh-lPj"; */
+"HCn-kh-lPj.ibShadowedToolTip" = "Index Register X";
+
+/* Class = "NSTextFieldCell"; title = "0C"; ObjectID = "IDm-lB-lwY"; */
+"IDm-lB-lwY.title" = "0C";
+
+/* Class = "NSTextField"; ibShadowedToolTip = "Index Register Y"; ObjectID = "iQg-Ae-EmO"; */
+"iQg-Ae-EmO.ibShadowedToolTip" = "Index Register Y";
+
+/* Class = "NSTextField"; ibShadowedToolTip = "Accumulator"; ObjectID = "k6a-fO-xTU"; */
+"k6a-fO-xTU.ibShadowedToolTip" = "Accumulator";
+
+/* Class = "NSTextFieldCell"; title = "02"; ObjectID = "KdT-gw-dEE"; */
+"KdT-gw-dEE.title" = "02";
+
+/* Class = "NSTextFieldCell"; title = "PS"; ObjectID = "KYg-90-Y8x"; */
+"KYg-90-Y8x.title" = "PS";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Annunciator 1"; ObjectID = "Lr1-iu-JZL"; */
+"Lr1-iu-JZL.ibShadowedToolTip" = "Annunciator 1";
+
+/* Class = "NSTextFieldCell"; title = "Page"; ObjectID = "lTR-va-6fP"; */
+"lTR-va-6fP.title" = "Page";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Zero"; ObjectID = "M7M-cm-BDl"; */
+"M7M-cm-BDl.ibShadowedToolTip" = "Zero";
+
+/* Class = "NSTextField"; ibShadowedToolTip = "Stack Pointer"; ObjectID = "no0-N1-iPe"; */
+"no0-N1-iPe.ibShadowedToolTip" = "Stack Pointer";
+
+/* Class = "NSTextFieldCell"; title = "SP"; ObjectID = "ont-9H-z8V"; */
+"ont-9H-z8V.title" = "SP";
+
+/* Class = "NSBox"; title = "Switches C0xx"; ObjectID = "pbW-12-HOz"; */
+"pbW-12-HOz.title" = "Switches C0xx";
+
+/* Class = "NSBox"; title = "Registers"; ObjectID = "pox-4H-Lol"; */
+"pox-4H-Lol.title" = "Registers";
+
+/* Class = "NSTextFieldCell"; title = "54"; ObjectID = "Q3p-ta-gRP"; */
+"Q3p-ta-gRP.title" = "54";
+
+/* Class = "NSBox"; title = "Annunciators"; ObjectID = "qCr-bN-xFT"; */
+"qCr-bN-xFT.title" = "Annunciators";
+
+/* Class = "NSTextFieldCell"; title = "52"; ObjectID = "qdB-lZ-8ef"; */
+"qdB-lZ-8ef.title" = "52";
+
+/* Class = "NSTextFieldCell"; title = "X"; ObjectID = "RHa-4B-5Fy"; */
+"RHa-4B-5Fy.title" = "X";
+
+/* Class = "NSTextFieldCell"; title = "\"X\""; ObjectID = "ru8-tH-zVq"; */
+"ru8-tH-zVq.title" = "\"X\"";
+
+/* Class = "NSTextFieldCell"; title = "PC"; ObjectID = "S0E-Wj-Heh"; */
+"S0E-Wj-Heh.title" = "PC";
+
+/* Class = "NSTextFieldCell"; title = "\"Y\""; ObjectID = "SDc-yF-5v5"; */
+"SDc-yF-5v5.title" = "\"Y\"";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Break"; ObjectID = "TyL-Dm-rs2"; */
+"TyL-Dm-rs2.ibShadowedToolTip" = "Break";
+
+/* Class = "NSTextFieldCell"; title = "80Sto"; ObjectID = "u9W-69-bCJ"; */
+"u9W-69-bCJ.title" = "80Sto";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Annunciator 3"; ObjectID = "uP3-3e-AQp"; */
+"uP3-3e-AQp.ibShadowedToolTip" = "Annunciator 3";
+
+/* Class = "NSTextFieldCell"; title = "50"; ObjectID = "uWY-IZ-eS1"; */
+"uWY-IZ-eS1.title" = "50";
+
+/* Class = "NSTextFieldCell"; title = "A"; ObjectID = "XUD-ux-JBB"; */
+"XUD-ux-JBB.title" = "A";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Annunciator 2"; ObjectID = "xyY-vl-40M"; */
+"xyY-vl-40M.ibShadowedToolTip" = "Annunciator 2";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Carry"; ObjectID = "Y6j-F5-9Y6"; */
+"Y6j-F5-9Y6.ibShadowedToolTip" = "Carry";
+
+/* Class = "NSTextField"; ibShadowedToolTip = "Accumulator"; ObjectID = "yoO-Qf-Ere"; */
+"yoO-Qf-Ere.ibShadowedToolTip" = "Accumulator";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Reserved"; ObjectID = "YTE-ko-hHd"; */
+"YTE-ko-hHd.ibShadowedToolTip" = "Reserved";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Decimal"; ObjectID = "yTQ-gl-PfT"; */
+"yTQ-gl-PfT.ibShadowedToolTip" = "Decimal";

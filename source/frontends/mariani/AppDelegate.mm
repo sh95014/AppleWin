@@ -1,5 +1,5 @@
 //
-//  AppDelegate.m
+//  AppDelegate.mm
 //  Mariani
 //
 //  Created by sh95014 on 12/27/21.
@@ -14,12 +14,13 @@
 #import "context.h"
 
 #import "benchmark.h"
+#import "cassettetape.h"
 #import "fileregistry.h"
 #import "programoptions.h"
 #import "sdirectsound.h"
 #import "MarianiFrame.h"
 #import "utils.h"
-#import "linux/cassettetape.h"
+#import "version.h"
 
 // AppleWin
 #import "Card.h"
@@ -33,6 +34,7 @@
 #import "CommonTypes.h"
 #import "EmulatorViewController.h"
 #import "PreferencesWindowController.h"
+#import "DebuggerWindowController.h"
 #import "UserDefaults.h"
 
 #import "DiskImg.h"
@@ -73,6 +75,7 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSImageView *aboutImage;
 @property (strong) IBOutlet NSTextField *aboutTitle;
 @property (strong) IBOutlet NSTextField *aboutVersion;
+@property (strong) IBOutlet NSTextField *aboutAppleWinVersion;
 @property (strong) IBOutlet NSTextField *aboutCredits;
 @property (strong) IBOutlet NSButton *aboutLinkButton;
 
@@ -88,6 +91,8 @@ using namespace DiskImgLib;
 @property (strong) NSMutableDictionary *browserWindowControllers;
 
 @property (strong) NSProcessInfo *processInfo;
+
+@property (strong) DebuggerWindowController *debuggerWC;
 
 @end
 
@@ -297,6 +302,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             self.aboutVersion.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Version %@ (%@)", @""),
                 infoDictionary[@"CFBundleShortVersionString"],
                 infoDictionary[@"CFBundleVersion"]];
+            self.aboutAppleWinVersion.stringValue = [NSString stringWithFormat:NSLocalizedString(@"(Based on AppleWin Version %s)", @""), getVersion().c_str()];
         }
     }
     [self.aboutWindow orderFront:sender];
@@ -492,6 +498,17 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
     [self scaleWindowByFactor:0.8];
+}
+
+#pragma mark - Window menu actions
+
+- (IBAction)showDebuggerAction:(id)sender {
+    [self.emulatorVC enterDebugMode];
+    
+    if (self.debuggerWC == nil) {
+        self.debuggerWC = [[DebuggerWindowController alloc] initWithEmulatorVC:self.emulatorVC];
+    }
+    [self.debuggerWC.window orderFront:sender];
 }
 
 #pragma mark - Main window actions
@@ -1087,6 +1104,12 @@ const char *GetSupportDirectory() {
     }
     
     return supportDirectoryPath.UTF8String;
+}
+
+const char *GetBuiltinSymbolsDirectory() {
+    NSString *path = [[NSBundle mainBundle] pathForResource:nil ofType:@"SYM"];
+    NSInteger filenameLength = path.lastPathComponent.length;
+    return [path substringToIndex:path.length - filenameLength].UTF8String;
 }
 
 int RegisterAudioOutput(size_t channels, size_t sampleRate) {

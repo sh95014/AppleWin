@@ -4,32 +4,17 @@
 /* Class = "NSTableColumn"; headerCell.title = "Name"; ObjectID = "Dh3-Ls-lrF"; */
 "Dh3-Ls-lrF.headerCell.title" = "名稱";
 
-/* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "ETA-TB-3e4"; */
-"ETA-TB-3e4.title" = "Text Cell";
-
-/* Class = "NSTextFieldCell"; title = "Table View Cell"; ObjectID = "Ef9-NB-YRE"; */
-"Ef9-NB-YRE.title" = "Table View Cell";
-
 /* Class = "NSTableColumn"; headerCell.title = "Date Modified"; ObjectID = "HTU-dl-fXr"; */
 "HTU-dl-fXr.headerCell.title" = "修改日期";
 
 /* Class = "NSTableColumn"; headerCell.title = "Kind"; ObjectID = "UeD-Lu-Av3"; */
 "UeD-Lu-Av3.headerCell.title" = "種類";
 
-/* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "bc8-xC-BlX"; */
-"bc8-xC-BlX.title" = "Text Cell";
-
 /* Class = "NSTableColumn"; headerCell.title = "Size"; ObjectID = "dvt-O6-6w5"; */
 "dvt-O6-6w5.headerCell.title" = "大小";
 
 /* Class = "NSTextFieldCell"; title = "128.3 KB"; ObjectID = "efb-Yp-oaX"; */
 "efb-Yp-oaX.title" = "128.3 KB";
-
-/* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "iHi-5Z-WsW"; */
-"iHi-5Z-WsW.title" = "Text Cell";
-
-/* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "zds-td-HbC"; */
-"zds-td-HbC.title" = "Text Cell";
 
 /* Class = "NSTextFieldCell"; title = "Dec 13, 2021 at 6:03 PM"; ObjectID = "zu3-9f-tsc"; */
 "zu3-9f-tsc.title" = "Dec 13, 2021 at 6:03 PM";

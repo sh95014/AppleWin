@@ -21,6 +21,7 @@ namespace mariani
     : SDLFrame(options)
   {
     g_sProgramDir = GetSupportDirectory();
+    g_sBuiltinSymbolsDir = GetBuiltinSymbolsDirectory();
   }
 
   void MarianiFrame::Initialize(bool resetVideoState)

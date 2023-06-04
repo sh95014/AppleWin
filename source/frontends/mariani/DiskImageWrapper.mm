@@ -1,5 +1,5 @@
 //
-//  DiskImageWrapper.m
+//  DiskImageWrapper.mm
 //  Mariani
 //
 //  Created by sh95014 on 1/8/22.
