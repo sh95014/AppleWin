@@ -206,12 +206,12 @@
                                                         <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMg-Lv-WYG">
                                                             <rect key="frame" x="201" y="659" width="180" height="25"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                            <popUpButtonCell key="cell" type="push" title="Go to Bookmark" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" autoenablesItems="NO" selectedItem="QR7-L0-WVK" id="98z-bx-bkD">
+                                                            <popUpButtonCell key="cell" type="push" title="Go to Bookmark" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" autoenablesItems="NO" selectedItem="QR7-L0-WVK" id="98z-bx-bkD">
                                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                 <font key="font" metaFont="menu"/>
                                                                 <menu key="menu" showsStateColumn="NO" autoenablesItems="NO" id="zp1-Sr-SDg">
                                                                     <items>
-                                                                        <menuItem title="Go to Bookmark" enabled="NO" id="QR7-L0-WVK"/>
+                                                                        <menuItem title="Go to Bookmark" state="on" enabled="NO" id="QR7-L0-WVK"/>
                                                                         <menuItem title="Bookmark 0" id="h5M-ZI-WfA"/>
                                                                         <menuItem title="Bookmark 1" id="XP4-7T-BqY"/>
                                                                         <menuItem title="Bookmark 2" id="HSM-t4-pFt"/>
