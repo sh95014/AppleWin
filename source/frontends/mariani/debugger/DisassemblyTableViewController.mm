@@ -468,10 +468,7 @@ enum DisassemblyTableColumns {
 - (void)tableView:(NSTableView *)tableView didAddRowView:(NSTableRowView *)rowView forRow:(NSInteger)row {
     DisassemblyLine *disasmLine = self.disasmLines[row];
     if (disasmLine.address == regs.pc) {
-        // FIXME: ConfigColorsReset() seems to set FG_DISASM_PC_X and BG_DISASM_PC_X both to white
-        //        in Black & White mode, so we substitute our own highlight color instead.
-        // rowView.backgroundColor = [NSColor colorForType:BG_DISASM_PC_X];
-        rowView.backgroundColor = [NSColor colorNamed:@"ASMCurrentLineBackgroundColor"];
+        rowView.backgroundColor = [NSColor colorForType:NSColorTypeDisassemblerHighlightedBackground];
     }
     else {
         rowView.backgroundColor = [NSColor colorForType:(row % 2) ? NSColorTypeDisassemblerBackground1 : NSColorTypeDisassemblerBackground2];

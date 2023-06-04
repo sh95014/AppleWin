@@ -42,6 +42,7 @@ static NSDictionary<NSNumber *, NSNumber *> *colorTypeToAppleWinMapping = @{
     @(NSColorTypeDisassemblerImmediateCharControl) : @(FG_INFO_CHAR_LO),
     @(NSColorTypeDisassemblerImmediateCharHigh) : @(FG_INFO_CHAR_HI),
     @(NSColorTypeDisassemblerHighlighted) : @(FG_DISASM_PC_X),
+    @(NSColorTypeDisassemblerHighlightedBackground) : @(BG_DISASM_PC_X),
     @(NSColorTypeDisassemblerBackground1) : @(BG_DISASM_1),
     @(NSColorTypeDisassemblerBackground2) : @(BG_DISASM_2),
     

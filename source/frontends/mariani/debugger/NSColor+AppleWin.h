@@ -43,6 +43,7 @@ enum NSColorTypeMariani {
     NSColorTypeDisassemblerImmediateCharControl,
     NSColorTypeDisassemblerImmediateCharHigh,
     NSColorTypeDisassemblerHighlighted,
+    NSColorTypeDisassemblerHighlightedBackground,
     NSColorTypeDisassemblerBackground1,
     NSColorTypeDisassemblerBackground2,
     NSColorTypeRegisterCharacterValue,
