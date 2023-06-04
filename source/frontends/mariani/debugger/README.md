@@ -6,7 +6,7 @@ Mariani now has some basic support for the AppleWin debugger.
 
 You can bring up the debugger by selecting Window → Show Debugger or pressing the `F7` key. Here's a quick tour of the main screen.
 
-
+<img width="800" alt="debugger-main" src="https://github.com/sh95014/AppleWin/assets/95387068/3b990131-831f-4b4c-8840-95b4c7b39b35">
 
 The big pane on the left is the disassembly listings. The columns from left to right display:
 
@@ -30,7 +30,7 @@ Here are the available features, from the top:
 - The theme picker lets you quickly change the display theme of the debugger.
 - The console provides full access to the AppleWin debugger:
 
-
+<img width="800" alt="debugger-console" src="https://github.com/sh95014/AppleWin/assets/95387068/c1ef0f67-4816-4d97-83cd-00ef2cd926a2">
 
 ## Caveats
 
