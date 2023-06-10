@@ -482,7 +482,7 @@ namespace sa2
           }
           else
           {
-            ResetMachineState();
+            FrameResetMachineState();
           }
           break;
         }
@@ -615,18 +615,18 @@ namespace sa2
     } while (totalCyclesExecuted < cyclesToExecute);
   }
 
-  void SDLFrame::ExecuteInRunningMode(const size_t msNextFrame)
+  void SDLFrame::ExecuteInRunningMode(const uint64_t microseconds)
   {
     SetFullSpeed(CanDoFullSpeed());
-    const uint64_t cyclesToExecute = mySpeed.getCyclesTillNext(msNextFrame * 1000);  // this checks g_bFullSpeed
+    const uint64_t cyclesToExecute = mySpeed.getCyclesTillNext(microseconds);  // this checks g_bFullSpeed
     Execute(cyclesToExecute);
   }
 
-  void SDLFrame::ExecuteInDebugMode(const size_t msNextFrame)
+  void SDLFrame::ExecuteInDebugMode(const uint64_t microseconds)
   {
     // In AppleWin this is called without a timer for just one iteration
     // because we run a "frame" at a time, we need a bit of ingenuity
-    const uint64_t cyclesToExecute = mySpeed.getCyclesAtFixedSpeed(msNextFrame * 1000);
+    const uint64_t cyclesToExecute = mySpeed.getCyclesAtFixedSpeed(microseconds);
     const uint64_t target = g_nCumulativeCycles + cyclesToExecute;
 
     while (g_nAppMode == MODE_STEPPING && g_nCumulativeCycles < target)
@@ -635,7 +635,7 @@ namespace sa2
     }
   }
 
-  void SDLFrame::ExecuteOneFrame(const size_t msNextFrame)
+  void SDLFrame::ExecuteOneFrame(const uint64_t microseconds)
   {
     // when running in adaptive speed
     // the value msNextFrame is only a hint for when the next frame will arrive
@@ -643,12 +643,12 @@ namespace sa2
     {
       case MODE_RUNNING:
         {
-          ExecuteInRunningMode(msNextFrame);
+          ExecuteInRunningMode(microseconds);
           break;
         }
       case MODE_STEPPING:
         {
-          ExecuteInDebugMode(msNextFrame);
+          ExecuteInDebugMode(microseconds);
           break;
         }
     };
@@ -719,6 +719,7 @@ namespace sa2
         mySpeed.reset();
       }
       g_bFullSpeed = value;
+      g_nCpuCyclesFeedback = 0;
     }
   }
 
@@ -739,6 +740,12 @@ namespace sa2
   void SDLFrame::ResetHardware()
   {
     myHardwareConfig.Reload();
+  }
+
+  void SDLFrame::FrameResetMachineState()
+  {
+    ResetMachineState();  // this changes g_bFullSpeed
+    ResetSpeed();
   }
 
   bool SDLFrame::HardwareChanged() const
@@ -783,6 +790,11 @@ namespace sa2
     #else
       return std::make_shared<PCapBackend>(interfaceName);
     #endif
+  }
+
+  const common2::Speed & SDLFrame::getSpeed() const
+  {
+    return mySpeed;
   }
 
 }

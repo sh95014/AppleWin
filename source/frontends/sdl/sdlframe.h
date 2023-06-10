@@ -35,12 +35,15 @@ namespace sa2
 
     void ProcessEvents(bool &quit);
 
-    void ExecuteOneFrame(const size_t msNextFrame);
+    void ExecuteOneFrame(const uint64_t microseconds);
     void ChangeMode(const AppMode_e mode);
     void SingleStep();
     void ResetHardware();
     bool HardwareChanged() const;
+
+    void FrameResetMachineState();
     virtual void ResetSpeed();
+
     void LoadSnapshot() override;
 
 #ifndef MARIANI
@@ -51,6 +54,8 @@ namespace sa2
     void setDragDropSlotAndDrive(const size_t slot, const size_t drive);
 
     bool & getPreserveAspectRatio();
+
+    const common2::Speed & getSpeed() const;
 
     static void setGLSwapInterval(const int interval);
 
@@ -69,8 +74,8 @@ namespace sa2
     void ProcessMouseMotion(const SDL_MouseMotionEvent & motion);
 #endif // MARIANI
 
-    void ExecuteInRunningMode(const size_t msNextFrame);
-    void ExecuteInDebugMode(const size_t msNextFrame);
+    void ExecuteInRunningMode(const uint64_t microseconds);
+    void ExecuteInDebugMode(const uint64_t microseconds);
     void Execute(const DWORD uCycles);
 
     void SetFullSpeed(const bool value);

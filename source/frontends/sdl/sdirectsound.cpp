@@ -1,7 +1,10 @@
+#include "StdAfx.h"
 #include "frontends/sdl/sdirectsound.h"
 
 #include "windows.h"
 #include "linux/linuxinterface.h"
+
+#include "SoundCore.h"
 
 #ifndef USE_COREAUDIO
 #include <SDL.h>
@@ -26,6 +29,21 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
                                AudioBufferList * ioData);
 #endif // USE_COREAUDIO
 
+  size_t getBytesPerSecond(const SDL_AudioSpec & spec)
+  {
+    const size_t bitsPerSample = spec.format & SDL_AUDIO_MASK_BITSIZE;
+    const size_t bytesPerFrame = spec.channels * bitsPerSample / 8;
+    return spec.freq * bytesPerFrame;
+  }
+
+  size_t nextPowerOf2(size_t n)
+  {
+    size_t k = 1;
+    while (k < n)
+      k *= 2;
+    return k;
+  }
+
   class DirectSoundGenerator
   {
   public:
@@ -33,7 +51,8 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     ~DirectSoundGenerator();
 
     void stop();
-    void writeAudio();
+    void writeAudio(const size_t ms);
+    void resetUnderruns();
 
     void printInfo() const;
     sa2::SoundInfo getInfo() const;
@@ -49,6 +68,10 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 #endif // USE_COREAUDIO
 
   private:
+    static void staticAudioCallback(void* userdata, Uint8* stream, int len);
+
+    void audioCallback(Uint8* stream, int len);
+
     IDirectSoundBuffer * myBuffer;
 
 #ifndef USE_COREAUDIO
@@ -63,17 +86,50 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     Float32 volume;
 #endif // USE_COREAUDIO
 
-    int myBytesPerSecond;
+    size_t myBytesPerSecond;
 
     void close();
     bool isRunning() const;
-    bool isRunning();
 
-    void mixBuffer(const void * ptr, const size_t size);
+    Uint8 * mixBufferTo(Uint8 * stream);
   };
 
-
   std::unordered_map<IDirectSoundBuffer *, std::shared_ptr<DirectSoundGenerator>> activeSoundGenerators;
+
+  void DirectSoundGenerator::staticAudioCallback(void* userdata, Uint8* stream, int len)
+  {
+    DirectSoundGenerator * generator = static_cast<DirectSoundGenerator *>(userdata);
+    return generator->audioCallback(stream, len);
+  }
+
+  void DirectSoundGenerator::audioCallback(Uint8* stream, int len)
+  {
+    LPVOID lpvAudioPtr1, lpvAudioPtr2;
+    DWORD dwAudioBytes1, dwAudioBytes2;
+    const size_t bytesRead = myBuffer->Read(len, &lpvAudioPtr1, &dwAudioBytes1, &lpvAudioPtr2, &dwAudioBytes2);
+
+    myMixerBuffer.resize(bytesRead);
+
+    Uint8 * dest = myMixerBuffer.data();
+    if (lpvAudioPtr1 && dwAudioBytes1)
+    {
+      memcpy(dest, lpvAudioPtr1, dwAudioBytes1);
+      dest += dwAudioBytes1;
+    }
+    if (lpvAudioPtr2 && dwAudioBytes2)
+    {
+      memcpy(dest, lpvAudioPtr2, dwAudioBytes2);
+      dest += dwAudioBytes2;
+    }
+
+    stream = mixBufferTo(stream);
+
+    const size_t gap = len - bytesRead;
+    if (gap)
+    {
+      memset(stream, myAudioSpec.silence, gap);
+    }
+  }
 
   DirectSoundGenerator::DirectSoundGenerator(IDirectSoundBuffer * buffer)
     : myBuffer(buffer)
@@ -117,126 +173,17 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 #endif
   }
 
-  bool DirectSoundGenerator::isRunning()
-  {
-#ifndef USE_COREAUDIO
-    if (myAudioDevice)
-    {
-      return true;
-    }
-#else
-    if (outputUnit)
-    {
-      return true;
-    }
-#endif // USE_COREAUDIO
-
-    DWORD dwStatus;
-    myBuffer->GetStatus(&dwStatus);
-    if (!(dwStatus & DSBSTATUS_PLAYING))
-    {
-      return false;
-    }
-
-#ifndef USE_COREAUDIO
-    SDL_AudioSpec want;
-    SDL_zero(want);
-
-    want.freq = myBuffer->sampleRate;
-    want.format = AUDIO_S16LSB;
-    want.channels = myBuffer->channels;
-    want.samples = 4096;  // what does this really mean?
-    want.callback = nullptr;
-    myAudioDevice = SDL_OpenAudioDevice(nullptr, 0, &want, &myAudioSpec, 0);
-
-    if (myAudioDevice)
-    {
-      const int bitsPerSample = myAudioSpec.format & SDL_AUDIO_MASK_BITSIZE;
-      myBytesPerSecond = myAudioSpec.freq * myAudioSpec.channels * bitsPerSample / 8;
-
-      SDL_PauseAudioDevice(myAudioDevice, 0);
-      return true;
-    }
-#else
-    AudioComponentDescription desc = { 0 };
-    desc.componentType = kAudioUnitType_Output;
-    desc.componentSubType = kAudioUnitSubType_DefaultOutput;
-    desc.componentManufacturer = kAudioUnitManufacturer_Apple;
-    
-    AudioComponent comp = AudioComponentFindNext(NULL, &desc);
-    if (comp == NULL)
-    {
-      fprintf(stderr, "can't find audio component\n");
-      return false;
-    }
-    
-    if (AudioComponentInstanceNew(comp, &outputUnit) != noErr)
-    {
-      fprintf(stderr, "can't create output unit\n");
-      return false;
-    }
-    
-    AudioStreamBasicDescription absd = { 0 };
-    absd.mSampleRate = myBuffer->sampleRate;
-    absd.mFormatID = kAudioFormatLinearPCM;
-    absd.mFormatFlags = kAudioFormatFlagIsSignedInteger;
-    absd.mFramesPerPacket = 1;
-    absd.mChannelsPerFrame = (UInt32)myBuffer->channels;
-    absd.mBitsPerChannel = sizeof(SInt16) * CHAR_BIT;
-    absd.mBytesPerPacket = sizeof(SInt16) * (UInt32)myBuffer->channels;
-    absd.mBytesPerFrame = sizeof(SInt16) * (UInt32)myBuffer->channels;
-    if (AudioUnitSetProperty(outputUnit,
-                             kAudioUnitProperty_StreamFormat,
-                             kAudioUnitScope_Input,
-                             0,
-                             &absd,
-                             sizeof(absd))) {
-      fprintf(stderr, "can't set stream format\n");
-      return false;
-    }
-    
-    AURenderCallbackStruct input;
-    input.inputProc = DirectSoundRenderProc;
-    input.inputProcRefCon = this;
-    if (AudioUnitSetProperty(outputUnit,
-                             kAudioUnitProperty_SetRenderCallback,
-                             kAudioUnitScope_Input,
-                             0,
-                             &input,
-                             sizeof(input)) != noErr)
-    {
-      fprintf(stderr, "can't set callback property\n");
-      return false;
-    }
-    
-    setVolumeIfNecessary();
-    
-    if (AudioUnitInitialize(outputUnit) != noErr)
-    {
-      fprintf(stderr, "can't initialize output unit\n");
-      return false;
-    }
-    
-    OSStatus status = AudioOutputUnitStart(outputUnit);
-    fprintf(stderr, "output unit %p, status %d\n", outputUnit, status);
-#endif // USE_COREAUDIO
-
-    return false;
-  }
-
   void DirectSoundGenerator::printInfo() const
   {
     if (isRunning())
     {
 #ifndef USE_COREAUDIO
-      const int width = 5;
       const DWORD bytesInBuffer = myBuffer->GetBytesInBuffer();
-      const Uint32 bytesInQueue = SDL_GetQueuedAudioSize(myAudioDevice);
       std::cerr << "Channels: " << (int)myAudioSpec.channels;
-      std::cerr << ", buffer: " << std::setw(width) << bytesInBuffer;
-      std::cerr << ", SDL: " << std::setw(width) << bytesInQueue;
-      const double queue = double(bytesInBuffer + bytesInQueue) / myBytesPerSecond;
-      std::cerr << ", queue: " << queue << " s" << std::endl;
+      std::cerr << ", buffer: " << std::setw(6) << bytesInBuffer;
+      const double time = double(bytesInBuffer) / myBytesPerSecond * 1000;
+      std::cerr << ", " << std::setw(8) << time << " ms";
+      std::cerr << ", underruns: " << std::setw(10) << myBuffer->GetBufferUnderruns() << std::endl;
 #endif // USE_COREAUDIO
     }
   }
@@ -251,22 +198,22 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     info.channels = myAudioSpec.channels;
 #endif
     info.volume = myBuffer->GetLogarithmicVolume();
+    info.numberOfUnderruns = myBuffer->GetBufferUnderruns();
 
-    if (info.running && myBytesPerSecond > 0.0)
+    if (info.running && myBytesPerSecond > 0)
     {
       const DWORD bytesInBuffer = myBuffer->GetBytesInBuffer();
-#ifndef USE_COREAUDIO
-      const Uint32 bytesInQueue = SDL_GetQueuedAudioSize(myAudioDevice);
-#endif
       const float coeff = 1.0 / myBytesPerSecond;
       info.buffer = bytesInBuffer * coeff;
-#ifndef USE_COREAUDIO
-      info.queue = bytesInQueue * coeff;
-#endif
       info.size = myBuffer->bufferSize * coeff;
     }
 
     return info;
+  }
+
+  void DirectSoundGenerator::resetUnderruns()
+  {
+    myBuffer->ResetUnderrruns();
   }
 
   void DirectSoundGenerator::stop()
@@ -284,62 +231,55 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     }
   }
 
-  void DirectSoundGenerator::mixBuffer(const void * ptr, const size_t size)
+  Uint8 * DirectSoundGenerator::mixBufferTo(Uint8 * stream)
   {
 #ifndef USE_COREAUDIO
+    // we could copy ADJUST_VOLUME from SDL_mixer.c and avoid all copying and (rare) race conditions
     const double logVolume = myBuffer->GetLogarithmicVolume();
     // same formula as QAudio::convertVolume()
     const double linVolume = logVolume > 0.99 ? 1.0 : -std::log(1.0 - logVolume) / std::log(100.0);
-
     const Uint8 svolume = Uint8(linVolume * SDL_MIX_MAXVOLUME);
 
-    // this is a bit of a waste copy-time, but it reuses SDL to do it properly
-    myMixerBuffer.resize(size);
-    memset(myMixerBuffer.data(), 0, size);
-    SDL_MixAudioFormat(myMixerBuffer.data(), (const Uint8*)ptr, myAudioSpec.format, size, svolume);
-    SDL_QueueAudio(myAudioDevice, myMixerBuffer.data(), size);
+    const size_t len = myMixerBuffer.size();
+    memset(stream, 0, len);
+    SDL_MixAudioFormat(stream, myMixerBuffer.data(), myAudioSpec.format, len, svolume);
+    return stream + len;
 #endif // USE_COREAUDIO
   }
 
-  void DirectSoundGenerator::writeAudio()
+  void DirectSoundGenerator::writeAudio(const size_t ms)
   {
     // this is autostart as we only do for the palying buffers
     // and AW might activate one later
-    if (!isRunning())
+    if (myAudioDevice)
     {
       return;
     }
 
 #ifndef USE_COREAUDIO
-    // CoreAudio audio units pull data via the DirectSoundRenderProc callback,
-    // so writeAudio() doesn't actually do anything except tickle isRunning()
-    // to initialize the outputUnit. This is all pretty pointless except I'd
-    // like to keep the general structure of DirectSoundGenerator compatible
-    // with Linux for now. It might be possible to get sa2 to switch to
-    // CoreAudio on Macs for lower latency.
-    
-    // SDL does not have a maximum buffer size
-    // we have to be careful not writing too much
-    // otherwise AW starts generating a lot of samples
-    // and we loose sync
-
-    // assume SDL's buffer is the same size as AW's
-    const int bytesFree = myBuffer->bufferSize - SDL_GetQueuedAudioSize(myAudioDevice);
-
-    if (bytesFree > 0)
+    DWORD dwStatus;
+    myBuffer->GetStatus(&dwStatus);
+    if (!(dwStatus & DSBSTATUS_PLAYING))
     {
-      LPVOID lpvAudioPtr1, lpvAudioPtr2;
-      DWORD dwAudioBytes1, dwAudioBytes2;
-      myBuffer->Read(bytesFree, &lpvAudioPtr1, &dwAudioBytes1, &lpvAudioPtr2, &dwAudioBytes2);
+      return;
+    }
 
-      if (lpvAudioPtr1 && dwAudioBytes1)
-      {
-        mixBuffer(lpvAudioPtr1, dwAudioBytes1);
-      }
-      if (lpvAudioPtr2 && dwAudioBytes2)
-      {
-        mixBuffer(lpvAudioPtr2, dwAudioBytes2);
-      }
+    SDL_AudioSpec want;
+    SDL_zero(want);
+
+    want.freq = myBuffer->sampleRate;
+    want.format = AUDIO_S16LSB;
+    want.channels = myBuffer->channels;
+    want.samples = std::min<size_t>(MAX_SAMPLES, nextPowerOf2(myBuffer->sampleRate * ms / 1000));
+    want.callback = staticAudioCallback;
+    want.userdata = this;
+    myAudioDevice = SDL_OpenAudioDevice(nullptr, 0, &want, &myAudioSpec, 0);
+
+    if (myAudioDevice)
+    {
+      myBytesPerSecond = getBytesPerSecond(myAudioSpec);
+
+      SDL_PauseAudioDevice(myAudioDevice, 0);
     }
 #endif // USE_COREAUDIO
   }
@@ -442,12 +382,12 @@ namespace sa2
     }
   }
 
-  void writeAudio()
+  void writeAudio(const size_t ms)
   {
     for (auto & it : activeSoundGenerators)
     {
       const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
-      generator->writeAudio();
+      generator->writeAudio(ms);
     }
   }
 
@@ -457,6 +397,15 @@ namespace sa2
     {
       const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
       generator->printInfo();
+    }
+  }
+
+  void resetUnderruns()
+  {
+    for (auto & it : activeSoundGenerators)
+    {
+      const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
+      generator->resetUnderruns();
     }
   }
 
