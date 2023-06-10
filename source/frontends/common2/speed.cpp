@@ -55,8 +55,11 @@ namespace common2
       // target the next time we will be called
       const auto targetDeltaInMicros = currentDelta + microseconds;
 
-      // permanently apply the correction
-      myStartCycles += g_nCpuCyclesFeedback;
+      // FIXME: Unsure if negative g_nCpuCyclesFeedback values should be handled.
+      if (g_nCpuCyclesFeedback > 0) {
+        // permanently apply the correction
+        myStartCycles += g_nCpuCyclesFeedback;
+      }
 
       const uint64_t targetCycles = static_cast<uint64_t>(targetDeltaInMicros * myAudioSpeed * 1.0e-6) + myStartCycles;
       if (targetCycles > currentCycles)

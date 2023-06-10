@@ -12,6 +12,10 @@
 #include <AudioToolbox/AudioToolbox.h>
 #endif // USE_COREAUDIO
 
+#ifdef __APPLE__
+typedef uint8_t Uint8;
+#endif
+
 #include <unordered_map>
 #include <memory>
 #include <iostream>
@@ -27,14 +31,14 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
                                UInt32 inBusNumber,
                                UInt32 inNumberFrames,
                                AudioBufferList * ioData);
-#endif // USE_COREAUDIO
-
+#else
   size_t getBytesPerSecond(const SDL_AudioSpec & spec)
   {
     const size_t bitsPerSample = spec.format & SDL_AUDIO_MASK_BITSIZE;
     const size_t bytesPerFrame = spec.channels * bitsPerSample / 8;
     return spec.freq * bytesPerFrame;
   }
+#endif // USE_COREAUDIO
 
   size_t nextPowerOf2(size_t n)
   {
@@ -124,11 +128,13 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
     stream = mixBufferTo(stream);
 
+#ifndef USE_COREAUDIO
     const size_t gap = len - bytesRead;
     if (gap)
     {
       memset(stream, myAudioSpec.silence, gap);
     }
+#endif // USE_COREAUDIO
   }
 
   DirectSoundGenerator::DirectSoundGenerator(IDirectSoundBuffer * buffer)
@@ -244,11 +250,14 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     memset(stream, 0, len);
     SDL_MixAudioFormat(stream, myMixerBuffer.data(), myAudioSpec.format, len, svolume);
     return stream + len;
+#else
+    return 0;
 #endif // USE_COREAUDIO
   }
 
   void DirectSoundGenerator::writeAudio(const size_t ms)
   {
+#ifndef USE_COREAUDIO
     // this is autostart as we only do for the palying buffers
     // and AW might activate one later
     if (myAudioDevice)
@@ -256,7 +265,6 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
       return;
     }
 
-#ifndef USE_COREAUDIO
     DWORD dwStatus;
     myBuffer->GetStatus(&dwStatus);
     if (!(dwStatus & DSBSTATUS_PLAYING))
@@ -281,6 +289,73 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
       SDL_PauseAudioDevice(myAudioDevice, 0);
     }
+#else
+    if (outputUnit)
+    {
+      return;
+    }
+    
+    AudioComponentDescription desc = { 0 };
+    desc.componentType = kAudioUnitType_Output;
+    desc.componentSubType = kAudioUnitSubType_DefaultOutput;
+    desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+    
+    AudioComponent comp = AudioComponentFindNext(NULL, &desc);
+    if (comp == NULL)
+    {
+      fprintf(stderr, "can't find audio component\n");
+      return;
+    }
+    
+    if (AudioComponentInstanceNew(comp, &outputUnit) != noErr)
+    {
+      fprintf(stderr, "can't create output unit\n");
+      return;
+    }
+    
+    AudioStreamBasicDescription absd = { 0 };
+    absd.mSampleRate = myBuffer->sampleRate;
+    absd.mFormatID = kAudioFormatLinearPCM;
+    absd.mFormatFlags = kAudioFormatFlagIsSignedInteger;
+    absd.mFramesPerPacket = 1;
+    absd.mChannelsPerFrame = (UInt32)myBuffer->channels;
+    absd.mBitsPerChannel = sizeof(SInt16) * CHAR_BIT;
+    absd.mBytesPerPacket = sizeof(SInt16) * (UInt32)myBuffer->channels;
+    absd.mBytesPerFrame = sizeof(SInt16) * (UInt32)myBuffer->channels;
+    if (AudioUnitSetProperty(outputUnit,
+                             kAudioUnitProperty_StreamFormat,
+                             kAudioUnitScope_Input,
+                             0,
+                             &absd,
+                             sizeof(absd))) {
+      fprintf(stderr, "can't set stream format\n");
+      return;
+    }
+    
+    AURenderCallbackStruct input;
+    input.inputProc = DirectSoundRenderProc;
+    input.inputProcRefCon = this;
+    if (AudioUnitSetProperty(outputUnit,
+                             kAudioUnitProperty_SetRenderCallback,
+                             kAudioUnitScope_Input,
+                             0,
+                             &input,
+                             sizeof(input)) != noErr)
+    {
+      fprintf(stderr, "can't set callback property\n");
+      return;
+    }
+    
+    setVolumeIfNecessary();
+    
+    if (AudioUnitInitialize(outputUnit) != noErr)
+    {
+      fprintf(stderr, "can't initialize output unit\n");
+      return;
+    }
+    
+    OSStatus status = AudioOutputUnitStart(outputUnit);
+    fprintf(stderr, "output unit %p, status %d\n", outputUnit, status);
 #endif // USE_COREAUDIO
   }
 

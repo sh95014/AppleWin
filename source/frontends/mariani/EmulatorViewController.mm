@@ -99,6 +99,7 @@ const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExi
 @implementation EmulatorViewController {
     MTKView *_view;
     FrameBuffer frameBuffer;
+    common2::EmulatorOptions options;
 }
 
 std::shared_ptr<mariani::MarianiFrame> frame;
@@ -108,7 +109,6 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     
     self.audioOutputs = [NSMutableArray array];
     
-    common2::EmulatorOptions options;
     self.registryContext = new RegistryContext(CreateFileRegistry(options));
     frame.reset(new mariani::MarianiFrame(options));
 
@@ -197,7 +197,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
     
     if (self.delegate == nil || [self.delegate shouldPlayAudio]) {
-        sa2::writeAudio();
+        sa2::writeAudio(options.audioBuffer);
     }
 #ifdef DEBUG
     NSTimeInterval audioWriteTimeOffset = -[start timeIntervalSinceNow];
@@ -212,7 +212,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     NSTimeInterval eventProcessingTimeOffset = -[start timeIntervalSinceNow];
 #endif
 
-    frame->ExecuteOneFrame(1000.0 / TARGET_FPS);
+    frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
 #ifdef DEBUG
     NSTimeInterval executionTimeOffset = -[start timeIntervalSinceNow];
 #endif
