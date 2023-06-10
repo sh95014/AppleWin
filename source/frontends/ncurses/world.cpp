@@ -4,10 +4,8 @@
 #include <ncurses.h>
 #include <signal.h>
 
-#include "Log.h"
-
 #include "linux/linuxinterface.h"
-#include "linux/keyboard.h"
+#include "linux/keyboardbuffer.h"
 
 #include "frontends/ncurses/nframe.h"
 

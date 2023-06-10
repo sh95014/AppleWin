@@ -38,7 +38,7 @@ void CreateLanguageCard(void); // FIXME should be in Memory.h
 // RegSaveValue() calls below.) This hack allows the function to be seen
 // with the correct signature and avoids the link error.
 #define BOOL int32_t
-#import "registry.h"
+#import "Registry.h"
 #undef BOOL
 
 #include "DiskImg.h"
@@ -160,8 +160,8 @@ const SS_CARDTYPE slot0Types[] = { CT_LanguageCard, CT_Saturn128K, CT_Empty };
 const SS_CARDTYPE slot1Types[] = { CT_GenericPrinter, CT_Uthernet2, CT_Empty };
 const SS_CARDTYPE slot2Types[] = { CT_SSC, CT_Uthernet2, CT_Empty };
 const SS_CARDTYPE slot3Types[] = { CT_Uthernet, CT_Uthernet2, CT_VidHD, CT_Empty };
-const SS_CARDTYPE slot4Types[] = { CT_MockingboardC, CT_MouseInterface, CT_Phasor, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot5Types[] = { CT_MockingboardC, CT_Z80, CT_SAM, CT_Disk2, CT_FourPlay, CT_SNESMAX, CT_Uthernet2, CT_Empty };
+const SS_CARDTYPE slot4Types[] = { CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_MouseInterface, CT_Phasor, CT_Uthernet2, CT_Empty };
+const SS_CARDTYPE slot5Types[] = { CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_Z80, CT_SAM, CT_Disk2, CT_Phasor, CT_FourPlay, CT_SNESMAX, CT_Uthernet2, CT_Empty };
 const SS_CARDTYPE slot6Types[] = { CT_Disk2, CT_Uthernet2, CT_Empty };
 const SS_CARDTYPE slot7Types[] = { CT_GenericHDD, CT_Uthernet2, CT_Empty };
 const SS_CARDTYPE *slotTypes[] = {
@@ -247,8 +247,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         self.audioSpeakerVolumeSlider.intValue = volumeMax - SpkrGetVolume();
         
         // Mockingboard volume slider
+        CardManager &cardManager = GetCardMgr();
         self.audioMockingboardVolumeSlider.maxValue = volumeMax;
-        self.audioMockingboardVolumeSlider.intValue = volumeMax - MB_GetVolume();
+        self.audioMockingboardVolumeSlider.intValue = volumeMax - cardManager.GetMockingboardCardMgr().GetVolume();
         [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
     }
 }
@@ -479,7 +480,8 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     NSLog(@"%s", __PRETTY_FUNCTION__);
     const int volumeMax = GetPropertySheet().GetVolumeMax();
     const int volume = volumeMax - self.audioMockingboardVolumeSlider.intValue;
-    MB_SetVolume(volume, volumeMax);
+    CardManager &cardManager = GetCardMgr();
+    cardManager.GetMockingboardCardMgr().SetVolume(volume, volumeMax);
     RegSaveValue(REG_CONFIG, REGVALUE_MB_VOLUME, true, volume);
     NSLog(@"Set Mockingboard volume to %d", volume);
 }
@@ -687,6 +689,8 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         @(CT_SNESMAX):              NSLocalizedString(@"SNES MAX (game controller)", @""),
         @(CT_VidHD):                NSLocalizedString(@"VidHD (video)", @""),
         @(CT_Uthernet2):            NSLocalizedString(@"Uthernet II (network)", @""),
+        @(CT_MegaAudio):            NSLocalizedString(@"MEGA Audio", @""),
+        @(CT_SDMusic):              NSLocalizedString(@"SD Music (sound)", @""),
     };
 }
 

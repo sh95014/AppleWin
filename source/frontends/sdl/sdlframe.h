@@ -5,7 +5,10 @@
 #include "frontends/common2/commonframe.h"
 #include "frontends/common2/speed.h"
 #include "frontends/common2/programoptions.h"
+#include "linux/network/portfwds.h"
+#ifndef MARIANI
 #include <SDL.h>
+#endif
 
 namespace common2
 {
@@ -28,21 +31,31 @@ namespace sa2
 #ifndef MARIANI
     void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
 #endif
+    std::shared_ptr<NetworkBackend> CreateNetworkBackend(const std::string & interfaceName) override;
 
     void ProcessEvents(bool &quit);
 
-    void ExecuteOneFrame(const size_t msNextFrame);
+    void ExecuteOneFrame(const uint64_t microseconds);
     void ChangeMode(const AppMode_e mode);
     void SingleStep();
     void ResetHardware();
     bool HardwareChanged() const;
+
+    void FrameResetMachineState();
     virtual void ResetSpeed();
+
     void LoadSnapshot() override;
 
+#ifndef MARIANI
     const std::shared_ptr<SDL_Window> & GetWindow() const;
+#endif
 
     void getDragDropSlotAndDrive(size_t & slot, size_t & drive) const;
     void setDragDropSlotAndDrive(const size_t slot, const size_t drive);
+
+    bool & getPreserveAspectRatio();
+
+    const common2::Speed & getSpeed() const;
 
     static void setGLSwapInterval(const int interval);
 
@@ -61,18 +74,21 @@ namespace sa2
     void ProcessMouseMotion(const SDL_MouseMotionEvent & motion);
 #endif // MARIANI
 
-    void ExecuteInRunningMode(const size_t msNextFrame);
-    void ExecuteInDebugMode(const size_t msNextFrame);
+    void ExecuteInRunningMode(const uint64_t microseconds);
+    void ExecuteInDebugMode(const uint64_t microseconds);
     void Execute(const DWORD uCycles);
 
     void SetFullSpeed(const bool value);
     bool CanDoFullSpeed();
 
+#ifndef MARIANI
     common2::Geometry getGeometryOrDefault(const std::optional<common2::Geometry> & geometry) const;
+#endif
 
     static double GetRelativePosition(const int value, const int width);
 
     int myTargetGLSwap;
+    bool myPreserveAspectRatio;
     bool myForceCapsLock;
     int myMultiplier;
     bool myFullscreen;
@@ -84,7 +100,11 @@ namespace sa2
 
     common2::Speed mySpeed;
 
+    std::vector<PortFwd> myPortFwds;
+
+#ifndef MARIANI
     std::shared_ptr<SDL_Window> myWindow;
+#endif
 
     CConfigNeedingRestart myHardwareConfig;
   };

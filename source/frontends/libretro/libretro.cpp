@@ -7,7 +7,6 @@
 #include "Video.h"
 #include "Interface.h"
 #include "Memory.h"
-#include "Utilities.h"
 #include "Debugger/DebugDefs.h"
 
 #include "linux/version.h"
@@ -121,7 +120,7 @@ unsigned retro_api_version(void)
 
 void retro_set_controller_port_device(unsigned port, unsigned device)
 {
-  ra2::log_cb(RETRO_LOG_INFO, "RA2: %s, Plugging device %u into port %u.\n", __FUNCTION__, device, port);
+  ra2::log_cb(RETRO_LOG_INFO, "RA2: %s, Plugging device %u into port %u\n", __FUNCTION__, device, port);
   if (port == 0)
   {
     ra2::Game::ourInputDevices[port] = device;
@@ -132,15 +131,15 @@ void retro_set_controller_port_device(unsigned port, unsigned device)
       Paddle::instance.reset();
       break;
     case RETRO_DEVICE_JOYPAD:
-      Paddle::instance.reset(new ra2::Joypad(device));
+      Paddle::instance = std::make_shared<ra2::Joypad>(device);
       Paddle::setSquaring(false);
       break;
     case RETRO_DEVICE_ANALOG:
-      Paddle::instance.reset(new ra2::Analog(device));
+      Paddle::instance = std::make_shared<ra2::Analog>(device);
       Paddle::setSquaring(true);
       break;
     case RETRO_DEVICE_MOUSE:
-      Paddle::instance.reset(new ra2::Mouse(device, &ourGame));
+      Paddle::instance = std::make_shared<ra2::Mouse>(device, &ourGame);
       Paddle::setSquaring(false);
       break;
     default:
@@ -205,8 +204,8 @@ void retro_set_environment(retro_environment_t cb)
   retro_keyboard_callback keyboardCallback = {&ra2::Game::keyboardCallback};
   cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, &keyboardCallback);
 
-  retro_audio_buffer_status_callback audioCallback = {&ra2::bufferStatusCallback};
-  cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK, &audioCallback);
+  // retro_audio_buffer_status_callback audioCallback = {&ra2::bufferStatusCallback};
+  // cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK, &audioCallback);
 
   retro_frame_time_callback timeCallback = {&ra2::Game::frameTimeCallback, 1000000 / ra2::Game::FPS};
   cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &timeCallback);
@@ -277,11 +276,11 @@ void retro_set_video_refresh(retro_video_refresh_t cb)
 
 void retro_run(void)
 {
+  ourGame->updateVariables();
   ourGame->processInputEvents();
   ourGame->executeOneFrame();
   GetFrame().VideoPresentScreen();
-  const size_t ms = (1000 + 60 - 1) / 60; // round up
-  ra2::writeAudio(ms);
+  ourGame->writeAudio(ra2::Game::FPS);
 }
 
 bool retro_load_game(const retro_game_info *info)
@@ -298,7 +297,7 @@ bool retro_load_game(const retro_game_info *info)
 
   try
   {
-    std::unique_ptr<ra2::Game> game(new ra2::Game());
+    std::unique_ptr<ra2::Game> game = std::make_unique<ra2::Game>();
 
     const std::string snapshotEnding = ".aws.yaml";
     const std::string playlistEnding = ".m3u";
@@ -357,8 +356,12 @@ unsigned retro_get_region(void)
 
 void retro_reset(void)
 {
+  if (ourGame)
+  {
+    ourGame->updateVariables();
+    ourGame->reset();
+  }
   ra2::log_cb(RETRO_LOG_INFO, "RA2: %s\n", __FUNCTION__);
-  ResetMachineState();
 }
 
 bool retro_load_game_special(unsigned type, const struct retro_game_info *info, size_t num)

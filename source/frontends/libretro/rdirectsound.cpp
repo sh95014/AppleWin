@@ -9,21 +9,17 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <vector>
 
 namespace
 {
-
-  // we can only run 1 generator at a time
-  // 1 is for speaker (2 would be Mockingboard)
-  const size_t ourChannels = 1;
 
   class DirectSoundGenerator
   {
   public:
     DirectSoundGenerator(IDirectSoundBuffer * buffer);
 
-    void writeAudio(const size_t ms);
-    void playSilence(const size_t ms);
+    void writeAudio(const size_t fps);
 
     bool isRunning() const;
     size_t getNumberOfChannels() const;
@@ -32,8 +28,6 @@ namespace
     IDirectSoundBuffer * myBuffer;
 
     std::vector<int16_t> myMixerBuffer;
-
-    size_t myBytesPerSecond;
 
     void mixBuffer(const void * ptr, const size_t size);
   };
@@ -47,7 +41,7 @@ namespace
       const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
       if (generator->isRunning() && generator->getNumberOfChannels() == channels)
       {
-	return generator;
+        return generator;
       }
     }
     return std::shared_ptr<DirectSoundGenerator>();
@@ -56,7 +50,6 @@ namespace
   DirectSoundGenerator::DirectSoundGenerator(IDirectSoundBuffer * buffer)
     : myBuffer(buffer)
   {
-    myBytesPerSecond = myBuffer->channels * myBuffer->sampleRate * sizeof(int16_t);
   }
 
   bool DirectSoundGenerator::isRunning() const
@@ -92,8 +85,8 @@ namespace
       myMixerBuffer.resize(2 * frames);
       for (int16_t i = 0; i < frames; ++i)
       {
-	myMixerBuffer[i * 2] = data[i];
-	myMixerBuffer[i * 2 + 1] = data[i];
+        myMixerBuffer[i * 2] = data[i];
+        myMixerBuffer[i * 2 + 1] = data[i];
       }
     }
 
@@ -110,20 +103,7 @@ namespace
     ra2::audio_batch_cb(myMixerBuffer.data(), frames);
   }
 
-  void DirectSoundGenerator::playSilence(const size_t ms)
-  {
-    if (!isRunning())
-    {
-      return;
-    }
-
-    const size_t frames = ms * myBuffer->sampleRate / 1000;
-    myMixerBuffer.resize(2 * frames);
-    std::fill(myMixerBuffer.begin(), myMixerBuffer.end(), 0);
-    ra2::audio_batch_cb(myMixerBuffer.data(), frames);
-  }
-
-  void DirectSoundGenerator::writeAudio(const size_t ms)
+  void DirectSoundGenerator::writeAudio(const size_t fps)
   {
     // this is autostart as we only do for the palying buffers
     // and AW might activate one later
@@ -132,7 +112,7 @@ namespace
       return;
     }
 
-    const size_t frames = ms * myBuffer->sampleRate / 1000;
+    const size_t frames = myBuffer->sampleRate / fps;
     const size_t bytesToRead = frames * myBuffer->channels * sizeof(int16_t);
 
     LPVOID lpvAudioPtr1, lpvAudioPtr2;
@@ -169,21 +149,12 @@ void unregisterSoundBuffer(IDirectSoundBuffer * buffer)
 namespace ra2
 {
 
-  void writeAudio(const size_t ms)
+  void writeAudio(const size_t channels, const size_t fps)
   {
-    const auto generator = findRunningGenerator(ourChannels);
+    const auto generator = findRunningGenerator(channels);
     if (generator)
     {
-      generator->writeAudio(ms);
-    }
-  }
-
-  void playSilence(const size_t ms)
-  {
-    const auto generator = findRunningGenerator(ourChannels);
-    if (generator)
-    {
-      generator->playSilence(ms);
+      generator->writeAudio(fps);
     }
   }
 
@@ -197,7 +168,7 @@ namespace ra2
       if (diff >= 5)
       {
         // this is very verbose
-        // log_cb(RETRO_LOG_INFO, "RA2: %s occupancy = %d, underrun_likely = %d\n", __FUNCTION__, occupancy, underrun_likely);
+        log_cb(RETRO_LOG_INFO, "RA2: %s occupancy = %d, underrun_likely = %d\n", __FUNCTION__, occupancy, underrun_likely);
         lastOccupancy = occupancy;
       }
     }

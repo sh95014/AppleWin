@@ -51,6 +51,7 @@ set(SOURCE_FILES
   Debugger/Debugger_Commands.cpp
   Debugger/Util_MemoryTextFile.cpp
 
+  CopyProtectionDongles.cpp
   Uthernet1.cpp
   Uthernet2.cpp
   StrFormat.cpp
@@ -61,6 +62,7 @@ set(SOURCE_FILES
   SoundCore.cpp
   AY8910.cpp
   Mockingboard.cpp
+  MockingboardCardManager.cpp
   Pravets.cpp
   YamlHelper.cpp
   Log.cpp
@@ -100,12 +102,12 @@ set(SOURCE_FILES
   linux/benchmark.cpp
   linux/paddle.cpp
   linux/version.cpp
-  linux/registry.cpp
-  linux/keyboard.cpp
+  linux/registryclass.cpp
   linux/linuxframe.cpp
   linux/context.cpp
-  linux/tape.cpp
+  linux/cassettetape.cpp
   linux/network/slirp2.cpp
+  linux/network/portfwds.cpp
 
   linux/duplicates/Debugger_Display.cpp
   linux/duplicates/Debugger_Win32.cpp
@@ -130,6 +132,7 @@ set(HEADER_FILES
   Tfe/IPRaw.h
   Tfe/DNS.h
 
+  CopyProtectionDongles.h
   Uthernet1.h
   Uthernet2.h
   W5100.h
@@ -141,6 +144,7 @@ set(HEADER_FILES
   SoundCore.h
   AY8910.h
   Mockingboard.h
+  MockingboardCardManager.h
   Pravets.h
   Tape.h
   YamlHelper.h
@@ -179,8 +183,6 @@ set(HEADER_FILES
   DiskDefs.h
   DiskLog.h
   Interface.h
-  SaveState_Structs_common.h
-  SaveState_Structs_v1.h
 
   Debugger/Debug.h
   Debugger/DebugDefs.h
@@ -206,11 +208,12 @@ set(HEADER_FILES
   linux/benchmark.h
   linux/paddle.h
   linux/version.h
-  linux/registry.h
-  linux/keyboard.h
+  linux/registryclass.h
+  linux/keyboardbuffer.h
   linux/linuxframe.h
-  linux/tape.h
+  linux/cassettetape.h
   linux/network/slirp2.h
+  linux/network/portfwds.h
 
   Z80VICE/z80.h
   Z80VICE/z80mem.h
@@ -225,7 +228,6 @@ add_library(appleii STATIC
   )
 
 target_include_directories(appleii PRIVATE
-  ${CMAKE_CURRENT_BINARY_DIR}  # for config.h
   ${YAML_INCLUDE_DIRS}
   ${PCAP_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
@@ -235,6 +237,7 @@ target_include_directories(appleii PRIVATE
 
 # this one appears in header files
 target_include_directories(appleii PUBLIC
+  ${CMAKE_CURRENT_BINARY_DIR}  # for config.h
   ${MINIZIP_INCLUDE_DIRS}
   )
 

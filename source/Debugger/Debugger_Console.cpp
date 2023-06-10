@@ -80,11 +80,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 		char g_aConsoleInput[ CONSOLE_WIDTH ]; // = g_aConsoleDisplay[0];
 
 		// Cooked input line (no prompt)
-		int          g_nConsoleInputChars  = 0;
-		      char * g_pConsoleInput       = 0; // points to past prompt
-		const char * g_pConsoleFirstArg    = 0; // points to first arg
-		bool         g_bConsoleInputQuoted = false; // Allows lower-case to be entered
-		char         g_nConsoleInputSkip   = '~';
+		      int    g_nConsoleInputChars       = 0;
+		      char * g_pConsoleInput            = 0; // points to past prompt
+		      int    g_nConsoleInputMaxLen      = 0;
+		      int    g_nConsoleInputScrollWidth = 0;
+		const char * g_pConsoleFirstArg         = 0; // points to first arg
+		      bool   g_bConsoleInputQuoted      = false; // Allows lower-case to be entered
+		      char   g_nConsoleInputSkip        = '~';
 
 // Prototypes _______________________________________________________________
 
@@ -125,30 +127,40 @@ void ConsolePrint ( const char * pText )
 	// Convert color string to native console color text
 	// Ignores g_nConsoleDisplayWidth
 	char c;
-
 	int x = 0;
+	int y = 0;
 	const char *pSrc = pText;
 	conchar_t  *pDst = & g_aConsoleBuffer[ g_nConsoleBuffer ][ 0 ];
+
+	const int MAX_PUSH_HEIGHT = 16;
 
 	conchar_t g = 0;
 	bool bHaveColor = false;
 	char cColor = 0;
 
-	while ((x < CONSOLE_WIDTH) && (c = *pSrc))
+	while ((y < MAX_PUSH_HEIGHT) && (c = *pSrc))
 	{
-		if ((c == '\n') || (x >= (CONSOLE_WIDTH - 1)))
+		if ((c == '\n') || (x >= g_nConsoleDisplayWidth))
 		{
 			*pDst = 0;
 			x = 0;
+			y++;
+
+			if (cColor)
+				bHaveColor = true; // wrap color to next line
+
 			if (g_nConsoleBuffer >= CONSOLE_BUFFER_HEIGHT)
 			{
-				ConsoleBufferToDisplay();	
+				ConsoleBufferToDisplay();
 			}
 			else
 			{
 				g_nConsoleBuffer++;
-			}							
+			}
 			pDst = & g_aConsoleBuffer[ g_nConsoleBuffer ][ 0 ];
+
+			if (c == '\n')
+				pSrc++;
 		}
 		else
 		{
@@ -190,7 +202,7 @@ void ConsolePrint ( const char * pText )
 			{
 				if (bHaveColor)
 				{
-					g = ConsoleColor_MakeColor( cColor, c );	
+					g = ConsoleColor_MakeColor( cColor, c );
 					bHaveColor = false;
 				}
 				*pDst = g;
@@ -354,7 +366,7 @@ void ConsoleConvertFromText ( conchar_t * sText, const char * pText )
 //===========================================================================
 Update_t ConsoleDisplayError ( const char * pText )
 {
-	ConsoleBufferPush( pText );
+	ConsolePrintFormat( CHC_ERROR "%s", pText );
 	return ConsoleUpdate();
 }
 
@@ -430,7 +442,7 @@ bool ConsoleInputBackSpace ()
 {
 	if (g_nConsoleInputChars)
 	{
-		g_pConsoleInput[ g_nConsoleInputChars ] = CHAR_SPACE;
+		g_pConsoleInput[ g_nConsoleInputChars ] = 0;
 
 		g_nConsoleInputChars--;
 
@@ -461,7 +473,7 @@ bool ConsoleInputClear ()
 //===========================================================================
 bool ConsoleInputChar ( char ch )
 {
-	if (g_nConsoleInputChars < g_nConsoleDisplayWidth) // bug? include prompt?
+	if (g_nConsoleInputChars < g_nConsoleInputMaxLen) // GH #1204 Need to count the space at EOL for the cursor
 	{
 		g_pConsoleInput[ g_nConsoleInputChars ] = ch;
 		g_nConsoleInputChars++;

@@ -13,7 +13,7 @@ Peripheral cards and add-on hardware supported:
 - Parallel printer card
 - Mouse interface
 - Apple IIe Extended 80-Column Text Card and RamWorks III (8MB)
-- RGB cards: Apple's Extended 80-Column Text/AppleColor Adaptor Card, 'Le Chat Mauve' Féline and Eve.
+- RGB cards: Apple's Extended 80-Column Text/AppleColor Adaptor Card and 'Le Chat Mauve' Féline.
 - CP/M SoftCard
 - Uthernet I and II (ethernet cards)
 - Language Card and Saturn 64/128K for Apple II/II+
@@ -22,9 +22,9 @@ Peripheral cards and add-on hardware supported:
 - No Slot Clock (NSC)
 
 
-Download latest (stable) release: [AppleWin v1.30.10.0](https://github.com/AppleWin/AppleWin/releases/download/v1.30.10.0/AppleWin1.30.10.0.zip)
+Download latest (stable) release: [AppleWin v1.30.13.0](https://github.com/AppleWin/AppleWin/releases/download/v1.30.13.0/AppleWin1.30.13.0.zip)
 
-Release Notes: [v1.30.10.0](https://github.com/AppleWin/AppleWin/releases/tag/v1.30.10.0)
+Release Notes: [v1.30.13.0](https://github.com/AppleWin/AppleWin/releases/tag/v1.30.13.0)
 
 
 Building
@@ -32,6 +32,11 @@ Building
 To compile from source see:
 
 * [docs/compiling.txt](https://github.com/AppleWin/AppleWin/blob/master/docs/compiling.txt)
+
+
+Contributing
+============
+Please see the [CONTRIBUTING](https://github.com/AppleWin/AppleWin/blob/master/CONTRIBUTING.md) doc before raising new bugs, features and _especially_ PRs.
 
 
 Next Version

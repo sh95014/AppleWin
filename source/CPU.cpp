@@ -90,8 +90,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Core.h"
 #include "CardManager.h"
 #include "Memory.h"
-#include "Mockingboard.h"
-#include "MouseInterface.h"
 #ifdef USE_SPEECH_API
 #include "Speech.h"
 #endif
@@ -138,6 +136,9 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 
 static bool g_irqDefer1Opcode = false;
 static bool g_interruptInLastExecutionBatch = false;	// Last batch of executed cycles included an interrupt (IRQ/NMI)
+
+// NB. No need to save to save-state, as IRQ() follows CheckSynchronousInterruptSources(), and IRQ() always sets it to false.
+static bool g_irqOnLastOpcodeCycle = false;
 
 //
 
@@ -202,6 +203,12 @@ void ResetCyclesExecutedForDebugger(void)
 bool IsInterruptInLastExecution(void)
 {
 	return g_interruptInLastExecutionBatch;
+}
+
+void SetIrqOnLastOpcodeCycle(void)
+{
+	if (!(regs.ps & AF_INTERRUPT))
+		g_irqOnLastOpcodeCycle = true;
 }
 
 //
@@ -388,7 +395,9 @@ static __forceinline bool NMI(ULONG& uExecutedCycles, BOOL& flagc, BOOL& flagn, 
 	PUSH(regs.pc & 0xFF)
 	EF_TO_AF
 	PUSH(regs.ps & ~AF_BREAK)
-	regs.ps = regs.ps | AF_INTERRUPT & ~AF_DECIMAL;
+	regs.ps |= AF_INTERRUPT;
+	if (GetMainCpu() == CPU_65C02)	// GH#1099
+		regs.ps &= ~AF_DECIMAL;
 	regs.pc = * (WORD*) (mem+0xFFFA);
 	UINT uExtraCycles = 0;	// Needed for CYC(a) macro
 	CYC(7);
@@ -403,9 +412,6 @@ static __forceinline void CheckSynchronousInterruptSources(UINT cycles, ULONG uE
 {
 	g_SynchronousEventMgr.Update(cycles, uExecutedCycles);
 }
-
-// NB. No need to save to save-state, as IRQ() follows CheckSynchronousInterruptSources(), and IRQ() always sets it to false.
-bool g_irqOnLastOpcodeCycle = false;
 
 static __forceinline bool IRQ(ULONG& uExecutedCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
 {
@@ -431,13 +437,15 @@ static __forceinline bool IRQ(ULONG& uExecutedCycles, BOOL& flagc, BOOL& flagn, 
 		PUSH(regs.pc & 0xFF)
 		EF_TO_AF
 		PUSH(regs.ps & ~AF_BREAK)
-		regs.ps = (regs.ps | AF_INTERRUPT) & (~AF_DECIMAL);
+		regs.ps |= AF_INTERRUPT;
+		if (GetMainCpu() == CPU_65C02)	// GH#1099
+			regs.ps &= ~AF_DECIMAL;
 		regs.pc = * (WORD*) (mem+0xFFFE);
 		UINT uExtraCycles = 0;	// Needed for CYC(a) macro
 		CYC(7);
 #if defined(_DEBUG) && LOG_IRQ_TAKEN_AND_RTI
 		std::string irq6522;
-		MB_Get6522IrqDescription(irq6522);
+		GetCardMgr().GetMockingboardCardMgr().Get6522IrqDescription(irq6522);
 		const char* pSrc =	(g_bmIRQ & 1) ? irq6522.c_str() :
 							(g_bmIRQ & 2) ? "SPEECH" :
 							(g_bmIRQ & 4) ? "SSC" :
@@ -610,7 +618,7 @@ DWORD CpuExecute(const DWORD uCycles, const bool bVideoUpdate)
 	g_interruptInLastExecutionBatch = false;
 
 #ifdef _DEBUG
-	MB_CheckCumulativeCycles();
+	GetCardMgr().GetMockingboardCardMgr().CheckCumulativeCycles();
 #endif
 
 	// uCycles:
@@ -621,7 +629,7 @@ DWORD CpuExecute(const DWORD uCycles, const bool bVideoUpdate)
 	// Update 6522s (NB. Do this before updating g_nCumulativeCycles below)
 	// . Ensures that 6522 regs are up-to-date for any potential save-state
 	// . SyncEvent will trigger the 6522 TIMER1/2 underflow on the correct cycle
-	MB_UpdateCycles(uExecutedCycles);
+	GetCardMgr().GetMockingboardCardMgr().UpdateCycles(uExecutedCycles);
 
 	const UINT nRemainingCycles = uExecutedCycles - g_nCyclesExecuted;
 	g_nCumulativeCycles	+= nRemainingCycles;
@@ -681,7 +689,9 @@ void CpuReset()
 	_ASSERT(mem != NULL);
 
 	// 7 cycles
-	regs.ps = (regs.ps | AF_INTERRUPT) & ~AF_DECIMAL;
+	regs.ps |= AF_INTERRUPT;
+	if (GetMainCpu() == CPU_65C02)	// GH#1099
+		regs.ps &= ~AF_DECIMAL;
 	regs.pc = *(WORD*)(mem + 0xFFFC);
 	regs.sp = 0x0100 | ((regs.sp - 3) & 0xFF);
 
@@ -718,7 +728,9 @@ void CpuSetupBenchmark ()
 			if ((++opcode >= BENCHOPCODES) || ((addr & 0x0F) >= 0x0B))
 			{
 				*(mem+addr++) = 0x4C;
-				*(mem+addr++) = (opcode >= BENCHOPCODES) ? 0x00 : ((addr >> 4)+1) << 4;
+				// split into 2 lines to avoid -Wunsequenced and undefined behaviour
+				const BYTE value = (opcode >= BENCHOPCODES) ? 0x00 : ((addr >> 4)+1) << 4;
+				*(mem+addr++) = value;
 				*(mem+addr++) = 0x03;
 				while (addr & 0x0F)
 					++addr;

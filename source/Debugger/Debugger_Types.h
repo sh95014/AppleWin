@@ -183,6 +183,7 @@
 		BP_SRC_MEM_RW,
 		BP_SRC_MEM_READ_ONLY,
 		BP_SRC_MEM_WRITE_ONLY,
+		BP_SRC_VIDEO_SCANNER,
 
 		NUM_BREAKPOINT_SOURCES
 	};
@@ -207,13 +208,16 @@
 
 	struct Breakpoint_t
 	{
-		WORD                 nAddress; // for registers, functions as nValue
-		UINT                 nLength ;
+		WORD                 nAddress ; // for registers, functions as nValue
+		UINT                 nLength  ;
 		BreakpointSource_t   eSource;
 		BreakpointOperator_t eOperator;
-		bool                 bSet    ; // used to be called enabled pre 2.0
+		bool                 bSet     ; // used to be called enabled pre 2.0
 		bool                 bEnabled;
-		bool                 bTemp;    // If true then remove BP when hit or stepping cancelled (eg. G xxxx)
+		bool                 bTemp    ; // If true then remove BP when hit or stepping cancelled (eg. G xxxx)
+		bool                 bHit     ; // true when the breakpoint has just been hit
+		bool                 bStop    ; // true if the debugger stops when it is hit
+		DWORD                nHitCount; // number of times the breakpoint was hit
 	};
 
 	typedef Breakpoint_t Bookmark_t;
@@ -334,6 +338,7 @@
 		, CMD_BREAKPOINT_ADD_MEM // break on: [$0000-$FFFF], excluding IO
 		, CMD_BREAKPOINT_ADD_MEMR // break on read on: [$0000-$FFFF], excluding IO
 		, CMD_BREAKPOINT_ADD_MEMW // break on write on: [$0000-$FFFF], excluding IO
+		, CMD_BREAKPOINT_ADD_VIDEO // break on video scanner position
 
 		, CMD_BREAKPOINT_CLEAR
 //		,	CMD_BREAKPOINT_REMOVE = CMD_BREAKPOINT_CLEAR // alias
@@ -343,6 +348,7 @@
 		, CMD_BREAKPOINT_LIST
 //		, CMD_BREAKPOINT_LOAD
 		, CMD_BREAKPOINT_SAVE
+		, CMD_BREAKPOINT_CHANGE
 // Benchmark / Timing
 //		, CMD_BENCHMARK_START
 //		, CMD_BENCHMARK_STOP
@@ -516,7 +522,7 @@
 		, CMD_VIEW_DHGR2
 		, CMD_VIEW_SHR
 // Watch
-		, CMD_WATCH // TODO: Deprecated ?
+		, CMD_WATCH
 		, CMD_WATCH_ADD
 		, CMD_WATCH_CLEAR
 		, CMD_WATCH_DISABLE
@@ -641,10 +647,12 @@
 	Update_t CmdBreakpointAddMemA  (int nArgs);
 	Update_t CmdBreakpointAddMemR  (int nArgs);
 	Update_t CmdBreakpointAddMemW  (int nArgs);
+	Update_t CmdBreakpointAddVideo (int nArgs);
 	Update_t CmdBreakpointClear    (int nArgs);
 	Update_t CmdBreakpointDisable  (int nArgs);
 	Update_t CmdBreakpointEdit     (int nArgs);
 	Update_t CmdBreakpointEnable   (int nArgs);
+	Update_t CmdBreakpointChange   (int nArgs);
 	Update_t CmdBreakpointList     (int nArgs);
 //	Update_t CmdBreakpointLoad     (int nArgs);
 	Update_t CmdBreakpointSave     (int nArgs);
@@ -1171,8 +1179,8 @@ const	DisasmData_t* pDisasmData; // If != NULL then bytes are marked up as data 
 	{
 		DEV_MEMORY,
 		DEV_DISK2 ,
-		DEV_SY6522,
-		DEV_AY8910,
+		DEV_MB_SUBUNIT,		// MB's 6522 & AY8913
+		DEV_AY8913_PAIR,	// Phasor's pair of AYs (connected to one of the 6522s)
 		NUM_DEVICES
 	};
 
@@ -1358,8 +1366,18 @@ const	DisasmData_t* pDisasmData; // If != NULL then bytes are marked up as data 
 
 //		, PARAM_SIZE  // TODO: used by FONT SIZE
 
+	, _PARAM_BP_CHANGE_BEGIN = _PARAM_BREAKPOINT_END // Daisy Chain
+		, PARAM_BP_CHANGE_ENABLE = _PARAM_BP_CHANGE_BEGIN // E
+		, PARAM_BP_CHANGE_DISABLE  // e
+		, PARAM_BP_CHANGE_TEMP_ON  // T
+		, PARAM_BP_CHANGE_TEMP_OFF // t
+		, PARAM_BP_CHANGE_STOP_ON  // S
+		, PARAM_BP_CHANGE_STOP_OFF // s
+	, _PARAM_BP_CHANGE_END
+	,  PARAM_BP_CHANGE_NUM = _PARAM_BP_CHANGE_END - _PARAM_BP_CHANGE_BEGIN
+
 	// Note: Order must match BreakpointSource_t
-	, _PARAM_REGS_BEGIN = _PARAM_BREAKPOINT_END // Daisy Chain
+	, _PARAM_REGS_BEGIN = _PARAM_BP_CHANGE_END // Daisy Chain
 // Regs
 		, PARAM_REG_A = _PARAM_REGS_BEGIN
 		, PARAM_REG_X
@@ -1393,8 +1411,9 @@ const	DisasmData_t* pDisasmData; // If != NULL then bytes are marked up as data 
 
 // Disk
 	, _PARAM_DISK_BEGIN = _PARAM_CONFIG_END // Daisy Chain
-		, PARAM_DISK_EJECT = _PARAM_DISK_BEGIN // DISK 1 EJECT
-		, PARAM_DISK_INFO                      // DISK 1 INFO
+		, PARAM_DISK_INFO = _PARAM_DISK_BEGIN  // DISK INFO
+		, PARAM_DISK_SET_SLOT                  // DISK SLOT 6
+		, PARAM_DISK_EJECT                     // DISK 1 EJECT
 		, PARAM_DISK_PROTECT                   // DISK 1 PROTECT
 		, PARAM_DISK_READ                      // DISK 1 READ Track Sector NumSectors MemAddress
 	, _PARAM_DISK_END

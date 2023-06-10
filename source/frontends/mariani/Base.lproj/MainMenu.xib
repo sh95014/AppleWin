@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -99,6 +99,12 @@
                             <menuItem title="Insert Disk Image" id="l7t-Fp-Pd9">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" id="aVZ-wx-6ML"/>
+                            </menuItem>
+                            <menuItem title="Load Tape…" id="b8E-ED-PjA">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="loadTapeAction:" target="Voe-Tx-rLC" id="ncL-0a-4Zz"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="081-d1-Gfw"/>
                             <menuItem title="Close Window" keyEquivalent="w" id="4wN-Ie-K1K">
@@ -220,8 +226,11 @@
                             <menuItem title="Show Memory Viewer" id="ig1-4e-Udw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Show Debugger" id="1DA-XY-M6d">
+                            <menuItem title="Show Debugger" keyEquivalent="" id="1DA-XY-M6d">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="showDebuggerAction:" target="Voe-Tx-rLC" id="UUu-QL-V2b"/>
+                                </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="X44-mn-AYa"/>
                             <menuItem title="Bring All to Front" id="LE2-aR-0XJ">

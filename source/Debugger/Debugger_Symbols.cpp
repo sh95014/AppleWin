@@ -542,7 +542,7 @@ int ParseSymbolTable(const std::string & pPathFileName, SymbolTable_Index_e eSym
 {
 	bool bFileDisplayed = false;
 
-	const int nMaxLen = MIN(DISASM_DISPLAY_MAX_TARGET_LEN, MAX_SYMBOLS_LEN);
+	const int nMaxLen = std::min<int>(DISASM_DISPLAY_MAX_TARGET_LEN, MAX_SYMBOLS_LEN);
 
 	int nSymbolsLoaded = 0;
 
@@ -749,8 +749,15 @@ Update_t CmdSymbolsLoad (int nArgs)
 	// Debugger will call us with 0 args on startup as a way to pre-load symbol tables
 	if (! nArgs)
 	{
-		sFileName += g_sFileNameSymbols[ iSymbolTable ];
+		sFileName = g_sProgramDir + g_sFileNameSymbols[ iSymbolTable ];
 		nSymbols = ParseSymbolTable( sFileName, (SymbolTable_Index_e) iSymbolTable );
+
+		// Try optional alternate location
+		if ((nSymbols == 0) && !g_sBuiltinSymbolsDir.empty())
+		{
+			sFileName = g_sBuiltinSymbolsDir + g_sFileNameSymbols[ iSymbolTable ];
+			nSymbols = ParseSymbolTable( sFileName, (SymbolTable_Index_e) iSymbolTable );
+		}
 	}
 
 	int iArg = 1;
@@ -816,7 +823,7 @@ Update_t _CmdSymbolsClear( SymbolTable_Index_e eSymbolTable )
 
 
 //===========================================================================
-void SymbolUpdate( SymbolTable_Index_e eSymbolTable, const char *pSymbolName, WORD nAddress, bool bRemoveSymbol, bool bUpdateSymbol )
+void SymbolUpdate ( SymbolTable_Index_e eSymbolTable, const char *pSymbolName, WORD nAddress, bool bRemoveSymbol, bool bUpdateSymbol )
 {
 	if (bRemoveSymbol)
 		pSymbolName = g_aArgs[2].sArg;
@@ -869,11 +876,16 @@ void SymbolUpdate( SymbolTable_Index_e eSymbolTable, const char *pSymbolName, WO
 #endif
 			g_aSymbols[ eSymbolTable ][ nAddress ] = pSymbolName;
 
+			// 2.9.1.26: When adding symbols list the address first then the name for readability
 			// Tell user symbol was added
-			ConsolePrintFormat( " Added symbol: %s%s%s %s$%s%04X%s"
-				, CHC_SYMBOL, pSymbolName, CHC_DEFAULT
-				, CHC_ARG_SEP					
-				, CHC_ADDRESS, nAddress, CHC_DEFAULT
+			ConsolePrintFormat(
+				/*CHC_DEFAULT*/ " Added: "
+				  CHC_ARG_SEP   "$"
+				  CHC_ADDRESS   "%04X"
+				  CHC_DEFAULT   " "
+				  CHC_SYMBOL    "%s"
+				, nAddress
+				, pSymbolName
 			);
 		}
 	}

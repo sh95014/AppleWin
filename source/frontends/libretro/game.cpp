@@ -1,26 +1,41 @@
 #include "StdAfx.h"
 #include "frontends/libretro/game.h"
+#include "frontends/libretro/rdirectsound.h"
 #include "frontends/libretro/retroregistry.h"
 #include "frontends/libretro/retroframe.h"
+#include "frontends/common2/utils.h"
+#include "frontends/common2/ptreeregistry.h"
 
 #include "Common.h"
 #include "CardManager.h"
 #include "Core.h"
-#include "Mockingboard.h"
 #include "Speaker.h"
-#include "Log.h"
 #include "CPU.h"
 #include "NTSC.h"
-#include "Utilities.h"
 #include "Interface.h"
 
-#include "linux/keyboard.h"
-#include "linux/registry.h"
+#include "linux/keyboardbuffer.h"
 #include "linux/paddle.h"
 #include "linux/context.h"
-#include "frontends/common2/utils.h"
 
 #include "libretro.h"
+#include <memory>
+
+#define APPLEWIN_RETRO_CONF "/tmp/applewin.retro.conf"
+
+namespace
+{
+  void saveRegistryToINI(const std::shared_ptr<common2::PTreeRegistry> & registry)
+  {
+    try
+    {
+      registry->saveToINIFile(APPLEWIN_RETRO_CONF);
+      ra2::display_message("Configuration saved to: " APPLEWIN_RETRO_CONF);
+    } catch (const std::exception & e) {
+      ra2::display_message(std::string("Error saving configuration: ") + e.what());
+    }
+  }
+}
 
 namespace ra2
 {
@@ -31,9 +46,12 @@ namespace ra2
     : mySpeed(true)  // fixed speed
     , myButtonStates(RETRO_DEVICE_ID_JOYPAD_R3 + 1)
   {
-    myLoggerContext.reset(new LoggerContext(true));
-    myRegistryContext.reset(new RegistryContext(CreateRetroRegistry()));
-    myFrame.reset(new ra2::RetroFrame());
+    myLoggerContext = std::make_shared<LoggerContext>(true);
+    myRegistry = CreateRetroRegistry();
+    myRegistryContext = std::make_shared<RegistryContext>(myRegistry);
+    myFrame = std::make_shared<ra2::RetroFrame>();
+
+    myAudioChannelsSelected = GetAudioOutputChannels();
 
     SetFrame(myFrame);
     myFrame->Begin();
@@ -66,6 +84,37 @@ namespace ra2
       g_dwCyclesThisFrame = (g_dwCyclesThisFrame + executedCycles) % dwClksPerFrame;
       GetCardMgr().Update(executedCycles);
       SpkrUpdate(executedCycles);
+    }
+  }
+
+  void Game::updateVariables()
+  {
+    bool updated = false;
+    if (ra2::environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
+    {
+      PopulateRegistry(myRegistry);
+
+      // some variables are immediately applied
+      myAudioChannelsSelected = GetAudioOutputChannels();
+
+      Video& video = GetVideo();
+      const VideoType_e prevVideoType = video.GetVideoType();
+      const VideoStyle_e prevVideoStyle = video.GetVideoStyle();
+
+      DWORD dwTmp = prevVideoType;
+      RegLoadValue(REG_CONFIG, REGVALUE_VIDEO_MODE, TRUE, &dwTmp);
+      const VideoType_e newVideoType = static_cast<VideoType_e>(dwTmp);
+
+      dwTmp = prevVideoStyle;
+      RegLoadValue(REG_CONFIG, REGVALUE_VIDEO_STYLE, TRUE, &dwTmp);
+      const VideoStyle_e newVideoStyle = static_cast<VideoStyle_e>(dwTmp);
+
+      if ((prevVideoType != newVideoType) || (prevVideoStyle != newVideoStyle))
+      {
+        video.SetVideoStyle(newVideoStyle);
+        video.SetVideoType(newVideoType);
+        myFrame->ApplyVideoModeChange();
+      }
     }
   }
 
@@ -219,7 +268,6 @@ namespace ra2
     return pressed;
   }
 
-
   void Game::keyboardEmulation()
   {
     if (ourInputDevices[0] != RETRO_DEVICE_NONE)
@@ -232,9 +280,30 @@ namespace ra2
       {
         myFrame->Cycle50ScanLines();
       }
+      if (checkButtonPressed(RETRO_DEVICE_ID_JOYPAD_L2))
+      {
+        saveRegistryToINI(myRegistry);
+      }
       if (checkButtonPressed(RETRO_DEVICE_ID_JOYPAD_START))
       {
-        ResetMachineState();
+        reset(); // just a myFrame->Restart();
+      }
+      if (checkButtonPressed(RETRO_DEVICE_ID_JOYPAD_SELECT))
+      {
+        // added as convenience if game_focus is on:
+        // exit emulator by pressing "select" twice
+        const auto secondBtnPress = std::chrono::steady_clock::now();
+        const auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(secondBtnPress - myFirstBtnPress).count();
+        myFirstBtnPress = secondBtnPress;
+        if (dt <= 500)
+        {
+          log_cb(RETRO_LOG_INFO, "RA2: %s - user quitted\n", __FUNCTION__);
+          environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
+        }
+        else
+        {
+          display_message("Press again to quit...", 30 /* 0.5s at 60 FPS */);
+        }
       }
     }
     else
@@ -268,6 +337,16 @@ namespace ra2
   DiskControl & Game::getDiskControl()
   {
     return myDiskControl;
+  }
+
+  void Game::reset()
+  {
+    myFrame->Restart();
+  }
+
+  void Game::writeAudio(const size_t fps)
+  {
+    ra2::writeAudio(myAudioChannelsSelected, fps);
   }
 
 }

@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "CardManager.h"
 #include "Registry.h"
-#include "Harddisk.h"
 #include "Core.h"
 #include "Memory.h"
 #include "Interface.h"
@@ -22,6 +21,8 @@ namespace
      {CT_Disk2, "Disk2"},
      {CT_SSC, "SSC"},
      {CT_MockingboardC, "MockingboardC"},
+     {CT_MegaAudio, "MegaAudio"},
+     {CT_SDMusic, "SDMusic"},
      {CT_GenericPrinter, "GenericPrinter"},
      {CT_GenericHDD, "GenericHDD"},
      {CT_GenericClock, "GenericClock"},
@@ -102,14 +103,20 @@ namespace
       {1, {CT_Empty, CT_GenericPrinter, CT_Uthernet2}},
       {2, {CT_Empty, CT_SSC, CT_Uthernet2}},
       {3, {CT_Empty, CT_Uthernet, CT_Uthernet2, CT_VidHD}},
-      {4, {CT_Empty, CT_MockingboardC, CT_MouseInterface, CT_Phasor, CT_Uthernet2}},
-      {5, {CT_Empty, CT_MockingboardC, CT_Z80, CT_SAM, CT_Disk2, CT_FourPlay, CT_SNESMAX, CT_Uthernet2}},
+      {4, {CT_Empty, CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_MouseInterface, CT_Phasor, CT_Uthernet2}},
+      {5, {CT_Empty, CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_Disk2, CT_GenericHDD, CT_Phasor, CT_Uthernet2, CT_Z80, CT_SAM, CT_FourPlay, CT_SNESMAX}},
       {6, {CT_Empty, CT_Disk2, CT_Uthernet2}},
       {7, {CT_Empty, CT_GenericHDD, CT_Uthernet2}},
     };
 
     const std::vector<SS_CARDTYPE> expansionCards =
       {CT_Empty, CT_LanguageCard, CT_Extended80Col, CT_Saturn128K, CT_RamWorksIII};
+
+  uint8_t roundToRGB(float x)
+  {
+    // c++ cast truncates
+    return uint8_t(x * 255 + 0.5);
+  }
 
 }
 
@@ -178,22 +185,6 @@ namespace sa2
         }
         break;
       }
-      case 4:
-      case 5:
-      {
-        if (card == CT_MockingboardC)
-        {
-          cardManager.Insert(9 - slot, card);  // the other
-        }
-        else
-        {
-          if (cardManager.QuerySlot(slot) == CT_MockingboardC)
-          {
-            cardManager.Insert(9 - slot, CT_Empty);  // the other
-          }
-        }
-        break;
-      }
     };
 
     cardManager.Insert(slot, card);
@@ -253,6 +244,20 @@ namespace sa2
     }
   }
 
+  ImVec4 colorrefToImVec4(const COLORREF cr)
+  {
+    const float coeff = 1.0 / 255.0;
+    const bgra_t * bgra = reinterpret_cast<const bgra_t *>(&cr);
+    const ImVec4 color(bgra->b * coeff, bgra->g * coeff, bgra->r * coeff, 1);
+    return color;
+  }
+
+  COLORREF imVec4ToColorref(const ImVec4 & color)
+  {
+    const bgra_t bgra = {roundToRGB(color.x), roundToRGB(color.y), roundToRGB(color.z), roundToRGB(color.w)};
+    const COLORREF * cr = reinterpret_cast<const COLORREF *>(&bgra);
+    return *cr;
+  }
 
 }
 

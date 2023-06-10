@@ -237,3 +237,42 @@
 
 /* No comment provided by engineer. */
 "Copy Screenshot" = "拷貝螢幕快照";
+
+/* No comment provided by engineer. */
+"(Based on AppleWin Version %s)" = "基於 AppleWin %s 版";
+
+/* No comment provided by engineer. */
+"Annunciators" = "Annunciators";
+
+/* No comment provided by engineer. */
+"Black & White" = "黑白";
+
+/* No comment provided by engineer. */
+"Bookmark" = "書籤";
+
+/* No comment provided by engineer. */
+"Clear Breakpoint" = "清除中斷點";
+
+/* No comment provided by engineer. */
+"Color" = "彩色";
+
+/* No comment provided by engineer. */
+"Mono" = "單色";
+
+/* No comment provided by engineer. */
+"Pause Execution" = "暫停執行";
+
+/* No comment provided by engineer. */
+"Registers" = "暫存器";
+
+/* No comment provided by engineer. */
+"Resume Execution" = "繼續執行";
+
+/* No comment provided by engineer. */
+"Switches C0xx" = "Switches C0xx";
+
+/* No comment provided by engineer. */
+"Toggle Bookmark" = "切換書籤";
+
+/* No comment provided by engineer. */
+"Toggle Breakpoint" = "切換中斷點";

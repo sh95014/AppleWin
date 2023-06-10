@@ -1,6 +1,6 @@
 #pragma once
 
-#include "linux/registry.h"
+#include "linux/registryclass.h"
 #include <boost/property_tree/ptree.hpp>
 #include <string>
 
@@ -34,6 +34,8 @@ namespace common2
     void putValue(const std::string & section, const std::string & key, const T & value);
 
     std::map<std::string, std::map<std::string, std::string>> getAllValues() const override;
+
+    void saveToINIFile(const std::string & filename) const;
 
   protected:
     ini_t myINI;

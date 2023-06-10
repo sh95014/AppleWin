@@ -34,7 +34,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Interface.h"
 #include "Log.h"
 #include "Memory.h"
-#include "Mockingboard.h"
 #include "Pravets.h"
 #include "Speaker.h"
 #include "Registry.h"
@@ -62,6 +61,7 @@ AppMode_e	g_nAppMode = MODE_LOGO;
 std::string g_sStartDir;	// NB. AppleWin.exe maybe relative to this! (GH#663)
 std::string g_sProgramDir;	// Directory of where AppleWin executable resides
 std::string g_sCurrentDir;	// Also Starting Dir.  Debugger uses this when load/save
+std::string g_sBuiltinSymbolsDir; // Alternate directory for built-in debug symbols
 
 bool      g_bRestart = false;
 
@@ -227,7 +227,7 @@ void SetCurrentCLK6502(void)
 	//
 
 	SpkrReinitialize();
-	MB_Reinitialize();
+	GetCardMgr().GetMockingboardCardMgr().ReinitializeClock();
 }
 
 void UseClockMultiplier(double clockMultiplier)

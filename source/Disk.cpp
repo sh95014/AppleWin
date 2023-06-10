@@ -32,8 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "Disk.h"
 
-#include "SaveState_Structs_v1.h"
-
 #include "Interface.h"
 #include "Core.h"
 #include "CardManager.h"
@@ -73,6 +71,7 @@ Disk2InterfaceCard::Disk2InterfaceCard(UINT slot) :
 	m_diskLastReadLatchCycle = 0;
 	m_enhanceDisk = true;
 	m_is13SectorFirmware = false;
+	m_force13SectorFirmware = false;
 	m_deferredStepperEvent = false;
 	m_deferredStepperAddress = 0;
 	m_deferredStepperCumulativeCycles = 0;
@@ -101,50 +100,66 @@ Disk2InterfaceCard::~Disk2InterfaceCard(void)
 bool Disk2InterfaceCard::GetEnhanceDisk(void) { return m_enhanceDisk; }
 void Disk2InterfaceCard::SetEnhanceDisk(bool bEnhanceDisk) { m_enhanceDisk = bEnhanceDisk; }
 
-int Disk2InterfaceCard::GetCurrentDrive(void)  { return m_currDrive; }
-int Disk2InterfaceCard::GetCurrentTrack(void)  { return ImagePhaseToTrack(m_floppyDrive[m_currDrive].m_disk.m_imagehandle, m_floppyDrive[m_currDrive].m_phasePrecise, false); }
-float Disk2InterfaceCard::GetCurrentPhase(void)  { return m_floppyDrive[m_currDrive].m_phasePrecise; }
-int Disk2InterfaceCard::GetCurrentOffset(void) { return m_floppyDrive[m_currDrive].m_disk.m_byte; }
-BYTE Disk2InterfaceCard::GetCurrentLSSBitMask(void) { return m_floppyDrive[m_currDrive].m_disk.m_bitMask; }
+UINT   Disk2InterfaceCard::GetCurrentBitOffset  (void) { return m_floppyDrive[m_currDrive].m_disk.m_bitOffset; }
 double Disk2InterfaceCard::GetCurrentExtraCycles(void) { return m_floppyDrive[m_currDrive].m_disk.m_extraCycles; }
-int Disk2InterfaceCard::GetTrack(const int drive)  { return ImagePhaseToTrack(m_floppyDrive[drive].m_disk.m_imagehandle, m_floppyDrive[drive].m_phasePrecise, false); }
+float  Disk2InterfaceCard::GetCurrentPhase      (void) { return m_floppyDrive[m_currDrive].m_phasePrecise; }
+int    Disk2InterfaceCard::GetCurrentDrive      (void) { return m_currDrive; }
+BYTE   Disk2InterfaceCard::GetCurrentShiftReg   (void) { return m_shiftReg; }
+int    Disk2InterfaceCard::GetCurrentTrack      (void) { return ImagePhaseToTrack(m_floppyDrive[m_currDrive].m_disk.m_imagehandle, m_floppyDrive[m_currDrive].m_phasePrecise, false); }
 
-std::string Disk2InterfaceCard::FormatPhaseString(float phase)
+float Disk2InterfaceCard::GetPhase(const int drive) { return m_floppyDrive[drive].m_phasePrecise; }
+int   Disk2InterfaceCard::GetTrack(const int drive)  { return ImagePhaseToTrack(m_floppyDrive[drive].m_disk.m_imagehandle, m_floppyDrive[drive].m_phasePrecise, false); }
+
+std::string Disk2InterfaceCard::FormatIntFracString(float phase, bool hex)
 {
 	const UINT phaseInt = (UINT)phase;
 	const UINT phaseFrac = (UINT)((phase - (float)phaseInt) * 100 + 0.5);
 
-	return StrFormat("%02X.%02d", phaseInt, phaseFrac);	// "$NN.nn"
+	if (hex)
+		return StrFormat("%02X.%02d", phaseInt, phaseFrac);	// (hex)"NN.nn"
+	else
+		return StrFormat("%02d.%02d", phaseInt, phaseFrac);	// (dec)"NN.nn"
+
 }
 
 std::string Disk2InterfaceCard::GetCurrentTrackString(void)
 {
-	return FormatPhaseString(m_floppyDrive[m_currDrive].m_phasePrecise / 2);
+	return FormatIntFracString(m_floppyDrive[m_currDrive].m_phasePrecise / 2, true);
 }
 
 std::string Disk2InterfaceCard::GetCurrentPhaseString(void)
 {
-	return FormatPhaseString(m_floppyDrive[m_currDrive].m_phasePrecise);
+	return FormatIntFracString(m_floppyDrive[m_currDrive].m_phasePrecise, true);
 }
 
-LPCTSTR Disk2InterfaceCard::GetCurrentState(void)
+LPCTSTR Disk2InterfaceCard::GetCurrentState(Disk_Status_e& eDiskState_)
 {
 	if (m_floppyDrive[m_currDrive].m_disk.m_imagehandle == NULL)
-		return "Empty";
-
+	{
+		eDiskState_ = DISK_STATUS_EMPTY;
+	}
+	else
 	if (!m_floppyMotorOn)
 	{
 		if (m_floppyDrive[m_currDrive].m_spinning > 0)
-			return "Off (spinning)";
+		{
+			eDiskState_ = DISK_STATUS_SPIN;
+		}
 		else
-			return "Off";
+		{
+			eDiskState_ = DISK_STATUS_OFF;
+		}
 	}
 	else if (m_seqFunc.writeMode)
 	{
 		if (m_floppyDrive[m_currDrive].m_disk.m_bWriteProtected)
-			return "Writing (write protected)";
+		{
+			eDiskState_ = DISK_STATUS_PROT;
+		}
 		else
-			return "Writing";
+		{
+			eDiskState_ = DISK_STATUS_WRITE;
+		}
 	}
 	else
 	{
@@ -156,8 +171,22 @@ LPCTSTR Disk2InterfaceCard::GetCurrentState(void)
 				return "Reading write protect state (not write protected)";
 		}
 		else*/
-			return "Reading";
+		{
+			eDiskState_ = DISK_STATUS_READ;
+		}
 	}
+
+	static const char *aDiskStateMiniDesc[NUM_DISK_STATUS] =
+	{
+		 "Off"  // DISK_STATUS_OFF
+		,"R"    // DISK_STATUS_READ
+		,"W"    // DISK_STATUS_WRITE
+		,"WP"   // DISK_STATUS_PROT
+		,"n/a"  // DISK_STATUS_EMPTY
+		,"Spin" // DISK_STATUS_SPIN
+	};
+
+	return aDiskStateMiniDesc[eDiskState_];
 }
 
 //===========================================================================
@@ -301,8 +330,15 @@ void Disk2InterfaceCard::ReadTrack(const int drive, ULONG uExecutedCycles)
 			UpdateBitStreamPosition(*pFloppy, bitCellDelta);
 		}
 
-		const UINT32 currentPosition = pFloppy->m_byte;
-		const UINT32 currentTrackLength = pFloppy->m_nibbles;
+		if (ImageIsWOZ(pFloppy->m_imagehandle) && (pFloppy->m_bitCount == 0))
+		{
+			// WOZ: m_bitCount only ever 0 on initial power on
+			pFloppy->m_bitOffset = 0;
+			pFloppy->m_bitCount = 8;
+		}
+
+		const UINT32 currentBitPosition = pFloppy->m_bitOffset;
+		const UINT32 currentBitTrackLength = pFloppy->m_bitCount;
 
 		ImageReadTrack(
 			pFloppy->m_imagehandle,
@@ -312,12 +348,18 @@ void Disk2InterfaceCard::ReadTrack(const int drive, ULONG uExecutedCycles)
 			&pFloppy->m_bitCount,
 			m_enhanceDisk);
 
-		if (!ImageIsWOZ(pFloppy->m_imagehandle) || (currentTrackLength == 0))
+		if (!ImageIsWOZ(pFloppy->m_imagehandle))
 		{
 			pFloppy->m_byte = 0;
 		}
 		else
 		{
+			// NB. This function is only called for a new track when there's a latch read, ie. only for *even* DEVICE SELECT I/O accesses.
+			// . So when seeking across tracks (ie. sequencing through the magnet phases), then not all (quarter) tracks will need reading.
+			// . eg. for 'Balance of Power'(GH#1022), for seek T00->T35: this only reads: 00.00, 00.25, 00.75, 01.25, 01.75, ... 34.25, 34.75, 35.00 (skipping the NN.00, NN.50 tracks).
+			// . And so the bitOffset "round-up" below isn't called for every track.
+			// TODO: consider forcing this function be be called for every track (and appropriately adjust the "round-up" amount - ie. halve it)
+
 			_ASSERT(pFloppy->m_nibbles && pFloppy->m_bitCount);
 			if (pFloppy->m_nibbles == 0 || pFloppy->m_bitCount == 0)
 			{
@@ -325,18 +367,28 @@ void Disk2InterfaceCard::ReadTrack(const int drive, ULONG uExecutedCycles)
 				pFloppy->m_bitCount = 8;
 			}
 
-			pFloppy->m_byte = (currentPosition * pFloppy->m_nibbles) / currentTrackLength;	// Ref: WOZ-1.01
+			pFloppy->m_bitOffset = (currentBitPosition * pFloppy->m_bitCount) / currentBitTrackLength;	// Ref: WOZ-1.01
+			pFloppy->m_bitOffset += 7;	// Round-up for sensitive cross-track sync check (GH#1022)
 
-			if (pFloppy->m_byte == (pFloppy->m_nibbles-1))	// Last nibble may not be complete, so advance by 1 nibble
-				pFloppy->m_byte = 0;
+			if (pFloppy->m_bitOffset >= pFloppy->m_bitCount)
+				pFloppy->m_bitOffset = 0;
+#if LOG_DISK_WOZ_READTRACK
+			LOG_DISK("T%05.2f: %04X->%04X, Len=%04X\n", pDrive->m_phasePrecise / 2, currentBitPosition, pFloppy->m_bitOffset, pFloppy->m_bitCount);
+#endif
 
-			pFloppy->m_bitOffset = pFloppy->m_byte*8;
-			pFloppy->m_bitMask = 1 << 7;
+			pFloppy->m_byte = pFloppy->m_bitOffset / 8;
+			pFloppy->m_bitMask = 1 << (7 - (pFloppy->m_bitOffset % 8));
+
 			pFloppy->m_extraCycles = 0.0;
 			pDrive->m_headWindow = 0;
+
+			FindTrackSeamWOZ(*pFloppy, pDrive->m_phasePrecise/2);
 		}
 
 		pFloppy->m_trackimagedata = (pFloppy->m_nibbles != 0);
+
+		pFloppy->m_initialBitOffset = pFloppy->m_bitOffset;
+		pFloppy->m_revs = 0;
 	}
 }
 
@@ -738,7 +790,7 @@ Disk_Status_e Disk2InterfaceCard::GetDriveLightStatus(const int drive)
 		}
 	}
 
-	return DISK_STATUS_OFF;
+	return DISK_STATUS_EMPTY;
 }
 
 void Disk2InterfaceCard::GetLightStatus(Disk_Status_e *pDisk1Status, Disk_Status_e *pDisk2Status)
@@ -1097,6 +1149,9 @@ void __stdcall Disk2InterfaceCard::ReadWrite(WORD pc, WORD addr, BYTE bWrite, BY
 #endif
 	}
 
+	// GH #1212 We have a non .WOZ disk, mirror so that GetCurrentShiftReg() returns last nibble read
+	m_shiftReg = m_floppyLatch;
+
 	if (++pFloppy->m_byte >= pFloppy->m_nibbles)
 		pFloppy->m_byte = 0;
 
@@ -1187,6 +1242,9 @@ __forceinline void Disk2InterfaceCard::IncBitStream(FloppyDisk& floppy)
 		floppy.m_bitOffset = 0;
 		floppy.m_byte = 0;
 	}
+
+	if (floppy.m_bitOffset == floppy.m_initialBitOffset)
+		floppy.m_revs++;
 }
 
 void Disk2InterfaceCard::PreJitterCheck(int phase, BYTE latch)
@@ -1231,6 +1289,29 @@ void Disk2InterfaceCard::AddJitter(int phase, FloppyDisk& floppy)
 	m_foundT00S00Pattern = false;
 }
 
+// GH#1125: For T$21 (track 33.0) or above (and sufficiently long sync FF/10 run-length), then randomly skip 1 bit-cell at the start of the FF/2 track seam.
+// Example of high sync FF/10 run-lengths for tracks 33.0+:
+// . Accolade Comics:114, Silent Service:117, Wings of Fury:140, Wizardry I:127, Wizardry III:283
+// NB. Restrict to higher FF/10 run-lengths to limit the titles affected by this jitter.
+void Disk2InterfaceCard::AddTrackSeamJitter(float phasePrecise, FloppyDisk& floppy)
+{
+	if (phasePrecise >= (33.0 * 2) && floppy.m_longestSyncFFRunLength > 110)
+	{
+		if (floppy.m_bitOffset == floppy.m_longestSyncFFBitOffsetStart)
+		{
+			if (rand() < RAND_THRESHOLD(5, 10))
+			{
+				LogOutput("Disk: T%05.2f jitter - slip 1 bitcell  (revs=%d) (PC=%04X)\n", phasePrecise / 2, floppy.m_revs, regs.pc);
+				IncBitStream(floppy);
+			}
+			else
+			{
+				LogOutput("Disk: T%05.2f jitter - ***  SKIP  ***  (revs=%d) (PC=%04X)\n", phasePrecise / 2, floppy.m_revs, regs.pc);
+			}
+		}
+	}
+}
+
 void __stdcall Disk2InterfaceCard::DataLatchReadWriteWOZ(WORD pc, WORD addr, BYTE bWrite, ULONG uExecutedCycles)
 {
 	_ASSERT(m_seqFunc.function != dataShiftWrite);
@@ -1239,7 +1320,11 @@ void __stdcall Disk2InterfaceCard::DataLatchReadWriteWOZ(WORD pc, WORD addr, BYT
 	FloppyDisk& floppy = drive.m_disk;
 
 	if (!floppy.m_trackimagedata && floppy.m_imagehandle)
+	{
 		ReadTrack(m_currDrive, uExecutedCycles);
+		// NB. ReadTrack() has called GetBitCellDelta(), so the subsequent call to GetBitCellDelta() below just returns bitCellDelta==0
+		// So could just return at this point.
+	}
 
 	if (!floppy.m_trackimagedata)
 	{
@@ -1333,6 +1418,8 @@ void Disk2InterfaceCard::DataLatchReadWOZ(WORD pc, WORD addr, UINT bitCellRemain
 
 		IncBitStream(floppy);
 
+		AddTrackSeamJitter(drive.m_phasePrecise, floppy);
+
 		m_shiftReg <<= 1;
 		m_shiftReg |= outputBit;
 
@@ -1419,6 +1506,8 @@ void Disk2InterfaceCard::DataLoadWriteWOZ(WORD pc, WORD addr, UINT bitCellRemain
 	LOG_DISK("load shiftReg with %02X (was: %02X)\n", m_floppyLatch, m_shiftReg);
 #endif
 	m_shiftReg = m_floppyLatch;
+
+	floppy.m_longestSyncFFBitOffsetStart = -1;	// invalidate the track seam location after a write
 }
 
 void Disk2InterfaceCard::DataShiftWriteWOZ(WORD pc, WORD addr, ULONG uExecutedCycles)
@@ -1436,6 +1525,12 @@ void Disk2InterfaceCard::DataShiftWriteWOZ(WORD pc, WORD addr, ULONG uExecutedCy
 		UpdateBitStreamPosition(floppy, bitCellRemainder);
 		return;
 	}
+
+	if (!drive.m_spinning)
+		return;
+
+	if (!floppy.m_trackimagedata)	// GH#1126
+		return;
 
 #if LOG_DISK_WOZ_SHIFTWRITE
 	LOG_DISK("T$%02X, bitOffset=%04X: %02X (%d bits)\n", drive.m_phase/2, floppy.m_bitOffset, m_shiftReg, bitCellRemainder);
@@ -1459,6 +1554,107 @@ void Disk2InterfaceCard::DataShiftWriteWOZ(WORD pc, WORD addr, ULONG uExecutedCy
 
 //===========================================================================
 
+// For now all that's needed is this basic case:
+// . find [start,end] of longest run of FF/10 sync nibbles
+void Disk2InterfaceCard::FindTrackSeamWOZ(FloppyDisk& floppy, float track)
+{
+	const UINT oldBitOffset = floppy.m_bitOffset;	// Save current state
+
+	BYTE shiftReg = 0;
+	UINT zeroCount = 0;
+
+	int startBitOffset = -1;	// NB. change this to start of first FF/10
+	floppy.m_bitOffset = 0;
+	UpdateBitStreamOffsets(floppy);
+
+	int nibbleStartBitOffset = -1;
+	int syncFFStartBitOffset = -1;
+	int syncFFRunLength = 0;
+	int longestSyncFFStartBitOffset = -1;
+	int longestSyncFFRunLength = 0;
+
+	floppy.m_longestSyncFFBitOffsetStart = -1;
+
+	while (1)
+	{
+		BYTE n = floppy.m_trackimage[floppy.m_byte];
+		BYTE outputBit = (n & floppy.m_bitMask) ? 1 : 0;
+
+		IncBitStream(floppy);
+
+		if ((startBitOffset < 0 && floppy.m_bitOffset == 0) || (startBitOffset == floppy.m_bitOffset))	// done complete track?
+			break;
+
+		if (shiftReg & 0x80)
+		{
+			if (outputBit == 0)		// zero, so LSS holds nibble in latch
+			{
+				zeroCount++;
+				continue;
+			}
+
+			// else: start of next nibble
+
+			if (shiftReg == 0xff && zeroCount == 2)
+			{
+				if (syncFFStartBitOffset < 0)
+					syncFFStartBitOffset = nibbleStartBitOffset;
+				syncFFRunLength++;
+			}
+
+			if ((shiftReg != 0xff || zeroCount != 2) && syncFFStartBitOffset >= 0)
+			{
+				// Longest FF/2 run could straddle end/start of track's bit buffer
+				if (startBitOffset < 0)
+					startBitOffset = nibbleStartBitOffset;
+
+				if (longestSyncFFRunLength < syncFFRunLength)
+				{
+					longestSyncFFStartBitOffset = syncFFStartBitOffset;
+					longestSyncFFRunLength = syncFFRunLength;
+				}
+				syncFFStartBitOffset = -1;
+				syncFFRunLength = 0;
+			}
+
+			shiftReg = 0;
+			zeroCount = 0;
+		}
+
+		shiftReg <<= 1;
+		shiftReg |= outputBit;
+
+		if (shiftReg == 0x01)
+		{
+			nibbleStartBitOffset = floppy.m_bitOffset - 1;
+			if (nibbleStartBitOffset < 0) nibbleStartBitOffset += floppy.m_bitCount;
+		}
+	}
+
+	if (longestSyncFFRunLength)
+	{
+		const int longestSyncFFBitOffsetEnd = (longestSyncFFStartBitOffset + longestSyncFFRunLength * 10 - 1) % floppy.m_bitCount;
+#if LOG_DISK_WOZ_TRACK_SEAM
+		LOG_DISK("Track seam: T%05.2f: FF/10 (run=%d), start=%04X, end=%04X\n", track, longestSyncFFRunLength, longestSyncFFStartBitOffset, longestSyncFFBitOffsetEnd);
+#endif
+		floppy.m_longestSyncFFBitOffsetStart = longestSyncFFStartBitOffset;
+		floppy.m_longestSyncFFRunLength = longestSyncFFRunLength;
+	}
+	else
+	{
+#if LOG_DISK_WOZ_TRACK_SEAM
+		LOG_DISK("Track seam: T%05.2f: FF/10 (none)\n", track);
+#endif
+	}
+
+	// Restore state
+
+	floppy.m_bitOffset = oldBitOffset;
+	UpdateBitStreamOffsets(floppy);
+}
+
+//===========================================================================
+
 #ifdef _DEBUG
 // Dump nibbles from current position bitstream wraps to same position
 // NB. Need to define LOG_DISK_NIBBLES_READ so that GetReadD5AAxxDetectedString() works.
@@ -1470,21 +1666,22 @@ void Disk2InterfaceCard::DumpTrackWOZ(FloppyDisk floppy)	// pass a copy of m_flo
 	UINT zeroCount = 0;
 	UINT nibbleCount = 0;
 
-	const UINT startBitOffset = 0;	// NB. may need to tweak this offset, since the bistream is a circular buffer
+	const UINT startBitOffset = 0;	// NB. may need to tweak this offset, since the bitstream is a circular buffer
 	floppy.m_bitOffset = startBitOffset;
+	UpdateBitStreamOffsets(floppy);
 
-	floppy.m_byte = floppy.m_bitOffset / 8;
-	const UINT remainder = 7 - (floppy.m_bitOffset & 7);
-	floppy.m_bitMask = 1 << remainder;
+	int nibbleStartBitOffset = -1;
 
 	bool newLine = true;
+	bool doneLastBit = false;
 
 	while (1)
 	{
-		if (newLine)
+		if (newLine && nibbleStartBitOffset >= 0)
 		{
 			newLine = false;
-			LogOutput("%04X:", floppy.m_bitOffset & 0xffff);
+			LogOutput("%04X:", nibbleStartBitOffset);
+			nibbleStartBitOffset = -1;
 		}
 
 		BYTE n = floppy.m_trackimage[floppy.m_byte];
@@ -1493,53 +1690,67 @@ void Disk2InterfaceCard::DumpTrackWOZ(FloppyDisk floppy)	// pass a copy of m_flo
 		IncBitStream(floppy);
 
 		if (startBitOffset == floppy.m_bitOffset)	// done complete track?
+			doneLastBit = true;
+		else if (doneLastBit)
 			break;
 
-		if (shiftReg == 0 && outputBit == 0)
+		if (shiftReg & 0x80)
 		{
-			zeroCount++;
-			continue;
+			if (outputBit == 0)		// zero, so LSS holds nibble in latch
+			{
+				zeroCount++;
+				continue;
+			}
+
+			// else: start of next nibble
+
+			nibbleCount++;
+
+			char syncBits = zeroCount <= 9 ? '0' + zeroCount : '+';
+			if (zeroCount == 0)	LogOutput("%02X   ", shiftReg);
+			else				LogOutput("%02X(%c)", shiftReg, syncBits);
+
+			formatTrack.DecodeLatchNibbleRead(shiftReg);
+
+			if ((nibbleCount % 32) == 0)
+			{
+				std::string strReadDetected = formatTrack.GetReadD5AAxxDetectedString();
+				if (!strReadDetected.empty())
+				{
+					OutputDebugString("\t; ");
+					OutputDebugString(strReadDetected.c_str());
+				}
+				OutputDebugString("\n");
+				newLine = true;
+			}
+
+			shiftReg = 0;
+			zeroCount = 0;
 		}
 
 		shiftReg <<= 1;
 		shiftReg |= outputBit;
 
-		if ((shiftReg & 0x80) == 0)
-			continue;
-
-		nibbleCount++;
-
-		char syncBits = zeroCount <= 9 ? '0'+zeroCount : '+';
-		if (zeroCount == 0)	LogOutput("   %02X", shiftReg);
-		else				LogOutput("(%c)%02X", syncBits, shiftReg);
-
-		formatTrack.DecodeLatchNibbleRead(shiftReg);
-
-		if ((nibbleCount % 32) == 0)
+		if (shiftReg == 0x01)
 		{
-			std::string strReadDetected = formatTrack.GetReadD5AAxxDetectedString();
-			if (!strReadDetected.empty())
-			{
-				OutputDebugString("\t; ");
-				OutputDebugString(strReadDetected.c_str());
-			}
-			OutputDebugString("\n");
-			newLine = true;
+			nibbleStartBitOffset = floppy.m_bitOffset - 1;
+			if (nibbleStartBitOffset < 0) nibbleStartBitOffset += floppy.m_bitCount;
 		}
-
-		shiftReg = 0;
-		zeroCount = 0;
-	}
-
-	// Output any remaining zeroCount
-	if (zeroCount)
-	{
-		char syncBits = zeroCount <= 9 ? '0'+zeroCount : '+';
-		LogOutput("(%c)", syncBits);
 	}
 
 	// Output any partial nibble
-	if (shiftReg)
+	if (shiftReg & 0x80)
+	{
+		LogOutput("%02X", shiftReg);
+
+		// Output any remaining zeroCount
+		if (zeroCount)
+		{
+			char syncBits = zeroCount <= 9 ? '0' + zeroCount : '+';
+			LogOutput("(%c)", syncBits);
+		}
+	}
+	else if (shiftReg)
 	{
 		LogOutput("%02X/Partial Nibble", shiftReg);
 	}
@@ -1826,7 +2037,10 @@ void Disk2InterfaceCard::InitFirmware(LPBYTE pCxRomPeripheral)
 
 	ImageInfo* pImage = m_floppyDrive[DRIVE_1].m_disk.m_imagehandle;
 
-	m_is13SectorFirmware = ImageIsBootSectorFormatSector13(pImage);
+	if (m_force13SectorFirmware)
+		m_is13SectorFirmware = true;
+	else
+		m_is13SectorFirmware = ImageIsBootSectorFormatSector13(pImage);
 
 	if (m_is13SectorFirmware)
 		memcpy(pCxRomPeripheral + m_slot*APPLE_SLOT_SIZE, m_13SectorFirmware, DISK2_FW_SIZE);

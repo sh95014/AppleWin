@@ -3,24 +3,16 @@
 
 #include "StdAfx.h"
 #include "Common.h"
-#include "Interface.h"
 #include "CardManager.h"
 #include "Core.h"
 #include "Disk.h"
-#include "Harddisk.h"
-#include "Log.h"
 #include "CPU.h"
-#include "LanguageCard.h"
-#include "Video.h"
 #include "NTSC.h"
 #include "SaveState.h"
 #include "Speaker.h"
-#include "Riff.h"
-#include "RGBMonitor.h"
 
 #include "linux/benchmark.h"
 #include "linux/version.h"
-#include "linux/paddle.h"
 #include "linux/context.h"
 
 #include "emulator.h"
@@ -49,12 +41,6 @@ namespace
 
     void initialiseEmulator()
     {
-#ifdef RIFF_SPKR
-        RiffInitWriteFile("/tmp/Spkr.wav", SPKR_SAMPLE_RATE, 1);
-#endif
-#ifdef RIFF_MB
-        RiffInitWriteFile("/tmp/Mockingboard.wav", 44100, 2);
-#endif
         g_nAppMode = MODE_RUNNING;
         LogInit();
         g_bFullSpeed = false;
@@ -117,14 +103,14 @@ QApple::QApple(QWidget *parent) :
     mySaveStateLabel = new QLabel;
     statusBar()->addPermanentWidget(mySaveStateLabel);
 
-    Registry::instance.reset(new Configuration);
+    Registry::instance = std::make_shared<Configuration>();
 
     myPreferences = new Preferences(this);
 
     Emulator * emulator = new Emulator(ui->mdiArea);
     myEmulatorWindow = ui->mdiArea->addSubWindow(emulator, Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinMaxButtonsHint);
 
-    myFrame.reset(new QtFrame(emulator, myEmulatorWindow));
+    myFrame = std::make_shared<QtFrame>(emulator, myEmulatorWindow);
     SetFrame(myFrame);
 
     readSettings();
@@ -380,8 +366,7 @@ void QApple::on_actionLoad_state_triggered()
     // have relative disk location
     SetCurrentImageDir(path.toStdString().c_str());
 
-    Snapshot_LoadState();
-
+    myFrame->LoadSnapshot();
     myFrame->FrameRefreshStatus(DRAW_TITLE);
     myFrame->VideoPresentScreen();
 

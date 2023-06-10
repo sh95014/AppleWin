@@ -1,11 +1,13 @@
 #pragma once
 
 #include "FrameBase.h"
+#include <memory>
 #include <vector>
 
 class LinuxFrame : public FrameBase
 {
 public:
+  LinuxFrame();
 
   void Initialize(bool resetVideoState) override;
   void Destroy() override;
@@ -18,6 +20,7 @@ public:
   void ResizeWindow() override;
 
   void SetFullScreenShowSubunitStatus(bool bShow) override;
+  void SetWindowedModeShowDiskiiStatus(bool bShow) override;
   bool GetBestDisplayResolutionForFullScreen(UINT& bestWidth, UINT& bestHeight, UINT userSpecifiedWidth = 0, UINT userSpecifiedHeight = 0) override;
   int SetViewportScale(int nNewScale, bool bForce = false) override;
   void SetAltEnterToggleFullScreen(bool mode) override;
@@ -39,6 +42,8 @@ public:
   // in AppleWin this happens in AppleWin.cpp, but it is useful to share it
   virtual void Begin();
   virtual void End();
+
+  virtual void LoadSnapshot();
 
 protected:
   std::vector<uint8_t> myFramebuffer;

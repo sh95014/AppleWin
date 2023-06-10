@@ -20,6 +20,7 @@ namespace mariani
     : SDLFrame(options)
   {
     g_sProgramDir = GetSupportDirectory();
+    g_sBuiltinSymbolsDir = GetBuiltinSymbolsDirectory();
   }
 
   void MarianiFrame::Initialize(bool resetVideoState)
@@ -50,6 +51,8 @@ namespace mariani
     const CGImageSourceRef imageSource = CGImageSourceCreateWithURL(imageURL, NULL);
     const CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, 0, NULL);
     const CFDataRef rawData = CGDataProviderCopyData(CGImageGetDataProvider(image));
+    
+    assert(rawData != NULL);
     
     const UInt8 * source = CFDataGetBytePtr(rawData);
     const size_t size = CGImageGetHeight(image) * CGImageGetWidth(image) / 8;

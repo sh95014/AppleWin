@@ -9,7 +9,7 @@
 #include "linux/context.h"
 
 #include "frontends/common2/fileregistry.h"
-#include "frontends/common2/utils.h"
+#include "frontends/common2/commoncontext.h"
 #include "frontends/common2/programoptions.h"
 #include "frontends/common2/timer.h"
 #include "frontends/sdl/gamepad.h"
@@ -19,12 +19,8 @@
 #include "frontends/sdl/renderer/sdlrendererframe.h"
 #include "frontends/sdl/imgui/sdlimguiframe.h"
 
-#include "CardManager.h"
 #include "Core.h"
-#include "Log.h"
-#include "CPU.h"
 #include "NTSC.h"
-#include "SaveState.h"
 #include "Interface.h"
 
 // comment out to test / debug init / shutdown only
@@ -44,7 +40,7 @@ namespace
       throw std::runtime_error(sa2::decorateSDLError("SDL_GetCurrentDisplayMode"));
     }
 
-    return current.refresh_rate;
+    return current.refresh_rate ? current.refresh_rate : 60;
   }
 
   struct Data
@@ -60,6 +56,9 @@ void run_sdl(int argc, const char * argv [])
 {
   std::cerr << std::fixed << std::setprecision(2);
 
+  std::cerr << "SDL Video driver: " << SDL_GetCurrentVideoDriver() << std::endl;
+  std::cerr << "SDL Audio driver: " << SDL_GetCurrentAudioDriver() << std::endl;
+
   common2::EmulatorOptions options;
 
   const bool run = getEmulatorOptions(argc, argv, "SDL2", options);
@@ -69,31 +68,21 @@ void run_sdl(int argc, const char * argv [])
 
   const LoggerContext logger(options.log);
   const RegistryContext registryContext(CreateFileRegistry(options));
-
-  common2::loadGeometryFromRegistry("sa2", options.geometry);
+  const std::shared_ptr<Paddle> paddle = sa2::Gamepad::create(options.gameControllerIndex, options.gameControllerMappingFile);
 
   std::shared_ptr<sa2::SDLFrame> frame;
   if (options.imgui)
   {
-    frame.reset(new sa2::SDLImGuiFrame(options));
+    frame = std::make_shared<sa2::SDLImGuiFrame>(options);
   }
   else
   {
-    frame.reset(new sa2::SDLRendererFrame(options));
+    frame = std::make_shared<sa2::SDLRendererFrame>(options);
   }
 
   std::cerr << "Default GL swap interval: " << SDL_GL_GetSwapInterval() << std::endl;
 
-  std::shared_ptr<Paddle> paddle(new sa2::Gamepad(0));
-  const Initialisation init(frame, paddle);
-  common2::applyOptions(options);
-  frame->Begin();
-
-  common2::setSnapshotFilename(options.snapshotFilename);
-  if (options.loadSnapshot)
-  {
-    frame->LoadSnapshot();
-  }
+  const common2::CommonInitialisation init(frame, paddle, options);
 
   const int fps = getRefreshRate();
   std::cerr << "Video refresh rate: " << fps << " Hz, " << 1000.0 / fps << " ms" << std::endl;
@@ -130,7 +119,7 @@ void run_sdl(int argc, const char * argv [])
     std::string updateTextureTimerTag, refreshScreenTimerTag, cpuTimerTag, eventTimerTag;
 
     // it does not need to be exact
-    const size_t oneFrame = 1000 / fps;
+    const uint64_t oneFrameMicros = 1000000 / fps;
 
     bool quit = false;
 
@@ -139,12 +128,12 @@ void run_sdl(int argc, const char * argv [])
       frameTimer.tic();
 
       eventTimer.tic();
-      sa2::writeAudio();
+      sa2::writeAudio(options.audioBuffer);
       frame->ProcessEvents(quit);
       eventTimer.toc();
 
       cpuTimer.tic();
-      frame->ExecuteOneFrame(oneFrame);
+      frame->ExecuteOneFrame(oneFrameMicros);
       cpuTimer.toc();
 
       if (!options.headless)
@@ -172,20 +161,15 @@ void run_sdl(int argc, const char * argv [])
     std::cerr << "Events:  " << eventTimer << std::endl;
     std::cerr << "CPU:     " << cpuTimer << std::endl;
 
-    const double timeInSeconds = global.getTimeInSeconds();
-    const double actualClock = g_nCumulativeCycles / timeInSeconds;
-    std::cerr << "Expected clock: " << g_fCurrentCLK6502 << " Hz, " << g_nCumulativeCycles / g_fCurrentCLK6502 << " s" << std::endl;
-    std::cerr << "Actual clock:   " << actualClock << " Hz, " << timeInSeconds << " s" << std::endl;
     sa2::stopAudio();
   }
-  frame->End();
 #endif
 }
 
 int main(int argc, const char * argv [])
 {
   //First we need to start up SDL, and make sure it went ok
-  const Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO | SDL_INIT_TIMER;
+  const Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS;
   if (SDL_Init(flags) != 0)
   {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;

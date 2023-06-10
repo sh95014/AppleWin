@@ -12,3 +12,6 @@
 
 /* Class = "NSWindow"; title = "About"; ObjectID = "iyR-5w-e9Q"; */
 "iyR-5w-e9Q.title" = "About";
+
+/* Class = "NSTextFieldCell"; title = "(Based on AppleWin Version x.y.z.w)"; ObjectID = "7ge-HN-w4m"; */
+"7ge-HN-w4m.title" = "(Based on AppleWin Version x.y.z.w)";

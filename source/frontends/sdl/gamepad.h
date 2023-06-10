@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <memory>
+#include <optional>
+#include <string>
 
 namespace sa2
 {
@@ -12,6 +14,7 @@ namespace sa2
   class Gamepad : public Paddle
   {
   public:
+    static std::shared_ptr<Gamepad> create(const std::optional<int> & index, const std::string & mappingFile);
     Gamepad(const int index);
 
     bool getButton(int i) const override;

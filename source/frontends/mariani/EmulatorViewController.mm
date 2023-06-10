@@ -36,7 +36,6 @@
 
 #import "context.h"
 
-#import <SDL.h>
 #import "benchmark.h"
 #import "fileregistry.h"
 #import "programoptions.h"
@@ -49,16 +48,17 @@
 #import "MarianiJoystick.h"
 #import "MarianiWriter.h"
 #import "EmulatorRenderer.h"
+#import "Interface.h"
 #import "UserDefaults.h"
-
-// FIXME: figure out how best to declare this. #import "Interface.h" seems to break other things
-Video& GetVideo();
 
 #define SCREEN_RECORDING_FILE_NAME  NSLocalizedString(@"Mariani Recording", @"default name for new screen recording")
 #define SCREENSHOT_FILE_NAME        NSLocalizedString(@"Mariani Screen Shot", @"default name for new screenshot")
 
 // display emulated CPU speed in the status bar
 #undef SHOW_EMULATED_CPU_SPEED
+
+const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
+const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
 
 @interface AudioOutput : NSObject
 @property (assign) UInt32 channels;
@@ -93,11 +93,14 @@ Video& GetVideo();
 
 @property NSMutableArray<AudioOutput *> *audioOutputs;
 
+@property AppMode_e savedAppMode;
+
 @end
 
 @implementation EmulatorViewController {
     MTKView *_view;
     FrameBuffer frameBuffer;
+    common2::EmulatorOptions options;
 }
 
 std::shared_ptr<mariani::MarianiFrame> frame;
@@ -107,7 +110,6 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     
     self.audioOutputs = [NSMutableArray array];
     
-    common2::EmulatorOptions options;
     self.registryContext = new RegistryContext(CreateFileRegistry(options));
     frame.reset(new mariani::MarianiFrame(options));
 
@@ -116,6 +118,7 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     applyOptions(options);
     
     frame->Begin();
+    self.savedAppMode = g_nAppMode;
 }
 
 - (void)viewDidLoad {
@@ -180,12 +183,23 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)runLoopTimerFired {
+    // g_nAppMode can change through a debugger CLI command, so we notice it and notify others
+    if (self.savedAppMode != g_nAppMode) {
+        if ((self.savedAppMode == MODE_RUNNING || self.savedAppMode == MODE_STEPPING) && g_nAppMode == MODE_DEBUG) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidEnterDebugModeNotification object:self];
+        }
+        if (self.savedAppMode == MODE_DEBUG && (g_nAppMode == MODE_RUNNING || g_nAppMode == MODE_STEPPING)) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidExitDebugModeNotification object:self];
+        }
+        self.savedAppMode = g_nAppMode;
+    }
+    
 #ifdef DEBUG
     NSDate *start = [NSDate now];
 #endif
     
     if (self.delegate == nil || [self.delegate shouldPlayAudio]) {
-        sa2::writeAudio();
+        sa2::writeAudio(options.audioBuffer);
     }
 #ifdef DEBUG
     NSTimeInterval audioWriteTimeOffset = -[start timeIntervalSinceNow];
@@ -200,7 +214,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     NSTimeInterval eventProcessingTimeOffset = -[start timeIntervalSinceNow];
 #endif
 
-    frame->ExecuteOneFrame(1000.0 / TARGET_FPS);
+    frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
 #ifdef DEBUG
     NSTimeInterval executionTimeOffset = -[start timeIntervalSinceNow];
 #endif
@@ -369,6 +383,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     self.displayLink = NULL;
 }
 
+- (void)resetSpeed {
+    frame->ResetSpeed();
+}
+
 - (void)reboot {
     frame->Restart();
 }
@@ -376,6 +394,23 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (void)reinitialize {
     frame->Destroy();
     frame->Initialize(true);
+}
+
+- (void)enterDebugMode {
+    frame->ChangeMode(MODE_DEBUG);
+    self.savedAppMode = g_nAppMode;
+    [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidEnterDebugModeNotification object:self];
+}
+
+- (void)exitDebugMode {
+    frame->ChangeMode(MODE_RUNNING);
+    self.savedAppMode = g_nAppMode;
+    [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidExitDebugModeNotification object:self];
+}
+
+- (void)singleStep {
+    frame->ChangeMode(MODE_DEBUG);
+    frame->SingleStep();
 }
 
 - (void)stop {

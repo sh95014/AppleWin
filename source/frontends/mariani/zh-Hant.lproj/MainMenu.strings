@@ -138,3 +138,6 @@
 
 /* Class = "NSMenuItem"; title = "Actual Size"; ObjectID = "JAJ-vt-1IF"; */
 "JAJ-vt-1IF.title" = "實際大小";
+
+/* Class = "NSMenuItem"; title = "Load Tape…"; ObjectID = "b8E-ED-PjA"; */
+"b8E-ED-PjA.title" = "讀取錄音帶⋯";

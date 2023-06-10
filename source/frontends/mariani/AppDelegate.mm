@@ -1,24 +1,26 @@
 //
-//  AppDelegate.m
+//  AppDelegate.mm
 //  Mariani
 //
 //  Created by sh95014 on 12/27/21.
 //
 
 #import "AppDelegate.h"
+#import <AudioToolbox/AudioToolbox.h>
 #import <Foundation/NSProcessInfo.h>
 #import <GameController/GameController.h>
 #import "windows.h"
 
 #import "context.h"
 
-#import <SDL.h>
 #import "benchmark.h"
+#import "cassettetape.h"
 #import "fileregistry.h"
 #import "programoptions.h"
 #import "sdirectsound.h"
 #import "MarianiFrame.h"
 #import "utils.h"
+#import "version.h"
 
 // AppleWin
 #import "Card.h"
@@ -33,6 +35,7 @@
 #import "EmulatorViewController.h"
 #import "PrinterWindowController.h"
 #import "PreferencesWindowController.h"
+#import "DebuggerWindowController.h"
 #import "UserDefaults.h"
 
 #import "DiskImg.h"
@@ -81,6 +84,7 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSImageView *aboutImage;
 @property (strong) IBOutlet NSTextField *aboutTitle;
 @property (strong) IBOutlet NSTextField *aboutVersion;
+@property (strong) IBOutlet NSTextField *aboutAppleWinVersion;
 @property (strong) IBOutlet NSTextField *aboutCredits;
 @property (strong) IBOutlet NSButton *aboutLinkButton;
 
@@ -90,11 +94,16 @@ using namespace DiskImgLib;
 @property BOOL hasStatusBar;
 @property (readonly) double statusBarHeight;
 
+@property (strong) NSOpenPanel *diskOpenPanel;
+@property (strong) NSOpenPanel *tapeOpenPanel;
+
 @property (strong) NSMutableDictionary *browserWindowControllers;
 
 @property (strong) PrinterWindowController *printerWC;
 
 @property (strong) NSProcessInfo *processInfo;
+
+@property (strong) DebuggerWindowController *debuggerWC;
 
 @end
 
@@ -229,7 +238,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         return YES;
     }
     
-    NSArray *supportedTypes = @[ @"BIN", @"DO", @"DSK", @"NIB", @"PO", @"WOZ", @"ZIP", @"GZIP", @"GZ" ];
+    NSArray *supportedTypes = nil;
+    if ([sender isEqual:self.diskOpenPanel]) {
+        supportedTypes = @[ @"BIN", @"DO", @"DSK", @"NIB", @"PO", @"WOZ", @"ZIP", @"GZIP", @"GZ" ];
+    } else if ([sender isEqual:self.tapeOpenPanel]) {
+        supportedTypes = @[ @"WAV" ];
+    }
     return [supportedTypes containsObject:url.pathExtension.uppercaseString];
 }
 
@@ -309,6 +323,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             self.aboutVersion.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Version %@ (%@)", @""),
                 infoDictionary[@"CFBundleShortVersionString"],
                 infoDictionary[@"CFBundleVersion"]];
+            self.aboutAppleWinVersion.stringValue = [NSString stringWithFormat:NSLocalizedString(@"(Based on AppleWin Version %s)", @""), getVersion().c_str()];
         }
     }
     [self.aboutWindow makeKeyAndOrderFront:sender];
@@ -338,6 +353,67 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 #pragma mark - File menu actions
+
+- (IBAction)loadTapeAction:(id)sender {
+    self.tapeOpenPanel = [NSOpenPanel openPanel];
+    self.tapeOpenPanel.canChooseFiles = YES;
+    self.tapeOpenPanel.canChooseDirectories = NO;
+    self.tapeOpenPanel.allowsMultipleSelection = NO;
+    self.tapeOpenPanel.canDownloadUbiquitousContents = YES;
+    self.tapeOpenPanel.delegate = self;
+    
+    if ([self.tapeOpenPanel runModal] == NSModalResponseOK) {
+        OSStatus status = noErr;
+        
+        ExtAudioFileRef inputFile;
+        status = ExtAudioFileOpenURL((__bridge CFURLRef)self.tapeOpenPanel.URL, &inputFile);
+        
+        // set output format to 8-bit 44kHz mono LPCM
+        AudioStreamBasicDescription outputFormat;
+        outputFormat.mFormatID         = kAudioFormatLinearPCM;
+        outputFormat.mFormatFlags      = kAudioFormatFlagIsSignedInteger;
+        outputFormat.mSampleRate       = 44100;
+        outputFormat.mChannelsPerFrame = 1;  // mono
+        outputFormat.mBitsPerChannel   = sizeof(CassetteTape::tape_data_t) * CHAR_BIT;
+        outputFormat.mFramesPerPacket  = 1;  // uncompressed audio
+        outputFormat.mBytesPerFrame    = sizeof(CassetteTape::tape_data_t);
+        outputFormat.mBytesPerPacket   = sizeof(CassetteTape::tape_data_t);
+        status = ExtAudioFileSetProperty(inputFile,
+                                         kExtAudioFileProperty_ClientDataFormat,
+                                         sizeof(outputFormat),
+                                         &outputFormat);
+        
+        std::vector<CassetteTape::tape_data_t> audioData;
+        
+        const UInt32 outputBufferSize = 1024 * 1024;
+        AudioBufferList convertedData;
+        convertedData.mNumberBuffers = 1;
+        convertedData.mBuffers[0].mNumberChannels = outputFormat.mChannelsPerFrame;
+        convertedData.mBuffers[0].mDataByteSize = outputBufferSize;
+        convertedData.mBuffers[0].mData = (UInt8 *)malloc(sizeof(UInt8) * outputBufferSize);
+        
+        while (true) {
+            const UInt8 *data = (UInt8 *)convertedData.mBuffers[0].mData;
+            UInt32 frameCount = outputBufferSize / outputFormat.mBytesPerPacket;
+            status = ExtAudioFileRead(inputFile,
+                                      &frameCount,
+                                      &convertedData);
+            if (frameCount == 0) {
+                free(convertedData.mBuffers[0].mData);
+                break;
+            }
+            audioData.insert(audioData.end(), data, data + frameCount * outputFormat.mBytesPerFrame);
+        }
+        
+        std::string filename(self.tapeOpenPanel.URL.lastPathComponent.UTF8String);
+        CassetteTape::instance().setData(filename,
+                                         audioData,
+                                         outputFormat.mSampleRate);
+        
+        ExtAudioFileDispose(inputFile);
+        self.tapeOpenPanel = nil;
+    }
+}
 
 - (IBAction)controlResetAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -458,6 +534,15 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         self.printerMenu.state = NSControlStateValueOff;
         self.printerButton.image = [NSImage imageWithSystemSymbolName:@"printer.dotmatrix" accessibilityDescription:@""];
     }
+}
+
+- (IBAction)showDebuggerAction:(id)sender {
+    [self.emulatorVC enterDebugMode];
+    
+    if (self.debuggerWC == nil) {
+        self.debuggerWC = [[DebuggerWindowController alloc] initWithEmulatorVC:self.emulatorVC];
+    }
+    [self.debuggerWC.window orderFront:sender];
 }
 
 #pragma mark - Main window actions
@@ -587,15 +672,15 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         const int slot = [menuItem.representedObject[0] intValue];
         const int drive = [menuItem.representedObject[1] intValue];
         
-        NSOpenPanel *panel = [NSOpenPanel openPanel];
-        panel.canChooseFiles = YES;
-        panel.canChooseDirectories = NO;
-        panel.allowsMultipleSelection = NO;
-        panel.canDownloadUbiquitousContents = YES;
-        panel.delegate = self;
+        self.diskOpenPanel = [NSOpenPanel openPanel];
+        self.diskOpenPanel.canChooseFiles = YES;
+        self.diskOpenPanel.canChooseDirectories = NO;
+        self.diskOpenPanel.allowsMultipleSelection = NO;
+        self.diskOpenPanel.canDownloadUbiquitousContents = YES;
+        self.diskOpenPanel.delegate = self;
         
-        if ([panel runModal] == NSModalResponseOK) {
-            const char *fileSystemRepresentation = panel.URL.fileSystemRepresentation;
+        if ([self.diskOpenPanel runModal] == NSModalResponseOK) {
+            const char *fileSystemRepresentation = self.diskOpenPanel.URL.fileSystemRepresentation;
             std::string filename(fileSystemRepresentation);
             CardManager &cardManager = GetCardMgr();
             Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
@@ -610,6 +695,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                       fileSystemRepresentation, slot, drive, error);
                 card->NotifyInvalidImage(drive, fileSystemRepresentation, error);
             }
+            self.diskOpenPanel = nil;
         }
     }
 }
@@ -1091,6 +1177,12 @@ const char *GetSupportDirectory() {
     }
     
     return supportDirectoryPath.UTF8String;
+}
+
+const char *GetBuiltinSymbolsDirectory() {
+    NSString *path = [[NSBundle mainBundle] pathForResource:nil ofType:@"SYM"];
+    NSInteger filenameLength = path.lastPathComponent.length;
+    return [path substringToIndex:path.length - filenameLength].UTF8String;
 }
 
 int RegisterAudioOutput(size_t channels, size_t sampleRate) {

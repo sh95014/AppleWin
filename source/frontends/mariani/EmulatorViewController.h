@@ -29,6 +29,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern const NSNotificationName EmulatorDidEnterDebugModeNotification;
+extern const NSNotificationName EmulatorDidExitDebugModeNotification;
+
 @protocol EmulatorViewControllerDelegate <NSObject>
 
 - (BOOL)shouldPlayAudio;
@@ -53,9 +56,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)start;
 - (void)pause;
+- (void)resetSpeed;
 - (void)reboot;
 - (void)reinitialize;
 - (void)stop;
+
+- (void)enterDebugMode;
+- (void)exitDebugMode;
+- (void)singleStep;
 
 - (void)toggleScreenRecording;
 @property (getter=isRecordingScreen) BOOL recordingScreen;

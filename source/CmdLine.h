@@ -9,6 +9,16 @@
 
 struct CmdLine
 {
+	struct SlotInfo
+	{
+		SlotInfo()
+		{
+			isDiskII13 = false;
+		}
+
+		bool isDiskII13;
+	};
+
 	CmdLine()
 	{
 		bShutdown = false;
@@ -22,9 +32,8 @@ struct CmdLine
 		snesMaxAltControllerType[1] = false;
 		supportDCD = false;
 		enableDumpToRealPrinter = false;
+		supportExtraMBCardTypes = false;
 		noDisk2StepperDefer = false;
-		szImageName_harddisk[HARDDISK_1] = NULL;
-		szImageName_harddisk[HARDDISK_2] = NULL;
 		szSnapshotName = NULL;
 		szScreenshotFilename = NULL;
 		uRamWorksExPages = 0;
@@ -50,6 +59,8 @@ struct CmdLine
 			szImageName_drive[i][DRIVE_2] = NULL;
 			driveConnected[i][DRIVE_1] = true;
 			driveConnected[i][DRIVE_2] = true;
+			szImageName_harddisk[i][HARDDISK_1] = NULL;
+			szImageName_harddisk[i][HARDDISK_2] = NULL;
 		}
 	}
 
@@ -64,11 +75,13 @@ struct CmdLine
 	bool snesMaxAltControllerType[2];
 	bool supportDCD;
 	bool enableDumpToRealPrinter;
+	bool supportExtraMBCardTypes;
 	bool noDisk2StepperDefer;	// debug
 	SS_CARDTYPE slotInsert[NUM_SLOTS];
+	SlotInfo slotInfo[NUM_SLOTS];
 	LPCSTR szImageName_drive[NUM_SLOTS][NUM_DRIVES];
 	bool driveConnected[NUM_SLOTS][NUM_DRIVES];
-	LPCSTR szImageName_harddisk[NUM_HARDDISKS];
+	LPCSTR szImageName_harddisk[NUM_SLOTS][NUM_HARDDISKS];
 	LPSTR szSnapshotName;
 	LPSTR szScreenshotFilename;
 	UINT uRamWorksExPages;

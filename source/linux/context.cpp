@@ -2,7 +2,7 @@
 
 #include "linux/context.h"
 #include "linux/linuxframe.h"
-#include "linux/registry.h"
+#include "linux/registryclass.h"
 #include "linux/paddle.h"
 #include "linux/duplicates/PropertySheet.h"
 
@@ -18,10 +18,6 @@
 #include "SaveState.h"
 #include "Memory.h"
 #include "Speaker.h"
-#include "MouseInterface.h"
-#include "Mockingboard.h"
-#include "Uthernet1.h"
-#include "Uthernet2.h"
 
 
 namespace
@@ -52,20 +48,22 @@ Video& GetVideo()
 }
 
 Initialisation::Initialisation(
-  const std::shared_ptr<FrameBase> & frame,
-  const std::shared_ptr<Paddle> & paddle
-  )
+  const std::shared_ptr<LinuxFrame> & frame,
+  const std::shared_ptr<Paddle> & paddle)
+: myFrame(frame)
 {
-  SetFrame(frame);
+  SetFrame(myFrame);
   Paddle::instance = paddle;
 }
 
 Initialisation::~Initialisation()
 {
-  GetFrame().Destroy();
+  myFrame->Destroy();
   SetFrame(std::shared_ptr<FrameBase>());
 
   Paddle::instance.reset();
+
+  RiffFinishWriteFile();
 
   CloseHandle(g_hCustomRomF8);
   g_hCustomRomF8 = INVALID_HANDLE_VALUE;
@@ -98,13 +96,6 @@ RegistryContext::~RegistryContext()
 
 void InitialiseEmulator()
 {
-#ifdef RIFF_SPKR
-  RiffInitWriteFile("/tmp/Spkr.wav", SPKR_SAMPLE_RATE, 1);
-#endif
-#ifdef RIFF_MB
-  RiffInitWriteFile("/tmp/Mockingboard.wav", 44100, 2);
-#endif
-
   g_nAppMode = MODE_RUNNING;
   LogFileOutput("Initialisation\n");
 
@@ -117,7 +108,6 @@ void InitialiseEmulator()
   GetFrame().FrameRefreshStatus(DRAW_LEDS | DRAW_BUTTON_DRIVES | DRAW_DISK_STATUS);
 
   DSInit();
-  MB_Initialize();
   SpkrInitialize();
 
   MemInitialize();
@@ -138,9 +128,7 @@ void DestroyEmulator()
   Snapshot_Shutdown();
   MemDestroy();
   SpkrDestroy();
-  MB_Destroy();
   DSUninit();
   CpuDestroy();
   DebugDestroy();
-  RiffFinishWriteFile();
 }

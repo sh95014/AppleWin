@@ -1,0 +1,80 @@
+/* Class = "NSMenuItem"; title = "Bookmark 8"; ObjectID = "7Mg-9a-l84"; */
+"7Mg-9a-l84.title" = "Bookmark 8";
+
+/* Class = "NSTableColumn"; headerCell.title = "Opcode"; ObjectID = "84C-0j-mzK"; */
+"84C-0j-mzK.headerCell.title" = "Opcode";
+
+/* Class = "NSTabViewItem"; label = "Breakpoints"; ObjectID = "a4C-59-YzF"; */
+"a4C-59-YzF.label" = "Breakpoints";
+
+/* Class = "NSMenuItem"; title = "Bookmark 5"; ObjectID = "bBV-lB-9mI"; */
+"bBV-lB-9mI.title" = "Bookmark 5";
+
+/* Class = "NSTableColumn"; headerCell.title = "Symbol"; ObjectID = "Cpz-O7-pHm"; */
+"Cpz-O7-pHm.headerCell.title" = "Symbol";
+
+/* Class = "NSMenuItem"; title = "Black & White"; ObjectID = "dDb-9d-jUa"; */
+"dDb-9d-jUa.title" = "Black & White";
+
+/* Class = "NSComboBoxCell"; placeholderString = "Go to Symbol"; ObjectID = "ebW-iX-yF3"; */
+"ebW-iX-yF3.placeholderString" = "Go to Symbol";
+
+/* Class = "NSTabViewItem"; label = "CPU"; ObjectID = "gFq-vJ-8oN"; */
+"gFq-vJ-8oN.label" = "CPU";
+
+/* Class = "NSMenuItem"; title = "Bookmark 0"; ObjectID = "h5M-ZI-WfA"; */
+"h5M-ZI-WfA.title" = "Bookmark 0";
+
+/* Class = "NSMenuItem"; title = "Bookmark 9"; ObjectID = "Hk8-6E-r7V"; */
+"Hk8-6E-r7V.title" = "Bookmark 9";
+
+/* Class = "NSMenuItem"; title = "Bookmark 2"; ObjectID = "HSM-t4-pFt"; */
+"HSM-t4-pFt.title" = "Bookmark 2";
+
+/* Class = "NSTextFieldCell"; placeholderString = "Debugger Command Line"; ObjectID = "Iqb-5c-Ikd"; */
+"Iqb-5c-Ikd.placeholderString" = "Debugger Command Line";
+
+/* Class = "NSTextFieldCell"; title = ">"; ObjectID = "iQs-I4-YdV"; */
+"iQs-I4-YdV.title" = ">";
+
+/* Class = "NSMenuItem"; title = "Bookmark 4"; ObjectID = "KnB-sd-S3M"; */
+"KnB-sd-S3M.title" = "Bookmark 4";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Single Step"; ObjectID = "MWo-mi-W3y"; */
+"MWo-mi-W3y.ibShadowedToolTip" = "Single Step";
+
+/* Class = "NSTableColumn"; headerCell.title = "􀉞"; ObjectID = "Njz-EA-4V6"; */
+"Njz-EA-4V6.headerCell.title" = "􀉞";
+
+/* Class = "NSMenuItem"; title = "Bookmark 3"; ObjectID = "QkB-Kz-QJU"; */
+"QkB-Kz-QJU.title" = "Bookmark 3";
+
+/* Class = "NSMenuItem"; title = "Go to Bookmark"; ObjectID = "QR7-L0-WVK"; */
+"QR7-L0-WVK.title" = "Go to Bookmark";
+
+/* Class = "NSWindow"; title = "Debugger"; ObjectID = "QvC-M9-y7g"; */
+"QvC-M9-y7g.title" = "Debugger";
+
+/* Class = "NSTableColumn"; headerCell.title = "Address"; ObjectID = "QvR-ba-zVl"; */
+"QvR-ba-zVl.headerCell.title" = "Address";
+
+/* Class = "NSMenuItem"; title = "Color"; ObjectID = "rlO-ba-ZwH"; */
+"rlO-ba-ZwH.title" = "Color";
+
+/* Class = "NSTableColumn"; headerCell.title = "Disassembly"; ObjectID = "Swt-EW-WAv"; */
+"Swt-EW-WAv.headerCell.title" = "Disassembly";
+
+/* Class = "NSMenuItem"; title = "Bookmark 7"; ObjectID = "taH-Im-IUA"; */
+"taH-Im-IUA.title" = "Bookmark 7";
+
+/* Class = "NSTabViewItem"; label = "Console"; ObjectID = "TnA-JS-h3f"; */
+"TnA-JS-h3f.label" = "Console";
+
+/* Class = "NSMenuItem"; title = "Bookmark 6"; ObjectID = "WrQ-QT-lr4"; */
+"WrQ-QT-lr4.title" = "Bookmark 6";
+
+/* Class = "NSMenuItem"; title = "Mono"; ObjectID = "XEb-N6-t5u"; */
+"XEb-N6-t5u.title" = "Mono";
+
+/* Class = "NSMenuItem"; title = "Bookmark 1"; ObjectID = "XP4-7T-BqY"; */
+"XP4-7T-BqY.title" = "Bookmark 1";

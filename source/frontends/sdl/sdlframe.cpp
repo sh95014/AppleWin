@@ -15,13 +15,12 @@
 #include "Interface.h"
 #include "NTSC.h"
 #include "CPU.h"
-#include "Mockingboard.h"
 #include "MouseInterface.h"
-#include "Log.h"
 #include "Debugger/Debug.h"
 
 #include "linux/paddle.h"
-#include "linux/keyboard.h"
+#include "linux/keyboardbuffer.h"
+#include "linux/network/slirp2.h"
 
 #include <algorithm>
 
@@ -30,6 +29,10 @@
 #endif
 
 // #define KEY_LOGGING_VERBOSE
+
+#ifdef KEY_LOGGING_VERBOSE
+#include "Log.h"
+#endif
 
 namespace
 {
@@ -130,6 +133,7 @@ namespace sa2
 
   SDLFrame::SDLFrame(const common2::EmulatorOptions & options)
     : myTargetGLSwap(options.glSwapInterval)
+    , myPreserveAspectRatio(options.aspectRatio)
     , myForceCapsLock(true)
     , myMultiplier(1)
     , myFullscreen(false)
@@ -137,6 +141,7 @@ namespace sa2
     , myDragAndDropDrive(DRIVE_1)
     , myScrollLockFullSpeed(false)
     , mySpeed(options.fixedSpeed)
+    , myPortFwds(getPortFwds(options.natPortFwds))
   {
   }
 
@@ -477,7 +482,7 @@ namespace sa2
           }
           else
           {
-            ResetMachineState();
+            FrameResetMachineState();
           }
           break;
         }
@@ -610,18 +615,18 @@ namespace sa2
     } while (totalCyclesExecuted < cyclesToExecute);
   }
 
-  void SDLFrame::ExecuteInRunningMode(const size_t msNextFrame)
+  void SDLFrame::ExecuteInRunningMode(const uint64_t microseconds)
   {
     SetFullSpeed(CanDoFullSpeed());
-    const uint64_t cyclesToExecute = mySpeed.getCyclesTillNext(msNextFrame * 1000);  // this checks g_bFullSpeed
+    const uint64_t cyclesToExecute = mySpeed.getCyclesTillNext(microseconds);  // this checks g_bFullSpeed
     Execute(cyclesToExecute);
   }
 
-  void SDLFrame::ExecuteInDebugMode(const size_t msNextFrame)
+  void SDLFrame::ExecuteInDebugMode(const uint64_t microseconds)
   {
     // In AppleWin this is called without a timer for just one iteration
     // because we run a "frame" at a time, we need a bit of ingenuity
-    const uint64_t cyclesToExecute = mySpeed.getCyclesAtFixedSpeed(msNextFrame * 1000);
+    const uint64_t cyclesToExecute = mySpeed.getCyclesAtFixedSpeed(microseconds);
     const uint64_t target = g_nCumulativeCycles + cyclesToExecute;
 
     while (g_nAppMode == MODE_STEPPING && g_nCumulativeCycles < target)
@@ -630,7 +635,7 @@ namespace sa2
     }
   }
 
-  void SDLFrame::ExecuteOneFrame(const size_t msNextFrame)
+  void SDLFrame::ExecuteOneFrame(const uint64_t microseconds)
   {
     // when running in adaptive speed
     // the value msNextFrame is only a hint for when the next frame will arrive
@@ -638,12 +643,12 @@ namespace sa2
     {
       case MODE_RUNNING:
         {
-          ExecuteInRunningMode(msNextFrame);
+          ExecuteInRunningMode(microseconds);
           break;
         }
       case MODE_STEPPING:
         {
-          ExecuteInDebugMode(msNextFrame);
+          ExecuteInDebugMode(microseconds);
           break;
         }
     };
@@ -690,6 +695,11 @@ namespace sa2
     myDragAndDropDrive = drive;
   }
 
+  bool & SDLFrame::getPreserveAspectRatio()
+  {
+    return myPreserveAspectRatio;
+  }
+
   void SDLFrame::SetFullSpeed(const bool value)
   {
     if (g_bFullSpeed != value)
@@ -697,18 +707,19 @@ namespace sa2
       if (value)
       {
         // entering full speed
-        MB_Mute();
+        GetCardMgr().GetMockingboardCardMgr().MuteControl(true);
         setGLSwapInterval(0);
         VideoRedrawScreenDuringFullSpeed(0, true);
       }
       else
       {
         // leaving full speed
-        MB_Unmute();
+        GetCardMgr().GetMockingboardCardMgr().MuteControl(false);
         setGLSwapInterval(myTargetGLSwap);
         mySpeed.reset();
       }
       g_bFullSpeed = value;
+      g_nCpuCyclesFeedback = 0;
     }
   }
 
@@ -716,7 +727,7 @@ namespace sa2
   {
     return myScrollLockFullSpeed ||
            (g_dwSpeed == SPEED_MAX) ||
-           (GetCardMgr().GetDisk2CardMgr().IsConditionForFullSpeed() && !Spkr_IsActive() && !MB_IsActive()) ||
+           (GetCardMgr().GetDisk2CardMgr().IsConditionForFullSpeed() && !Spkr_IsActive() && !GetCardMgr().GetMockingboardCardMgr().IsActive()) ||
            IsDebugSteppingAtFullSpeed();
   }
 
@@ -729,6 +740,12 @@ namespace sa2
   void SDLFrame::ResetHardware()
   {
     myHardwareConfig.Reload();
+  }
+
+  void SDLFrame::FrameResetMachineState()
+  {
+    ResetMachineState();  // this changes g_bFullSpeed
+    ResetSpeed();
   }
 
   bool SDLFrame::HardwareChanged() const
@@ -744,6 +761,7 @@ namespace sa2
     ResetHardware();
   }
 
+#ifndef MARIANI
   common2::Geometry SDLFrame::getGeometryOrDefault(const std::optional<common2::Geometry> & geometry) const
   {
     if (geometry)
@@ -755,7 +773,28 @@ namespace sa2
     const int sw = video.GetFrameBufferBorderlessWidth();
     const int sh = video.GetFrameBufferBorderlessHeight();
 
-    return {.width = sw * 2, .height = sh * 2, .x = SDL_WINDOWPOS_UNDEFINED, .y = SDL_WINDOWPOS_UNDEFINED};
+    // initialise with defaults
+    common2::Geometry actual = {.width = sw * 2, .height = sh * 2, .x = SDL_WINDOWPOS_UNDEFINED, .y = SDL_WINDOWPOS_UNDEFINED};
+
+    // add registry information
+    loadGeometryFromRegistry("sa2", actual);
+
+    return actual;
+  }
+#endif // MARIANI
+
+  std::shared_ptr<NetworkBackend> SDLFrame::CreateNetworkBackend(const std::string & interfaceName)
+  {
+    #ifdef U2_USE_SLIRP
+      return std::make_shared<SlirpBackend>(myPortFwds);
+    #else
+      return std::make_shared<PCapBackend>(interfaceName);
+    #endif
+  }
+
+  const common2::Speed & SDLFrame::getSpeed() const
+  {
+    return mySpeed;
   }
 
 }

@@ -2,7 +2,9 @@
 
 #include "Tfe/NetworkBackend.h"
 
+#ifndef MARIANI
 #include "linux/config.h"
+#endif
 
 #ifdef SLIRP_FOUND
 // disable to use libpcap in all cases
@@ -10,6 +12,8 @@
 #endif
 
 #ifdef U2_USE_SLIRP
+
+#include "linux/network/portfwds.h"
 
 #include <memory>
 #include <vector>
@@ -22,7 +26,7 @@ struct Slirp;
 class SlirpBackend : public NetworkBackend
 {
 public:
-  SlirpBackend();
+  SlirpBackend(const std::vector<PortFwd> & portFwds = std::vector<PortFwd>());
 
   void transmit(const int txlength,	uint8_t *txframe) override;
   int receive(const int size,	uint8_t * rxframe) override;
@@ -38,6 +42,8 @@ public:
 
   int addPoll(const int fd, const int events);
   int getREvents(const int idx) const;
+
+  std::string getNeighborInfo() const;
 private:
 
   static constexpr size_t ourQueueSize = 10;

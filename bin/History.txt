@@ -9,6 +9,81 @@ https://github.com/AppleWin/AppleWin/issues/new
 Tom Charlesworth
 
 
+1.30.14.1 - 11 Mar 2023
+-----------------------
+- [Bug #1193] Fix for reading AY regs after AY Function set to INACTIVE. (Fix for mb-audit v1.3.)
+
+
+1.30.14.0 - 5 Mar 2023
+----------------------
+- [Change #1080] Support Mockingboard and Mouse at same time. (Improvement for: "Witch Trial".)
+- [Change #1187] New command line: '-capslock=off' to start up with Caps Lock off.
+- [Change #1183] Phasor: add support for Echo+ mode (eg. 6522 PortA chip select for the AYs, dual-mono sound output & reading AY regs).
+- [Change #1190] Document command line: '-multimon'.
+  - At start-up, use the Registry's saved "Window x/y position" to position the AppleWin window correctly for multiple monitors.
+- [Change #1033] New command line support for hard disk controller in slots 5 and 7.
+  - Use '-s5 hdc' or '-s7 hdc' to start up with a hard disk controller (hdc) in slots 5 and 7 respectively.
+  - Use '-s5h1 <pathname>' and '-s5h2 <pathname>' to connect hard disk images.
+  - NB. There's no GUI configuration support for the hdc in slot 5.
+  - NB. An hdc in slot 5 allows these 3.5" titles to work: "Perplexing Puzzles" and "Dark Heart of Uukrul".
+- [Bug #1193] Phasor: now can't read AY regs (via 6522 PortA) after AY set to INACTIVE function. (Mockingboard still can.)
+- [Bug #1192] Phasor: support the GAL logic for AY chip select & AY PSG Function.
+- [Bug #1188] Alt+Enter: fix regression, as this key combo should default to toggling full screen.
+- [Bug #1175, #1176] Mockingboard: fix some edge cases.
+- [Bug #1164] Debugger: Fix 'bpv' & 'tf' commands to trigger for non-visible scan lines when in full-speed.
+- [Bug #1163] Debugger: Fix disassembly when in middle of data.
+- [Bug #1099] Fix 6502/65C02: Clearing the D flag (or not) on a BRK or Interrupt or Reset.
+- [PR #1171] Refactor the Mockingboard & Phasor code.
+  - Can now put any sound card (Mockingboard, Phasor or SAM) into either or both slots 4 and 5.
+  - NB. Allows Mouse card in slot 4 and Mockingboard (or Phasor) in slot 5.
+- Change: Command line '-s<N> empty' now works for slots 1-7 (so only slot 0 isn't supported).
+- Debugger: Improve mini-memory views for AY8913 chip registers: show reg. latch address in white.
+- Debugger: Fix 'zpc' command, which wasn't working.
+
+
+1.30.13.0 - 2 Jan 2023
+----------------------
+. [Change #1153] Support Game I/O Connector copy protection dongles. [@medasaro]
+	- SDS SpeedStar dongle
+. [Change #1141,1142,1148,1149,1150] SNES MAX support for various controllers via mapping files. [@eriknoc]
+	- EG. -snes-max-user-joy1 snesmax\controller_Logitech_F310.yaml
+. [Change #1134] Add disk activity indicators for drives in Slot 5.
+	- Only visible in 2x Windowed mode.
+	- Add a new UI toggle in Config->Disk tab to "Show status" (ie. the track/sector status).
+	- Hovering over this status will show a tooltip with both decimal and hexadecimal values,
+	  and the track includes the full fractional quarter track value too.
+. [Change #1133] Add a new command line '-s<n> diskii13' to put a diskii card into slot-n and force it to use the 13-sector firmware.
+. [Bug #1157] Fix video junk on RHS edge for TV & Monitor video modes. (Regression at 1.13.11.0)
+. [Bug #1144] Fix some ZP symbols in A2_BASIC.SYM.
+. [Bug #1143] Fix graphical glitches on penultimate scan line when in non-"50% Scan Lines" mode.
+. [Bug #1138] Fix Mousecard - wasn't generating VBL interrupt for mode byte of $08. Fixes 'Jeeves'.
+. [Bug #1131] Fix MIXED issue when in 'Color (PAL Monitor)' video mode.
+. Change: Debugger: for LBR, support the unset/undefined case (eg. reset to undefined when beginning a new debug session).
+. Change: Debugger: extend to support DISK commands for Disk II cards in other slots:
+	- DISK SLOT n
+	- Now DISK INFO will provide info for the new slot.
+. Change: Debugger: add new command: 'bpv <vpos,[len]>'
+	- break when video-scanner's vertical position matches vpos.
+	- NB. auto disable when hit.
+. Change: Debugger: extend watches: 'WA <n> v' to show video scanner address & video data (aux and/or main or shr 4-byte).
+
+
+1.30.12.0 - 27 Sep 2022
+-----------------------
+. [Bug #1128] Increase paddle maximum offset - fixes 'Learning with Leepers'.
+. [Bug #1127] Debugger: fix memory search command.
+. [Bug #1126] Fix rare crash bug (when unprotected WOZ in drive).
+. [Bug #1125] Improve WOZ support: fixes 'Accolade Comics'.
+. [Bug #1121] Fix for aspect ratio in full-screen:
+	- Now revert to uniformly scaling in both x & y directions unless user specifies resolution.
+	- NB. Regression at 1.30.7.0 when adding VidHD support.
+. [Bug #1119] Fix render issue in 'Color (PAL Monitor)' video mode.
+. [Bug #1022] WOZ support: Better cross-track positioning - fixes 'Balance of Power'.
+. Fix for loading old save-states with Phasor card (bumps MB version in save-state to v9).
+	- NB. Regression at 1.30.10.0 when fixed Phasor to "use correct primary AY8913".
+. Change: Command line: support '-s2 ssc'.
+
+
 1.30.11.0 - 23 Jun 2022
 -----------------------
 . [Change #1103] Debugger: support memory breakpoints for HDD DMA r/w's:
@@ -63,7 +138,7 @@ Tom Charlesworth
 	- Fixes: What's My Logic, Forbidden Quest, The Isle of Mem.
 . [Bug #1018] Support AN3 for //e models.
 . [Bug #1015] Registry: fix support for legacy 'Harddisk Enable' key.
-. [PR #1028] Internal: Split 6522 out of MB code and into own class (bumps MB version in save-state).
+. [PR #1028] Internal: Split 6522 out of MB code and into own class (bumps MB version in save-state to v8).
 . [PR #1025] Load save-state for Cards: improve error messages. [audetto]
 . [PR #1014] Correct BMP creation. [audetto]
 . SSC: Fix for command line -dcd not being honoured. (Regression)

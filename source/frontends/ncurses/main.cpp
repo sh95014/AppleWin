@@ -5,22 +5,18 @@
 #include <iostream>
 #include <ncurses.h>
 
-#include "Common.h"
 #include "CardManager.h"
 #include "Core.h"
-#include "Log.h"
 #include "CPU.h"
 #include "NTSC.h"
 #include "SaveState.h"
 #include "Utilities.h"
-#include "Interface.h"
 
 #include "linux/benchmark.h"
-#include "linux/paddle.h"
 #include "linux/context.h"
 #include "frontends/common2/fileregistry.h"
 #include "frontends/common2/programoptions.h"
-#include "frontends/common2/utils.h"
+#include "frontends/common2/commoncontext.h"
 #include "frontends/ncurses/world.h"
 #include "frontends/ncurses/nframe.h"
 #include "frontends/ncurses/evdevpaddle.h"
@@ -87,7 +83,7 @@ namespace
       }
     case KEY_F(12):
       {
-        Snapshot_LoadState();
+        frame->LoadSnapshot();
         break;
       }
     }
@@ -147,18 +143,10 @@ namespace
 
     const LoggerContext loggerContext(options.log);
     const RegistryContext registryContet(CreateFileRegistry(options));
-    const std::shared_ptr<na2::EvDevPaddle> paddle(new na2::EvDevPaddle(options.paddleDeviceName));
-    const std::shared_ptr<na2::NFrame> frame(new na2::NFrame(paddle));
+    const std::shared_ptr<na2::EvDevPaddle> paddle = std::make_shared<na2::EvDevPaddle>(options.paddleDeviceName);
+    const std::shared_ptr<na2::NFrame> frame = std::make_shared<na2::NFrame>(paddle);
 
-    const Initialisation init(frame, paddle);
-    common2::applyOptions(options);
-    frame->Begin();
-
-    common2::setSnapshotFilename(options.snapshotFilename);
-    if (options.loadSnapshot)
-    {
-      frame->LoadSnapshot();
-    }
+    const common2::CommonInitialisation init(frame, paddle, options);
 
     na2::SetCtrlCHandler(options.headless);
 
@@ -171,7 +159,6 @@ namespace
     {
       EnterMessageLoop(options, frame);
     }
-    frame->End();
 
     return 0;
   }

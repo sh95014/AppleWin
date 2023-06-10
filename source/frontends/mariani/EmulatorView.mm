@@ -7,7 +7,7 @@
 
 #import "EmulatorView.h"
 #import "Carbon/Carbon.h"
-#import "linux/keyboard.h"
+#import "linux/keyboardbuffer.h"
 #import "linux/paddle.h"
 
 #import "StdAfx.h"

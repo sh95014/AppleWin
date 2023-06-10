@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "StdAfx.h"
 
 #include "6522.h"
+#include "CardManager.h"
 #include "Core.h"
 #include "CPU.h"
 #include "Memory.h"
@@ -45,7 +46,10 @@ void SY6522::Reset(const bool powerCycle)
 	}
 
 	CpuCreateCriticalSection();	// Reset() called by SY6522 global ctor, so explicitly create CPU's CriticalSection
+	Write(rDDRB, 0x00);	// DDRB = 0x00: all pins are inputs
+	Write(rDDRA, 0x00);	// DDRA = 0x00: all pins are inputs
 	Write(rACR, 0x00);	// ACR = 0x00: T1 one-shot mode
+	Write(rPCR, 0x00);	// PCR = 0x00: CB2/CA2 Control = Input (negative active edge)
 	Write(rIFR, 0x7f);	// IFR = 0x7F: de-assert any IRQs
 	Write(rIER, 0x7f);	// IER = 0x7F: disable all IRQs
 
@@ -106,7 +110,16 @@ USHORT SY6522::SetTimerSyncEvent(BYTE reg, USHORT timerLatch)
 	if (syncEvent->m_active)
 		g_SynchronousEventMgr.Remove(syncEvent->m_id);
 
-	syncEvent->SetCycles(timerLatch + kExtraTimerCycles + opcodeCycleAdjust);
+	if (m_isMegaAudio)
+	{
+		if (reg == rT1CH && timerLatch == 0x0000)
+			timerLatch = 0xFFFF;	// MegaAudio && T1.LATCH=0: use 0xFFFF (or maybe 0x10000?)
+		syncEvent->SetCycles(timerLatch + kExtraMegaAudioTimerCycles + opcodeCycleAdjust);	// MegaAudio asserts IRQ 1 cycle late!
+	}
+	else
+	{
+		syncEvent->SetCycles(timerLatch + kExtraTimerCycles + opcodeCycleAdjust);
+	}
 	g_SynchronousEventMgr.Insert(syncEvent);
 
 	// It doesn't matter if this overflows (ie. >0xFFFF), since on completion of current opcode it'll be corrected
@@ -115,7 +128,12 @@ USHORT SY6522::SetTimerSyncEvent(BYTE reg, USHORT timerLatch)
 
 //-----------------------------------------------------------------------------
 
-extern void MB_UpdateIRQ(void);
+void SY6522::UpdatePortAForHiZ(void)
+{
+	BYTE ora = GetReg(SY6522::rORA);
+	ora |= GetReg(SY6522::rDDRA) ^ 0xff;	// for any DDRA bits set as input (logical 0), then set them in ORA
+	SetRegORA(ora);							// Empirically Phasor's 6522-AY8913 bus floats high (or pull-up?) if no AY chip-selected (so DDRA=0x00 will read 0xFF as input)
+}
 
 void SY6522::UpdateIFR(BYTE clr_ifr, BYTE set_ifr /*= 0*/)
 {
@@ -127,7 +145,8 @@ void SY6522::UpdateIFR(BYTE clr_ifr, BYTE set_ifr /*= 0*/)
 	else
 		m_regs.IFR &= ~IFR_IRQ;
 
-	MB_UpdateIRQ();
+	if (GetCardMgr().GetObj(m_slot))	// If called from MockingboardCard ctor, then CardManager::m_slot[slot] == NULL
+		GetCardMgr().GetMockingboardCardMgr().UpdateIRQ();
 }
 
 //-----------------------------------------------------------------------------
@@ -201,6 +220,10 @@ void SY6522::Write(BYTE nReg, BYTE nValue)
 			nValue &= 0x7F;
 			m_regs.IER |= nValue;
 		}
+		if (m_syncEvent[0])
+			m_syncEvent[0]->m_canAssertIRQ = (m_regs.IER & IxR_TIMER1) ? true : false;
+		if (m_syncEvent[1])
+			m_syncEvent[1]->m_canAssertIRQ = (m_regs.IER & IxR_TIMER2) ? true : false;
 		UpdateIFR(0);
 		break;
 	case 0x0f:	// ORA_NO_HS
@@ -246,10 +269,21 @@ bool SY6522::CheckTimerUnderflow(USHORT& counter, int& timerIrqDelay, const USHO
 
 	if (oldTimer >= 0 && timer < 0)	// Underflow occurs for 0x0000 -> 0xFFFF
 	{
-		if (timer <= -2)				// TIMER = 0xFFFE (or less)
-			timerIrq = true;
-		else							// TIMER = 0xFFFF
-			timerIrqDelay = 1;			// ...so 1 cycle until IRQ
+		if (m_isMegaAudio)
+		{
+			if (timer <= -3)				// TIMER = 0xFFFD (or less)
+				timerIrq = true;
+			else							// TIMER = 0xFFFF or 0xFFFE
+				timerIrqDelay = 1;			// ...so 1 or 2 cycles until IRQ
+		}
+		else
+		{
+			if (timer <= -2)				// TIMER = 0xFFFE (or less)
+				timerIrq = true;
+			else							// TIMER = 0xFFFF
+				timerIrqDelay = 1;			// ...so 1 cycle until IRQ
+		}
+
 	}
 
 	return timerIrq;
@@ -258,10 +292,19 @@ bool SY6522::CheckTimerUnderflow(USHORT& counter, int& timerIrqDelay, const USHO
 int SY6522::OnTimer1Underflow(USHORT& counter)
 {
 	int timer = (int)(short)(counter);
-	while (timer < -1)
-		timer += (m_regs.TIMER1_LATCH.w + kExtraTimerCycles);	// GH#651: account for underflowed cycles / GH#652: account for extra 2 cycles
+	if (m_isMegaAudio)
+	{
+		const UINT timerLatch = m_regs.TIMER1_LATCH.w ? m_regs.TIMER1_LATCH.w : 0xFFFF;	// MegaAudio && T1.LATCH=0: use 0xFFFF (or maybe 0x10000?)
+		while (timer < -2)
+			timer += (timerLatch + kExtraMegaAudioTimerCycles);		// MegaAudio asserts IRQ 1 cycle late!
+	}
+	else
+	{
+		while (timer < -1)
+			timer += (m_regs.TIMER1_LATCH.w + kExtraTimerCycles);	// GH#651: account for underflowed cycles / GH#652: account for extra 2 cycles
+	}
 	counter = (USHORT)timer;
-	return (timer == -1) ? 1 : 0;		// timer1IrqDelay
+	return (timer < 0) ? 1 : 0;			// timer1IrqDelay
 }
 
 //-----------------------------------------------------------------------------
@@ -335,9 +378,11 @@ BYTE SY6522::Read(BYTE nReg)
 	case 0x08:	// TIMER2L
 		nValue = GetTimer2Counter(nReg) & 0xff;
 		UpdateIFR(IxR_TIMER2);
+		if (m_isMegaAudio) nValue = 0xFF;	// MegaAudio: Timer2 just reads as $00FF
 		break;
 	case 0x09:	// TIMER2H
 		nValue = GetTimer2Counter(nReg) >> 8;
+		if (m_isMegaAudio) nValue = 0x00;	// MegaAudio: Timer2 just reads as $00FF
 		break;
 	case 0x0a:	// SERIAL_SHIFT
 		break;
@@ -356,6 +401,8 @@ BYTE SY6522::Read(BYTE nReg)
 		break;
 	case 0x0e:	// IER
 		nValue = 0x80 | m_regs.IER;	// GH#567
+		if (m_isMegaAudio)
+			nValue &= 0x7F;
 		break;
 	case 0x0f:	// ORA_NO_HS
 		nValue = m_regs.ORA;
@@ -668,12 +715,14 @@ void SY6522::SetTimersActiveFromSnapshot(bool timer1Active, bool timer2Active, U
 	{
 		SyncEvent* syncEvent = m_syncEvent[0];
 		syncEvent->SetCycles(GetRegT1C() + kExtraTimerCycles);	// NB. use COUNTER, not LATCH
+		syncEvent->m_canAssertIRQ = (m_regs.IER & IxR_TIMER1) ? true : false;
 		g_SynchronousEventMgr.Insert(syncEvent);
 	}
 	if (IsTimer2Active())
 	{
 		SyncEvent* syncEvent = m_syncEvent[1];
 		syncEvent->SetCycles(GetRegT2C() + kExtraTimerCycles);	// NB. use COUNTER, not LATCH
+		syncEvent->m_canAssertIRQ = (m_regs.IER & IxR_TIMER2) ? true : false;
 		g_SynchronousEventMgr.Insert(syncEvent);
 	}
 }
