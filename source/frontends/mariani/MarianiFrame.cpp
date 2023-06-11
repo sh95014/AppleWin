@@ -18,7 +18,8 @@ namespace mariani
 {
 
   MarianiFrame::MarianiFrame(const common2::EmulatorOptions & options)
-    : SDLFrame(options)
+    : CommonFrame()
+    , SDLFrame(options)
   {
     g_sProgramDir = GetSupportDirectory();
     g_sBuiltinSymbolsDir = GetBuiltinSymbolsDirectory();
