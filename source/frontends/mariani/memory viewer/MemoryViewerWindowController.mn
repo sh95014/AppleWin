@@ -113,6 +113,7 @@
     NSData *data = [NSData dataWithBytes:config.basePointer length:config.length];
     
     self.hfController = [[HFController alloc] init];
+    self.hfController.editable = NO;
     HFSharedMemoryByteSlice *byteSlice = [[HFSharedMemoryByteSlice alloc] initWithUnsharedData:data];
     HFFullMemoryByteArray *byteArray = [[HFFullMemoryByteArray alloc] initWithByteSlice:byteSlice];
     [self.hfController setByteArray:byteArray];
