@@ -1364,8 +1364,6 @@
 				B049E82F277B5E2600FC14A3 /* common2 */,
 				B049E81D277B50E100FC14A3 /* sdl */,
 				B032DE23277A0C23006DC0F7 /* mariani */,
-				B0F526F42A2C1E0200288820 /* browser */,
-				B0F526EC2A2C1D3100288820 /* debugger */,
 				B032DE36277A0C24006DC0F7 /* marianiTests */,
 				B032DE40277A0C24006DC0F7 /* marianiUITests */,
 				B0A8D67127B4519200D4314F /* CiderPress */,
@@ -1408,21 +1406,18 @@
 				B0689D082780B9B60029EB7D /* MarianiFrame.cpp */,
 				B090CF2127B5A2A900C6C23D /* MarianiJoystick.h */,
 				B090CF2027B5A2A900C6C23D /* MarianiJoystick.mm */,
-				B0927414277D9399003FFB79 /* PreferencesViewController.h */,
-				B0927415277D9399003FFB79 /* PreferencesViewController.mm */,
-				B0927418277D9403003FFB79 /* PreferencesWindowController.h */,
-				B0927419277D9403003FFB79 /* PreferencesWindowController.m */,
 				B049E8A4277C4F0E00FC14A3 /* ShaderTypes.h */,
 				B049E8A6277C4F6D00FC14A3 /* Shaders.metal */,
 				B0689D152781984F0029EB7D /* UserDefaults.h */,
 				B0689D162781984F0029EB7D /* UserDefaults.m */,
 				B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */,
+				B0DB46E22A36E42600B4E670 /* preferences */,
+				B0F526F42A2C1E0200288820 /* browser */,
+				B0F526EC2A2C1D3100288820 /* debugger */,
 				B032DE27277A0C24006DC0F7 /* Assets.xcassets */,
 				B045FE5B278297F8006E36F9 /* Resources */,
 				B032DE29277A0C24006DC0F7 /* MainMenu.xib */,
 				B07612332789E4BE009E79BE /* About.xib */,
-				B0F25BCF2789B2DB0080523F /* DiskImageBrowser.xib */,
-				B0F0138E2785A211002936B4 /* Preferences.storyboard */,
 				B0ED3FCD2785973C006E4784 /* Localizable.strings */,
 				B089EF2D27BADA5200BDC415 /* Mariani.help */,
 				B032DE2C277A0C24006DC0F7 /* main.m */,
@@ -2078,6 +2073,18 @@
 			name = libhfs;
 			sourceTree = "<group>";
 		};
+		B0DB46E22A36E42600B4E670 /* preferences */ = {
+			isa = PBXGroup;
+			children = (
+				B0927414277D9399003FFB79 /* PreferencesViewController.h */,
+				B0927415277D9399003FFB79 /* PreferencesViewController.mm */,
+				B0927418277D9403003FFB79 /* PreferencesWindowController.h */,
+				B0927419277D9403003FFB79 /* PreferencesWindowController.m */,
+				B0F0138E2785A211002936B4 /* Preferences.storyboard */,
+			);
+			path = preferences;
+			sourceTree = "<group>";
+		};
 		B0F526EC2A2C1D3100288820 /* debugger */ = {
 			isa = PBXGroup;
 			children = (
@@ -2100,8 +2107,7 @@
 				B0F97BAA2A259F1800461923 /* Debugger.xib */,
 				B00BE9EC2A291BD100F288F9 /* InspectorPanels.xib */,
 			);
-			name = debugger;
-			path = source/frontends/mariani/debugger;
+			path = debugger;
 			sourceTree = "<group>";
 		};
 		B0F526F42A2C1E0200288820 /* browser */ = {
@@ -2115,9 +2121,9 @@
 				B08CFE4827889D44002B841D /* DiskImageWrapper.mm */,
 				B043659327B8769E00329469 /* NSMutableString+RTF.h */,
 				B043659427B8769E00329469 /* NSMutableString+RTF.m */,
+				B0F25BCF2789B2DB0080523F /* DiskImageBrowser.xib */,
 			);
-			name = browser;
-			path = source/frontends/mariani/browser;
+			path = browser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
