@@ -57,6 +57,7 @@ enum {
 
 - (void)viewDidMoveToWindow {
     [self.window setAcceptsMouseMovedEvents:YES];
+    [self.window makeFirstResponder:self];
 }
 
 - (void)updateTrackingAreas {
