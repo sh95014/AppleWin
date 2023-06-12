@@ -8,6 +8,7 @@
 #import "MemoryViewerWindowController.h"
 #import "EmulatorViewController.h"
 #import <HexFiend/HexFiend.h>
+#import <HexFiend/HFLineCountingView.h>
 
 #import "StdAfx.h"
 #import "Debug.h"
@@ -33,6 +34,7 @@
 @property (weak) IBOutlet NSView *hexViewContainerView;
 
 @property (strong) HFController *hfController;
+@property (weak) HFLineCountingView *lineCountingView;
 @property (assign) BOOL inDebugMode;
 @property (strong) NSMutableArray<MemoryTabConfiguration *> *memoryTabConfigurations;
 
@@ -121,6 +123,7 @@
     HFLayoutRepresenter *layoutRep = [[HFLayoutRepresenter alloc] init];
     HFLineCountingRepresenter *lcRep = [[HFLineCountingRepresenter alloc] init];
     lcRep.lineNumberFormat = HFLineNumberFormatHexadecimal;
+    self.lineCountingView = (HFLineCountingView *)lcRep.view;
     HFHexTextRepresenter *hexRep = [[HFHexTextRepresenter alloc] init];
     HFStringEncodingTextRepresenter *asciiRep = [[HFStringEncodingTextRepresenter alloc] init];
     HFVerticalScrollerRepresenter *scrollRep = [[HFVerticalScrollerRepresenter alloc] init];
@@ -132,7 +135,7 @@
     [self.hfController addRepresenter:asciiRep];
     [self.hfController addRepresenter:scrollRep];
     [self.hfController addRepresenter:statusRep];
-
+    
     [layoutRep addRepresenter:lcRep];
     [layoutRep addRepresenter:hexRep];
     [layoutRep addRepresenter:asciiRep];
@@ -157,6 +160,8 @@
     HFSharedMemoryByteSlice *byteSlice = [[HFSharedMemoryByteSlice alloc] initWithUnsharedData:data];
     HFFullMemoryByteArray *byteArray = [[HFFullMemoryByteArray alloc] initWithByteSlice:byteSlice];
     [self.hfController setByteArray:byteArray];
+    
+    self.lineCountingView.startOffset = config.baseAddress;
     
     if (!self.inDebugMode) {
         [self performSelector:@selector(refresh) withObject:nil afterDelay:REFRESH_DELAY];

@@ -13,3 +13,4 @@
 [submodule "source/frontends/mariani/HexFiend"]
 	path = source/frontends/mariani/HexFiend
 	url = https://github.com/sh95014/HexFiend.git
+	branch = mariani
