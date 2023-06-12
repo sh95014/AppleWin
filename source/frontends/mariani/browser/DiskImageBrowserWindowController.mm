@@ -363,7 +363,7 @@ NSArray *fileTypeStrings = @[
         [self.hfController addRepresenter:asciiRep];
         [self.hfController addRepresenter:scrollRep];
         [self.hfController addRepresenter:statusRep];
-
+        
         [layoutRep addRepresenter:lcRep];
         [layoutRep addRepresenter:hexRep];
         [layoutRep addRepresenter:asciiRep];
