@@ -34,6 +34,7 @@
 #import "CommonTypes.h"
 #import "EmulatorViewController.h"
 #import "PreferencesWindowController.h"
+#import "MemoryViewerWindowController.h"
 #import "DebuggerWindowController.h"
 #import "UserDefaults.h"
 
@@ -92,6 +93,7 @@ using namespace DiskImgLib;
 
 @property (strong) NSProcessInfo *processInfo;
 
+@property (strong) MemoryViewerWindowController *memoryWC;
 @property (strong) DebuggerWindowController *debuggerWC;
 
 @end
@@ -501,6 +503,13 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 #pragma mark - Window menu actions
+
+- (IBAction)showMemoryViewerAction:(id)sender {
+    if (self.memoryWC == nil) {
+        self.memoryWC = [[MemoryViewerWindowController alloc] init];
+    }
+    [self.memoryWC.window orderFront:sender];
+}
 
 - (IBAction)showDebuggerAction:(id)sender {
     [self.emulatorVC enterDebugMode];

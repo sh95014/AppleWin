@@ -1,0 +1,165 @@
+//
+//  MemoryViewerWindowController.mm
+//  Mariani
+//
+//  Created by sh95014 on 6/11/23.
+//
+
+#import "MemoryViewerWindowController.h"
+#import "EmulatorViewController.h"
+#import <HexFiend/HexFiend.h>
+
+#import "StdAfx.h"
+#import "Debug.h"
+#import "Memory.h"
+
+#define REFRESH_DELAY               0.1
+#define MARGIN                      18
+
+@interface MemoryTabConfiguration : NSObject
+
+@property (assign) void *basePointer;
+@property (assign) size_t baseAddress;
+@property (assign) size_t length;
+
+@end
+
+@implementation MemoryTabConfiguration
+@end
+
+@interface MemoryViewerWindowController ()
+
+@property (weak) IBOutlet NSSegmentedControl *memoryRangeSegmentedControl;
+@property (weak) IBOutlet NSView *hexViewContainerView;
+
+@property (strong) HFController *hfController;
+@property (assign) BOOL inDebugMode;
+@property (strong) NSMutableArray<MemoryTabConfiguration *> *memoryTabConfigurations;
+
+@end
+
+@implementation MemoryViewerWindowController
+
+- (id)init {
+    if ((self = [super init]) != nil) {
+        if (![[NSBundle mainBundle] loadNibNamed:@"MemoryViewerWindow" owner:self topLevelObjects:nil]) {
+            NSLog(@"failed to load Memory Viewer nib");
+            return nil;
+        }
+        
+        self.memoryTabConfigurations = [NSMutableArray array];
+        
+        [self loadSegmentedControl];
+        [self loadHexView];
+        
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+        [center addObserverForName:EmulatorDidEnterDebugModeNotification object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+            self.inDebugMode = YES;
+        }];
+        [center addObserverForName:EmulatorDidExitDebugModeNotification object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+            self.inDebugMode = NO;
+            [self performSelector:@selector(refresh) withObject:nil afterDelay:REFRESH_DELAY];
+        }];
+        
+        [self refresh];
+    }
+    return self;
+}
+
+- (void)loadSegmentedControl {
+    CGRect frame = self.memoryRangeSegmentedControl.frame;
+    frame.origin.x = MARGIN;
+    frame.size.width = self.window.frame.size.width - MARGIN * 2;
+    self.memoryRangeSegmentedControl.frame = frame;
+    self.memoryRangeSegmentedControl.segmentCount = 2;
+    
+    [self.memoryRangeSegmentedControl setLabel:NSLocalizedString(@"Memory", @"") forSegment:0];
+    MemoryTabConfiguration *config = [[MemoryTabConfiguration alloc] init];
+    config.basePointer = mem;
+    config.baseAddress = 0;
+    config.length = _6502_MEM_LEN;
+    [self.memoryTabConfigurations addObject:config];
+    
+    [self.memoryRangeSegmentedControl setLabel:NSLocalizedString(@"Cx ROM", @"") forSegment:1];
+    config = [[MemoryTabConfiguration alloc] init];
+    config.basePointer = MemGetCxRomPeripheral();
+    config.baseAddress = _6502_IO_BEGIN;
+    config.length = 4 * 1024;
+    [self.memoryTabConfigurations addObject:config];
+
+    unsigned int i = 0;
+    void *bank;
+    while ((bank = MemGetBankPtr(i)) != NULL) {
+        self.memoryRangeSegmentedControl.segmentCount = self.memoryRangeSegmentedControl.segmentCount + 1;
+        
+        NSString *label = [NSString stringWithFormat:NSLocalizedString(@"Bank %u", @""), i];
+        [self.memoryRangeSegmentedControl setLabel:label forSegment:2 + i];
+        config = [[MemoryTabConfiguration alloc] init];
+        config.basePointer = bank;
+        config.baseAddress = 0;
+        config.length = _6502_MEM_LEN;
+        [self.memoryTabConfigurations addObject:config];
+        
+        ++i;
+    }
+    
+    self.memoryRangeSegmentedControl.selectedSegment = 0;
+}
+
+- (void)loadHexView {
+    NSView *layoutView;
+    MemoryTabConfiguration *config = self.memoryTabConfigurations[self.memoryRangeSegmentedControl.selectedSegment];
+    NSData *data = [NSData dataWithBytes:config.basePointer length:config.length];
+    
+    self.hfController = [[HFController alloc] init];
+    HFSharedMemoryByteSlice *byteSlice = [[HFSharedMemoryByteSlice alloc] initWithUnsharedData:data];
+    HFFullMemoryByteArray *byteArray = [[HFFullMemoryByteArray alloc] initWithByteSlice:byteSlice];
+    [self.hfController setByteArray:byteArray];
+    
+    HFLayoutRepresenter *layoutRep = [[HFLayoutRepresenter alloc] init];
+    HFLineCountingRepresenter *lcRep = [[HFLineCountingRepresenter alloc] init];
+    lcRep.lineNumberFormat = HFLineNumberFormatHexadecimal;
+    HFHexTextRepresenter *hexRep = [[HFHexTextRepresenter alloc] init];
+    HFStringEncodingTextRepresenter *asciiRep = [[HFStringEncodingTextRepresenter alloc] init];
+    HFVerticalScrollerRepresenter *scrollRep = [[HFVerticalScrollerRepresenter alloc] init];
+    HFStatusBarRepresenter *statusRep = [[HFStatusBarRepresenter alloc] init];
+    
+    [self.hfController addRepresenter:layoutRep];
+    [self.hfController addRepresenter:lcRep];
+    [self.hfController addRepresenter:hexRep];
+    [self.hfController addRepresenter:asciiRep];
+    [self.hfController addRepresenter:scrollRep];
+    [self.hfController addRepresenter:statusRep];
+
+    [layoutRep addRepresenter:lcRep];
+    [layoutRep addRepresenter:hexRep];
+    [layoutRep addRepresenter:asciiRep];
+    [layoutRep addRepresenter:scrollRep];
+    [layoutRep addRepresenter:statusRep];
+        
+    // shrink the window to exactly fit desired bytes per row
+    CGRect frame = self.window.frame;
+    frame.size.width = [layoutRep minimumViewWidthForBytesPerLine:16];
+    [self.window setFrame:frame display:NO];
+    layoutView = [layoutRep view];
+    
+    [layoutView setFrame:self.hexViewContainerView.bounds];
+    [layoutView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    [self.hexViewContainerView addSubview:layoutView];
+}
+
+- (void)refresh {
+    MemoryTabConfiguration *config = self.memoryTabConfigurations[self.memoryRangeSegmentedControl.selectedSegment];
+    NSData *data = [NSData dataWithBytes:config.basePointer length:config.length];
+    
+    HFSharedMemoryByteSlice *byteSlice = [[HFSharedMemoryByteSlice alloc] initWithUnsharedData:data];
+    HFFullMemoryByteArray *byteArray = [[HFFullMemoryByteArray alloc] initWithByteSlice:byteSlice];
+    [self.hfController setByteArray:byteArray];
+    
+    if (!self.inDebugMode) {
+        [self performSelector:@selector(refresh) withObject:nil afterDelay:REFRESH_DELAY];
+    }
+}
+
+@end

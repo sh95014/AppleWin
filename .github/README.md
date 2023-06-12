@@ -22,7 +22,6 @@ But if what you want is a macOS command-line app, you can build that too with th
 
 Mariani should be broadly useful, so please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into. The following AppleWin features are not yet supported:
 
-- [Memory viewer](https://github.com/sh95014/AppleWin/issues/12)
 - [Load/Save State](https://github.com/sh95014/AppleWin/issues/13)
 - [Numeric keypad joystick emulation](https://github.com/sh95014/AppleWin/issues/10)
 

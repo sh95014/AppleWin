@@ -433,6 +433,12 @@
 		B0BAB4AA29B42CAA008F54D7 /* MockingboardCardManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0BAB4A029B42CAA008F54D7 /* MockingboardCardManager.cpp */; };
 		B0BAB4AB29B42CAA008F54D7 /* MockingboardDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A829B42CAA008F54D7 /* MockingboardDefs.h */; };
 		B0BAB4AC29B42CAA008F54D7 /* MockingboardCardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A929B42CAA008F54D7 /* MockingboardCardManager.h */; };
+		B0DB46E72A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */; };
+		B0DB46E82A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */; };
+		B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
+		B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
+		B0DB46EB2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */; };
+		B0DB46EC2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */; };
 		B0E1DC8C298874EF00F61989 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC8B298874EF00F61989 /* libboost_program_options.a */; };
 		B0E1DC8E2988751000F61989 /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC8D2988751000F61989 /* libslirp.a */; };
 		B0E1DC8F2988753900F61989 /* libStaticWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC80298874A800F61989 /* libStaticWrapper.a */; };
@@ -1196,6 +1202,9 @@
 		B0D1C3C627B45E5600C0BF71 /* version.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = version.c; path = source/frontends/mariani/CiderPress/diskimg/libhfs/version.c; sourceTree = "<group>"; };
 		B0D1C3C727B45E5600C0BF71 /* block.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = block.c; path = source/frontends/mariani/CiderPress/diskimg/libhfs/block.c; sourceTree = "<group>"; };
 		B0D1C3C827B45E5600C0BF71 /* data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = data.c; path = source/frontends/mariani/CiderPress/diskimg/libhfs/data.c; sourceTree = "<group>"; };
+		B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MemoryViewerWindowController.h; sourceTree = "<group>"; };
+		B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MemoryViewerWindowController.mn; sourceTree = "<group>"; };
+		B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MemoryViewerWindow.xib; sourceTree = "<group>"; };
 		B0E1DC80298874A800F61989 /* libStaticWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStaticWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0E1DC8B298874EF00F61989 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../../../../usr/local/Cellar/boost/1.76.0/lib/libboost_program_options.a; sourceTree = "<group>"; };
 		B0E1DC8D2988751000F61989 /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../../../../usr/local/Cellar/libslirp/4.7.0/lib/libslirp.a; sourceTree = "<group>"; };
@@ -1414,6 +1423,7 @@
 				B0DB46E22A36E42600B4E670 /* preferences */,
 				B0F526F42A2C1E0200288820 /* browser */,
 				B0F526EC2A2C1D3100288820 /* debugger */,
+				B0DB46E32A36E52100B4E670 /* memory viewer */,
 				B032DE27277A0C24006DC0F7 /* Assets.xcassets */,
 				B045FE5B278297F8006E36F9 /* Resources */,
 				B032DE29277A0C24006DC0F7 /* MainMenu.xib */,
@@ -2085,6 +2095,16 @@
 			path = preferences;
 			sourceTree = "<group>";
 		};
+		B0DB46E32A36E52100B4E670 /* memory viewer */ = {
+			isa = PBXGroup;
+			children = (
+				B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */,
+				B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */,
+				B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */,
+			);
+			path = "memory viewer";
+			sourceTree = "<group>";
+		};
 		B0F526EC2A2C1D3100288820 /* debugger */ = {
 			isa = PBXGroup;
 			children = (
@@ -2214,6 +2234,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0DB46E82A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */,
 				B0F527112A2C1F2200288820 /* InspectorOutlineViewController.h in Headers */,
 				B0F527082A2C1F2200288820 /* DebuggerWindowController.h in Headers */,
 				B0F527102A2C1F2200288820 /* CapsuleView.h in Headers */,
@@ -2284,6 +2305,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0DB46E72A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */,
 				B0F527022A2C1F2100288820 /* InspectorOutlineViewController.h in Headers */,
 				B0F526F92A2C1F2100288820 /* DebuggerWindowController.h in Headers */,
 				B0F527012A2C1F2100288820 /* CapsuleView.h in Headers */,
@@ -2667,6 +2689,7 @@
 				B00ECBDB279EEB600041E16C /* SSC.rom in Resources */,
 				B00ECBDC279EEB600041E16C /* Apple2.rom in Resources */,
 				B00ECBDD279EEB600041E16C /* Parallel.rom in Resources */,
+				B0DB46EC2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */,
 				B00ECBDE279EEB600041E16C /* Apple2e_Enhanced.rom in Resources */,
 				B00ECBDF279EEB600041E16C /* Apple2_JPlus.rom in Resources */,
 				B0F43FDA295E4BAD00E79AD7 /* CHARSET8M.bmp in Resources */,
@@ -2710,6 +2733,7 @@
 				B045FE812782984F006E36F9 /* SSC.rom in Resources */,
 				B045FE852782984F006E36F9 /* Apple2.rom in Resources */,
 				B045FE832782984F006E36F9 /* Parallel.rom in Resources */,
+				B0DB46EB2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */,
 				B045FE862782984F006E36F9 /* Apple2e_Enhanced.rom in Resources */,
 				B045FE7D2782984F006E36F9 /* Apple2_JPlus.rom in Resources */,
 				B0F43FD9295E4BAD00E79AD7 /* CHARSET8M.bmp in Resources */,
@@ -2830,6 +2854,7 @@
 				B00ECB7E279EEB600041E16C /* MarianiFrame.cpp in Sources */,
 				B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */,
 				B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */,
+				B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
 				B00ECB81279EEB600041E16C /* main.m in Sources */,
 				B00ECB82279EEB600041E16C /* programoptions.cpp in Sources */,
 				B043659827B8769E00329469 /* NSMutableString+RTF.m in Sources */,
@@ -2895,6 +2920,7 @@
 				B0689D0A2780B9B60029EB7D /* MarianiFrame.cpp in Sources */,
 				B09AB72E277A1BA40002A6C3 /* Util_MemoryTextFile.cpp in Sources */,
 				B049E852277B6FFE00FC14A3 /* fileregistry.cpp in Sources */,
+				B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
 				B032DE2D277A0C24006DC0F7 /* main.m in Sources */,
 				B0689D0D2780C85F0029EB7D /* programoptions.cpp in Sources */,
 				B043659727B8769E00329469 /* NSMutableString+RTF.m in Sources */,

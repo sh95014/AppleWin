@@ -217,6 +217,9 @@
                             <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
                             <menuItem title="Show Memory Viewer" id="ig1-4e-Udw">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="showMemoryViewerAction:" target="Voe-Tx-rLC" id="dJ8-3N-HFY"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Show Debugger" keyEquivalent="" id="1DA-XY-M6d">
                                 <modifierMask key="keyEquivalentModifierMask"/>
