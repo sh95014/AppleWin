@@ -40,7 +40,7 @@ namespace mariani
 
   private:
     // FIXME: without this hack the app crashes randomly elsewhere
-    unsigned char padding[256];
+    unsigned char padding[1024];
   };
 
 }
