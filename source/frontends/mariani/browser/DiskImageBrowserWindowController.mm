@@ -52,6 +52,26 @@ using namespace DiskImgLib;
 @implementation FSItem
 @end
 
+@interface MyTextView : NSTextView
+@property (strong) NSData *data;
+@property (assign) BOOL isApplesoftBASIC;
+@end
+
+@implementation MyTextView
+
+- (void)viewDidChangeEffectiveAppearance {
+    // regenerate the RTF and attributed string to pick up the new appearance
+    [NSAppearance setCurrentAppearance:self.effectiveAppearance];
+    NSString *rtfString = self.isApplesoftBASIC ? ApplesoftBASICDataToRTF(self.data) : IntegerBASICDataToRTF(self.data);
+    [self.textStorage setAttributedString:
+         [[NSAttributedString alloc] initWithData:[rtfString dataUsingEncoding:NSUTF8StringEncoding]
+                                          options:@{}
+                               documentAttributes:nil
+                                            error:nil]];
+}
+
+@end
+
 @interface DiskImageBrowserWindowController ()
 
 @property (strong) IBOutlet NSOutlineView *filesOutlineView;
@@ -330,8 +350,10 @@ NSArray *fileTypeStrings = @[
     const BOOL isApplesoftBASIC = [fsItem.kind hasPrefix:@"BAS"];
     const BOOL isIntegerBASIC = [fsItem.kind hasPrefix:@"INT"];
     if (isApplesoftBASIC || isIntegerBASIC) {
-        NSScrollView *scrollView = [NSTextView scrollableTextView];
-        NSTextView *textView = scrollView.documentView;
+        NSScrollView *scrollView = [MyTextView scrollableTextView];
+        MyTextView *textView = scrollView.documentView;
+        textView.data = data;
+        textView.isApplesoftBASIC = isApplesoftBASIC;
         NSString *rtfString = isApplesoftBASIC ? ApplesoftBASICDataToRTF(data) : IntegerBASICDataToRTF(data);
         [textView.textStorage setAttributedString:
             [[NSAttributedString alloc] initWithData:[rtfString dataUsingEncoding:NSUTF8StringEncoding]
