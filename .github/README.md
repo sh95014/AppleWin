@@ -51,28 +51,15 @@ git clone https://github.com/sh95014/AppleWin.git --recursive
 
 Load up the Xcode project, and build the "Mariani" target for "My Mac".
 
-"Mariani Universal" is the target used to build a universal (x86 and ARM) app, and will *not* build out of the box. Homebrew does not support universal (x86 and ARM) libraries, so you'll have to download/build [Boost](https://www.boost.org/users/download/) yourself. Here's a script that should help stitch the Boost binaries from both x86 and ARM builds together into an universal static library:
+"Mariani Universal" is the target used to build a universal (x86 and ARM) app, and will *not* build out of the box. Homebrew does not support universal libraries, so you'll have to follow [these instructions](https://medium.com/mkdir-awesome/how-to-install-x86-64-homebrew-packages-on-apple-m1-macbook-54ba295230f) on an Apple Silicon Mac to install the x86 versions of the relevant libraries. Here's a handy script to combine them into universal shared libraries:
 
 ```
 #!/bin/sh
 
-rm -rf arm64 x86_64 universal stage bin.v2
-rm -f b2 project-config*
-./bootstrap.sh cxxflags="-arch x86_64 -arch arm64" cflags="-arch x86_64 -arch arm64" linkflags="-arch x86_64 -arch arm64"
-./b2 toolset=clang-darwin target-os=darwin architecture=arm abi=aapcs cxxflags="-arch arm64" cflags="-arch arm64" linkflags="-arch arm64" -a
-mkdir -p arm64 && cp stage/lib/*.dylib arm64 && cp stage/lib/*.a arm64
-./b2 toolset=clang-darwin target-os=darwin architecture=x86 cxxflags="-arch x86_64" cflags="-arch x86_64" linkflags="-arch x86_64" abi=sysv binary-format=mach-o -a
-mkdir x86_64 && cp stage/lib/*.dylib x86_64 && cp stage/lib/*.a x86_64
-mkdir universal
-for dylib in arm64/*; do 
-  lipo -create -arch arm64 $dylib -arch x86_64 x86_64/$(basename $dylib) -output universal/$(basename $dylib); 
-done
-for dylib in universal/*; do
-  lipo $dylib -info;
-done
+lipo -create -arch arm64 /opt/homebrew/lib/$1 -arch x86_64 /usr/local/homebrew/lib/$1 -output $1
 ```
 
-To get Uthernet support in "Mariani Universal", you'll also need to build [libslirp](https://gitlab.freedesktop.org/slirp/libslirp) on your own. I haven't done the work to add `U2_USE_SLIRP=1` to its pre-processor defines and link the library yet.
+You'll need to run that script for everything that the "StaticWrapper Universal" target needs to link against, which are currently `libintl.a`, `libglib-2.0.a`, `libslirp.a`, and `libboost_program_options.a`. The Xcode project expects them to be placed in `~/Developer/universal/` but you can change that to your liking.
 
 ## Build sa2
 
