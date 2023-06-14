@@ -68,9 +68,11 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 #endif // USE_COREAUDIO
 
   private:
+#ifndef USE_COREAUDIO
     static void staticAudioCallback(void* userdata, uint8_t* stream, int len);
 
     void audioCallback(uint8_t* stream, int len);
+#endif // USE_COREAUDIO
 
     IDirectSoundBuffer * myBuffer;
 
@@ -98,6 +100,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
   std::unordered_map<IDirectSoundBuffer *, std::shared_ptr<DirectSoundGenerator>> activeSoundGenerators;
 
+#ifndef USE_COREAUDIO
   void DirectSoundGenerator::staticAudioCallback(void* userdata, uint8_t* stream, int len)
   {
     DirectSoundGenerator * generator = static_cast<DirectSoundGenerator *>(userdata);
@@ -124,7 +127,6 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
       dest += dwAudioBytes2;
     }
 
-#ifndef USE_COREAUDIO
     stream = mixBufferTo(stream);
 
     const size_t gap = len - bytesRead;
@@ -132,8 +134,8 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     {
       memset(stream, myAudioSpec.silence, gap);
     }
-#endif // USE_COREAUDIO
   }
+#endif // USE_COREAUDIO
 
   DirectSoundGenerator::DirectSoundGenerator(IDirectSoundBuffer * buffer)
     : myBuffer(buffer)
