@@ -1115,7 +1115,7 @@ const char *GetSupportDirectory() {
     return supportDirectoryPath.UTF8String;
 }
 
-const char *GetBuiltinSymbolsDirectory() {
+const char *GetBuiltinSymbolsDirectory(void) {
     NSString *path = [[NSBundle mainBundle] pathForResource:nil ofType:@"SYM"];
     NSInteger filenameLength = path.lastPathComponent.length;
     return [path substringToIndex:path.length - filenameLength].UTF8String;

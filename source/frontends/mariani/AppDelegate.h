@@ -32,7 +32,7 @@
 int ShowModalAlertOfType(int type, const char *message, const char *information);
 void UpdateDriveLights(void);
 const char *PathToResourceNamed(const char *name);
-const char *GetBuiltinSymbolsDirectory();
+const char *GetBuiltinSymbolsDirectory(void);
 const char *GetSupportDirectory(void);
 
 int RegisterAudioOutput(size_t channels, size_t sampleRate);

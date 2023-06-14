@@ -324,7 +324,7 @@
         Bookmark_t *bm = g_aBookmarks + i;
         [self.bookmarksButton.menu itemAtIndex:i+1].enabled = bm->bSet;
 #ifdef DEBUG
-        [self.bookmarksButton.menu itemAtIndex:i+1].title = [NSString stringWithFormat:@"Bookmark %d ($%04X)", i, bm->nAddress];
+        [self.bookmarksButton.menu itemAtIndex:i+1].title = [NSString stringWithFormat:@"Bookmark %ld ($%04X)", (long)i, bm->nAddress];
 #endif
     }
 }

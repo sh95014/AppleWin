@@ -60,7 +60,7 @@ static inline uint16_t Read16(const uint8_t** pBuf, long* pLength)
     return val;
 }
 
-static NSArray *BASICfonts()
+static NSArray *BASICfonts(void)
 {
     static dispatch_once_t onceToken;
     static NSArray *fonts;
@@ -73,7 +73,7 @@ static NSArray *BASICfonts()
     return fonts;
 }
 
-static NSArray *BASICColors()
+static NSArray *BASICColors(void)
 {
     static dispatch_once_t onceToken;
     static NSArray *colors;

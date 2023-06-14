@@ -34,7 +34,6 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     const size_t bytesPerFrame = spec.channels * bitsPerSample / 8;
     return spec.freq * bytesPerFrame;
   }
-#endif // USE_COREAUDIO
 
   size_t nextPowerOf2(size_t n)
   {
@@ -43,6 +42,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
       k *= 2;
     return k;
   }
+#endif // USE_COREAUDIO
 
   class DirectSoundGenerator
   {
