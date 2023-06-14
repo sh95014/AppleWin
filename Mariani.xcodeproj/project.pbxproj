@@ -214,8 +214,14 @@
 		B00ECBDD279EEB600041E16C /* Parallel.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE6D2782984E006E36F9 /* Parallel.rom */; };
 		B00ECBDE279EEB600041E16C /* Apple2e_Enhanced.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE702782984E006E36F9 /* Apple2e_Enhanced.rom */; };
 		B00ECBDF279EEB600041E16C /* Apple2_JPlus.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE672782984E006E36F9 /* Apple2_JPlus.rom */; };
-		B00ECBE6279EEBAB0041E16C /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */; };
-		B00ECBEA279EEBDC0041E16C /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B00ECBE7279EEBD30041E16C /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B017D6772A3A4C1200FE6D1E /* StaticLibraryWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */; };
+		B017D68C2A3A4C2700FE6D1E /* libintl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6882A3A4C2700FE6D1E /* libintl.a */; };
+		B017D68D2A3A4C2700FE6D1E /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6892A3A4C2700FE6D1E /* libslirp.a */; };
+		B017D68E2A3A4C2700FE6D1E /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */; };
+		B017D68F2A3A4C2700FE6D1E /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */; };
+		B017D6902A3A4C4500FE6D1E /* libStaticWrapper Universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6802A3A4C1200FE6D1E /* libStaticWrapper Universal.a */; };
+		B017D6912A3A4C5A00FE6D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC9B29887ED000F61989 /* libiconv.tbd */; };
+		B017D6922A3A4C6000FE6D1E /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DCA229887FA900F61989 /* libresolv.tbd */; };
 		B020F8A62785D30E0071D3C7 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B020F8A32785D30E0071D3C7 /* stdafx.cpp */; };
 		B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8A82785EA440071D3C7 /* AVFoundation.framework */; };
 		B020F8AB2785F3920071D3C7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8AA2785F3920071D3C7 /* CoreMedia.framework */; };
@@ -433,8 +439,6 @@
 		B0BAB4AA29B42CAA008F54D7 /* MockingboardCardManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0BAB4A029B42CAA008F54D7 /* MockingboardCardManager.cpp */; };
 		B0BAB4AB29B42CAA008F54D7 /* MockingboardDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A829B42CAA008F54D7 /* MockingboardDefs.h */; };
 		B0BAB4AC29B42CAA008F54D7 /* MockingboardCardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A929B42CAA008F54D7 /* MockingboardCardManager.h */; };
-		B0DB46E72A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */; };
-		B0DB46E82A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */; };
 		B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
 		B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
 		B0DB46EB2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */; };
@@ -475,35 +479,19 @@
 		B0F43FDE295E4BAD00E79AD7 /* CHARSET82.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */; };
 		B0F526F72A2C1F1300288820 /* DebuggerWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0F97BB22A25A8F100461923 /* DebuggerWindowController.mm */; };
 		B0F526F82A2C1F1400288820 /* DebuggerWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0F97BB22A25A8F100461923 /* DebuggerWindowController.mm */; };
-		B0F526F92A2C1F2100288820 /* DebuggerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F97BB12A25A8F100461923 /* DebuggerWindowController.h */; };
 		B0F526FA2A2C1F2100288820 /* DisassemblyTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0F97BB82A25BFB600461923 /* DisassemblyTableViewController.mm */; };
 		B0F526FB2A2C1F2100288820 /* HexDigitFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AA395B2A2A6CEF00A3F665 /* HexDigitFormatter.m */; };
 		B0F526FC2A2C1F2100288820 /* SymbolTable.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0F9E3C32A2AC58E009C1D3F /* SymbolTable.mm */; };
 		B0F526FD2A2C1F2100288820 /* CapsuleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9D32A27E55900F288F9 /* CapsuleView.m */; };
 		B0F526FE2A2C1F2100288820 /* NSColor+AppleWin.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9CD2A271C5700F288F9 /* NSColor+AppleWin.mm */; };
-		B0F526FF2A2C1F2100288820 /* SymbolTable.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F9E3C22A2AC58E009C1D3F /* SymbolTable.h */; };
 		B0F527002A2C1F2100288820 /* InspectorOutlineViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9EE2A291C0000F288F9 /* InspectorOutlineViewController.mm */; };
-		B0F527012A2C1F2100288820 /* CapsuleView.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9D22A27E55900F288F9 /* CapsuleView.h */; };
-		B0F527022A2C1F2100288820 /* InspectorOutlineViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9ED2A291C0000F288F9 /* InspectorOutlineViewController.h */; };
-		B0F527032A2C1F2100288820 /* NSColor+AppleWin.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9CC2A271C5700F288F9 /* NSColor+AppleWin.h */; };
-		B0F527042A2C1F2100288820 /* ConsoleViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9E02A28466500F288F9 /* ConsoleViewController.h */; };
-		B0F527052A2C1F2100288820 /* DisassemblyTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F97BB72A25BFB600461923 /* DisassemblyTableViewController.h */; };
-		B0F527062A2C1F2100288820 /* HexDigitFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = B0AA395A2A2A6CEF00A3F665 /* HexDigitFormatter.h */; };
 		B0F527072A2C1F2100288820 /* ConsoleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9E12A28466500F288F9 /* ConsoleViewController.mm */; };
-		B0F527082A2C1F2200288820 /* DebuggerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F97BB12A25A8F100461923 /* DebuggerWindowController.h */; };
 		B0F527092A2C1F2200288820 /* DisassemblyTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0F97BB82A25BFB600461923 /* DisassemblyTableViewController.mm */; };
 		B0F5270A2A2C1F2200288820 /* HexDigitFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = B0AA395B2A2A6CEF00A3F665 /* HexDigitFormatter.m */; };
 		B0F5270B2A2C1F2200288820 /* SymbolTable.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0F9E3C32A2AC58E009C1D3F /* SymbolTable.mm */; };
 		B0F5270C2A2C1F2200288820 /* CapsuleView.m in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9D32A27E55900F288F9 /* CapsuleView.m */; };
 		B0F5270D2A2C1F2200288820 /* NSColor+AppleWin.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9CD2A271C5700F288F9 /* NSColor+AppleWin.mm */; };
-		B0F5270E2A2C1F2200288820 /* SymbolTable.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F9E3C22A2AC58E009C1D3F /* SymbolTable.h */; };
 		B0F5270F2A2C1F2200288820 /* InspectorOutlineViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9EE2A291C0000F288F9 /* InspectorOutlineViewController.mm */; };
-		B0F527102A2C1F2200288820 /* CapsuleView.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9D22A27E55900F288F9 /* CapsuleView.h */; };
-		B0F527112A2C1F2200288820 /* InspectorOutlineViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9ED2A291C0000F288F9 /* InspectorOutlineViewController.h */; };
-		B0F527122A2C1F2200288820 /* NSColor+AppleWin.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9CC2A271C5700F288F9 /* NSColor+AppleWin.h */; };
-		B0F527132A2C1F2200288820 /* ConsoleViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B00BE9E02A28466500F288F9 /* ConsoleViewController.h */; };
-		B0F527142A2C1F2200288820 /* DisassemblyTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F97BB72A25BFB600461923 /* DisassemblyTableViewController.h */; };
-		B0F527152A2C1F2200288820 /* HexDigitFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = B0AA395A2A2A6CEF00A3F665 /* HexDigitFormatter.h */; };
 		B0F527162A2C1F2200288820 /* ConsoleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B00BE9E12A28466500F288F9 /* ConsoleViewController.mm */; };
 		B0F84FF927D1B3F30015F642 /* Uthernet2.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F84FF427D1B3F30015F642 /* Uthernet2.h */; };
 		B0F84FFA27D1B3F30015F642 /* Uthernet1.h in Headers */ = {isa = PBXBuildFile; fileRef = B0F84FF527D1B3F30015F642 /* Uthernet1.h */; };
@@ -525,6 +513,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B017D6932A3A4C8900FE6D1E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B032DE19277A0C23006DC0F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B017D6742A3A4C1200FE6D1E;
+			remoteInfo = "StaticWrapper Universal";
+		};
 		B032DE34277A0C24006DC0F7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B032DE19277A0C23006DC0F7 /* Project object */;
@@ -681,7 +676,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B00ECBEA279EEBDC0041E16C /* SDL2.framework in Embed Frameworks */,
 				B04365D827BAD29500329469 /* HexFiend.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -714,6 +708,11 @@
 		B00ECBE4279EEB600041E16C /* Mariani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mariani.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../boost_1_78_0/universal/libboost_program_options.a; sourceTree = "<group>"; };
 		B00ECBE7279EEBD30041E16C /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../SDL2.framework; sourceTree = "<group>"; };
+		B017D6802A3A4C1200FE6D1E /* libStaticWrapper Universal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libStaticWrapper Universal.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B017D6882A3A4C2700FE6D1E /* libintl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libintl.a; path = ../universal/libintl.a; sourceTree = "<group>"; };
+		B017D6892A3A4C2700FE6D1E /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../universal/libslirp.a; sourceTree = "<group>"; };
+		B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../universal/libboost_program_options.a; sourceTree = "<group>"; };
+		B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "../universal/libglib-2.0.a"; sourceTree = "<group>"; };
 		B020F8A32785D30E0071D3C7 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stdafx.cpp; path = test/TestCPU6502/stdafx.cpp; sourceTree = SOURCE_ROOT; };
 		B020F8A42785D30E0071D3C7 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = test/TestCPU6502/stdafx.h; sourceTree = SOURCE_ROOT; };
 		B020F8A52785D30E0071D3C7 /* TestCPU6502.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCPU6502.cpp; path = test/TestCPU6502/TestCPU6502.cpp; sourceTree = SOURCE_ROOT; };
@@ -1277,11 +1276,24 @@
 				B00ECBB9279EEB600041E16C /* CoreMedia.framework in Frameworks */,
 				B00ECBBC279EEB600041E16C /* MetalKit.framework in Frameworks */,
 				B00ECBBB279EEB600041E16C /* libAppleWin.a in Frameworks */,
+				B017D6902A3A4C4500FE6D1E /* libStaticWrapper Universal.a in Frameworks */,
 				B061853527B7798700B6D04C /* libnufx.a in Frameworks */,
 				B061852227B75C7300B6D04C /* libdiskimg.a in Frameworks */,
 				B061852327B75C7300B6D04C /* libhfs.a in Frameworks */,
-				B00ECBE6279EEBAB0041E16C /* libboost_program_options.a in Frameworks */,
 				B00ECBC0279EEB600041E16C /* libpcap.tbd in Frameworks */,
+				B017D6912A3A4C5A00FE6D1E /* libiconv.tbd in Frameworks */,
+				B017D6922A3A4C6000FE6D1E /* libresolv.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B017D6782A3A4C1200FE6D1E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B017D68C2A3A4C2700FE6D1E /* libintl.a in Frameworks */,
+				B017D68F2A3A4C2700FE6D1E /* libglib-2.0.a in Frameworks */,
+				B017D68D2A3A4C2700FE6D1E /* libslirp.a in Frameworks */,
+				B017D68E2A3A4C2700FE6D1E /* libboost_program_options.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1395,6 +1407,7 @@
 				B061852C27B778EA00B6D04C /* libnufx.a */,
 				B0E55A5427B7844D003173F2 /* libyaml.a */,
 				B0E1DC80298874A800F61989 /* libStaticWrapper.a */,
+				B017D6802A3A4C1200FE6D1E /* libStaticWrapper Universal.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1918,6 +1931,10 @@
 		B09AB844277A282A0002A6C3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */,
+				B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */,
+				B017D6882A3A4C2700FE6D1E /* libintl.a */,
+				B017D6892A3A4C2700FE6D1E /* libslirp.a */,
 				B0E1DCA229887FA900F61989 /* libresolv.tbd */,
 				B0E1DC9E29887EE200F61989 /* libiconv.2.4.0.tbd */,
 				B0E1DC9D29887EE200F61989 /* libiconv.2.tbd */,
@@ -2234,15 +2251,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0DB46E82A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */,
-				B0F527112A2C1F2200288820 /* InspectorOutlineViewController.h in Headers */,
-				B0F527082A2C1F2200288820 /* DebuggerWindowController.h in Headers */,
-				B0F527102A2C1F2200288820 /* CapsuleView.h in Headers */,
-				B0F527152A2C1F2200288820 /* HexDigitFormatter.h in Headers */,
-				B0F5270E2A2C1F2200288820 /* SymbolTable.h in Headers */,
-				B0F527122A2C1F2200288820 /* NSColor+AppleWin.h in Headers */,
-				B0F527132A2C1F2200288820 /* ConsoleViewController.h in Headers */,
-				B0F527142A2C1F2200288820 /* DisassemblyTableViewController.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B017D6752A3A4C1200FE6D1E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2305,15 +2320,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0DB46E72A36E5A600B4E670 /* MemoryViewerWindowController.h in Headers */,
-				B0F527022A2C1F2100288820 /* InspectorOutlineViewController.h in Headers */,
-				B0F526F92A2C1F2100288820 /* DebuggerWindowController.h in Headers */,
-				B0F527012A2C1F2100288820 /* CapsuleView.h in Headers */,
-				B0F527062A2C1F2100288820 /* HexDigitFormatter.h in Headers */,
-				B0F526FF2A2C1F2100288820 /* SymbolTable.h in Headers */,
-				B0F527032A2C1F2100288820 /* NSColor+AppleWin.h in Headers */,
-				B0F527042A2C1F2100288820 /* ConsoleViewController.h in Headers */,
-				B0F527052A2C1F2100288820 /* DisassemblyTableViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2368,6 +2374,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B017D6942A3A4C8900FE6D1E /* PBXTargetDependency */,
 				B06184F127B759E100B6D04C /* PBXTargetDependency */,
 				B061853427B7796A00B6D04C /* PBXTargetDependency */,
 				B06184F327B759E100B6D04C /* PBXTargetDependency */,
@@ -2378,6 +2385,23 @@
 			productName = mariani;
 			productReference = B00ECBE4279EEB600041E16C /* Mariani.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B017D6742A3A4C1200FE6D1E /* StaticWrapper Universal */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B017D67D2A3A4C1200FE6D1E /* Build configuration list for PBXNativeTarget "StaticWrapper Universal" */;
+			buildPhases = (
+				B017D6752A3A4C1200FE6D1E /* Headers */,
+				B017D6762A3A4C1200FE6D1E /* Sources */,
+				B017D6782A3A4C1200FE6D1E /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "StaticWrapper Universal";
+			productName = StaticWrapper;
+			productReference = B017D6802A3A4C1200FE6D1E /* libStaticWrapper Universal.a */;
+			productType = "com.apple.product-type.library.static";
 		};
 		B032DE20277A0C23006DC0F7 /* Mariani */ = {
 			isa = PBXNativeTarget;
@@ -2595,6 +2619,7 @@
 				B06184FD27B75AE900B6D04C /* libhfs */,
 				B061852B27B778EA00B6D04C /* nufxlib */,
 				B0E1DC7F298874A800F61989 /* StaticWrapper */,
+				B017D6742A3A4C1200FE6D1E /* StaticWrapper Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -2908,6 +2933,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B017D6762A3A4C1200FE6D1E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B017D6772A3A4C1200FE6D1E /* StaticLibraryWrapper.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B032DE1D277A0C23006DC0F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3108,6 +3141,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B017D6942A3A4C8900FE6D1E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B017D6742A3A4C1200FE6D1E /* StaticWrapper Universal */;
+			targetProxy = B017D6932A3A4C8900FE6D1E /* PBXContainerItemProxy */;
+		};
 		B032DE35277A0C24006DC0F7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B032DE20277A0C23006DC0F7 /* Mariani */;
@@ -3330,7 +3368,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3366,10 +3404,50 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		B017D67E2A3A4C1200FE6D1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+					/usr/local/lib/slirp,
+					/opt/homebrew/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		B017D67F2A3A4C1200FE6D1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/lib,
+					/usr/local/lib/slirp,
+					/opt/homebrew/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -3530,7 +3608,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3570,7 +3648,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3817,6 +3895,15 @@
 			buildConfigurations = (
 				B00ECBE2279EEB600041E16C /* Debug */,
 				B00ECBE3279EEB600041E16C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B017D67D2A3A4C1200FE6D1E /* Build configuration list for PBXNativeTarget "StaticWrapper Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B017D67E2A3A4C1200FE6D1E /* Debug */,
+				B017D67F2A3A4C1200FE6D1E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

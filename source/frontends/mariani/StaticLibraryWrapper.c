@@ -10,6 +10,6 @@
 
 #pragma GCC diagnostic ignored "-Wunused-function"
 
-static void do_nothing()
+static void do_nothing(void)
 {
 }
