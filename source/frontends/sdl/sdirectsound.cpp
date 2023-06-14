@@ -91,7 +91,9 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     void close();
     bool isRunning() const;
 
+#ifndef USE_COREAUDIO
     uint8_t * mixBufferTo(uint8_t * stream);
+#endif
   };
 
   std::unordered_map<IDirectSoundBuffer *, std::shared_ptr<DirectSoundGenerator>> activeSoundGenerators;
@@ -122,9 +124,9 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
       dest += dwAudioBytes2;
     }
 
+#ifndef USE_COREAUDIO
     stream = mixBufferTo(stream);
 
-#ifndef USE_COREAUDIO
     const size_t gap = len - bytesRead;
     if (gap)
     {
@@ -233,9 +235,9 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     }
   }
 
+#ifndef USE_COREAUDIO
   uint8_t * DirectSoundGenerator::mixBufferTo(uint8_t * stream)
   {
-#ifndef USE_COREAUDIO
     // we could copy ADJUST_VOLUME from SDL_mixer.c and avoid all copying and (rare) race conditions
     const double logVolume = myBuffer->GetLogarithmicVolume();
     // same formula as QAudio::convertVolume()
@@ -246,10 +248,8 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     memset(stream, 0, len);
     SDL_MixAudioFormat(stream, myMixerBuffer.data(), myAudioSpec.format, len, svolume);
     return stream + len;
-#else
-    return 0;
-#endif // USE_COREAUDIO
   }
+#endif // USE_COREAUDIO
 
   void DirectSoundGenerator::writeAudio(const size_t ms)
   {
