@@ -16,18 +16,18 @@ But if what you want is a macOS command-line app, you can build that too with th
 - Disk image browser, including syntax-highlighted listings for Applesoft and Integer BASIC, as well as hex viewer for other file types
 - Floppy and hard disk image creation
 - Full-screen support
-- Debugger in a separate window
+- Debugger and memory viewer in separate windows
 
 ### Known Issues
 
-Mariani should be broadly useful, so please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into. The following AppleWin features are not yet supported:
+Mariani should now be broadly useful, so please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into. The following AppleWin features are not yet supported:
 
 - [Load/Save State](https://github.com/sh95014/AppleWin/issues/13)
 - [Numeric keypad joystick emulation](https://github.com/sh95014/AppleWin/issues/10)
 
 ### Roadmap
 
-A [debugger](/source/frontends/mariani/debugger/README.md) is now available.
+A [debugger](/source/frontends/mariani/debugger/README.md) and memory viewer are now available.
 
 Experimental support for printers is available in a [branch](https://github.com/sh95014/AppleWin/tree/printer-support). It needs considerable [upstream support](https://github.com/AppleWin/AppleWin/issues/1026) and is unmaintained.
 
