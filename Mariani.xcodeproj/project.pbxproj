@@ -215,16 +215,18 @@
 		B00ECBDE279EEB600041E16C /* Apple2e_Enhanced.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE702782984E006E36F9 /* Apple2e_Enhanced.rom */; };
 		B00ECBDF279EEB600041E16C /* Apple2_JPlus.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE672782984E006E36F9 /* Apple2_JPlus.rom */; };
 		B017D6772A3A4C1200FE6D1E /* StaticLibraryWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */; };
-		B017D68C2A3A4C2700FE6D1E /* libintl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6882A3A4C2700FE6D1E /* libintl.a */; };
-		B017D68D2A3A4C2700FE6D1E /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6892A3A4C2700FE6D1E /* libslirp.a */; };
-		B017D68E2A3A4C2700FE6D1E /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */; };
-		B017D68F2A3A4C2700FE6D1E /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */; };
-		B017D6902A3A4C4500FE6D1E /* libStaticWrapper Universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6802A3A4C1200FE6D1E /* libStaticWrapper Universal.a */; };
 		B017D6912A3A4C5A00FE6D1E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC9B29887ED000F61989 /* libiconv.tbd */; };
 		B017D6922A3A4C6000FE6D1E /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DCA229887FA900F61989 /* libresolv.tbd */; };
+		B017D6962A3A557800FE6D1E /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */; };
+		B017D6972A3A557800FE6D1E /* libintl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6882A3A4C2700FE6D1E /* libintl.a */; };
+		B017D6992A3A55E900FE6D1E /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		B017D69B2A3A563C00FE6D1E /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6892A3A4C2700FE6D1E /* libslirp.a */; };
 		B020F8A62785D30E0071D3C7 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B020F8A32785D30E0071D3C7 /* stdafx.cpp */; };
 		B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8A82785EA440071D3C7 /* AVFoundation.framework */; };
 		B020F8AB2785F3920071D3C7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8AA2785F3920071D3C7 /* CoreMedia.framework */; };
+		B0211CF92A3A5C310057ECBE /* libStaticWrapper Universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6802A3A4C1200FE6D1E /* libStaticWrapper Universal.a */; };
+		B0211CFA2A3A5EF50057ECBE /* MemoryViewerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0211CFD2A3A5EF50057ECBE /* MemoryViewerWindow.xib */; };
+		B0211CFB2A3A5EF50057ECBE /* MemoryViewerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0211CFD2A3A5EF50057ECBE /* MemoryViewerWindow.xib */; };
 		B032DE26277A0C23006DC0F7 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B032DE25277A0C23006DC0F7 /* AppDelegate.mm */; };
 		B032DE28277A0C24006DC0F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B032DE27277A0C24006DC0F7 /* Assets.xcassets */; };
 		B032DE2B277A0C24006DC0F7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B032DE29277A0C24006DC0F7 /* MainMenu.xib */; };
@@ -441,8 +443,6 @@
 		B0BAB4AC29B42CAA008F54D7 /* MockingboardCardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A929B42CAA008F54D7 /* MockingboardCardManager.h */; };
 		B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
 		B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
-		B0DB46EB2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */; };
-		B0DB46EC2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */; };
 		B0E1DC8C298874EF00F61989 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC8B298874EF00F61989 /* libboost_program_options.a */; };
 		B0E1DC8E2988751000F61989 /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC8D2988751000F61989 /* libslirp.a */; };
 		B0E1DC8F2988753900F61989 /* libStaticWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC80298874A800F61989 /* libStaticWrapper.a */; };
@@ -718,6 +718,8 @@
 		B020F8A52785D30E0071D3C7 /* TestCPU6502.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCPU6502.cpp; path = test/TestCPU6502/TestCPU6502.cpp; sourceTree = SOURCE_ROOT; };
 		B020F8A82785EA440071D3C7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B020F8AA2785F3920071D3C7 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		B0211CFC2A3A5EF50057ECBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MemoryViewerWindow.xib; sourceTree = "<group>"; };
+		B0211CFF2A3A5F010057ECBE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/MemoryViewerWindow.strings"; sourceTree = "<group>"; };
 		B032DE21277A0C23006DC0F7 /* Mariani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mariani.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B032DE24277A0C23006DC0F7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B032DE25277A0C23006DC0F7 /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -1203,7 +1205,6 @@
 		B0D1C3C827B45E5600C0BF71 /* data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = data.c; path = source/frontends/mariani/CiderPress/diskimg/libhfs/data.c; sourceTree = "<group>"; };
 		B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MemoryViewerWindowController.h; sourceTree = "<group>"; };
 		B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MemoryViewerWindowController.mn; sourceTree = "<group>"; };
-		B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MemoryViewerWindow.xib; sourceTree = "<group>"; };
 		B0E1DC80298874A800F61989 /* libStaticWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStaticWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0E1DC8B298874EF00F61989 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../../../../usr/local/Cellar/boost/1.76.0/lib/libboost_program_options.a; sourceTree = "<group>"; };
 		B0E1DC8D2988751000F61989 /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../../../../usr/local/Cellar/libslirp/4.7.0/lib/libslirp.a; sourceTree = "<group>"; };
@@ -1276,7 +1277,7 @@
 				B00ECBB9279EEB600041E16C /* CoreMedia.framework in Frameworks */,
 				B00ECBBC279EEB600041E16C /* MetalKit.framework in Frameworks */,
 				B00ECBBB279EEB600041E16C /* libAppleWin.a in Frameworks */,
-				B017D6902A3A4C4500FE6D1E /* libStaticWrapper Universal.a in Frameworks */,
+				B0211CF92A3A5C310057ECBE /* libStaticWrapper Universal.a in Frameworks */,
 				B061853527B7798700B6D04C /* libnufx.a in Frameworks */,
 				B061852227B75C7300B6D04C /* libdiskimg.a in Frameworks */,
 				B061852327B75C7300B6D04C /* libhfs.a in Frameworks */,
@@ -1290,10 +1291,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B017D68C2A3A4C2700FE6D1E /* libintl.a in Frameworks */,
-				B017D68F2A3A4C2700FE6D1E /* libglib-2.0.a in Frameworks */,
-				B017D68D2A3A4C2700FE6D1E /* libslirp.a in Frameworks */,
-				B017D68E2A3A4C2700FE6D1E /* libboost_program_options.a in Frameworks */,
+				B017D6972A3A557800FE6D1E /* libintl.a in Frameworks */,
+				B017D6962A3A557800FE6D1E /* libglib-2.0.a in Frameworks */,
+				B017D69B2A3A563C00FE6D1E /* libslirp.a in Frameworks */,
+				B017D6992A3A55E900FE6D1E /* libboost_program_options.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2117,7 +2118,7 @@
 			children = (
 				B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */,
 				B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */,
-				B0DB46E62A36E5A600B4E670 /* MemoryViewerWindow.xib */,
+				B0211CFD2A3A5EF50057ECBE /* MemoryViewerWindow.xib */,
 			);
 			path = "memory viewer";
 			sourceTree = "<group>";
@@ -2714,7 +2715,7 @@
 				B00ECBDB279EEB600041E16C /* SSC.rom in Resources */,
 				B00ECBDC279EEB600041E16C /* Apple2.rom in Resources */,
 				B00ECBDD279EEB600041E16C /* Parallel.rom in Resources */,
-				B0DB46EC2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */,
+				B0211CFB2A3A5EF50057ECBE /* MemoryViewerWindow.xib in Resources */,
 				B00ECBDE279EEB600041E16C /* Apple2e_Enhanced.rom in Resources */,
 				B00ECBDF279EEB600041E16C /* Apple2_JPlus.rom in Resources */,
 				B0F43FDA295E4BAD00E79AD7 /* CHARSET8M.bmp in Resources */,
@@ -2758,7 +2759,7 @@
 				B045FE812782984F006E36F9 /* SSC.rom in Resources */,
 				B045FE852782984F006E36F9 /* Apple2.rom in Resources */,
 				B045FE832782984F006E36F9 /* Parallel.rom in Resources */,
-				B0DB46EB2A36E5A600B4E670 /* MemoryViewerWindow.xib in Resources */,
+				B0211CFA2A3A5EF50057ECBE /* MemoryViewerWindow.xib in Resources */,
 				B045FE862782984F006E36F9 /* Apple2e_Enhanced.rom in Resources */,
 				B045FE7D2782984F006E36F9 /* Apple2_JPlus.rom in Resources */,
 				B0F43FD9295E4BAD00E79AD7 /* CHARSET8M.bmp in Resources */,
@@ -3229,6 +3230,15 @@
 			name = InspectorPanels.xib;
 			sourceTree = "<group>";
 		};
+		B0211CFD2A3A5EF50057ECBE /* MemoryViewerWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B0211CFC2A3A5EF50057ECBE /* Base */,
+				B0211CFF2A3A5F010057ECBE /* zh-Hant */,
+			);
+			name = MemoryViewerWindow.xib;
+			sourceTree = "<group>";
+		};
 		B032DE29277A0C24006DC0F7 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3423,9 +3433,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/lib,
-					/usr/local/lib/slirp,
-					/opt/homebrew/lib,
+					../universal/,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3441,9 +3449,7 @@
 				EXECUTABLE_PREFIX = lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/lib,
-					/usr/local/lib/slirp,
-					/opt/homebrew/lib,
+					../universal/,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3570,7 +3576,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
