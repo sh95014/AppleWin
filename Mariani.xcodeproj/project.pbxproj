@@ -1231,9 +1231,7 @@
 		B0F43FD4295E4BAD00E79AD7 /* CHARSET8M.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET8M.bmp; path = resource/CHARSET8M.bmp; sourceTree = SOURCE_ROOT; };
 		B0F43FD5295E4BAD00E79AD7 /* CHARSET4.BMP */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET4.BMP; path = resource/CHARSET4.BMP; sourceTree = SOURCE_ROOT; };
 		B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET82.bmp; path = resource/CHARSET82.bmp; sourceTree = SOURCE_ROOT; };
-		B0F526DA2A2C0EB500288820 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Debugger.strings; sourceTree = "<group>"; };
 		B0F526DC2A2C0EB600288820 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Debugger.strings"; sourceTree = "<group>"; };
-		B0F526DE2A2C0EC500288820 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InspectorPanels.strings; sourceTree = "<group>"; };
 		B0F526E02A2C0EC600288820 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InspectorPanels.strings"; sourceTree = "<group>"; };
 		B0F84FF427D1B3F30015F642 /* Uthernet2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Uthernet2.h; path = source/Uthernet2.h; sourceTree = "<group>"; };
 		B0F84FF527D1B3F30015F642 /* Uthernet1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Uthernet1.h; path = source/Uthernet1.h; sourceTree = "<group>"; };
@@ -3224,7 +3222,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				B00BE9EB2A291BD100F288F9 /* Base */,
-				B0F526DE2A2C0EC500288820 /* en */,
 				B0F526E02A2C0EC600288820 /* zh-Hant */,
 			);
 			name = InspectorPanels.xib;
@@ -3288,7 +3285,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				B0F97BA92A259F1800461923 /* Base */,
-				B0F526DA2A2C0EB500288820 /* en */,
 				B0F526DC2A2C0EB600288820 /* zh-Hant */,
 			);
 			name = Debugger.xib;
