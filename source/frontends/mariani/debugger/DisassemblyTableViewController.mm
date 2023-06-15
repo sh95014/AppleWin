@@ -20,6 +20,8 @@
 #define DISASM_FONT                 [NSFont monospacedSystemFontOfSize:10 weight:NSFontWeightRegular]
 #define FG_DISASM_DEFAULT           FG_DISASM_OPCODE
 
+#define BP_INDICATOR_MARGIN         2
+
 // Order needs to match Debugger.xib
 enum DisassemblyTableColumns {
     DisassemblyBreakpointColumn,
@@ -46,6 +48,15 @@ enum DisassemblyTableColumns {
 
 @implementation DisassemblyLine
 
+@end
+
+@interface IndicatorView : NSView
+@end
+
+@implementation IndicatorView
+- (BOOL)wantsLayer {
+    return YES;
+}
 @end
 
 @implementation NSTableView (Centering)
@@ -117,6 +128,7 @@ enum DisassemblyTableColumns {
             [self toggleBreakpointAtAddress:disasmLine.address];
         }
         [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:DisassemblyBreakpointColumn]];
+        [self updateIndicators];
     }
 }
 
@@ -130,6 +142,7 @@ enum DisassemblyTableColumns {
             NSString *cmd = [NSString stringWithFormat:@"bpc %ld", index];
             [self.delegate sendDebuggerCommand:cmd refresh:YES];
         }
+        [self updateIndicators];
     }
 }
 
@@ -142,6 +155,7 @@ enum DisassemblyTableColumns {
         if ([self.delegate respondsToSelector:@selector(refreshBookmarks)]) {
             [self.delegate refreshBookmarks];
         }
+        [self updateIndicators];
     }
 }
 
@@ -171,6 +185,7 @@ enum DisassemblyTableColumns {
     if (syncPC) {
         [self.tableView scrollRowToCenter:self.pcRow];
     }
+    [self updateIndicators];
 }
 
 - (void)recenterAtAddress:(NSUInteger)address {
@@ -184,6 +199,7 @@ enum DisassemblyTableColumns {
         [self.tableView selectRowIndexes:indexSet byExtendingSelection:NO];
         [self.tableView scrollRowToCenter:row];
     }
+    [self updateIndicators];
 }
 
 - (void)selectBookmark:(NSInteger)index {
@@ -541,6 +557,46 @@ enum DisassemblyTableColumns {
         *indexPointer = NSNotFound;
     }
     return NULL;
+}
+
+- (void)updateIndicators {
+    NSScroller *scroller = self.view.enclosingScrollView.verticalScroller;
+    
+    // throw them all away
+    for (NSView *view in scroller.subviews.copy) {
+        if ([view isKindOfClass:[IndicatorView class]]) {
+            [view removeFromSuperview];
+        }
+    }
+    
+    // make new ones
+    for (NSInteger i = 0; i < MAX_BREAKPOINTS; i++) {
+        Breakpoint_t *bp = g_aBreakpoints + i;
+        if (bp->bSet && bp->nLength) {
+            NSInteger row = [self rowWithAddress:bp->nAddress];
+            
+            CGFloat y = floorf(BP_INDICATOR_MARGIN + ((double)row / self.disasmLines.count) * (scroller.frame.size.height - BP_INDICATOR_MARGIN * 2));
+            IndicatorView *bpView = [[IndicatorView alloc] initWithFrame:CGRectMake(0, y, scroller.frame.size.width, 1)];
+            NSColor *color = [[NSColor colorForType:NSColorTypeBreakpointBackground] colorWithAlphaComponent:0.5];
+            bpView.wantsLayer = YES;
+            bpView.layer.backgroundColor = color.CGColor;
+            [scroller addSubview:bpView];
+        }
+    }
+    
+    for (NSInteger i = 0; i < MAX_BOOKMARKS; i++) {
+        Breakpoint_t *bm = g_aBookmarks + i;
+        if (bm->bSet) {
+            NSInteger row = [self rowWithAddress:bm->nAddress];
+            
+            CGFloat y = floorf(BP_INDICATOR_MARGIN + ((double)row / self.disasmLines.count) * (scroller.frame.size.height - BP_INDICATOR_MARGIN * 2));
+            IndicatorView *bpView = [[IndicatorView alloc] initWithFrame:CGRectMake(0, y, scroller.frame.size.width, 1)];
+            NSColor *color = [[NSColor colorForType:NSColorTypeBookmarkBackground] colorWithAlphaComponent:0.5];
+            bpView.wantsLayer = YES;
+            bpView.layer.backgroundColor = color.CGColor;
+            [scroller addSubview:bpView];
+        }
+    }
 }
 
 - (void)toggleBookmarkAtAddress:(WORD)address {
