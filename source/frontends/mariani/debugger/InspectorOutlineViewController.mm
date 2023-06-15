@@ -287,6 +287,9 @@ static NSArray *topLevelLabels = @[
         else if (textField == self.registerSPTextField && [textField hexValue] != regs.sp) {
             cmd = [NSString stringWithFormat:@"r s %@", textField.stringValue];
         }
+        else if (textField == self.registerPSTextField && [textField hexValue] != regs.ps) {
+            cmd = [NSString stringWithFormat:@"r p %@", textField.stringValue];
+        }
         if (cmd != nil && [self.delegate respondsToSelector:@selector(sendDebuggerCommand:refresh:)]) {
             [self.delegate sendDebuggerCommand:cmd refresh:YES];
             [self refresh];
