@@ -149,6 +149,68 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
   {
 #ifndef USE_COREAUDIO
     SDL_zero(myAudioSpec);
+#else
+    AudioComponentDescription desc = { 0 };
+    desc.componentType = kAudioUnitType_Output;
+    desc.componentSubType = kAudioUnitSubType_DefaultOutput;
+    desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+    
+    AudioComponent comp = AudioComponentFindNext(NULL, &desc);
+    if (comp == NULL)
+    {
+      fprintf(stderr, "can't find audio component\n");
+      return;
+    }
+    
+    if (AudioComponentInstanceNew(comp, &outputUnit) != noErr)
+    {
+      fprintf(stderr, "can't create output unit\n");
+      return;
+    }
+    
+    AudioStreamBasicDescription absd = { 0 };
+    absd.mSampleRate = myBuffer->sampleRate;
+    absd.mFormatID = kAudioFormatLinearPCM;
+    absd.mFormatFlags = kAudioFormatFlagIsSignedInteger;
+    absd.mFramesPerPacket = 1;
+    absd.mChannelsPerFrame = (UInt32)myBuffer->channels;
+    absd.mBitsPerChannel = sizeof(SInt16) * CHAR_BIT;
+    absd.mBytesPerPacket = sizeof(SInt16) * (UInt32)myBuffer->channels;
+    absd.mBytesPerFrame = sizeof(SInt16) * (UInt32)myBuffer->channels;
+    if (AudioUnitSetProperty(outputUnit,
+                             kAudioUnitProperty_StreamFormat,
+                             kAudioUnitScope_Input,
+                             0,
+                             &absd,
+                             sizeof(absd))) {
+      fprintf(stderr, "can't set stream format\n");
+      return;
+    }
+    
+    AURenderCallbackStruct input;
+    input.inputProc = DirectSoundRenderProc;
+    input.inputProcRefCon = this;
+    if (AudioUnitSetProperty(outputUnit,
+                             kAudioUnitProperty_SetRenderCallback,
+                             kAudioUnitScope_Input,
+                             0,
+                             &input,
+                             sizeof(input)) != noErr)
+    {
+      fprintf(stderr, "can't set callback property\n");
+      return;
+    }
+    
+    setVolumeIfNecessary();
+    
+    if (AudioUnitInitialize(outputUnit) != noErr)
+    {
+      fprintf(stderr, "can't initialize output unit\n");
+      return;
+    }
+    
+    OSStatus status = AudioOutputUnitStart(outputUnit);
+    fprintf(stderr, "output unit %p, status %d\n", outputUnit, status);
 #endif
   }
 
@@ -287,73 +349,6 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
       SDL_PauseAudioDevice(myAudioDevice, 0);
     }
-#else
-    if (outputUnit)
-    {
-      return;
-    }
-    
-    AudioComponentDescription desc = { 0 };
-    desc.componentType = kAudioUnitType_Output;
-    desc.componentSubType = kAudioUnitSubType_DefaultOutput;
-    desc.componentManufacturer = kAudioUnitManufacturer_Apple;
-    
-    AudioComponent comp = AudioComponentFindNext(NULL, &desc);
-    if (comp == NULL)
-    {
-      fprintf(stderr, "can't find audio component\n");
-      return;
-    }
-    
-    if (AudioComponentInstanceNew(comp, &outputUnit) != noErr)
-    {
-      fprintf(stderr, "can't create output unit\n");
-      return;
-    }
-    
-    AudioStreamBasicDescription absd = { 0 };
-    absd.mSampleRate = myBuffer->sampleRate;
-    absd.mFormatID = kAudioFormatLinearPCM;
-    absd.mFormatFlags = kAudioFormatFlagIsSignedInteger;
-    absd.mFramesPerPacket = 1;
-    absd.mChannelsPerFrame = (UInt32)myBuffer->channels;
-    absd.mBitsPerChannel = sizeof(SInt16) * CHAR_BIT;
-    absd.mBytesPerPacket = sizeof(SInt16) * (UInt32)myBuffer->channels;
-    absd.mBytesPerFrame = sizeof(SInt16) * (UInt32)myBuffer->channels;
-    if (AudioUnitSetProperty(outputUnit,
-                             kAudioUnitProperty_StreamFormat,
-                             kAudioUnitScope_Input,
-                             0,
-                             &absd,
-                             sizeof(absd))) {
-      fprintf(stderr, "can't set stream format\n");
-      return;
-    }
-    
-    AURenderCallbackStruct input;
-    input.inputProc = DirectSoundRenderProc;
-    input.inputProcRefCon = this;
-    if (AudioUnitSetProperty(outputUnit,
-                             kAudioUnitProperty_SetRenderCallback,
-                             kAudioUnitScope_Input,
-                             0,
-                             &input,
-                             sizeof(input)) != noErr)
-    {
-      fprintf(stderr, "can't set callback property\n");
-      return;
-    }
-    
-    setVolumeIfNecessary();
-    
-    if (AudioUnitInitialize(outputUnit) != noErr)
-    {
-      fprintf(stderr, "can't initialize output unit\n");
-      return;
-    }
-    
-    OSStatus status = AudioOutputUnitStart(outputUnit);
-    fprintf(stderr, "output unit %p, status %d\n", outputUnit, status);
 #endif // USE_COREAUDIO
   }
 
