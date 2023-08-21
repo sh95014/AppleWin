@@ -53,7 +53,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MAKE_VERSION(a,b,c,d) ((a<<24) | (b<<16) | (c<<8) | (d))
 
 	// See /docs/Debugger_Changelog.txt for full details
-	const int DEBUGGER_VERSION = MAKE_VERSION(2,9,1,26);
+	const int DEBUGGER_VERSION = MAKE_VERSION(2,9,2,0);
 
 
 // Public _________________________________________________________________________________________
@@ -5100,8 +5100,8 @@ Update_t CmdNTSC (int nArgs)
 					ConsoleBufferPush( pPrefixText );	// TODO: Add a ": " separator
 
 #if _DEBUG
-					LogOutput( "Filename.length.1: %d\n", len1 );
-					LogOutput( "Filename.length.2: %d\n", len2 );
+					LogOutput( "Filename.length.1: %" SIZE_T_FMT "\n", len1 );
+					LogOutput( "Filename.length.2: %" SIZE_T_FMT "\n", len2 );
 					OutputDebugString( sPaletteFilePath.c_str() );
 #endif
 					// File path is too long
