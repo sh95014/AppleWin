@@ -304,12 +304,23 @@
 
     if (g_nAppMode == MODE_DEBUG) {
         NSString *toolTip = NSLocalizedString(@"Resume Execution", @"");
-        self.toggleRunningButton.image = [NSImage imageWithSystemSymbolName:@"forward.frame" accessibilityDescription:toolTip];
+        if (@available(macOS 11.0, *)) {
+            self.toggleRunningButton.image = [NSImage imageWithSystemSymbolName:@"forward.frame" accessibilityDescription:toolTip];
+        }
+        else {
+            self.toggleRunningButton.title = NSLocalizedString(@"Resume", @"resume execution");
+        }
         self.toggleRunningButton.toolTip = toolTip;
         self.toggleRunningButton.state = NSControlStateValueOff;
-    } else {
+    }
+    else {
         NSString *toolTip = NSLocalizedString(@"Pause Execution", @"");
-        self.toggleRunningButton.image = [NSImage imageWithSystemSymbolName:@"pause" accessibilityDescription:toolTip];
+        if (@available(macOS 11.0, *)) {
+            self.toggleRunningButton.image = [NSImage imageWithSystemSymbolName:@"pause" accessibilityDescription:toolTip];
+        }
+        else {
+            self.toggleRunningButton.title = NSLocalizedString(@"Pause", @"pause execution");
+        }
         self.toggleRunningButton.toolTip = toolTip;
         self.toggleRunningButton.state = NSControlStateValueOn;
     }

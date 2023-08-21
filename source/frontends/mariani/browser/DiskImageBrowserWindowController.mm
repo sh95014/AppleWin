@@ -310,7 +310,8 @@ NSArray *fileTypeStrings = @[
         size = file->GetDataLength();
     } else if (file->GetRsrcLength() >= 0) {
         size = file->GetDataLength() + file->GetRsrcLength();
-    } else {
+    }
+    else {
         size = file->GetDataLength();
     }
     if (size > 999999999) {

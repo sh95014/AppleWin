@@ -185,7 +185,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     alert.messageText = NSLocalizedString(@"Ending Emulation", @"");
     alert.informativeText = NSLocalizedString(@"This will end the emulation and any unsaved changes will be lost.", @"");
     alert.alertStyle = NSAlertStyleWarning;
-    alert.icon = [NSImage imageWithSystemSymbolName:@"hand.raised" accessibilityDescription:@""];
+    if (@available(macOS 11.0, *)) {
+        alert.icon = [NSImage imageWithSystemSymbolName:@"hand.raised" accessibilityDescription:@""];
+    }
+    else {
+        // FIXME: fallback
+    }
     [alert addButtonWithTitle:NSLocalizedString(@"End Emulation", @"")];
     [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
     [alert beginSheetModalForWindow:sender completionHandler:^(NSModalResponse returnCode) {
@@ -243,15 +248,30 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 - (void)screenRecordingDidTick {
-    self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle.fill" accessibilityDescription:@""];
+    if (@available(macOS 11.0, *)) {
+        self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle.fill" accessibilityDescription:@""];
+    }
+    else {
+        self.screenRecordingButton.title = @"🅡";
+    }
 }
 
 - (void)screenRecordingDidTock {
-    self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
+    if (@available(macOS 11.0, *)) {
+        self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
+    }
+    else {
+        self.screenRecordingButton.title = @"Ⓡ";
+    }
 }
 
 - (void)screenRecordingDidStop {
-    self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
+    if (@available(macOS 11.0, *)) {
+        self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
+    }
+    else {
+        self.screenRecordingButton.title = @"Ⓡ";
+    }
     self.screenRecordingButton.contentTintColor = [NSColor secondaryLabelColor];
 }
 
@@ -850,7 +870,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     switch (type & 0x000000F0) {
         case MB_ICONINFORMATION:  // also MB_ICONASTERISK
             alert.alertStyle = NSAlertStyleInformational;
-            alert.icon = [NSImage imageWithSystemSymbolName:@"info.circle" accessibilityDescription:@""];
+            if (@available(macOS 11.0, *)) {
+                alert.icon = [NSImage imageWithSystemSymbolName:@"info.circle" accessibilityDescription:@""];
+            }
+            else {
+                // FIXME: fallback
+            }
             break;
         case MB_ICONSTOP:  // also MB_ICONHAND
             alert.alertStyle = NSAlertStyleCritical;
@@ -858,11 +883,21 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             break;
         case MB_ICONQUESTION:
             alert.alertStyle = NSAlertStyleWarning;
-            alert.icon = [NSImage imageWithSystemSymbolName:@"questionmark.circle" accessibilityDescription:@""];
+            if (@available(macOS 11.0, *)) {
+                alert.icon = [NSImage imageWithSystemSymbolName:@"questionmark.circle" accessibilityDescription:@""];
+            }
+            else {
+                // FIXME: fallback
+            }
             break;
         default:  // MB_ICONWARNING
             alert.alertStyle = NSAlertStyleWarning;
-            alert.icon = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle" accessibilityDescription:@""];
+            if (@available(macOS 11.0, *)) {
+                alert.icon = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle" accessibilityDescription:@""];
+            }
+            else {
+                // FIXME: fallback
+            }
             break;
     }
     
@@ -918,11 +953,16 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             if (cardManager.QuerySlot(slot) == CT_Disk2) {
                 Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard *>(cardManager.GetObj(slot));
                 if (card->IsDriveEmpty(drive)) {
-                    if ([self.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
-                        driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.dotted" accessibilityDescription:@""];
+                    if (@available(macOS 11.0, *)) {
+                        if ([self.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
+                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.dotted" accessibilityDescription:@""];
+                        }
+                        else {
+                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.dashed" accessibilityDescription:@""];
+                        }
                     }
                     else {
-                        driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.dashed" accessibilityDescription:@""];
+                        driveLightButton.title = @"◌";
                     }
                     driveLightButton.contentTintColor = [NSColor secondaryLabelColor];
                 }
@@ -931,19 +971,39 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                     card->GetLightStatus(&status[0], &status[1]);
                     if (status[drive] != DISK_STATUS_OFF) {
                         if (card->GetProtect(drive)) {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"lock.circle.fill" accessibilityDescription:@""];
+                            if (@available(macOS 11.0, *)) {
+                                driveLightButton.image = [NSImage imageWithSystemSymbolName:@"lock.circle.fill" accessibilityDescription:@""];
+                            }
+                            else {
+                                driveLightButton.title = @"🔒";
+                            }
                         }
                         else {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
+                            if (@available(macOS 11.0, *)) {
+                                driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
+                            }
+                            else {
+                                driveLightButton.title = @"●";
+                            }
                         }
                         driveLightButton.contentTintColor = [NSColor controlAccentColor];
                     }
                     else {
                         if (card->GetProtect(drive)) {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"lock.circle" accessibilityDescription:@""];
+                            if (@available(macOS 11.0, *)) {
+                                driveLightButton.image = [NSImage imageWithSystemSymbolName:@"lock.circle" accessibilityDescription:@""];
+                            }
+                            else {
+                                driveLightButton.title = @"🔒";
+                            }
                         }
                         else {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
+                            if (@available(macOS 11.0, *)) {
+                                driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
+                            }
+                            else {
+                                driveLightButton.title = @"○";
+                            }
                         }
                         driveLightButton.contentTintColor = [NSColor secondaryLabelColor];
                     }
@@ -954,11 +1014,21 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 Disk_Status_e status;
                 card->GetLightStatus(&status);
                 if (status != DISK_STATUS_OFF) {
-                    driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
+                    if (@available(macOS 11.0, *)) {
+                        driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
+                    }
+                    else {
+                        driveLightButton.title = @"●";
+                    }
                     driveLightButton.contentTintColor = [NSColor controlAccentColor];
                 }
                 else {
-                    driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
+                    if (@available(macOS 11.0, *)) {
+                        driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
+                    }
+                    else {
+                        driveLightButton.title = @"○";
+                    }
                     driveLightButton.contentTintColor = [NSColor secondaryLabelColor];
                 }
             }

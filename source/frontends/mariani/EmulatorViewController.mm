@@ -192,14 +192,14 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         self.savedAppMode = g_nAppMode;
     }
     
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
     NSDate *start = [NSDate now];
 #endif
     
     if (self.delegate == nil || [self.delegate shouldPlayAudio]) {
         sa2::writeAudio(options.audioBuffer);
     }
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
     NSTimeInterval audioWriteTimeOffset = -[start timeIntervalSinceNow];
 #endif
 
@@ -208,12 +208,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     if (quit) {
         [self.delegate terminateWithReason:@"requested by frame"];
     }
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
     NSTimeInterval eventProcessingTimeOffset = -[start timeIntervalSinceNow];
 #endif
 
     frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
     NSTimeInterval executionTimeOffset = -[start timeIntervalSinceNow];
 #endif
 
@@ -235,7 +235,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     }
 #endif // SHOW_EMULATED_CPU_SPEED
     
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
     NSTimeInterval duration = -[start timeIntervalSinceNow];
     if (duration > 1.0 / TARGET_FPS) {
         // oops, took too long
@@ -546,7 +546,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)takeScreenshotWithCompletion:(void (^)(NSData *pngData))completion {
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
     NSDate *start = [NSDate now];
 #endif
     
@@ -557,13 +557,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     GetVideo().Video_MakeScreenShot(memStream, Video::SCREENSHOT_560x384);
     fclose(memStream);
 
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
     NSTimeInterval duration = -[start timeIntervalSinceNow];
     NSLog(@"Screenshot took: %f ms", duration * 1000);
 #endif // DEBUG
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
         NSDate *start = [NSDate now];
 #endif
         // ...and then convert it to PNG for saving
@@ -573,7 +573,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [newRep setSize:[image size]];
         NSData *pngData = [newRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
         free(buffer);
-#ifdef DEBUG
+#if defined(DEBUG) && __MAC_OS_X_VERSION_MIN_REQUIRED >= 101500
         NSTimeInterval duration = -[start timeIntervalSinceNow];
         NSLog(@"Screenshot converted to PNG, PNG conversion took %f ms", duration * 1000);
 #endif // DEBUG

@@ -10,6 +10,7 @@
 #import "Debugger_Types.h"
 #import "Debugger_Console.h"
 #import "NSColor+AppleWin.h"
+#import "NSFont+Mariani.h"
 
 @interface ConsoleViewController ()
 
@@ -73,7 +74,7 @@ static NSString *mouseTextMapping = @"⬉⌛︎✓☑︎↵�←…↓↑
     __block NSColor *color = [NSColor colorForType:NSColorTypeConsoleOutputDefault];
     
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary: @{
-        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:[NSFont systemFontSize] weight:NSFontWeightRegular],
+        NSFontAttributeName : [NSFont myMonospacedSystemFontOfSize:[NSFont systemFontSize] weight:NSFontWeightRegular],
     }];
 
     void (^emit)(char *) = ^(char *charBuffer) {

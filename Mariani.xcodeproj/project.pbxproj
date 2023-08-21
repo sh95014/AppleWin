@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9792B8C32A940FEC0092C235 /* NSFont+Mariani.h in Headers */ = {isa = PBXBuildFile; fileRef = 9792B8C12A940FEC0092C235 /* NSFont+Mariani.h */; };
+		9792B8C42A940FEC0092C235 /* NSFont+Mariani.h in Headers */ = {isa = PBXBuildFile; fileRef = 9792B8C12A940FEC0092C235 /* NSFont+Mariani.h */; };
+		9792B8C52A940FEC0092C235 /* NSFont+Mariani.m in Sources */ = {isa = PBXBuildFile; fileRef = 9792B8C22A940FEC0092C235 /* NSFont+Mariani.m */; };
+		9792B8C62A940FEC0092C235 /* NSFont+Mariani.m in Sources */ = {isa = PBXBuildFile; fileRef = 9792B8C22A940FEC0092C235 /* NSFont+Mariani.m */; };
 		B0098C73277E133D00F38E0C /* tfearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB835277A22530002A6C3 /* tfearch.cpp */; };
 		B0098C74277E133D00F38E0C /* tfesupp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB833277A22530002A6C3 /* tfesupp.cpp */; };
 		B0098C76277E140100F38E0C /* CmdLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB643277A14DB0002A6C3 /* CmdLine.cpp */; };
@@ -695,6 +699,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9792B8C12A940FEC0092C235 /* NSFont+Mariani.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSFont+Mariani.h"; sourceTree = "<group>"; };
+		9792B8C22A940FEC0092C235 /* NSFont+Mariani.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSFont+Mariani.m"; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B00BE9CC2A271C5700F288F9 /* NSColor+AppleWin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSColor+AppleWin.h"; sourceTree = "<group>"; };
 		B00BE9CD2A271C5700F288F9 /* NSColor+AppleWin.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = "NSColor+AppleWin.mm"; sourceTree = "<group>"; };
@@ -1431,6 +1437,8 @@
 				B049E8A6277C4F6D00FC14A3 /* Shaders.metal */,
 				B0689D152781984F0029EB7D /* UserDefaults.h */,
 				B0689D162781984F0029EB7D /* UserDefaults.m */,
+				9792B8C12A940FEC0092C235 /* NSFont+Mariani.h */,
+				9792B8C22A940FEC0092C235 /* NSFont+Mariani.m */,
 				B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */,
 				B0DB46E22A36E42600B4E670 /* preferences */,
 				B0F526F42A2C1E0200288820 /* browser */,
@@ -2250,6 +2258,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9792B8C42A940FEC0092C235 /* NSFont+Mariani.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2319,6 +2328,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9792B8C32A940FEC0092C235 /* NSFont+Mariani.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2879,6 +2889,7 @@
 				B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */,
 				B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */,
 				B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
+				9792B8C62A940FEC0092C235 /* NSFont+Mariani.m in Sources */,
 				B00ECB81279EEB600041E16C /* main.m in Sources */,
 				B00ECB82279EEB600041E16C /* programoptions.cpp in Sources */,
 				B043659827B8769E00329469 /* NSMutableString+RTF.m in Sources */,
@@ -2953,6 +2964,7 @@
 				B09AB72E277A1BA40002A6C3 /* Util_MemoryTextFile.cpp in Sources */,
 				B049E852277B6FFE00FC14A3 /* fileregistry.cpp in Sources */,
 				B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
+				9792B8C52A940FEC0092C235 /* NSFont+Mariani.m in Sources */,
 				B032DE2D277A0C24006DC0F7 /* main.m in Sources */,
 				B0689D0D2780C85F0029EB7D /* programoptions.cpp in Sources */,
 				B043659727B8769E00329469 /* NSMutableString+RTF.m in Sources */,
@@ -3508,7 +3520,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -3569,7 +3581,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
@@ -3609,7 +3621,7 @@
 					/opt/homebrew/lib,
 					/usr/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MARKETING_VERSION = 1.3;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
@@ -3649,7 +3661,7 @@
 					/opt/homebrew/lib,
 					/usr/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MARKETING_VERSION = 1.3;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;

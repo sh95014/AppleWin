@@ -9,6 +9,7 @@
 #import "CapsuleView.h"
 #import "HexDigitFormatter.h"
 #import "NSColor+AppleWin.h"
+#import "NSFont+Mariani.h"
 
 #import "StdAfx.h"
 #import "CPU.h"
@@ -91,6 +92,7 @@
 
 @implementation InspectorOutlineViewController
 
+API_AVAILABLE(macos(11.0))
 static NSDictionary *psIconMapping = @{
     @(0x80) : @[ [NSImage imageWithSystemSymbolName:@"n.square" accessibilityDescription:@""],
                  [NSImage imageWithSystemSymbolName:@"n.square.fill" accessibilityDescription:@""] ],
@@ -110,6 +112,7 @@ static NSDictionary *psIconMapping = @{
                  [NSImage imageWithSystemSymbolName:@"c.square.fill" accessibilityDescription:@""] ],
 };
 
+API_AVAILABLE(macos(11.0))
 static NSDictionary *annunciatorIconMapping = @{
     @(0) : @[ [NSImage imageWithSystemSymbolName:@"0.circle" accessibilityDescription:@""],
               [NSImage imageWithSystemSymbolName:@"0.circle.fill" accessibilityDescription:@""] ],
@@ -354,7 +357,7 @@ static NSArray *topLevelLabels = @[
 }
 
 - (void)configureRegisterTextLabel:(NSTextField *)label type:(NSColorTypeMariani)type {
-    label.font = [NSFont monospacedSystemFontOfSize:REGISTER_FONT_SIZE weight:REGISTER_FONT_WEIGHT];
+    label.font = [NSFont myMonospacedSystemFontOfSize:REGISTER_FONT_SIZE weight:REGISTER_FONT_WEIGHT];
     label.textColor = [NSColor colorForType:type];
 }
 
@@ -363,14 +366,14 @@ static NSArray *topLevelLabels = @[
     label.stringValue = [NSString stringWithFormat:@"%@", character];
     CGFloat fontHeight;
     if (character.length == 1) {
-        label.font = [NSFont monospacedSystemFontOfSize:REGISTER_FONT_SIZE weight:REGISTER_FONT_WEIGHT];
+        label.font = [NSFont myMonospacedSystemFontOfSize:REGISTER_FONT_SIZE weight:REGISTER_FONT_WEIGHT];
         label.wantsLayer = NO;
         label.layer.borderWidth = 0;
         label.alignment = NSTextAlignmentNatural;
         fontHeight = label.font.boundingRectForFont.size.height;
     }
     else {
-        label.font = [NSFont monospacedSystemFontOfSize:REGISTER_SMALLFONT_SIZE weight:REGISTER_FONT_WEIGHT];
+        label.font = [NSFont myMonospacedSystemFontOfSize:REGISTER_SMALLFONT_SIZE weight:REGISTER_FONT_WEIGHT];
         label.wantsLayer = YES;
         label.layer.borderColor = label.textColor.CGColor;
         label.layer.borderWidth = 1.0;
@@ -454,14 +457,42 @@ static NSArray *topLevelLabels = @[
         const NSUInteger bit = 1 << (7 - i);
         const BOOL value = (regs.ps & bit) != 0;
         NSButton *bitButton = self.psButtons[i];
-        NSArray *icons = psIconMapping[@(bit)];
-        bitButton.image = icons[value];
+        if (@available(macOS 11.0, *)) {
+            NSArray *icons = psIconMapping[@(bit)];
+            bitButton.image = icons[value];
+        }
+        else {
+            static NSDictionary *fallbackMapping = @{
+                @(0x80) : @[ @"🄽", @"🅽" ],
+                @(0x40) : @[ @"🅅", @"🆅" ],
+                @(0x20) : @[ @"•", @"•" ],
+                @(0x10) : @[ @"🄱", @"🅱" ],
+                @(0x08) : @[ @"🄳", @"🅳" ],
+                @(0x04) : @[ @"🄸", @"🅸" ],
+                @(0x02) : @[ @"🅉", @"🆉" ],
+                @(0x01) : @[ @"🄲", @"🅲" ],
+            };
+            NSArray *icons = fallbackMapping[@(bit)];
+            bitButton.title = icons[value];
+        }
     }
     
     for (NSInteger i = 0; i < kNumAnnunciators; i++) {
         NSButton *annunciatorButton = self.annunciatorButtons[i];
-        NSArray *icons = annunciatorIconMapping[@(i)];
-        annunciatorButton.image = icons[MemGetAnnunciator((UINT)i)];
+        if (@available(macOS 11.0, *)) {
+            NSArray *icons = annunciatorIconMapping[@(i)];
+            annunciatorButton.image = icons[MemGetAnnunciator((UINT)i)];
+        }
+        else {
+            static NSDictionary *fallbackMapping = @{
+                @(0) : @[ @"⓪", @"⓿" ],
+                @(1) : @[ @"①", @"❶" ],
+                @(2) : @[ @"②", @"❷" ],
+                @(3) : @[ @"③", @"❸" ],
+            };
+            NSArray *icons = fallbackMapping[@(i)];
+            annunciatorButton.title = icons[MemGetAnnunciator((UINT)i)];
+        }
     }
     
     Video & video = GetVideo();

@@ -7,6 +7,7 @@
 
 #import "DisassemblyTableViewController.h"
 #import "NSColor+AppleWin.h"
+#import "NSFont+Mariani.h"
 #import "Carbon/Carbon.h"
 #import "SymbolTable.h"
 
@@ -17,7 +18,7 @@
 #define VERTICAL_MARGIN             2
 
 #define DISASM_LINES                1000
-#define DISASM_FONT                 [NSFont monospacedSystemFontOfSize:10 weight:NSFontWeightRegular]
+#define DISASM_FONT                 [NSFont myMonospacedSystemFontOfSize:10 weight:NSFontWeightRegular]
 #define FG_DISASM_DEFAULT           FG_DISASM_OPCODE
 
 #define BP_INDICATOR_MARGIN         2
@@ -255,23 +256,34 @@ enum DisassemblyTableColumns {
         if (bp != NULL) {
             if (bp->bSet) {
                 if (bp->bEnabled) {
-                    NSString *symbol = [NSString stringWithFormat:@"%lx.square.fill", index];
-                    NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:@""];
-                    if (@available(macOS 12.0, *)) {
-                        NSImageSymbolConfiguration *config = [NSImageSymbolConfiguration configurationWithPaletteColors:@[
-                            [NSColor colorForType:NSColorTypeBreakpoint], [NSColor colorForType:NSColorTypeBreakpointBackground]
-                        ]];
-                        imageView = [NSImageView imageViewWithImage:[image imageWithSymbolConfiguration:config]];
-                    } else {
-                        imageView = [NSImageView imageViewWithImage:image];
-                        imageView.contentTintColor = [NSColor colorForType:NSColorTypeBreakpointBackground];
+                    if (@available(macOS 11.0, *)) {
+                        NSString *symbol = [NSString stringWithFormat:@"%lx.square.fill", index];
+                        NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:@""];
+                        if (@available(macOS 12.0, *)) {
+                            NSImageSymbolConfiguration *config = [NSImageSymbolConfiguration configurationWithPaletteColors:@[
+                                [NSColor colorForType:NSColorTypeBreakpoint], [NSColor colorForType:NSColorTypeBreakpointBackground]
+                            ]];
+                            imageView = [NSImageView imageViewWithImage:[image imageWithSymbolConfiguration:config]];
+                        }
+                        else {
+                            imageView = [NSImageView imageViewWithImage:image];
+                            imageView.contentTintColor = [NSColor colorForType:NSColorTypeBreakpointBackground];
+                        }
+                    }
+                    else {
+                        // FIXME: fallback
                     }
                 }
                 else {
-                    NSString *symbol = [NSString stringWithFormat:@"%lx.square", index];
-                    NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:@""];
-                    imageView = [NSImageView imageViewWithImage:image];
-                    imageView.contentTintColor = [NSColor colorForType:NSColorTypeBreakpointBackground];
+                    if (@available(macOS 11.0, *)) {
+                        NSString *symbol = [NSString stringWithFormat:@"%lx.square", index];
+                        NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:@""];
+                        imageView = [NSImageView imageViewWithImage:image];
+                        imageView.contentTintColor = [NSColor colorForType:NSColorTypeBreakpointBackground];
+                    }
+                    else {
+                        // FIXME: fallback
+                    }
                 }
             }
         }
@@ -288,15 +300,21 @@ enum DisassemblyTableColumns {
         if (bm != NULL) {
             if (bm->bSet) {
                 NSString *symbol = [NSString stringWithFormat:@"%lx.circle.fill", index];
-                NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:@""];
-                if (@available(macOS 12.0, *)) {
-                    NSImageSymbolConfiguration *config = [NSImageSymbolConfiguration configurationWithPaletteColors:@[
-                        [NSColor colorForType:NSColorTypeBookmark], [NSColor colorForType:NSColorTypeBookmarkBackground]
-                    ]];
-                    imageView = [NSImageView imageViewWithImage:[image imageWithSymbolConfiguration:config]];
-                } else {
-                    imageView = [NSImageView imageViewWithImage:image];
-                    imageView.contentTintColor = [NSColor colorForType:NSColorTypeBookmarkBackground];
+                if (@available(macOS 11.0, *)) {
+                    NSImage *image = [NSImage imageWithSystemSymbolName:symbol accessibilityDescription:@""];
+                    if (@available(macOS 12.0, *)) {
+                        NSImageSymbolConfiguration *config = [NSImageSymbolConfiguration configurationWithPaletteColors:@[
+                            [NSColor colorForType:NSColorTypeBookmark], [NSColor colorForType:NSColorTypeBookmarkBackground]
+                        ]];
+                        imageView = [NSImageView imageViewWithImage:[image imageWithSymbolConfiguration:config]];
+                    }
+                    else {
+                        imageView = [NSImageView imageViewWithImage:image];
+                        imageView.contentTintColor = [NSColor colorForType:NSColorTypeBookmarkBackground];
+                    }
+                }
+                else {
+                    // FIXME: fallback
                 }
             }
         }
@@ -397,16 +415,21 @@ enum DisassemblyTableColumns {
     else if ([tableColumn.identifier isEqualToString:@"branch"]) {
         // branch indicator
         if (disasmLine.bDisasmFormatFlags & DISASM_FORMAT_BRANCH) {
-            NSImage *image;
-            if ((unsigned char)*disasmLine->line.sBranch == 0x8A) {
-                image = [NSImage imageWithSystemSymbolName:@"arrow.uturn.down" accessibilityDescription:@""];
+            if (@available(macOS 11.0, *)) {
+                NSImage *image;
+                if ((unsigned char)*disasmLine->line.sBranch == 0x8A) {
+                        image = [NSImage imageWithSystemSymbolName:@"arrow.uturn.down" accessibilityDescription:@""];
+                }
+                else if ((unsigned char)*disasmLine->line.sBranch == 0x8B) {
+                    image = [NSImage imageWithSystemSymbolName:@"arrow.uturn.up" accessibilityDescription:@""];
+                }
+                if (image != nil) {
+                    imageView = [NSImageView imageViewWithImage:image];
+                    imageView.contentTintColor = [NSColor colorForType:NSColorTypeDisassemblerBranchDirection];
+                }
             }
-            else if ((unsigned char)*disasmLine->line.sBranch == 0x8B) {
-                image = [NSImage imageWithSystemSymbolName:@"arrow.uturn.up" accessibilityDescription:@""];
-            }
-            if (image != nil) {
-                imageView = [NSImageView imageViewWithImage:image];
-                imageView.contentTintColor = [NSColor colorForType:NSColorTypeDisassemblerBranchDirection];
+            else {
+                // FIXME: fallback
             }
         }
         alignment = NSLayoutAttributeCenterX;

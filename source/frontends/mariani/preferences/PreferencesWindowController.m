@@ -17,7 +17,12 @@
         alert.messageText = NSLocalizedString(@"Reboot Emulator", @"");
         alert.informativeText = NSLocalizedString(@"Changes to hardware configuration require the emulator to be rebooted to take effect.", @"");
         alert.alertStyle = NSAlertStyleWarning;
-        alert.icon = [NSImage imageWithSystemSymbolName:@"power.circle" accessibilityDescription:@""];
+        if (@available(macOS 11.0, *)) {
+            alert.icon = [NSImage imageWithSystemSymbolName:@"power.circle" accessibilityDescription:@""];
+        }
+        else {
+            // FIXME: fallback image
+        }
         [alert addButtonWithTitle:NSLocalizedString(@"Reboot", @"")];
         [alert runModal];
         [theAppDelegate rebootEmulatorAction:sender];

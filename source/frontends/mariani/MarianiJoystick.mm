@@ -14,7 +14,13 @@ namespace mariani
 
 bool Gamepad::getButton(int i) const
 {
-    GCController *gc = [GCController current];
+    GCController *gc;
+    if (@available(macOS 11.0, *)) {
+        gc = [GCController current];
+    }
+    else {
+        gc = GCController.controllers.firstObject;
+    }
     GCExtendedGamepad *gamepad = [gc extendedGamepad];
     
     if (gamepad != nil) {
@@ -28,7 +34,13 @@ bool Gamepad::getButton(int i) const
 
 double Gamepad::getAxis(int i) const
 {
-    GCController *gc = [GCController current];
+    GCController *gc;
+    if (@available(macOS 11.0, *)) {
+        gc = [GCController current];
+    }
+    else {
+        gc = GCController.controllers.firstObject;
+    }
     GCExtendedGamepad *gamepad = [gc extendedGamepad];
     
     if (gamepad != nil) {
