@@ -141,7 +141,7 @@
 		B00ECB7E279EEB600041E16C /* MarianiFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0689D082780B9B60029EB7D /* MarianiFrame.cpp */; };
 		B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB710277A1BA30002A6C3 /* Util_MemoryTextFile.cpp */; };
 		B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E850277B6FFE00FC14A3 /* fileregistry.cpp */; };
-		B00ECB81279EEB600041E16C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B032DE2C277A0C24006DC0F7 /* main.m */; };
+		B00ECB81279EEB600041E16C /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = B032DE2C277A0C24006DC0F7 /* main.mm */; };
 		B00ECB82279EEB600041E16C /* programoptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E84B277B6DE300FC14A3 /* programoptions.cpp */; };
 		B00ECB86279EEB600041E16C /* Debugger_Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB721277A1BA40002A6C3 /* Debugger_Color.cpp */; };
 		B00ECB88279EEB600041E16C /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = B049E8A6277C4F6D00FC14A3 /* Shaders.metal */; };
@@ -230,7 +230,7 @@
 		B032DE26277A0C23006DC0F7 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B032DE25277A0C23006DC0F7 /* AppDelegate.mm */; };
 		B032DE28277A0C24006DC0F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B032DE27277A0C24006DC0F7 /* Assets.xcassets */; };
 		B032DE2B277A0C24006DC0F7 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B032DE29277A0C24006DC0F7 /* MainMenu.xib */; };
-		B032DE2D277A0C24006DC0F7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B032DE2C277A0C24006DC0F7 /* main.m */; };
+		B032DE2D277A0C24006DC0F7 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = B032DE2C277A0C24006DC0F7 /* main.mm */; };
 		B032DE38277A0C24006DC0F7 /* marianiTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = B032DE37277A0C24006DC0F7 /* marianiTests.mm */; };
 		B032DE42277A0C24006DC0F7 /* marianiUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = B032DE41277A0C24006DC0F7 /* marianiUITests.m */; };
 		B032DE44277A0C24006DC0F7 /* marianiUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B032DE43277A0C24006DC0F7 /* marianiUITestsLaunchTests.m */; };
@@ -725,7 +725,7 @@
 		B032DE25277A0C23006DC0F7 /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		B032DE27277A0C24006DC0F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B032DE2A277A0C24006DC0F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		B032DE2C277A0C24006DC0F7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B032DE2C277A0C24006DC0F7 /* main.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		B032DE2E277A0C24006DC0F7 /* mariani.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = mariani.entitlements; sourceTree = "<group>"; };
 		B032DE33277A0C24006DC0F7 /* MarianiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MarianiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B032DE37277A0C24006DC0F7 /* marianiTests.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = marianiTests.mm; sourceTree = "<group>"; };
@@ -1442,7 +1442,7 @@
 				B07612332789E4BE009E79BE /* About.xib */,
 				B0ED3FCD2785973C006E4784 /* Localizable.strings */,
 				B089EF2D27BADA5200BDC415 /* Mariani.help */,
-				B032DE2C277A0C24006DC0F7 /* main.m */,
+				B032DE2C277A0C24006DC0F7 /* main.mm */,
 				B032DE2E277A0C24006DC0F7 /* mariani.entitlements */,
 			);
 			name = mariani;
@@ -2879,7 +2879,7 @@
 				B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */,
 				B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */,
 				B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
-				B00ECB81279EEB600041E16C /* main.m in Sources */,
+				B00ECB81279EEB600041E16C /* main.mm in Sources */,
 				B00ECB82279EEB600041E16C /* programoptions.cpp in Sources */,
 				B043659827B8769E00329469 /* NSMutableString+RTF.m in Sources */,
 				B00ECB86279EEB600041E16C /* Debugger_Color.cpp in Sources */,
@@ -2953,7 +2953,7 @@
 				B09AB72E277A1BA40002A6C3 /* Util_MemoryTextFile.cpp in Sources */,
 				B049E852277B6FFE00FC14A3 /* fileregistry.cpp in Sources */,
 				B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
-				B032DE2D277A0C24006DC0F7 /* main.m in Sources */,
+				B032DE2D277A0C24006DC0F7 /* main.mm in Sources */,
 				B0689D0D2780C85F0029EB7D /* programoptions.cpp in Sources */,
 				B043659727B8769E00329469 /* NSMutableString+RTF.m in Sources */,
 				B09AB73F277A1BA40002A6C3 /* Debugger_Color.cpp in Sources */,

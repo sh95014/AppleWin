@@ -96,10 +96,13 @@ const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExi
 
 @end
 
+// Don't want to pollute ObjC headers with C++ or create a new one just for this,
+// but this needs to match the definition in main.mm.
+extern common2::EmulatorOptions gEmulatorOptions;
+
 @implementation EmulatorViewController {
     MTKView *_view;
     FrameBuffer frameBuffer;
-    common2::EmulatorOptions options;
 }
 
 std::shared_ptr<mariani::MarianiFrame> frame;
@@ -109,12 +112,12 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     
     self.audioOutputs = [NSMutableArray array];
     
-    self.registryContext = new RegistryContext(CreateFileRegistry(options));
-    frame.reset(new mariani::MarianiFrame(options));
+    self.registryContext = new RegistryContext(CreateFileRegistry(gEmulatorOptions));
+    frame.reset(new mariani::MarianiFrame(gEmulatorOptions));
 
     std::shared_ptr<Paddle> paddle(new mariani::Gamepad());
     self.initialisation = new Initialisation(frame, paddle);
-    applyOptions(options);
+    applyOptions(gEmulatorOptions);
     frame->Begin();
     self.savedAppMode = g_nAppMode;
 }
@@ -197,7 +200,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
     
     if (self.delegate == nil || [self.delegate shouldPlayAudio]) {
-        sa2::writeAudio(options.audioBuffer);
+        sa2::writeAudio(gEmulatorOptions.audioBuffer);
     }
 #ifdef DEBUG
     NSTimeInterval audioWriteTimeOffset = -[start timeIntervalSinceNow];
