@@ -1,5 +1,5 @@
 //
-//  a2dir.cpp
+//  a2tools.cpp
 //  a2tools
 //
 //  Created by sh95014 on 8/22/23.
@@ -13,6 +13,11 @@
 
 #define SAFE(x) ((x) != 0 ? (x) : "<null>")
 
+typedef enum {
+    A2FORMAT            = 1 << 0,
+    A2DIR               = 1 << 1,
+} A2ROLE;
+
 using namespace DiskImgLib;
 
 static bool verbose = false;
@@ -24,8 +29,15 @@ const char *getString(int argc, const char *argv[], int index) {
     return 0;
 }
 
+long getLong(int argc, const char *argv[], int index) {
+    if (index < argc) {
+        return atol(argv[index]);
+    }
+    return INT_MIN;
+}
+
 void logErrorIf(int condition, const char *format, ...) {
-    if (verbose && condition) {
+    if (condition) {
         va_list args;
         va_start(args, format);
         vfprintf(stderr, format, args);
@@ -34,12 +46,10 @@ void logErrorIf(int condition, const char *format, ...) {
 }
 
 void logError(const char *format, ...) {
-    if (verbose) {
-        va_list args;
-        va_start(args, format);
-        vfprintf(stderr, format, args);
-        va_end(args);
-    }
+    va_list args;
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
 }
 
 void diskImgDebugMsgHandler(const char* file, int line, const char* msg) {
@@ -52,6 +62,56 @@ void diskImgDebugMsgHandler(const char* file, int line, const char* msg) {
 
 bool equalString(const char *s1, const char *s2) {
     return strcmp(s1, s2) == 0;
+}
+
+DiskImg::FSFormat getFileSystemFormat(const char *string) {
+    if (string != 0) {
+        if (equalString(string, "prodos")) {
+            return DiskImg::kFormatProDOS;
+        } else if (equalString(string, "dos")) {
+            return DiskImg::kFormatDOS33;
+        } else if (equalString(string, "pascal")) {
+            return DiskImg::kFormatPascal;
+        }
+    }
+    return DiskImg::kFormatUnknown;
+}
+
+static int format(DiskImg *diskImg,
+                  const char *imageFileName,
+                  long blockCount,
+                  DiskImg::FSFormat fileSystemFormat) {
+    if (blockCount < 0) {
+        logError("Size is unspecified or invalid, substituting with default.\n");
+        blockCount = 140 * 2;
+    }
+    if (fileSystemFormat == DiskImg::kFormatUnknown) {
+        logError("File system format is unspecified or invalid, substituting with default.\n");
+        fileSystemFormat = DiskImg::kFormatDOS33;
+    }
+    
+    DIError error;
+    error = diskImg->CreateImage(imageFileName,
+                                 0,
+                                 DiskImg::kOuterFormatNone,
+                                 DiskImg::kFileFormatUnadorned,
+                                 DiskImg::kPhysicalFormatSectors,
+                                 0,
+                                 DiskImg::kSectorOrderProDOS,
+                                 DiskImg::kFormatGenericProDOSOrd,
+                                 blockCount,
+                                 true);
+    if (error != kDIErrNone) {
+        return -1;
+    }
+    
+    const char *volumeLabel = (fileSystemFormat == DiskImg::kFormatDOS33) ? "DOS" : "TEMP";
+    error = diskImg->FormatImage(fileSystemFormat, volumeLabel);
+    if (error != kDIErrNone) {
+        return -1;
+    }
+    
+    return 0;
 }
 
 static const char *fileTypeStrings[] = {
@@ -89,29 +149,8 @@ static const char *fileTypeStrings[] = {
     "$F8", "OS ", "INT", "IVR", "BAS", "VAR", "REL", "SYS",
 };
 
-int main(int argc, const char * argv[]) {
-    const char *imageFileName = 0;
-    
-    for (int i = 1; i < argc; i++) {
-        if (equalString(argv[i], "-i")) {
-            imageFileName = getString(argc, argv, ++i);
-            logErrorIf(imageFileName == 0, "Image file name expected after -i.\n");
-        } else if (equalString(argv[i], "--verbose")) {
-            verbose = true;
-        } else {
-            logError("Unexpected argument '%s'\n", argv[i]);
-            return -1;
-        }
-    }
-    
-    if (imageFileName == 0) {
-        logError("Image file name is required.\n");
-        return -1;
-    }
-    
-    Global::SetDebugMsgHandler(&diskImgDebugMsgHandler);
-    Global::AppInit();
-    DiskImg *diskImg = new DiskImg;
+static int dir(DiskImg *diskImg,
+               const char *imageFileName) {
     DIError error;
     
     error = diskImg->OpenImage(imageFileName, '/', true);
@@ -132,6 +171,7 @@ int main(int argc, const char * argv[]) {
     diskFS->SetScanForSubVolumes(DiskFS::kScanSubEnabled);
     error = diskFS->Initialize(diskImg, DiskFS::kInitFull);
     if (error != kDIErrNone) {
+        delete diskFS;
         return -1;
     }
     
@@ -165,11 +205,75 @@ int main(int argc, const char * argv[]) {
     }
     
     delete diskFS;
-    error = diskImg->CloseImage();
+    return 0;
+}
+
+int main(int argc, const char * argv[]) {
+    const char *imageFileName = 0;
+    DiskImg::FSFormat fileSystemFormat = DiskImg::kFormatUnknown;
+    long blockCount = -1;
+    A2ROLE role;
+    
+    // strip any path components from argv[0]
+    const char *name = strrchr(argv[0], '/');
+    name = (name != NULL) ? name + 1 : argv[0];
+    
+    if (equalString(name, "a2format")) {
+        role = A2FORMAT;
+    } else if (equalString(name, "a2dir")) {
+        role = A2DIR;
+    } else {
+        logError("Unknown command '%s'\n", name);
+        return -1;
+    }
+    
+    for (int i = 1; i < argc; i++) {
+        if (equalString(argv[i], "-i")) {
+            imageFileName = getString(argc, argv, ++i);
+            logErrorIf(imageFileName == 0, "Path name expected.\n");
+        } else if ((role & A2FORMAT) && equalString(argv[i], "--fs-format")) {
+            const char *string = getString(argc, argv, ++i);
+            logErrorIf(string == 0, "Expected format 'dos', 'prodos', or 'pascal'\n");
+            fileSystemFormat = getFileSystemFormat(string);
+        } else if ((role & A2FORMAT) && equalString(argv[i], "-f")) {
+            const long size = getLong(argc, argv, ++i);
+            if (size == 140 || size == 800) {
+                blockCount = size * 2;
+            } else {
+                logError("Expected size '140' or '800'\n", argv[i]);
+            }
+        } else if (equalString(argv[i], "--verbose")) {
+            verbose = true;
+        } else {
+            logError("Unexpected argument '%s'\n", argv[i]);
+            return -1;
+        }
+    }
+    
+    if (imageFileName == 0) {
+        logError("Image file name is required.\n");
+        return -1;
+    }
+    
+    Global::SetDebugMsgHandler(&diskImgDebugMsgHandler);
+    Global::AppInit();
+    DiskImg *diskImg = new DiskImg;
+    
+    int status = 0;
+    switch (role) {
+        case A2FORMAT:
+            status = format(diskImg, imageFileName, blockCount, fileSystemFormat);
+            break;
+        case A2DIR:
+            status = dir(diskImg, imageFileName);
+            break;
+    }
+    
+    DIError error = diskImg->CloseImage();
     if (error != kDIErrNone) {
         return -1;
     }
     delete diskImg;
-    
-    return 0;
+
+    return status;
 }
