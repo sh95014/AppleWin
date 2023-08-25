@@ -6,5 +6,9 @@
 	<string>Mariani.help</string>
 	<key>CFBundleHelpBookName</key>
 	<string>Mariani Help</string>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
+	<key>OSAScriptingDefinition</key>
+	<string>Mariani.sdef</string>
 </dict>
 </plist>

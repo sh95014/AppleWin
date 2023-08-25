@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+
+<dictionary title="Mariani Terminology">
+    <suite name="Mariani Suite" code="awin" description="Mariani Scripting Support">
+        <command name="reboot" code="awreboot" description="Reboot the emulator">
+            <cocoa class="RebootCommand" />
+        </command>
+    </suite>
+</dictionary>

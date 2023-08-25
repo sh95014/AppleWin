@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		97FF91BE2A9965EC006A62A3 /* ScriptCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */; };
+		97FF91BF2A9965EC006A62A3 /* ScriptCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */; };
+		97FF91C02A9965EC006A62A3 /* ScriptCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */; };
+		97FF91C12A9965EC006A62A3 /* ScriptCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */; };
+		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
+		97FF91C32A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
 		B0098C73277E133D00F38E0C /* tfearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB835277A22530002A6C3 /* tfearch.cpp */; };
 		B0098C74277E133D00F38E0C /* tfesupp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB833277A22530002A6C3 /* tfesupp.cpp */; };
 		B0098C76277E140100F38E0C /* CmdLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB643277A14DB0002A6C3 /* CmdLine.cpp */; };
@@ -695,6 +701,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptCommands.h; sourceTree = "<group>"; };
+		97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScriptCommands.m; sourceTree = "<group>"; };
+		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B00BE9CC2A271C5700F288F9 /* NSColor+AppleWin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSColor+AppleWin.h"; sourceTree = "<group>"; };
 		B00BE9CD2A271C5700F288F9 /* NSColor+AppleWin.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = "NSColor+AppleWin.mm"; sourceTree = "<group>"; };
@@ -1373,6 +1382,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		97FF91B32A9965CA006A62A3 /* scripting */ = {
+			isa = PBXGroup;
+			children = (
+				97FF91BD2A9965EC006A62A3 /* Mariani.sdef */,
+				97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */,
+				97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */,
+			);
+			path = scripting;
+			sourceTree = "<group>";
+		};
 		B032DE18277A0C23006DC0F7 = {
 			isa = PBXGroup;
 			children = (
@@ -1436,6 +1455,7 @@
 				B0F526F42A2C1E0200288820 /* browser */,
 				B0F526EC2A2C1D3100288820 /* debugger */,
 				B0DB46E32A36E52100B4E670 /* memory viewer */,
+				97FF91B32A9965CA006A62A3 /* scripting */,
 				B032DE27277A0C24006DC0F7 /* Assets.xcassets */,
 				B045FE5B278297F8006E36F9 /* Resources */,
 				B032DE29277A0C24006DC0F7 /* MainMenu.xib */,
@@ -2250,6 +2270,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97FF91BF2A9965EC006A62A3 /* ScriptCommands.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2319,6 +2340,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97FF91BE2A9965EC006A62A3 /* ScriptCommands.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2691,6 +2713,7 @@
 				B00ECBCB279EEB600041E16C /* DiskImageBrowser.xib in Resources */,
 				B0F43FD8295E4BAD00E79AD7 /* CHARSET8C.bmp in Resources */,
 				B00ECBCC279EEB600041E16C /* Assets.xcassets in Resources */,
+				97FF91C32A9965EC006A62A3 /* Mariani.sdef in Resources */,
 				B00ECBCD279EEB600041E16C /* Base64A_German_Video.rom in Resources */,
 				B00ECBCE279EEB600041E16C /* Hddrvr.bin in Resources */,
 				B0F97BC02A26758E00461923 /* A2_BASIC.SYM in Resources */,
@@ -2735,6 +2758,7 @@
 				B0F25BCD2789B2DB0080523F /* DiskImageBrowser.xib in Resources */,
 				B0F43FD7295E4BAD00E79AD7 /* CHARSET8C.bmp in Resources */,
 				B032DE28277A0C24006DC0F7 /* Assets.xcassets in Resources */,
+				97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */,
 				B045FE7A2782984F006E36F9 /* Base64A_German_Video.rom in Resources */,
 				B045FE762782984F006E36F9 /* Hddrvr.bin in Resources */,
 				B0F97BBF2A26758E00461923 /* A2_BASIC.SYM in Resources */,
@@ -2904,6 +2928,7 @@
 				B00ECB9B279EEB600041E16C /* sdlframe.cpp in Sources */,
 				B00ECB9C279EEB600041E16C /* Debug.cpp in Sources */,
 				B00ECB9D279EEB600041E16C /* ptreeregistry.cpp in Sources */,
+				97FF91C12A9965EC006A62A3 /* ScriptCommands.m in Sources */,
 				B00ECB9E279EEB600041E16C /* PreferencesWindowController.m in Sources */,
 				B00ECB9F279EEB600041E16C /* Debugger_Help.cpp in Sources */,
 				B00ECBA0279EEB600041E16C /* EmulatorView.mm in Sources */,
@@ -2978,6 +3003,7 @@
 				B049E826277B52B200FC14A3 /* sdlframe.cpp in Sources */,
 				B09AB736277A1BA40002A6C3 /* Debug.cpp in Sources */,
 				B049E855277B702100FC14A3 /* ptreeregistry.cpp in Sources */,
+				97FF91C02A9965EC006A62A3 /* ScriptCommands.m in Sources */,
 				B092741B277D9403003FFB79 /* PreferencesWindowController.m in Sources */,
 				B09AB738277A1BA40002A6C3 /* Debugger_Help.cpp in Sources */,
 				B049E8AD277C880800FC14A3 /* EmulatorView.mm in Sources */,
