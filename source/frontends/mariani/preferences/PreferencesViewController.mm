@@ -188,7 +188,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     
         // peripheral slots
         CardManager &manager = GetCardMgr();
-        NSDictionary *cardNames = [self localizedCardNameMap];
+        NSDictionary *cardNames = [self.class localizedCardNameMap];
         for (int slot = SLOT1; slot < NUM_SLOTS; slot++) {
             NSPopUpButton *slotButton = [[self slotButtonsArray] objectAtIndex:slot];
             
@@ -663,7 +663,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     ];
 }
 
-- (NSDictionary *)localizedCardNameMap {
++ (NSDictionary *)localizedCardNameMap {
     // helps map SS_CARDTYPE to a readable string
     return @{
         @(CT_Empty):                NSLocalizedString(@"—", @"empty slot"),

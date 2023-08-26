@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		97FF91BE2A9965EC006A62A3 /* ScriptCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */; };
 		97FF91BF2A9965EC006A62A3 /* ScriptCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */; };
-		97FF91C02A9965EC006A62A3 /* ScriptCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */; };
-		97FF91C12A9965EC006A62A3 /* ScriptCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */; };
+		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
+		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
 		97FF91C32A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
 		B0098C73277E133D00F38E0C /* tfearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB835277A22530002A6C3 /* tfearch.cpp */; };
@@ -702,7 +702,7 @@
 
 /* Begin PBXFileReference section */
 		97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptCommands.h; sourceTree = "<group>"; };
-		97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScriptCommands.m; sourceTree = "<group>"; };
+		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B00BE9CC2A271C5700F288F9 /* NSColor+AppleWin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSColor+AppleWin.h"; sourceTree = "<group>"; };
@@ -1387,7 +1387,7 @@
 			children = (
 				97FF91BD2A9965EC006A62A3 /* Mariani.sdef */,
 				97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */,
-				97FF91BC2A9965EC006A62A3 /* ScriptCommands.m */,
+				97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */,
 			);
 			path = scripting;
 			sourceTree = "<group>";
@@ -2928,7 +2928,7 @@
 				B00ECB9B279EEB600041E16C /* sdlframe.cpp in Sources */,
 				B00ECB9C279EEB600041E16C /* Debug.cpp in Sources */,
 				B00ECB9D279EEB600041E16C /* ptreeregistry.cpp in Sources */,
-				97FF91C12A9965EC006A62A3 /* ScriptCommands.m in Sources */,
+				97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */,
 				B00ECB9E279EEB600041E16C /* PreferencesWindowController.m in Sources */,
 				B00ECB9F279EEB600041E16C /* Debugger_Help.cpp in Sources */,
 				B00ECBA0279EEB600041E16C /* EmulatorView.mm in Sources */,
@@ -3003,7 +3003,7 @@
 				B049E826277B52B200FC14A3 /* sdlframe.cpp in Sources */,
 				B09AB736277A1BA40002A6C3 /* Debug.cpp in Sources */,
 				B049E855277B702100FC14A3 /* ptreeregistry.cpp in Sources */,
-				97FF91C02A9965EC006A62A3 /* ScriptCommands.m in Sources */,
+				97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */,
 				B092741B277D9403003FFB79 /* PreferencesWindowController.m in Sources */,
 				B09AB738277A1BA40002A6C3 /* Debugger_Help.cpp in Sources */,
 				B049E8AD277C880800FC14A3 /* EmulatorView.mm in Sources */,

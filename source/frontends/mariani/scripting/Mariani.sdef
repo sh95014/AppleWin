@@ -2,9 +2,25 @@
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
 
 <dictionary title="Mariani Terminology">
-    <suite name="Mariani Suite" code="awin" description="Mariani Scripting Support">
-        <command name="reboot" code="awreboot" description="Reboot the emulator">
+    <suite name="Mariani Suite" code="AWin" description="Mariani Scripting Support">
+        <command name="reboot" code="AWreboot" description="Reboot the emulator">
             <cocoa class="RebootCommand" />
         </command>
+        
+        <class name="application" code="AWap" description="Mariani's top-level scripting object">
+            <cocoa class="NSApplication" />
+            
+            <element type="slot" description="I/O slots">
+                <cocoa key="slots" />
+            </element>
+        </class>
+        
+        <class name="slot" code="AWsl" description="I/O slot">
+            <cocoa class="Slot" />
+            <property name="card" code="AWcd" description="I/O card inserted in slot" type="text">
+                <cocoa key="card" />
+            </property>
+        </class>
+        
     </suite>
 </dictionary>
