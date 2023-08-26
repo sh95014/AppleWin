@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		97FF91BE2A9965EC006A62A3 /* ScriptCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */; };
-		97FF91BF2A9965EC006A62A3 /* ScriptCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -701,7 +699,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptCommands.h; sourceTree = "<group>"; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1386,7 +1383,6 @@
 			isa = PBXGroup;
 			children = (
 				97FF91BD2A9965EC006A62A3 /* Mariani.sdef */,
-				97FF91BB2A9965EC006A62A3 /* ScriptCommands.h */,
 				97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */,
 			);
 			path = scripting;
@@ -2270,7 +2266,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97FF91BF2A9965EC006A62A3 /* ScriptCommands.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2340,7 +2335,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97FF91BE2A9965EC006A62A3 /* ScriptCommands.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

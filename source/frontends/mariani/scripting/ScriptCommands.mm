@@ -15,6 +15,9 @@
 //#import "Common.h"
 #import "Core.h"
 
+@interface RebootCommand : NSScriptCommand
+@end
+
 @implementation RebootCommand
 
 - (id)performDefaultImplementation {
@@ -24,7 +27,11 @@
 
 @end
 
-@interface Slot ()
+#pragma mark -
+
+@interface Slot : NSObject
+
+@property (readonly) NSString *card;
 
 @property (assign) NSInteger index;
 @property (assign) SS_CARDTYPE cardType;
@@ -53,6 +60,14 @@
     NSDictionary *cardNames = [PreferencesViewController localizedCardNameMap];
     return cardNames[@(self.cardType)];
 }
+
+@end
+
+#pragma mark -
+
+@interface AppDelegate (Scripting)
+
+@property (readonly) NSArray *slots;
 
 @end
 
