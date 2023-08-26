@@ -58,6 +58,7 @@
 
 const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
 const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
+const NSNotificationName EmulatorDidRebootNotification = @"EmulatorDidRebootNotification";
 
 @interface AudioOutput : NSObject
 @property (assign) UInt32 channels;
@@ -390,6 +391,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void)reboot {
     frame->Restart();
+    [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidRebootNotification object:self];
 }
 
 - (void)reinitialize {

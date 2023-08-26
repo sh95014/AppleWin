@@ -74,6 +74,9 @@
             self.inDebugMode = NO;
             [self performSelector:@selector(refresh) withObject:nil afterDelay:REFRESH_DELAY];
         }];
+        [center addObserverForName:EmulatorDidRebootNotification object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+            [self loadSegmentedControl];
+        }];
         
         [self refresh];
     }
@@ -173,6 +176,8 @@
 }
 
 - (void)loadBASICView {
+    [self.basicListingView removeFromSuperview];
+    
     NSScrollView *scrollView = [BASICListingView scrollableTextView];
     self.basicListingView = scrollView.documentView;
     self.basicListingView.editable = NO;

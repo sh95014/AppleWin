@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern const NSNotificationName EmulatorDidEnterDebugModeNotification;
 extern const NSNotificationName EmulatorDidExitDebugModeNotification;
+extern const NSNotificationName EmulatorDidRebootNotification;
 
 @protocol EmulatorViewControllerDelegate <NSObject>
 
