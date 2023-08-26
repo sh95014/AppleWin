@@ -7,6 +7,7 @@
 
 #import "AppDelegate.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import <Carbon/Carbon.h>
 #import <Foundation/NSProcessInfo.h>
 #import <GameController/GameController.h>
 #import "windows.h"
@@ -151,6 +152,18 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     self.driveLightButtonTemplateArchive = [self archiveFromTemplateView:self.driveLightButtonTemplate];
     [self reconfigureDrives];
     
+    [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent * _Nullable(NSEvent * _Nonnull event) {
+        switch (event.keyCode) {
+            case kVK_F9:
+                // toggle 50% scan lines
+                Video &video = GetVideo();
+                video.SetVideoStyle(VideoStyle_e(video.GetVideoStyle() ^ VS_HALF_SCANLINES));
+                [self applyVideoModeChange];
+                return nil;
+        }
+        return event;
+    }];
+
     [self.emulatorVC start];
 }
 
