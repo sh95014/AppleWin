@@ -22,6 +22,9 @@
 @interface TypeCommand : NSScriptCommand
 @end
 
+@interface ScreenshotCommand : NSScriptCommand
+@end
+
 @class Drive;
 
 @interface Slot : NSObject
@@ -61,7 +64,7 @@
     Drive* drive = [[self evaluatedArguments] valueForKey:@"drive"];
     CardManager &cardManager = GetCardMgr();
     Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(drive.slot.index));
-    card->InsertDisk(drive.index, cppFilename, false, false);
+    card->InsertDisk(drive.index, cppFilename, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_DONT_CREATE);
     return nil;
 }
 
@@ -72,7 +75,18 @@
 @implementation TypeCommand
 
 - (id)performDefaultImplementation {
-    [theAppDelegate type:[self directParameter]];
+    [theAppDelegate.emulatorVC type:[self directParameter]];
+    return nil;
+}
+
+@end
+
+#pragma mark -
+
+@implementation ScreenshotCommand
+
+- (id)performDefaultImplementation {
+    [theAppDelegate.emulatorVC saveScreenshot:YES];
     return nil;
 }
 

@@ -12,6 +12,8 @@
 
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate, NSOpenSavePanelDelegate, EmulatorViewControllerDelegate>
 
+@property (strong) IBOutlet EmulatorViewController *emulatorVC;
+
 - (void)applyVideoModeChange;
 - (void)browserWindowWillClose:(NSString *)path;
 - (BOOL)emulationHardwareChanged;
@@ -21,8 +23,6 @@
 - (int)showModalAlertofType:(int)type withMessage:(NSString *)message information:(NSString *)information;
 - (void)terminateWithReason:(NSString *)reason;
 - (void)updateDriveLights;
-
-- (void)type:(NSString *)string;
 
 @end
 

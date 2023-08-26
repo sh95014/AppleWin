@@ -65,7 +65,7 @@ extern const NSNotificationName EmulatorDidExitDebugModeNotification;
 
 - (void)toggleScreenRecording;
 @property (getter=isRecordingScreen) BOOL recordingScreen;
-- (void)saveScreenshot;
+- (void)saveScreenshot:(BOOL)silent;
 - (int)registerAudioOutputWithChannels:(UInt32)channels sampleRate:(UInt32)sampleRate;
 - (void)submitOutput:(int)output audioData:(NSData *)data;
 

@@ -57,7 +57,6 @@ using namespace DiskImgLib;
 
 @interface AppDelegate ()
 
-@property (strong) IBOutlet EmulatorViewController *emulatorVC;
 @property (strong) IBOutlet NSWindow *window;
 @property (strong) IBOutlet NSMenu *createDiskImageMenu;
 @property (strong) IBOutlet NSMenu *openDiskImageMenu;
@@ -718,12 +717,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 - (IBAction)saveScreenshotAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-
-    [self.emulatorVC saveScreenshot];
-}
-
-- (void)type:(NSString *)string {
-    [self.emulatorVC type:string];
+    
+    [self.emulatorVC saveScreenshot:NO];
 }
 
 #pragma mark - Helpers because I can't figure out how to make 'frame' properly global

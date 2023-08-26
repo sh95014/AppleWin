@@ -20,6 +20,10 @@
             <direct-parameter description="String" type="text" />
         </command>
         
+        <command name="take screenshot" code="MrniSsht" description="Take a screenshot">
+            <cocoa class="ScreenshotCommand" />
+        </command>
+        
         <class name="Application" code="Mapp" description="Mariani's top-level scripting object">
             <cocoa class="NSApplication" />
             

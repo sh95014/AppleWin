@@ -586,13 +586,15 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     });
 }
 
-- (void)saveScreenshot {
+- (void)saveScreenshot:(BOOL)silent {
     [self takeScreenshotWithCompletion:^(NSData *pngData) {
         NSURL *url = [self.delegate unusedURLForFilename:SCREENSHOT_FILE_NAME
                                                extension:@"png"
                                                 inFolder:[[UserDefaults sharedInstance] screenshotsFolder]];
         [pngData writeToURL:url atomically:YES];
-        [[NSSound soundNamed:@"Blow"] play];
+        if (!silent) {
+            [[NSSound soundNamed:@"Blow"] play];
+        }
     }];
 }
 
