@@ -153,13 +153,25 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     [self reconfigureDrives];
     
     [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent * _Nullable(NSEvent * _Nonnull event) {
+        const BOOL shift = (event.modifierFlags & NSEventModifierFlagShift) != 0;
+        const BOOL control = (event.modifierFlags & NSEventModifierFlagControl) != 0;
+        const BOOL option = (event.modifierFlags & NSEventModifierFlagOption) != 0;
+        const BOOL command = (event.modifierFlags & NSEventModifierFlagCommand) != 0;
         switch (event.keyCode) {
             case kVK_F9:
-                // toggle 50% scan lines
-                Video &video = GetVideo();
-                video.SetVideoStyle(VideoStyle_e(video.GetVideoStyle() ^ VS_HALF_SCANLINES));
-                [self applyVideoModeChange];
-                return nil;
+                if (shift && control && !option && !command) {
+                    // ^⇧F9: toggle 50% scan lines
+                    Video &video = GetVideo();
+                    video.SetVideoStyle(VideoStyle_e(video.GetVideoStyle() ^ VS_HALF_SCANLINES));
+                    [self applyVideoModeChange];
+                    return nil;
+                }
+                else if (!shift && !control && !option && !command) {
+                    // F9: cycle through display types
+                    NSMenuItem *newItem = [self.displayTypeMenu itemWithTag:(video.GetVideoType() + 1) % NUM_VIDEO_MODES];
+                    [self displayTypeAction:newItem];
+                    return nil;
+                }
         }
         return event;
     }];
