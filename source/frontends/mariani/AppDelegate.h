@@ -22,6 +22,8 @@
 - (void)terminateWithReason:(NSString *)reason;
 - (void)updateDriveLights;
 
+- (void)type:(NSString *)string;
+
 @end
 
 #define theAppDelegate ((AppDelegate *)[[NSApplication sharedApplication] delegate])

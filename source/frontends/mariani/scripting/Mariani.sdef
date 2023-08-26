@@ -15,6 +15,11 @@
             </parameter>
         </command>
         
+        <command name="type" code="MrniType" description="Type on the keyboard">
+            <cocoa class="TypeCommand" />
+            <direct-parameter description="String" type="text" />
+        </command>
+        
         <class name="Application" code="Mapp" description="Mariani's top-level scripting object">
             <cocoa class="NSApplication" />
             

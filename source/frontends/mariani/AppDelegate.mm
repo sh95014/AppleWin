@@ -722,6 +722,10 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     [self.emulatorVC saveScreenshot];
 }
 
+- (void)type:(NSString *)string {
+    [self.emulatorVC type:string];
+}
+
 #pragma mark - Helpers because I can't figure out how to make 'frame' properly global
 
 - (void)applyVideoModeChange {

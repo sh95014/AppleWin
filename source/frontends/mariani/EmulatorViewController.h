@@ -73,6 +73,8 @@ extern const NSNotificationName EmulatorDidExitDebugModeNotification;
 - (void)videoModeDidChange;
 - (BOOL)emulationHardwareChanged;
 
+- (void)type:(NSString *)string;
+
 @end
 
 NS_ASSUME_NONNULL_END

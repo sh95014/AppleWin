@@ -19,6 +19,9 @@
 @interface InsertCommand : NSScriptCommand
 @end
 
+@interface TypeCommand : NSScriptCommand
+@end
+
 @class Drive;
 
 @interface Slot : NSObject
@@ -59,6 +62,17 @@
     CardManager &cardManager = GetCardMgr();
     Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(drive.slot.index));
     card->InsertDisk(drive.index, cppFilename, false, false);
+    return nil;
+}
+
+@end
+
+#pragma mark -
+
+@implementation TypeCommand
+
+- (id)performDefaultImplementation {
+    [theAppDelegate type:[self directParameter]];
     return nil;
 }
 

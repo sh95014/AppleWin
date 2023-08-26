@@ -609,6 +609,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (IBAction)paste:(id)sender {
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSString *string = [pasteboard stringForType:NSPasteboardTypeString];
+    [self type:string];
+}
+
+- (void)type:(NSString *)string {
     [(EmulatorView *)self.view addStringToKeyboardBuffer:string];
 }
 
