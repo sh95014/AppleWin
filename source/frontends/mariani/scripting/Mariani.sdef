@@ -30,6 +30,10 @@
             <element type="Slot" description="I/O slots">
                 <cocoa key="slots" />
             </element>
+            
+            <property name="display" code="Mdsp" description="Display type" type="DisplayType">
+                <cocoa key="display" />
+            </property>
         </class>
         
         <class name="Slot" code="Mslt" description="I/O slot">
@@ -48,6 +52,18 @@
                 <cocoa key="disk" />
             </property>
         </class>
+        
+        <enumeration name="DisplayType" code="MdsT" description="Video display type">
+            <enumerator name="VT_MONO_CUSTOM" code="Mmcu" description="Monochrome (Custom)" />
+            <enumerator name="VT_COLOR_IDEALIZED" code="Mcid" description="Color (Composite Idealized)" />
+            <enumerator name="VT_COLOR_VIDEOCARD_RGB" code="Mcvc" description="Color (RGB Card/Monitor)" />
+            <enumerator name="VT_COLOR_MONITOR_NTSC" code="Mcnt" description="Color (Composite Monitor)" />
+            <enumerator name="VT_COLOR_TV" code="Mctv" description="Color TV" />
+            <enumerator name="VT_MONO_TV" code="Mmtv" description="B&amp;W TV" />
+            <enumerator name="VT_MONO_AMBER" code="Mmam" description="Monochrome (Amber)" />
+            <enumerator name="VT_MONO_GREEN" code="Mmgr" description="Monochrome (Green)" />
+            <enumerator name="VT_MONO_WHITE" code="Mmwt" description="Monochrome (White)" />
+        </enumeration>
         
     </suite>
 </dictionary>

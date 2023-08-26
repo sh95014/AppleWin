@@ -12,6 +12,8 @@
 #import "CardManager.h"
 #import "Core.h"
 #import "Disk.h"
+#import "Interface.h"
+#import "Video.h"
 
 @interface RebootCommand : NSScriptCommand
 @end
@@ -160,6 +162,18 @@
 
 #pragma mark -
 
+typedef enum {
+    monochromeCustom = 'Mmcu',
+    colorIdealized = 'Mcid',
+    colorRGB = 'Mcvc',
+    colorComposite = 'Mcnt',
+    colorTV = 'Mctv',
+    bwTV = 'Mmtv',
+    monochromeAmber = 'Mmam',
+    monochromeGreen = 'Mmgr',
+    monochromeWhite = 'Mmwt',
+} DisplayType;
+
 @implementation AppDelegate (Scripting)
 
 - (NSArray *)slots {
@@ -172,8 +186,47 @@
     return slots;
 }
 
+- (DisplayType)display {
+    Video &video = GetVideo();
+    switch (video.GetVideoType()) {
+        case VT_MONO_CUSTOM: return monochromeCustom;
+        case VT_COLOR_IDEALIZED: return colorIdealized;
+        case VT_COLOR_VIDEOCARD_RGB: return colorRGB;
+        case VT_COLOR_MONITOR_NTSC: return colorComposite;
+        case VT_COLOR_TV: return colorTV;
+        case VT_MONO_TV: return bwTV;
+        case VT_MONO_AMBER: return monochromeAmber;
+        case VT_MONO_GREEN: return monochromeGreen;
+        case VT_MONO_WHITE: return monochromeWhite;
+        default: return colorTV;
+    }
+}
+
+- (void)setDisplay:(DisplayType)displayType {
+    NSLog(@"setDisplay: %d", displayType);
+    Video &video = GetVideo();
+    
+    VideoType_e videoType;
+    switch (displayType) {
+        case monochromeCustom:  videoType = VT_MONO_CUSTOM; break;
+        case colorIdealized:    videoType = VT_COLOR_IDEALIZED; break;
+        case colorRGB:          videoType = VT_COLOR_VIDEOCARD_RGB; break;
+        case colorComposite:    videoType = VT_COLOR_MONITOR_NTSC; break;
+        case colorTV:           videoType = VT_COLOR_TV; break;
+        case bwTV:              videoType = VT_MONO_TV; break;
+        case monochromeAmber:   videoType = VT_MONO_AMBER; break;
+        case monochromeGreen:   videoType = VT_MONO_GREEN; break;
+        case monochromeWhite:   videoType = VT_MONO_WHITE; break;
+    }
+    
+    video.SetVideoType(videoType);
+    [theAppDelegate.emulatorVC videoModeDidChange];
+    [theAppDelegate.emulatorVC displayTypeDidChange];
+}
+
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
-    return [key isEqualToString:@"slots"];
+    NSArray *supportedCommands = @[ @"display", @"slots" ];
+    return [supportedCommands containsObject:key];
 }
 
 @end
