@@ -782,6 +782,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                                                   action:@selector(openDiskImage:)
                                            keyEquivalent:@""];
                 item.representedObject = @[ @(slot), @(drive) ];
+                if (slot == SLOT6) {
+                    unichar character = (drive == DRIVE_1) ? NSF3FunctionKey : NSF4FunctionKey;
+                    NSString *key = [NSString stringWithCharacters:&character length:1];
+                    item.keyEquivalent = key;
+                    item.keyEquivalentModifierMask = 0;
+                }
                 [self.openDiskImageMenu addItem:item];
                 driveLightButton.toolTip = driveName;
 
