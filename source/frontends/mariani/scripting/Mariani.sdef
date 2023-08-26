@@ -2,12 +2,12 @@
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
 
 <dictionary title="Mariani Terminology">
-    <suite name="Mariani Suite" code="AWin" description="Mariani Scripting Support">
+    <suite name="Mariani Suite" code="Mrni" description="Mariani Scripting Support">
         <command name="reboot" code="AWreboot" description="Reboot the emulator">
             <cocoa class="RebootCommand" />
         </command>
         
-        <class name="application" code="AWap" description="Mariani's top-level scripting object">
+        <class name="application" code="Mapp" description="Mariani's top-level scripting object">
             <cocoa class="NSApplication" />
             
             <element type="slot" description="I/O slots">
@@ -15,10 +15,20 @@
             </element>
         </class>
         
-        <class name="slot" code="AWsl" description="I/O slot">
+        <class name="slot" code="Mslt" description="I/O slot">
             <cocoa class="Slot" />
-            <property name="card" code="AWcd" description="I/O card inserted in slot" type="text">
+            <property name="card" code="Mcrd" description="I/O card inserted in slot" type="text">
                 <cocoa key="card" />
+            </property>
+            <element type="drive" description="Disk drives">
+                <cocoa key="drives" />
+            </element>
+        </class>
+        
+        <class name="drive" code="Mdrv" description="Disk drive">
+            <cocoa class="Drive" />
+            <property name="disk" code="Mdsk" description="Disk inserted in drive" type="text">
+                <cocoa key="disk" />
             </property>
         </class>
         

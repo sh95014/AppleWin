@@ -5,18 +5,36 @@
 //  Created by sh95014 on 8/25/23.
 //
 
-#import "ScriptCommands.h"
 #import "AppDelegate.h"
 #import "PreferencesViewController.h"
 
 #import "StdAfx.h"
-//#import "Card.h"
 #import "CardManager.h"
-//#import "Common.h"
 #import "Core.h"
+#import "Disk.h"
 
 @interface RebootCommand : NSScriptCommand
 @end
+
+@class Drive;
+
+@interface Slot : NSObject
+@property (readonly) NSString *card;
+@property (readonly) Drive *drives;
+@property (assign) UINT index;
+@property (assign) SS_CARDTYPE cardType;
+@end
+
+@interface Drive : NSObject
+@property (assign) int index;
+@property (weak) Slot *slot;
+@end
+
+@interface AppDelegate (Scripting)
+@property (readonly) NSArray *slots;
+@end
+
+#pragma mark -
 
 @implementation RebootCommand
 
@@ -29,18 +47,36 @@
 
 #pragma mark -
 
-@interface Slot : NSObject
+@implementation Drive
 
-@property (readonly) NSString *card;
+- (id)initWithIndex:(int)index slot:(Slot *)slot {
+    if ((self = [super init]) != nil) {
+        self.index = index;
+        self.slot = slot;
+    }
+    return self;
+}
 
-@property (assign) NSInteger index;
-@property (assign) SS_CARDTYPE cardType;
+- (NSScriptObjectSpecifier *)objectSpecifier {
+    return [[NSIndexSpecifier alloc] initWithContainerClassDescription:(NSScriptClassDescription *)self.slot.classDescription
+                                                    containerSpecifier:nil
+                                                                   key:@"drives"
+                                                                 index:self.index];
+}
+
+- (NSString *)disk {
+    CardManager &cardManager = GetCardMgr();
+    Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(self.slot.index));
+    return [NSString stringWithUTF8String:card->GetFullDiskFilename(self.index).c_str()];
+}
 
 @end
 
+#pragma mark -
+
 @implementation Slot
 
-- (id)initWithIndex:(NSInteger)index card:(SS_CARDTYPE)cardType {
+- (id)initWithIndex:(UINT)index card:(SS_CARDTYPE)cardType {
     if ((self = [super init]) != nil) {
         self.index = index;
         self.cardType = cardType;
@@ -61,22 +97,28 @@
     return cardNames[@(self.cardType)];
 }
 
+- (NSArray *)drives {
+    NSMutableArray *drives = [NSMutableArray array];
+    CardManager &cardManager = GetCardMgr();
+    if (cardManager.QuerySlot(self.index) == CT_Disk2) {
+        for (int index = DRIVE_1; index < NUM_DRIVES; index++) {
+            Drive *drive = [[Drive alloc] initWithIndex:index slot:self];
+            [drives addObject:drive];
+        }
+    }
+    return drives;
+}
+
 @end
 
 #pragma mark -
-
-@interface AppDelegate (Scripting)
-
-@property (readonly) NSArray *slots;
-
-@end
 
 @implementation AppDelegate (Scripting)
 
 - (NSArray *)slots {
     NSMutableArray *slots = [NSMutableArray array];
     CardManager &manager = GetCardMgr();
-    for (int slot = SLOT1; slot < NUM_SLOTS; slot++) {
+    for (UINT slot = SLOT1; slot < NUM_SLOTS; slot++) {
         SS_CARDTYPE card = manager.QuerySlot(slot);
         [slots addObject:[[Slot alloc] initWithIndex:slot card:card]];
     }
