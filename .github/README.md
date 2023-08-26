@@ -6,7 +6,7 @@ Mariani is a native macOS UI for [AppleWin](https://github.com/AppleWin/AppleWin
 
 <img width="2560" alt="Mariani Screenshot" src="https://github.com/sh95014/AppleWin/assets/95387068/b9ce556f-d3eb-4d0a-9617-b5fb27211b84">
 
-But if what you want is a macOS command-line app, you can build that too with the instructions below.
+But if what you want is a macOS command-line app, you can build that too with the [instructions below](https://github.com/sh95014/AppleWin#build-sa2).
 
 ### Features
 
