@@ -16,7 +16,8 @@ But if what you want is a macOS command-line app, you can build that too with th
 - Disk image browser, including syntax-highlighted listings for Applesoft and Integer BASIC, as well as hex viewer for other file types
 - Floppy and hard disk image creation
 - Full-screen support
-- Debugger and memory viewer in separate windows
+- [Debugger](/source/frontends/mariani/debugger/README.md) and memory viewer in separate windows
+- [AppleScript](/source/frontends/mariani/scripting/README.md) support
 
 ### Known Issues
 
@@ -26,8 +27,6 @@ Mariani should now be broadly useful, so please [report any issues](https://gith
 - [Numeric keypad joystick emulation](https://github.com/sh95014/AppleWin/issues/10)
 
 ### Roadmap
-
-A [debugger](/source/frontends/mariani/debugger/README.md) and memory viewer are now available.
 
 Experimental support for printers is available in a [branch](https://github.com/sh95014/AppleWin/tree/printer-support). It needs considerable [upstream support](https://github.com/AppleWin/AppleWin/issues/1026) and is unmaintained.
 
