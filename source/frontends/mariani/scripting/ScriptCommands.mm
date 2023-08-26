@@ -16,6 +16,9 @@
 @interface RebootCommand : NSScriptCommand
 @end
 
+@interface InsertCommand : NSScriptCommand
+@end
+
 @class Drive;
 
 @interface Slot : NSObject
@@ -40,6 +43,22 @@
 
 - (id)performDefaultImplementation {
     [theAppDelegate rebootEmulatorAction:self];
+    return nil;
+}
+
+@end
+
+#pragma mark -
+
+@implementation InsertCommand
+
+- (id)performDefaultImplementation {
+    NSString *filename = [self directParameter];
+    std::string cppFilename(filename.UTF8String);
+    Drive* drive = [[self evaluatedArguments] valueForKey:@"drive"];
+    CardManager &cardManager = GetCardMgr();
+    Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(drive.slot.index));
+    card->InsertDisk(drive.index, cppFilename, false, false);
     return nil;
 }
 

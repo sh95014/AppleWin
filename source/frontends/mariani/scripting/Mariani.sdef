@@ -3,31 +3,39 @@
 
 <dictionary title="Mariani Terminology">
     <suite name="Mariani Suite" code="Mrni" description="Mariani Scripting Support">
-        <command name="reboot" code="AWreboot" description="Reboot the emulator">
+        <command name="reboot" code="MrniRebt" description="Reboot the emulator">
             <cocoa class="RebootCommand" />
         </command>
         
-        <class name="application" code="Mapp" description="Mariani's top-level scripting object">
+        <command name="insert" code="MrniInsr" description="Insert disk in drive">
+            <cocoa class="InsertCommand" />
+            <direct-parameter description="File name of disk" type="text" />
+            <parameter name="into" code="Pdrv" description="Disk drive" type="Drive">
+                <cocoa key="drive"/>
+            </parameter>
+        </command>
+        
+        <class name="Application" code="Mapp" description="Mariani's top-level scripting object">
             <cocoa class="NSApplication" />
             
-            <element type="slot" description="I/O slots">
+            <element type="Slot" description="I/O slots">
                 <cocoa key="slots" />
             </element>
         </class>
         
-        <class name="slot" code="Mslt" description="I/O slot">
+        <class name="Slot" code="Mslt" description="I/O slot">
             <cocoa class="Slot" />
             <property name="card" code="Mcrd" description="I/O card inserted in slot" type="text">
                 <cocoa key="card" />
             </property>
-            <element type="drive" description="Disk drives">
+            <element type="Drive" description="Disk drives">
                 <cocoa key="drives" />
             </element>
         </class>
         
-        <class name="drive" code="Mdrv" description="Disk drive">
+        <class name="Drive" code="Mdrv" description="Disk drive">
             <cocoa class="Drive" />
-            <property name="disk" code="Mdsk" description="Disk inserted in drive" type="text">
+            <property name="disk" code="Mdsk" description="Disk in drive" type="text">
                 <cocoa key="disk" />
             </property>
         </class>
