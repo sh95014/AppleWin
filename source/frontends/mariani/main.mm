@@ -10,16 +10,31 @@
 
 common2::EmulatorOptions gEmulatorOptions;
 
-int main(int argc, const char * argv[]) {
-    int argCount = argc;
-    if (argc > 2 &&
-        strcmp(argv[argc - 2], "-NSDocumentRevisionsDebugMode") == 0 &&
-        strcmp(argv[argc - 1], "YES") == 0) {
-        // strip off parameters that Xcode seems to inject.
-        argCount -= 2;
+int main(int argc, const char *argv[]) {
+    // need to split the argv[] into two halves, one for AppleWin to ingest, and the
+    // other for NSApplicationMain().
+    int awArgc, macArgc;
+    const char **awArgv = (const char **)malloc(sizeof(*awArgv) * argc);
+    const char **macArgv = (const char **)malloc(sizeof(*macArgv) * argc);
+    awArgv[0] = macArgv[0] = argv[0];
+    awArgc = macArgc = 1;
+    
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-NSDocumentRevisionsDebugMode") == 0 ||
+            strcmp(argv[i], "-AppleLanguages") == 0 ||
+            strcmp(argv[i], "-AppleTextDirection") == 0) {
+            macArgv[macArgc++] = argv[i];
+            if (i + 1 < argc) {
+                macArgv[macArgc++] = argv[++i];
+            }
+        }
+        else {
+            awArgv[awArgc++] = argv[i];
+        }
     }
-    if (!getEmulatorOptions(argCount, argv, "macOS", gEmulatorOptions)) {
+    
+    if (!getEmulatorOptions(awArgc, awArgv, "macOS", gEmulatorOptions)) {
         return -1;
     }
-    return NSApplicationMain(argc, argv);
+    return NSApplicationMain(macArgc, macArgv);
 }
