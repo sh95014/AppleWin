@@ -6,6 +6,8 @@
 //
 
 #import "MemoryViewerWindowController.h"
+#import "DataFormatBASIC.h"
+#import "DiskImageBrowserWindowController.h"
 #import "EmulatorViewController.h"
 #import <HexFiend/HexFiend.h>
 #import <HexFiend/HFLineCountingView.h>
@@ -22,6 +24,7 @@
 @property (assign) void *basePointer;
 @property (assign) size_t baseAddress;
 @property (assign) size_t length;
+@property (assign) BOOL isBASIC;
 
 @end
 
@@ -32,6 +35,7 @@
 
 @property (weak) IBOutlet NSSegmentedControl *memoryRangeSegmentedControl;
 @property (weak) IBOutlet NSView *hexViewContainerView;
+@property (strong) BASICListingView *basicListingView;
 
 @property (strong) HFController *hfController;
 @property (weak) HFLineCountingView *lineCountingView;
@@ -53,6 +57,13 @@
         
         [self loadSegmentedControl];
         [self loadHexView];
+        [self loadBASICView];
+        
+        // Let the BASIC view be a sibling of the hex view, with the same size.
+        NSView *basicScrollView = self.basicListingView.enclosingScrollView;
+        basicScrollView.frame = self.hexViewContainerView.frame;
+        [self.hexViewContainerView.superview addSubview:basicScrollView];
+        basicScrollView.hidden = YES;
         
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
@@ -106,6 +117,14 @@
         ++i;
     }
     
+    self.memoryRangeSegmentedControl.segmentCount = self.memoryRangeSegmentedControl.segmentCount + 1;
+    [self.memoryRangeSegmentedControl setLabel:NSLocalizedString(@"BASIC", @"")
+                                    forSegment:self.memoryRangeSegmentedControl.segmentCount - 1];
+    config = [[MemoryTabConfiguration alloc] init];
+    config.basePointer = mem;
+    config.isBASIC = YES;
+    [self.memoryTabConfigurations addObject:config];
+    
     self.memoryRangeSegmentedControl.selectedSegment = 0;
 }
 
@@ -153,16 +172,72 @@
     [self.hexViewContainerView addSubview:layoutView];
 }
 
+- (void)loadBASICView {
+    NSScrollView *scrollView = [BASICListingView scrollableTextView];
+    self.basicListingView = scrollView.documentView;
+    self.basicListingView.editable = NO;
+    self.basicListingView.richText = YES;
+}
+
 - (void)refresh {
     MemoryTabConfiguration *config = self.memoryTabConfigurations[self.memoryRangeSegmentedControl.selectedSegment];
-    NSData *data = [NSData dataWithBytes:config.basePointer length:config.length];
-    
-    HFSharedMemoryByteSlice *byteSlice = [[HFSharedMemoryByteSlice alloc] initWithUnsharedData:data];
-    HFFullMemoryByteArray *byteArray = [[HFFullMemoryByteArray alloc] initWithByteSlice:byteSlice];
-    [self.hfController setByteArray:byteArray];
-    
-    self.lineCountingView.startOffset = config.baseAddress;
-    
+    if (!config.isBASIC) {
+        self.hexViewContainerView.hidden = NO;
+        self.basicListingView.enclosingScrollView.hidden = YES;
+        
+        NSData *data = [NSData dataWithBytes:config.basePointer length:config.length];
+        
+        HFSharedMemoryByteSlice *byteSlice = [[HFSharedMemoryByteSlice alloc] initWithUnsharedData:data];
+        HFFullMemoryByteArray *byteArray = [[HFFullMemoryByteArray alloc] initWithByteSlice:byteSlice];
+        [self.hfController setByteArray:byteArray];
+        
+        self.lineCountingView.startOffset = config.baseAddress;
+    }
+    else {
+        self.hexViewContainerView.hidden = YES;
+        self.basicListingView.enclosingScrollView.hidden = NO;
+        
+        static unsigned savedProgramStart = 0, savedProgramEnd = 0;
+        
+        const unsigned char *mem = (const unsigned char *)config.basePointer;
+        unsigned programStart = 0, programEnd = 0;
+        NSData *data;
+        NSString *rtfString;
+        BOOL programChanged = NO;
+        switch (mem[0xE000]) {
+            case 0x4C: // AppleSoft
+                self.basicListingView.isApplesoftBASIC = YES;
+                programStart = ((unsigned)mem[0x68] << 8) | mem[0x67];
+                programEnd = ((unsigned)mem[0xB0] << 8) | mem[0xAF];
+                programChanged = programStart != savedProgramStart || programEnd != savedProgramEnd;
+                if (programChanged) {
+                    data = [NSData dataWithBytes:mem + programStart length:programEnd - programStart];
+                    rtfString = ApplesoftBASICDataToRTF(data);
+                }
+                break;
+            case 0x20: // Integer BASIC
+                self.basicListingView.isApplesoftBASIC = NO;
+                programStart = ((unsigned)mem[0xCB] << 8) | mem[0xCA];
+                programEnd = ((unsigned)mem[0x4D] << 8) | mem[0x4C];
+                programChanged = programStart != savedProgramStart || programEnd != savedProgramEnd;
+                if (programChanged) {
+                    data = [NSData dataWithBytes:mem + programStart length:programEnd - programStart];
+                    rtfString = IntegerBASICDataToRTF(data);
+                }
+                break;
+        }
+        
+        if (programChanged) {
+            self.basicListingView.data = data;
+            [self.basicListingView.textStorage setAttributedString:
+                [[NSAttributedString alloc] initWithData:[rtfString dataUsingEncoding:NSUTF8StringEncoding]
+                                                 options:@{}
+                                      documentAttributes:nil
+                                                   error:nil]];
+            savedProgramStart = programStart;
+            savedProgramEnd = programEnd;
+        }
+    }
     if (!self.inDebugMode) {
         [self performSelector:@selector(refresh) withObject:nil afterDelay:REFRESH_DELAY];
     }

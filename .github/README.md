@@ -16,7 +16,7 @@ But if what you want is a macOS command-line app, you can build that too with th
 - Disk image browser, including syntax-highlighted listings for Applesoft and Integer BASIC, as well as hex viewer for other file types
 - Floppy and hard disk image creation
 - Full-screen support
-- [Debugger](/source/frontends/mariani/debugger/README.md) and memory viewer in separate windows
+- [Debugger](/source/frontends/mariani/debugger/README.md) and memory viewer (including a live viewer for the current BASIC program!) in separate windows
 - [AppleScript](/source/frontends/mariani/scripting/README.md) support
 
 ### Known Issues

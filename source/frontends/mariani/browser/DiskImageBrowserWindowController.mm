@@ -52,12 +52,7 @@ using namespace DiskImgLib;
 @implementation FSItem
 @end
 
-@interface MyTextView : NSTextView
-@property (strong) NSData *data;
-@property (assign) BOOL isApplesoftBASIC;
-@end
-
-@implementation MyTextView
+@implementation BASICListingView
 
 - (void)viewDidChangeEffectiveAppearance {
     // regenerate the RTF and attributed string to pick up the new appearance
@@ -350,8 +345,8 @@ NSArray *fileTypeStrings = @[
     const BOOL isApplesoftBASIC = [fsItem.kind hasPrefix:@"BAS"];
     const BOOL isIntegerBASIC = [fsItem.kind hasPrefix:@"INT"];
     if (isApplesoftBASIC || isIntegerBASIC) {
-        NSScrollView *scrollView = [MyTextView scrollableTextView];
-        MyTextView *textView = scrollView.documentView;
+        NSScrollView *scrollView = [BASICListingView scrollableTextView];
+        BASICListingView *textView = scrollView.documentView;
         textView.data = data;
         textView.isApplesoftBASIC = isApplesoftBASIC;
         NSString *rtfString = isApplesoftBASIC ? ApplesoftBASICDataToRTF(data) : IntegerBASICDataToRTF(data);

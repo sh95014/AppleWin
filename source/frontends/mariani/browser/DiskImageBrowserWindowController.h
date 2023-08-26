@@ -16,4 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface BASICListingView : NSTextView
+@property (strong) NSData *data;
+@property (assign) BOOL isApplesoftBASIC;
+@end
+
 NS_ASSUME_NONNULL_END
