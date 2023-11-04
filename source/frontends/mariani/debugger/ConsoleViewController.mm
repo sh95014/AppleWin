@@ -20,8 +20,6 @@
 
 @implementation ConsoleViewController
 
-static NSString *mouseTextMapping = @"⬉⌛︎✓☑︎↵�←…↓↑‾↵█⇤⇥⤓⤒―⌞→▦▩⟦⟧⎥♦︎�✛⊡⎢";
-
 - (id)initWithTextView:(NSTextView *)textView {
     NSAssert((int)NSColorModeAppleWinColor == (int)SCHEME_COLOR, @"");
     NSAssert((int)NSColorModeAppleWinMonochrome == (int)SCHEME_MONO, @"");
@@ -73,9 +71,9 @@ static NSString *mouseTextMapping = @"⬉⌛︎✓☑︎↵�←…↓↑
     __block NSColor *color = [NSColor colorForType:NSColorTypeConsoleOutputDefault];
     
     NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary: @{
-        NSFontAttributeName : [NSFont monospacedSystemFontOfSize:[NSFont systemFontSize] weight:NSFontWeightRegular],
+        NSFontAttributeName : [NSFont fontWithName:@"Print Char 21" size:[NSFont systemFontSize]],
     }];
-
+    
     void (^emit)(char *) = ^(char *charBuffer) {
         if (charIndex > 0) {
             // output accumulated buffer
@@ -100,7 +98,8 @@ static NSString *mouseTextMapping = @"⬉⌛︎✓☑︎↵�←…↓↑
             // mouse text
             emit(charBuffer);
             
-            NSString *mouseChar = [mouseTextMapping substringWithRange:NSMakeRange(*c & 0x1F, 1)];
+            // See https://www.kreativekorp.com/software/fonts/apple2/ for private use area
+            NSString *mouseChar = [NSString stringWithFormat:@"%C", (unichar)(0xE080 + (*c & 0x1F))];
             [attributes setValue:color forKey:NSForegroundColorAttributeName];
             NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:mouseChar attributes:attributes];
             [self.textView.textStorage appendAttributedString:attrString];

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		97419F302AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
+		97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -699,6 +701,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1517,6 +1520,7 @@
 				B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */,
 				B0F97BBD2A26758E00461923 /* A2_BASIC.SYM */,
 				B0F97BBE2A26758E00461923 /* APPLE2E.SYM */,
+				97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2708,6 +2712,7 @@
 				B0F43FD8295E4BAD00E79AD7 /* CHARSET8C.bmp in Resources */,
 				B00ECBCC279EEB600041E16C /* Assets.xcassets in Resources */,
 				97FF91C32A9965EC006A62A3 /* Mariani.sdef in Resources */,
+				97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */,
 				B00ECBCD279EEB600041E16C /* Base64A_German_Video.rom in Resources */,
 				B00ECBCE279EEB600041E16C /* Hddrvr.bin in Resources */,
 				B0F97BC02A26758E00461923 /* A2_BASIC.SYM in Resources */,
@@ -2753,6 +2758,7 @@
 				B0F43FD7295E4BAD00E79AD7 /* CHARSET8C.bmp in Resources */,
 				B032DE28277A0C24006DC0F7 /* Assets.xcassets in Resources */,
 				97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */,
+				97419F302AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */,
 				B045FE7A2782984F006E36F9 /* Base64A_German_Video.rom in Resources */,
 				B045FE762782984F006E36F9 /* Hddrvr.bin in Resources */,
 				B0F97BBF2A26758E00461923 /* A2_BASIC.SYM in Resources */,
