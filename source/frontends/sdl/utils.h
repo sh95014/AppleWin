@@ -11,6 +11,10 @@ namespace sa2
 {
 
 #ifndef MARIANI
+  void printVideoInfo(std::ostream & os);
+
+  void printAudioInfo(std::ostream & os);
+
   void printRendererInfo(std::ostream & os,
                          const std::shared_ptr<SDL_Renderer> & ren,
                          const Uint32 pixelFormat,

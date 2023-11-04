@@ -14,7 +14,6 @@
 
 #include "frontends/libretro/game.h"
 #include "frontends/libretro/environment.h"
-#include "frontends/libretro/rdirectsound.h"
 #include "frontends/libretro/retroregistry.h"
 #include "frontends/libretro/joypad.h"
 #include "frontends/libretro/analog.h"
@@ -100,6 +99,32 @@ namespace
     return ourGame->getDiskControl().getImageLabel(index, label, len);
   }
 
+  void retro_keyboard_event(bool down, unsigned keycode, uint32_t character, uint16_t key_modifiers)
+  {
+    ourGame->keyboardCallback(down, keycode, character, key_modifiers);
+  }
+
+  const retro_input_descriptor inputDescriptors[] = {
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT, "PDL(0)=0"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT, "PDL(0)=255"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP, "PDL(1)=0"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN, "PDL(1)=255"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A, "Button 0"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B, "Button 1"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_SELECT, "Select"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START, "Start"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L, "Scan lines"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R, "Cycle video"},
+    {0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L2, "Save conf"},
+
+    {0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_LEFT, "Button 0"},
+    {0, RETRO_DEVICE_MOUSE, 0, RETRO_DEVICE_ID_MOUSE_RIGHT, "Button 1"},
+
+    {0, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X, "PDL(0)" },
+    {0, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_Y, "PDL(1)" },
+    {0, 0, 0, 0, nullptr}
+  };
+
 }
 
 void retro_init(void)
@@ -131,15 +156,15 @@ void retro_set_controller_port_device(unsigned port, unsigned device)
       Paddle::instance.reset();
       break;
     case RETRO_DEVICE_JOYPAD:
-      Paddle::instance = std::make_shared<ra2::Joypad>(device);
+      Paddle::instance = std::make_shared<ra2::Joypad>();
       Paddle::setSquaring(false);
       break;
     case RETRO_DEVICE_ANALOG:
-      Paddle::instance = std::make_shared<ra2::Analog>(device);
+      Paddle::instance = std::make_shared<ra2::Analog>();
       Paddle::setSquaring(true);
       break;
     case RETRO_DEVICE_MOUSE:
-      Paddle::instance = std::make_shared<ra2::Mouse>(device, &ourGame);
+      Paddle::instance = std::make_shared<ra2::Mouse>(&ourGame);
       Paddle::setSquaring(false);
       break;
     default:
@@ -200,15 +225,13 @@ void retro_set_environment(retro_environment_t cb)
     };
 
   cb(RETRO_ENVIRONMENT_SET_CONTROLLER_INFO, (void*)ports);
+  cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, (void*)inputDescriptors);
 
-  retro_keyboard_callback keyboardCallback = {&ra2::Game::keyboardCallback};
+  retro_keyboard_callback keyboardCallback = {&retro_keyboard_event};
   cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, &keyboardCallback);
 
   // retro_audio_buffer_status_callback audioCallback = {&ra2::bufferStatusCallback};
   // cb(RETRO_ENVIRONMENT_SET_AUDIO_BUFFER_STATUS_CALLBACK, &audioCallback);
-
-  retro_frame_time_callback timeCallback = {&ra2::Game::frameTimeCallback, 1000000 / ra2::Game::FPS};
-  cb(RETRO_ENVIRONMENT_SET_FRAME_TIME_CALLBACK, &timeCallback);
 
   // see retro_get_memory_data() below
   bool achievements = true;

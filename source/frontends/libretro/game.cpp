@@ -3,6 +3,7 @@
 #include "frontends/libretro/rdirectsound.h"
 #include "frontends/libretro/retroregistry.h"
 #include "frontends/libretro/retroframe.h"
+#include "frontends/libretro/rkeyboard.h"
 #include "frontends/common2/utils.h"
 #include "frontends/common2/ptreeregistry.h"
 
@@ -51,10 +52,11 @@ namespace ra2
     myRegistryContext = std::make_shared<RegistryContext>(myRegistry);
     myFrame = std::make_shared<ra2::RetroFrame>();
 
-    myAudioChannelsSelected = GetAudioOutputChannels();
+    refreshVariables();
 
     SetFrame(myFrame);
     myFrame->Begin();
+    mySpeed.reset();
 
     Video & video = GetVideo();
     // should the user be allowed to tweak 0.75
@@ -68,8 +70,6 @@ namespace ra2
     myFrame.reset();
     SetFrame(myFrame);
   }
-
-  retro_usec_t Game::ourFrameTime = 0;
 
   void Game::executeOneFrame()
   {
@@ -87,6 +87,12 @@ namespace ra2
     }
   }
 
+  void Game::refreshVariables()
+  {
+    myAudioChannelsSelected = GetAudioOutputChannels();
+    myKeyboardType = GetKeyboardEmulationType();
+  }
+
   void Game::updateVariables()
   {
     bool updated = false;
@@ -95,7 +101,7 @@ namespace ra2
       PopulateRegistry(myRegistry);
 
       // some variables are immediately applied
-      myAudioChannelsSelected = GetAudioOutputChannels();
+      refreshVariables();
 
       Video& video = GetVideo();
       const VideoType_e prevVideoType = video.GetVideoType();
@@ -137,105 +143,98 @@ namespace ra2
     }
   }
 
-  void Game::frameTimeCallback(retro_usec_t usec)
-  {
-    ourFrameTime = usec;
-  }
-
   void Game::processKeyDown(unsigned keycode, uint32_t character, uint16_t key_modifiers)
   {
     BYTE ch = 0;
-    switch (keycode)
-    {
-    case RETROK_RETURN:
-      {
-        ch = 0x0d;
-        break;
-      }
-    case RETROK_BACKSPACE: // same as AppleWin
-    case RETROK_LEFT:
-      {
-        ch = 0x08;
-        break;
-      }
-    case RETROK_RIGHT:
-      {
-        ch = 0x15;
-        break;
-      }
-    case RETROK_UP:
-      {
-        ch = 0x0b;
-        break;
-      }
-    case RETROK_DOWN:
-      {
-        ch = 0x0a;
-        break;
-      }
-    case RETROK_DELETE:
-      {
-        ch = 0x7f;
-        break;
-      }
-    case RETROK_ESCAPE:
-      {
-        ch = 0x1b;
-        break;
-      }
-    case RETROK_TAB:
-      {
-        ch = 0x09;
-        break;
-      }
-    case RETROK_LALT:
-      {
-        Paddle::setButtonPressed(Paddle::ourOpenApple);
-        break;
-      }
-    case RETROK_RALT:
-      {
-        Paddle::setButtonPressed(Paddle::ourSolidApple);
-        break;
-      }
-    case RETROK_a ... RETROK_z:
-      {
-        ch = (keycode - RETROK_a) + 0x01;
-        if (key_modifiers & RETROKMOD_CTRL)
-        {
-          // ok
-        }
-        else if (key_modifiers & RETROKMOD_SHIFT)
-        {
-          ch += 0x60;
-        }
-        else
-        {
-          ch += 0x40;
-        }
-        break;
-      }
-    }
+    bool found = false; // it seems CTRL-2 produces NUL. is it a real key?
+    bool valid = true;
 
-    if (!ch)
+    if (myKeyboardType == KeyboardType::ASCII)
     {
+      // if we tried ASCII and the character is invalid, dont try again with scancode (e.g. £)
+      valid = character < 0x80;
+
+      // this block is to ensure the ascii character is used
+      // if selected and available
       switch (character) {
-      case 0x20 ... 0x40:
-      case 0x5b ... 0x60:
-      case 0x7b ... 0x7e:
+      case 0x20 ... 0x40:   // space ... @
+      case 0x5b ... 0x60:   // [ ... `
+      case 0x7b ... 0x7e:   // { ... ~
         {
-          // not the letters
-          // this is very simple, but one cannot handle CRTL-key combination.
           ch = character;
+          found = true;
           break;
         }
       }
     }
 
-    if (ch)
+    if (!found && valid)
+    {
+      // use scancodes, but dont overwrite invalid ASCII
+      found = getApple2Character(keycode, key_modifiers & RETROKMOD_CTRL, key_modifiers & RETROKMOD_SHIFT, ch);
+    }
+
+    if (!found)
+    {
+      // some special characters and letters
+      switch (keycode)
+      {
+      case RETROK_LEFT:
+        {
+          ch = 0x08;
+          break;
+        }
+      case RETROK_RIGHT:
+        {
+          ch = 0x15;
+          break;
+        }
+      case RETROK_UP:
+        {
+          ch = 0x0b;
+          break;
+        }
+      case RETROK_DOWN:
+        {
+          ch = 0x0a;
+          break;
+        }
+      case RETROK_LALT:
+        {
+          Paddle::setButtonPressed(Paddle::ourOpenApple);
+          break;
+        }
+      case RETROK_RALT:
+        {
+          Paddle::setButtonPressed(Paddle::ourSolidApple);
+          break;
+        }
+      case RETROK_a ... RETROK_z:
+        {
+          ch = (keycode - RETROK_a) + 0x01;
+          if (key_modifiers & RETROKMOD_CTRL)
+          {
+            // ok
+          }
+          else if (key_modifiers & RETROKMOD_SHIFT)
+          {
+            ch += 0x60;
+          }
+          else
+          {
+            ch += 0x40;
+          }
+          break;
+        }
+      }
+      found = !!ch;
+    }
+
+    // log_cb(RETRO_LOG_INFO, "RA2: %s - %02x %02x %02x %02x\n", __FUNCTION__, character, keycode, key_modifiers, ch);
+
+    if (found)
     {
       addKeyToBuffer(ch);
-      // log_cb(RETRO_LOG_INFO, "RA2: %s - %02x\n", __FUNCTION__, ch);
     }
   }
 
@@ -272,6 +271,7 @@ namespace ra2
   {
     if (ourInputDevices[0] != RETRO_DEVICE_NONE)
     {
+      // we should use an InputDescriptor, but these are all on RETRO_DEVICE_JOYPAD anyway
       if (checkButtonPressed(RETRO_DEVICE_ID_JOYPAD_R))
       {
         myFrame->CycleVideoType();
@@ -292,17 +292,14 @@ namespace ra2
       {
         // added as convenience if game_focus is on:
         // exit emulator by pressing "select" twice
-        const auto secondBtnPress = std::chrono::steady_clock::now();
-        const auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(secondBtnPress - myFirstBtnPress).count();
-        myFirstBtnPress = secondBtnPress;
-        if (dt <= 500)
+        if (myControllerQuit.pressButton())
         {
           log_cb(RETRO_LOG_INFO, "RA2: %s - user quitted\n", __FUNCTION__);
           environ_cb(RETRO_ENVIRONMENT_SHUTDOWN, NULL);
         }
         else
         {
-          display_message("Press again to quit...", 30 /* 0.5s at 60 FPS */);
+          display_message("Press again to quit...", 60 /* 1.0s at 60 FPS */);
         }
       }
     }
@@ -314,6 +311,7 @@ namespace ra2
 
   void Game::mouseEmulation()
   {
+    // we should use an InputDescriptor, but these are all on RETRO_DEVICE_MOUSE anyway
     for (auto & mouse : myMouse)
     {
       const int16_t x = input_state_cb(0, RETRO_DEVICE_MOUSE, 0, mouse.id);

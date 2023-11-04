@@ -44,6 +44,16 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
   }
 #endif // USE_COREAUDIO
 
+  void printAudioDeviceErrorOnce()
+  {
+    static bool once = false;
+    if (!once)
+    {
+      std::cerr << "SDL_OpenAudioDevice: " << SDL_GetError() << std::endl;
+      once = true;
+    }
+  }
+
   class DirectSoundGenerator
   {
   public:
@@ -51,7 +61,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     ~DirectSoundGenerator();
 
     void stop();
-    void writeAudio(const size_t ms);
+    void writeAudio(const char * deviceName, const size_t ms);
     void resetUnderruns();
 
     void printInfo() const;
@@ -315,7 +325,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
   }
 #endif // USE_COREAUDIO
 
-  void DirectSoundGenerator::writeAudio(const size_t ms)
+  void DirectSoundGenerator::writeAudio(const char * deviceName, const size_t ms)
   {
 #ifndef USE_COREAUDIO
     // this is autostart as we only do for the palying buffers
@@ -341,13 +351,17 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     want.samples = std::min<size_t>(MAX_SAMPLES, nextPowerOf2(myBuffer->sampleRate * ms / 1000));
     want.callback = staticAudioCallback;
     want.userdata = this;
-    myAudioDevice = SDL_OpenAudioDevice(nullptr, 0, &want, &myAudioSpec, 0);
+    myAudioDevice = SDL_OpenAudioDevice(deviceName, 0, &want, &myAudioSpec, 0);
 
     if (myAudioDevice)
     {
       myBytesPerSecond = getBytesPerSecond(myAudioSpec);
 
       SDL_PauseAudioDevice(myAudioDevice, 0);
+    }
+    else
+    {
+      printAudioDeviceErrorOnce();
     }
 #endif // USE_COREAUDIO
   }
@@ -450,12 +464,12 @@ namespace sa2
     }
   }
 
-  void writeAudio(const size_t ms)
+  void writeAudio(const char * deviceName, const size_t ms)
   {
     for (auto & it : activeSoundGenerators)
     {
       const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
-      generator->writeAudio(ms);
+      generator->writeAudio(deviceName, ms);
     }
   }
 

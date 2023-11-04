@@ -283,7 +283,7 @@ namespace sa2
       }
     case SDL_KEYDOWN:
       {
-        ProcessKeyDown(e.key);
+        ProcessKeyDown(e.key, quit);
         break;
       }
     case SDL_KEYUP:
@@ -311,6 +311,14 @@ namespace sa2
       {
         ProcessDropEvent(e.drop);
         SDL_free(e.drop.file);
+        break;
+      }
+    case SDL_CONTROLLERBUTTONDOWN:
+      {
+        if (e.cbutton.button == SDL_CONTROLLER_BUTTON_BACK)  // SELECT
+        {
+          quit = myControllerQuit.pressButton();
+        }
         break;
       }
     }
@@ -411,7 +419,7 @@ namespace sa2
     processFile(this, drop.file, myDragAndDropSlot, myDragAndDropDrive);
   }
 
-  void SDLFrame::ProcessKeyDown(const SDL_KeyboardEvent & key)
+  void SDLFrame::ProcessKeyDown(const SDL_KeyboardEvent & key, bool &quit)
   {
     // scancode vs keycode
     // scancode is relative to the position on the keyboard
@@ -479,6 +487,10 @@ namespace sa2
           if (key.keysym.mod & KMOD_CTRL)
           {
             CtrlReset();
+          }
+          else if (key.keysym.mod & KMOD_SHIFT)
+          {
+            quit = true;
           }
           else
           {

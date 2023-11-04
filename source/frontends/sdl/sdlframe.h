@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "Configuration/Config.h"
 #include "frontends/common2/commonframe.h"
+#include "frontends/common2/controllerquit.h"
 #include "frontends/common2/speed.h"
 #include "frontends/common2/programoptions.h"
 #include "linux/network/portfwds.h"
@@ -66,7 +67,7 @@ namespace sa2
     virtual void ProcessSingleEvent(const SDL_Event & event, bool & quit);
     virtual void GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, double & x, double & y) const = 0;
 
-    void ProcessKeyDown(const SDL_KeyboardEvent & key);
+    void ProcessKeyDown(const SDL_KeyboardEvent & key, bool &quit);
     void ProcessKeyUp(const SDL_KeyboardEvent & key);
     void ProcessText(const SDL_TextInputEvent & text);
     void ProcessDropEvent(const SDL_DropEvent & drop);
@@ -107,6 +108,8 @@ namespace sa2
 #endif
 
     CConfigNeedingRestart myHardwareConfig;
+
+    common2::ControllerQuit myControllerQuit;
   };
 
 }

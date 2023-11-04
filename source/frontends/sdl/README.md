@@ -47,11 +47,15 @@ Some of the configuration options are exposed in the ``Settings`` menu. This is 
 
 ``F2``, ``F5``, ``F6``, ``F9``, ``F11``, ``F12`` and ``Pause``  have the same meaning as in AppleWin.
 
+``F2``: ResetMachineState, `Ctrl-F2`: Ctrl-Reset, `Shift-F2`: Quit
+
 ``Left Alt`` and ``Right Alt`` emulate the Open and Solid Apple key.
 
 ``Shift-Insert`` pastes the clipboard to the input key buffer.
 
 ``Ctrl-Insert`` copies the text screen (in AppleWin this is ``Ctrl-PrintScreen``).
+
+The application terminates if the `SDL_CONTROLLER_BUTTON_BACK` (i.e. `SELECT`) button is pressed twice in one second.
 
 ## Audio
 
