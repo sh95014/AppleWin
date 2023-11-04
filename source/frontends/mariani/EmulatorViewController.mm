@@ -201,7 +201,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
     
     if (self.delegate == nil || [self.delegate shouldPlayAudio]) {
-        sa2::writeAudio(gEmulatorOptions.audioBuffer);
+        sa2::writeAudio("", gEmulatorOptions.audioBuffer);
     }
 #ifdef DEBUG
     NSTimeInterval audioWriteTimeOffset = -[start timeIntervalSinceNow];

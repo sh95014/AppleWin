@@ -42,7 +42,6 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
       k *= 2;
     return k;
   }
-#endif // USE_COREAUDIO
 
   void printAudioDeviceErrorOnce()
   {
@@ -53,6 +52,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
       once = true;
     }
   }
+#endif // USE_COREAUDIO
 
   class DirectSoundGenerator
   {
