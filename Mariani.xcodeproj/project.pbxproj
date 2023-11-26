@@ -61,7 +61,6 @@
 		B0098CA1277E144E00F38E0C /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB79E277A20FA0002A6C3 /* context.cpp */; };
 		B0098CA2277E144E00F38E0C /* registryclass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A6277A20FA0002A6C3 /* registryclass.cpp */; };
 		B0098CA4277E144E00F38E0C /* resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB798277A20FA0002A6C3 /* resources.cpp */; };
-		B0098CA5277E144E00F38E0C /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7AA277A20FA0002A6C3 /* Keyboard.cpp */; };
 		B0098CA7277E144E00F38E0C /* paddle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A2277A20FA0002A6C3 /* paddle.cpp */; };
 		B0098CA8277E147500F38E0C /* Joystick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7C8277A21180002A6C3 /* Joystick.cpp */; };
 		B0098CA9277E147500F38E0C /* SNESMAX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7D1277A21180002A6C3 /* SNESMAX.cpp */; };
@@ -1056,7 +1055,6 @@
 		B09AB7A7277A20FA0002A6C3 /* keyboardbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboardbuffer.h; path = source/linux/keyboardbuffer.h; sourceTree = "<group>"; };
 		B09AB7A8277A20FA0002A6C3 /* linuxframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = linuxframe.cpp; path = source/linux/linuxframe.cpp; sourceTree = "<group>"; };
 		B09AB7A9277A20FA0002A6C3 /* benchmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = benchmark.h; path = source/linux/benchmark.h; sourceTree = "<group>"; };
-		B09AB7AA277A20FA0002A6C3 /* Keyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keyboard.cpp; path = source/linux/duplicates/Keyboard.cpp; sourceTree = "<group>"; };
 		B09AB7AD277A20FA0002A6C3 /* resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resources.h; path = source/linux/resources.h; sourceTree = "<group>"; };
 		B09AB7C8277A21180002A6C3 /* Joystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Joystick.cpp; path = source/linux/duplicates/Joystick.cpp; sourceTree = "<group>"; };
 		B09AB7C9277A21180002A6C3 /* Debugger_Win32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger_Win32.cpp; path = source/linux/duplicates/Debugger_Win32.cpp; sourceTree = "<group>"; };
@@ -1869,7 +1867,6 @@
 				B09AB79E277A20FA0002A6C3 /* context.cpp */,
 				B09AB79C277A20FA0002A6C3 /* context.h */,
 				B09AB7C7277A21000002A6C3 /* duplicates */,
-				B09AB7AA277A20FA0002A6C3 /* Keyboard.cpp */,
 				B09AB7A7277A20FA0002A6C3 /* keyboardbuffer.h */,
 				B09AB7DC277A21300002A6C3 /* libwindows */,
 				B09AB7A8277A20FA0002A6C3 /* linuxframe.cpp */,
@@ -2873,7 +2870,6 @@
 				B0098CAD277E147500F38E0C /* SerialComms.cpp in Sources */,
 				B0098CB1277E148600F38E0C /* z80.cpp in Sources */,
 				B0098CA4277E144E00F38E0C /* resources.cpp in Sources */,
-				B0098CA5277E144E00F38E0C /* Keyboard.cpp in Sources */,
 				B0098C82277E140100F38E0C /* Memory.cpp in Sources */,
 				B0098CAC277E147500F38E0C /* Debugger_Display.cpp in Sources */,
 				B0098CB2277E148600F38E0C /* daa.cpp in Sources */,
