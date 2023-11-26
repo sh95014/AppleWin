@@ -702,6 +702,19 @@
 
 /* Begin PBXFileReference section */
 		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
+		97B92FC82B13AFBA000D8B98 /* sdlframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlframe.h; path = source/frontends/sdl/sdlframe.h; sourceTree = "<group>"; };
+		97B92FC92B13AFBA000D8B98 /* processfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = processfile.h; path = source/frontends/sdl/processfile.h; sourceTree = "<group>"; };
+		97B92FCB2B13AFBA000D8B98 /* sdirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdirectsound.cpp; path = source/frontends/sdl/sdirectsound.cpp; sourceTree = "<group>"; };
+		97B92FCC2B13AFBA000D8B98 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = source/frontends/sdl/main.cpp; sourceTree = "<group>"; };
+		97B92FCD2B13AFBA000D8B98 /* processfile.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = processfile.cpp; path = source/frontends/sdl/processfile.cpp; sourceTree = "<group>"; };
+		97B92FCE2B13AFBA000D8B98 /* gamepad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = gamepad.h; path = source/frontends/sdl/gamepad.h; sourceTree = "<group>"; };
+		97B92FCF2B13AFBA000D8B98 /* sdlframe.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdlframe.cpp; path = source/frontends/sdl/sdlframe.cpp; sourceTree = "<group>"; };
+		97B92FD02B13AFBA000D8B98 /* utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = utils.cpp; path = source/frontends/sdl/utils.cpp; sourceTree = "<group>"; };
+		97B92FD12B13AFBA000D8B98 /* sdirectsound.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdirectsound.h; path = source/frontends/sdl/sdirectsound.h; sourceTree = "<group>"; };
+		97B92FD22B13AFBA000D8B98 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = utils.h; path = source/frontends/sdl/utils.h; sourceTree = "<group>"; };
+		97B92FD32B13AFBA000D8B98 /* gamepad.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad.cpp; path = source/frontends/sdl/gamepad.cpp; sourceTree = "<group>"; };
+		97B92FD42B13AFCD000D8B98 /* sdlrendererframe.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdlrendererframe.cpp; path = source/frontends/sdl/renderer/sdlrendererframe.cpp; sourceTree = "<group>"; };
+		97B92FD52B13AFCD000D8B98 /* sdlrendererframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlrendererframe.h; path = source/frontends/sdl/renderer/sdlrendererframe.h; sourceTree = "<group>"; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1382,6 +1395,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		97B92FC02B13AF71000D8B98 /* sa2 */ = {
+			isa = PBXGroup;
+			children = (
+				97B92FD32B13AFBA000D8B98 /* gamepad.cpp */,
+				97B92FCE2B13AFBA000D8B98 /* gamepad.h */,
+				97B92FCC2B13AFBA000D8B98 /* main.cpp */,
+				97B92FCD2B13AFBA000D8B98 /* processfile.cpp */,
+				97B92FC92B13AFBA000D8B98 /* processfile.h */,
+				97B92FD42B13AFCD000D8B98 /* sdlrendererframe.cpp */,
+				97B92FD52B13AFCD000D8B98 /* sdlrendererframe.h */,
+				97B92FCB2B13AFBA000D8B98 /* sdirectsound.cpp */,
+				97B92FD12B13AFBA000D8B98 /* sdirectsound.h */,
+				97B92FCF2B13AFBA000D8B98 /* sdlframe.cpp */,
+				97B92FC82B13AFBA000D8B98 /* sdlframe.h */,
+				97B92FD02B13AFBA000D8B98 /* utils.cpp */,
+				97B92FD22B13AFBA000D8B98 /* utils.h */,
+			);
+			name = sa2;
+			sourceTree = "<group>";
+		};
 		97FF91B32A9965CA006A62A3 /* scripting */ = {
 			isa = PBXGroup;
 			children = (
@@ -1404,6 +1437,7 @@
 				B032DE23277A0C23006DC0F7 /* mariani */,
 				B032DE36277A0C24006DC0F7 /* marianiTests */,
 				B032DE40277A0C24006DC0F7 /* marianiUITests */,
+				97B92FC02B13AF71000D8B98 /* sa2 */,
 				B0A8D67127B4519200D4314F /* CiderPress */,
 				B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */,
 				B032DE22277A0C23006DC0F7 /* Products */,

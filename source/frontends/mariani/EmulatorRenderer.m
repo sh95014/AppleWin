@@ -152,8 +152,8 @@
                               atIndex:VertexInputIndexViewportSize];
 
         // Set the texture object.  The TextureIndexBaseColor enum value corresponds
-        ///  to the 'colorMap' argument in the 'samplingShader' function because its
-        //   texture attribute qualifier also uses TextureIndexBaseColor for its index.
+        // to the 'colorMap' argument in the 'samplingShader' function because its
+        // texture attribute qualifier also uses TextureIndexBaseColor for its index.
         [renderEncoder setFragmentTexture:_texture
                                   atIndex:TextureIndexBaseColor];
 
