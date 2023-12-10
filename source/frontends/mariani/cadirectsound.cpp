@@ -208,9 +208,9 @@ namespace
         {
             memset(data + dwAudioBytes1 + dwAudioBytes2, 0, size - (dwAudioBytes1 + dwAudioBytes2));
         }
-
+        
         dsg->setVolumeIfNecessary();
-
+        
         return noErr;
     }
 
