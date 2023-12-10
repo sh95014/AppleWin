@@ -810,23 +810,15 @@
 		B049E7FA277A36CE00FC14A3 /* PropertySheetHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertySheetHelper.h; path = source/Configuration/PropertySheetHelper.h; sourceTree = "<group>"; };
 		B049E7FB277A36CE00FC14A3 /* PageAdvanced.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageAdvanced.h; path = source/Configuration/PageAdvanced.h; sourceTree = "<group>"; };
 		B049E7FC277A36CE00FC14A3 /* PageAdvanced.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageAdvanced.cpp; path = source/Configuration/PageAdvanced.cpp; sourceTree = "<group>"; };
-		B049E81E277B512500FC14A3 /* sdirectsound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdirectsound.cpp; path = source/frontends/sdl/sdirectsound.cpp; sourceTree = "<group>"; };
-		B049E81F277B512500FC14A3 /* sdirectsound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdirectsound.h; path = source/frontends/sdl/sdirectsound.h; sourceTree = "<group>"; };
 		B049E822277B517700FC14A3 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = /opt/homebrew/Cellar/sdl2/2.0.20/lib/libSDL2.a; sourceTree = "<absolute>"; };
 		B049E824277B52B200FC14A3 /* sdlframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdlframe.cpp; path = source/frontends/sdl/sdlframe.cpp; sourceTree = "<group>"; };
 		B049E825277B52B200FC14A3 /* sdlframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdlframe.h; path = source/frontends/sdl/sdlframe.h; sourceTree = "<group>"; };
 		B049E830277B5E3700FC14A3 /* commonframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = commonframe.cpp; path = source/frontends/common2/commonframe.cpp; sourceTree = "<group>"; };
 		B049E831277B5E3700FC14A3 /* commonframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = commonframe.h; path = source/frontends/common2/commonframe.h; sourceTree = "<group>"; };
-		B049E834277B614900FC14A3 /* processfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = processfile.cpp; path = source/frontends/sdl/processfile.cpp; sourceTree = "<group>"; };
-		B049E835277B614900FC14A3 /* processfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = processfile.h; path = source/frontends/sdl/processfile.h; sourceTree = "<group>"; };
-		B049E838277B61A100FC14A3 /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utils.cpp; path = source/frontends/sdl/utils.cpp; sourceTree = "<group>"; };
-		B049E839277B61A100FC14A3 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = source/frontends/sdl/utils.h; sourceTree = "<group>"; };
 		B049E83C277B61AC00FC14A3 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = source/frontends/common2/utils.h; sourceTree = "<group>"; };
 		B049E83D277B61AC00FC14A3 /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utils.cpp; path = source/frontends/common2/utils.cpp; sourceTree = "<group>"; };
 		B049E840277B61CB00FC14A3 /* speed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = speed.h; path = source/frontends/common2/speed.h; sourceTree = "<group>"; };
 		B049E841277B61CB00FC14A3 /* speed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = speed.cpp; path = source/frontends/common2/speed.cpp; sourceTree = "<group>"; };
-		B049E844277B677400FC14A3 /* sdlrendererframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdlrendererframe.h; path = source/frontends/sdl/renderer/sdlrendererframe.h; sourceTree = "<group>"; };
-		B049E845277B677400FC14A3 /* sdlrendererframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdlrendererframe.cpp; path = source/frontends/sdl/renderer/sdlrendererframe.cpp; sourceTree = "<group>"; };
 		B049E848277B68E900FC14A3 /* programoptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = programoptions.h; path = source/frontends/common2/programoptions.h; sourceTree = "<group>"; };
 		B049E84B277B6DE300FC14A3 /* programoptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = programoptions.cpp; path = source/frontends/common2/programoptions.cpp; sourceTree = "<group>"; };
 		B049E84D277B6F4A00FC14A3 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = /opt/homebrew/Cellar/boost/1.76.0/lib/libboost_program_options.a; sourceTree = "<absolute>"; };
@@ -834,8 +826,6 @@
 		B049E850277B6FFE00FC14A3 /* fileregistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fileregistry.cpp; path = source/frontends/common2/fileregistry.cpp; sourceTree = "<group>"; };
 		B049E853277B702000FC14A3 /* ptreeregistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ptreeregistry.cpp; path = source/frontends/common2/ptreeregistry.cpp; sourceTree = "<group>"; };
 		B049E854277B702100FC14A3 /* ptreeregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ptreeregistry.h; path = source/frontends/common2/ptreeregistry.h; sourceTree = "<group>"; };
-		B049E857277B714800FC14A3 /* gamepad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad.cpp; path = source/frontends/sdl/gamepad.cpp; sourceTree = "<group>"; };
-		B049E858277B714800FC14A3 /* gamepad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gamepad.h; path = source/frontends/sdl/gamepad.h; sourceTree = "<group>"; };
 		B049E89C277C43BF00FC14A3 /* EmulatorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmulatorViewController.h; sourceTree = "<group>"; };
 		B049E89D277C43BF00FC14A3 /* EmulatorViewController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = EmulatorViewController.mm; sourceTree = "<group>"; };
 		B049E8A0277C44B100FC14A3 /* EmulatorRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmulatorRenderer.h; sourceTree = "<group>"; };
@@ -1606,18 +1596,8 @@
 		B049E81D277B50E100FC14A3 /* sdl */ = {
 			isa = PBXGroup;
 			children = (
-				B049E857277B714800FC14A3 /* gamepad.cpp */,
-				B049E858277B714800FC14A3 /* gamepad.h */,
-				B049E834277B614900FC14A3 /* processfile.cpp */,
-				B049E835277B614900FC14A3 /* processfile.h */,
-				B049E81E277B512500FC14A3 /* sdirectsound.cpp */,
-				B049E81F277B512500FC14A3 /* sdirectsound.h */,
 				B049E824277B52B200FC14A3 /* sdlframe.cpp */,
 				B049E825277B52B200FC14A3 /* sdlframe.h */,
-				B049E845277B677400FC14A3 /* sdlrendererframe.cpp */,
-				B049E844277B677400FC14A3 /* sdlrendererframe.h */,
-				B049E838277B61A100FC14A3 /* utils.cpp */,
-				B049E839277B61A100FC14A3 /* utils.h */,
 			);
 			name = sdl;
 			sourceTree = "<group>";

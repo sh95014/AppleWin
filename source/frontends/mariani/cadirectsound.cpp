@@ -6,10 +6,9 @@
 //  Forked from frontends/sdl/sdirectsound.cpp
 //
 
-#include "frontends/sdl/sdirectsound.h"
+#include <AudioToolbox/AudioToolbox.h>
 #include "windows.h"
 #include "Core.h"
-#include <AudioToolbox/AudioToolbox.h>
 
 namespace
 {
@@ -30,11 +29,8 @@ namespace
         DirectSoundGenerator(LPCDSBUFFERDESC lpcDSBufferDesc,
                              const char * deviceName,
                              const size_t ms);
+        
         virtual HRESULT Release() override;
-        
-        void resetUnderruns();
-        
-        sa2::SoundInfo getInfo();
         
         friend OSStatus DirectSoundRenderProc(void * inRefCon,
                                               AudioUnitRenderActionFlags * ioActionFlags,
@@ -42,15 +38,12 @@ namespace
                                               UInt32 inBusNumber,
                                               UInt32 inNumberFrames,
                                               AudioBufferList * ioData);
+        
         void setVolumeIfNecessary();
         
     private:
-        std::vector<uint8_t> myMixerBuffer;
-        
         AudioUnit outputUnit;
         Float32 volume;
-        
-        size_t myBytesPerSecond;
     };
     
     std::unordered_map<DirectSoundGenerator *, std::shared_ptr<DirectSoundGenerator>> activeSoundGenerators;
@@ -61,7 +54,6 @@ namespace
         : IDirectSoundBuffer(lpcDSBufferDesc)
         , outputUnit(0)
         , volume(0)
-        , myBytesPerSecond(0)
     {
         AudioComponentDescription desc = { 0 };
         desc.componentType = kAudioUnitType_Output;
@@ -129,32 +121,6 @@ namespace
         AudioComponentInstanceDispose(outputUnit);
         outputUnit = 0;
         return S_OK;
-    }
-    
-    sa2::SoundInfo DirectSoundGenerator::getInfo()
-    {
-        DWORD dwStatus;
-        GetStatus(&dwStatus);
-        
-        sa2::SoundInfo info;
-        info.running = dwStatus & DSBSTATUS_PLAYING;
-        info.channels = (UInt32)myChannels;
-        info.volume = GetLogarithmicVolume();
-        info.numberOfUnderruns = GetBufferUnderruns();
-        
-        if (info.running && myBytesPerSecond > 0)  {
-            const DWORD bytesInBuffer = GetBytesInBuffer();
-            const float coeff = 1.0 / myBytesPerSecond;
-            info.buffer = bytesInBuffer * coeff;
-            info.size = myBufferSize * coeff;
-        }
-        
-        return info;
-    }
-    
-    void DirectSoundGenerator::resetUnderruns()
-    {
-        ResetUnderrruns();
     }
     
     void DirectSoundGenerator::setVolumeIfNecessary()
