@@ -1,12 +1,16 @@
 [submodule "source/frontends/qt/QHexView"]
 	path = source/frontends/qt/QHexView
-	url = ../../Dax89/QHexView.git
+	url = ../../Dax89/QHexView
+	branch = 5.0
 [submodule "source/frontends/sdl/imgui/imgui"]
 	path = source/frontends/sdl/imgui/imgui
 	url = ../../ocornut/imgui
 [submodule "source/frontends/sdl/imgui/imgui_club"]
 	path = source/frontends/sdl/imgui/imgui_club
 	url = ../../ocornut/imgui_club
+[submodule "source/frontends/sdl/imgui/imgui-filebrowser"]
+	path = source/frontends/sdl/imgui/imgui-filebrowser
+	url = ../../AirGuanZ/imgui-filebrowser
 [submodule "source/frontends/mariani/CiderPress"]
 	path = source/frontends/mariani/CiderPress
 	url = https://github.com/fadden/ciderpress.git

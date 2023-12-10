@@ -1,10 +1,14 @@
 #include "StdAfx.h"
 #include "frontends/sdl/sdirectsound.h"
+#include "frontends/sdl/utils.h"
+#include "frontends/common2/programoptions.h"
 
 #include "windows.h"
 #include "linux/linuxinterface.h"
 
+#include "Core.h"
 #include "SoundCore.h"
+#include "Log.h"
 
 #ifndef USE_COREAUDIO
 #include <SDL.h>
@@ -19,6 +23,10 @@
 
 namespace
 {
+
+  // these have to come from EmulatorOptions
+  std::string audioDeviceName;
+  size_t audioBuffer = 0;
 
 #ifdef USE_COREAUDIO
 OSStatus DirectSoundRenderProc(void * inRefCon,
@@ -42,30 +50,22 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
       k *= 2;
     return k;
   }
-
-  void printAudioDeviceErrorOnce()
-  {
-    static bool once = false;
-    if (!once)
-    {
-      std::cerr << "SDL_OpenAudioDevice: " << SDL_GetError() << std::endl;
-      once = true;
-    }
-  }
 #endif // USE_COREAUDIO
 
-  class DirectSoundGenerator
+  class DirectSoundGenerator : public IDirectSoundBuffer
   {
   public:
-    DirectSoundGenerator(IDirectSoundBuffer * buffer);
-    ~DirectSoundGenerator();
+    DirectSoundGenerator(LPCDSBUFFERDESC lpcDSBufferDesc, const char * deviceName, const size_t ms);
+    virtual ~DirectSoundGenerator() override;
+    virtual HRESULT Release() override;
 
-    void stop();
-    void writeAudio(const char * deviceName, const size_t ms);
+    virtual HRESULT Stop() override;
+    virtual HRESULT Play( DWORD dwReserved1, DWORD dwReserved2, DWORD dwFlags ) override;
+
     void resetUnderruns();
 
-    void printInfo() const;
-    sa2::SoundInfo getInfo() const;
+    void printInfo();
+    sa2::SoundInfo getInfo();
 
 #ifdef USE_COREAUDIO
     friend OSStatus DirectSoundRenderProc(void * inRefCon,
@@ -82,11 +82,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     static void staticAudioCallback(void* userdata, uint8_t* stream, int len);
 
     void audioCallback(uint8_t* stream, int len);
-#endif // USE_COREAUDIO
 
-    IDirectSoundBuffer * myBuffer;
-
-#ifndef USE_COREAUDIO
     std::vector<uint8_t> myMixerBuffer;
 
     SDL_AudioDeviceID myAudioDevice;
@@ -100,15 +96,12 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
     size_t myBytesPerSecond;
 
-    void close();
-    bool isRunning() const;
-
 #ifndef USE_COREAUDIO
     uint8_t * mixBufferTo(uint8_t * stream);
 #endif
   };
 
-  std::unordered_map<IDirectSoundBuffer *, std::shared_ptr<DirectSoundGenerator>> activeSoundGenerators;
+  std::unordered_map<DirectSoundGenerator *, std::shared_ptr<DirectSoundGenerator> > activeSoundGenerators;
 
 #ifndef USE_COREAUDIO
   void DirectSoundGenerator::staticAudioCallback(void* userdata, uint8_t* stream, int len)
@@ -121,7 +114,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
   {
     LPVOID lpvAudioPtr1, lpvAudioPtr2;
     DWORD dwAudioBytes1, dwAudioBytes2;
-    const size_t bytesRead = myBuffer->Read(len, &lpvAudioPtr1, &dwAudioBytes1, &lpvAudioPtr2, &dwAudioBytes2);
+    const size_t bytesRead = Read(len, &lpvAudioPtr1, &dwAudioBytes1, &lpvAudioPtr2, &dwAudioBytes2);
 
     myMixerBuffer.resize(bytesRead);
 
@@ -147,8 +140,8 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
   }
 #endif // USE_COREAUDIO
 
-  DirectSoundGenerator::DirectSoundGenerator(IDirectSoundBuffer * buffer)
-    : myBuffer(buffer)
+  DirectSoundGenerator::DirectSoundGenerator(LPCDSBUFFERDESC lpcDSBufferDesc, const char * deviceName, const size_t ms)
+    : IDirectSoundBuffer(lpcDSBufferDesc)
 #ifndef USE_COREAUDIO
     , myAudioDevice(0)
 #else
@@ -159,6 +152,28 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
   {
 #ifndef USE_COREAUDIO
     SDL_zero(myAudioSpec);
+
+    SDL_AudioSpec want;
+    SDL_zero(want);
+
+    _ASSERT(ms > 0);
+
+    want.freq = mySampleRate;
+    want.format = AUDIO_S16LSB;
+    want.channels = myChannels;
+    want.samples = std::min<size_t>(MAX_SAMPLES, nextPowerOf2(mySampleRate * ms / 1000));
+    want.callback = staticAudioCallback;
+    want.userdata = this;
+    myAudioDevice = SDL_OpenAudioDevice(deviceName, 0, &want, &myAudioSpec, 0);
+
+    if (myAudioDevice)
+    {
+      myBytesPerSecond = getBytesPerSecond(myAudioSpec);
+    }
+    else
+    {
+      throw std::runtime_error(sa2::decorateSDLError("SDL_OpenAudioDevice"));
+    }
 #else
     AudioComponentDescription desc = { 0 };
     desc.componentType = kAudioUnitType_Output;
@@ -226,14 +241,17 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
   DirectSoundGenerator::~DirectSoundGenerator()
   {
-    close();
+#ifndef USE_COREAUDIO
+    SDL_PauseAudioDevice(myAudioDevice, 1);
+    SDL_CloseAudioDevice(myAudioDevice);
+#endif // USE_COREAUDIO
   }
 
-  void DirectSoundGenerator::close()
+  HRESULT DirectSoundGenerator::Release()
   {
 #ifndef USE_COREAUDIO
-    SDL_CloseAudioDevice(myAudioDevice);
-    myAudioDevice = 0;
+    activeSoundGenerators.erase(this);  // this will force the destructor
+    return IUnknown::Release();
 #else
     AudioOutputUnitStop(outputUnit);
     AudioUnitUninitialize(outputUnit);
@@ -242,48 +260,55 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 #endif // USE_COREAUDIO
   }
 
-  bool DirectSoundGenerator::isRunning() const
+  HRESULT DirectSoundGenerator::Stop()
   {
+    const HRESULT res = IDirectSoundBuffer::Stop();
 #ifndef USE_COREAUDIO
-    return myAudioDevice;
-#else
-    return outputUnit;
-#endif
-  }
-
-  void DirectSoundGenerator::printInfo() const
-  {
-    if (isRunning())
-    {
-#ifndef USE_COREAUDIO
-      const DWORD bytesInBuffer = myBuffer->GetBytesInBuffer();
-      std::cerr << "Channels: " << (int)myAudioSpec.channels;
-      std::cerr << ", buffer: " << std::setw(6) << bytesInBuffer;
-      const double time = double(bytesInBuffer) / myBytesPerSecond * 1000;
-      std::cerr << ", " << std::setw(8) << time << " ms";
-      std::cerr << ", underruns: " << std::setw(10) << myBuffer->GetBufferUnderruns() << std::endl;
+    SDL_PauseAudioDevice(myAudioDevice, 1);
 #endif // USE_COREAUDIO
-    }
+    return res;
+  }
+  
+  HRESULT DirectSoundGenerator::Play( DWORD dwReserved1, DWORD dwReserved2, DWORD dwFlags )
+  {
+    const HRESULT res = IDirectSoundBuffer::Play(dwReserved1, dwReserved2, dwFlags);
+#ifndef USE_COREAUDIO
+    SDL_PauseAudioDevice(myAudioDevice, 0);
+#endif // USE_COREAUDIO
+    return res;
   }
 
-  sa2::SoundInfo DirectSoundGenerator::getInfo() const
+  void DirectSoundGenerator::printInfo()
+  {
+#ifndef USE_COREAUDIO
+    const DWORD bytesInBuffer = GetBytesInBuffer();
+    std::cerr << "Channels: " << (int)myAudioSpec.channels;
+    std::cerr << ", buffer: " << std::setw(6) << bytesInBuffer;
+    const double time = double(bytesInBuffer) / myBytesPerSecond * 1000;
+    std::cerr << ", " << std::setw(8) << time << " ms";
+    std::cerr << ", underruns: " << std::setw(10) << GetBufferUnderruns() << std::endl;
+#endif // USE_COREAUDIO
+  }
+
+  sa2::SoundInfo DirectSoundGenerator::getInfo()
   {
     // FIXME: The #ifdef'ed out bits probably need to be restored to use CoreAudio in sa2.
-    
+
+    DWORD dwStatus;
+    GetStatus(&dwStatus);
+
     sa2::SoundInfo info;
-    info.running = isRunning();
-#ifndef USE_COREAUDIO
-    info.channels = myAudioSpec.channels;
-#endif
-    info.volume = myBuffer->GetLogarithmicVolume();
-    info.numberOfUnderruns = myBuffer->GetBufferUnderruns();
+    info.running = dwStatus & DSBSTATUS_PLAYING;
+    info.channels = myChannels;
+    info.volume = GetLogarithmicVolume();
+    info.numberOfUnderruns = GetBufferUnderruns();
 
     if (info.running && myBytesPerSecond > 0)
     {
-      const DWORD bytesInBuffer = myBuffer->GetBytesInBuffer();
+      const DWORD bytesInBuffer = GetBytesInBuffer();
       const float coeff = 1.0 / myBytesPerSecond;
       info.buffer = bytesInBuffer * coeff;
-      info.size = myBuffer->bufferSize * coeff;
+      info.size = myBufferSize * coeff;
     }
 
     return info;
@@ -291,29 +316,14 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
   void DirectSoundGenerator::resetUnderruns()
   {
-    myBuffer->ResetUnderrruns();
-  }
-
-  void DirectSoundGenerator::stop()
-  {
-#ifndef USE_COREAUDIO
-    if (myAudioDevice)
-#else
-    if (outputUnit)
-#endif // USE_COREAUDIO
-    {
-#ifndef USE_COREAUDIO
-      SDL_PauseAudioDevice(myAudioDevice, 1);
-#endif
-      close();
-    }
+    ResetUnderrruns();
   }
 
 #ifndef USE_COREAUDIO
   uint8_t * DirectSoundGenerator::mixBufferTo(uint8_t * stream)
   {
     // we could copy ADJUST_VOLUME from SDL_mixer.c and avoid all copying and (rare) race conditions
-    const double logVolume = myBuffer->GetLogarithmicVolume();
+    const double logVolume = GetLogarithmicVolume();
     // same formula as QAudio::convertVolume()
     const double linVolume = logVolume > 0.99 ? 1.0 : -std::log(1.0 - logVolume) / std::log(100.0);
     const uint8_t svolume = uint8_t(linVolume * SDL_MIX_MAXVOLUME);
@@ -324,50 +334,8 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     return stream + len;
   }
 #endif // USE_COREAUDIO
-
-  void DirectSoundGenerator::writeAudio(const char * deviceName, const size_t ms)
-  {
-#ifndef USE_COREAUDIO
-    // this is autostart as we only do for the palying buffers
-    // and AW might activate one later
-    if (myAudioDevice)
-    {
-      return;
-    }
-
-    DWORD dwStatus;
-    myBuffer->GetStatus(&dwStatus);
-    if (!(dwStatus & DSBSTATUS_PLAYING))
-    {
-      return;
-    }
-
-    SDL_AudioSpec want;
-    SDL_zero(want);
-
-    want.freq = myBuffer->sampleRate;
-    want.format = AUDIO_S16LSB;
-    want.channels = myBuffer->channels;
-    want.samples = std::min<size_t>(MAX_SAMPLES, nextPowerOf2(myBuffer->sampleRate * ms / 1000));
-    want.callback = staticAudioCallback;
-    want.userdata = this;
-    myAudioDevice = SDL_OpenAudioDevice(deviceName, 0, &want, &myAudioSpec, 0);
-
-    if (myAudioDevice)
-    {
-      myBytesPerSecond = getBytesPerSecond(myAudioSpec);
-
-      SDL_PauseAudioDevice(myAudioDevice, 0);
-    }
-    else
-    {
-      printAudioDeviceErrorOnce();
-    }
-#endif // USE_COREAUDIO
-  }
-
+  
 #ifdef USE_COREAUDIO
-
   void DirectSoundGenerator::setVolumeIfNecessary()
   {
     const double logVolume = myBuffer->GetLogarithmicVolume();
@@ -432,61 +400,47 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     return noErr;
   }
 #endif // USE_COREAUDIO
-
+  
 }
 
-void registerSoundBuffer(IDirectSoundBuffer * buffer)
+IDirectSoundBuffer * iCreateDirectSoundBuffer(LPCDSBUFFERDESC lpcDSBufferDesc)
 {
-  const std::shared_ptr<DirectSoundGenerator> generator = std::make_shared<DirectSoundGenerator>(buffer);
-  activeSoundGenerators[buffer] = generator;
-}
-
-void unregisterSoundBuffer(IDirectSoundBuffer * buffer)
-{
-  const auto it = activeSoundGenerators.find(buffer);
-  if (it != activeSoundGenerators.end())
+  try
   {
-    // stop the QAudioOutput before removing. is this necessary?
-    it->second->stop();
-    activeSoundGenerators.erase(it);
+    const char * deviceName = audioDeviceName.empty() ? nullptr : audioDeviceName.c_str();
+
+    std::shared_ptr<DirectSoundGenerator> generator = std::make_shared<DirectSoundGenerator>(lpcDSBufferDesc, deviceName, audioBuffer);
+    DirectSoundGenerator * ptr = generator.get();
+    activeSoundGenerators[ptr] = generator;
+    return ptr;
+  }
+  catch (const std::exception & e)
+  {
+    // once this fails, no point in trying again next time
+    g_bDisableDirectSound = true;
+    g_bDisableDirectSoundMockingboard = true;
+    LogOutput("IDirectSoundBuffer: %s\n", e.what());
+    return nullptr;
   }
 }
 
 namespace sa2
 {
 
-  void stopAudio()
-  {
-    for (auto & it : activeSoundGenerators)
-    {
-      const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
-      generator->stop();
-    }
-  }
-
-  void writeAudio(const char * deviceName, const size_t ms)
-  {
-    for (auto & it : activeSoundGenerators)
-    {
-      const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
-      generator->writeAudio(deviceName, ms);
-    }
-  }
-
   void printAudioInfo()
   {
-    for (auto & it : activeSoundGenerators)
+    for (const auto & it : activeSoundGenerators)
     {
-      const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
+      const auto generator = it.second;
       generator->printInfo();
     }
   }
 
-  void resetUnderruns()
+  void resetAudioUnderruns()
   {
-    for (auto & it : activeSoundGenerators)
+    for (const auto & it : activeSoundGenerators)
     {
-      const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
+      const auto generator = it.second;
       generator->resetUnderruns();
     }
   }
@@ -496,13 +450,19 @@ namespace sa2
     std::vector<SoundInfo> info;
     info.reserve(activeSoundGenerators.size());
 
-    for (auto & it : activeSoundGenerators)
+    for (const auto & it : activeSoundGenerators)
     {
-      const std::shared_ptr<DirectSoundGenerator> & generator = it.second;
+      const auto & generator = it.second;
       info.push_back(generator->getInfo());
     }
 
     return info;
+  }
+
+  void setAudioOptions(const common2::EmulatorOptions & options)
+  {
+    audioDeviceName = options.audioDeviceName;
+    audioBuffer = options.audioBuffer;
   }
 
 }
