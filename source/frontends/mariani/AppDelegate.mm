@@ -67,7 +67,6 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSView *statusBarView;
 @property (strong) IBOutlet NSButton *driveLightButtonTemplate;
 @property (strong) IBOutlet NSTextField *statusLabel;
-@property (strong) IBOutlet NSButton *volumeToggleButton;
 @property (strong) IBOutlet NSButton *screenRecordingButton;
 
 @property (strong) IBOutlet NSMenuItem *aboutMarianiMenuItem;
@@ -257,10 +256,6 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 #pragma mark - EmulatorViewControllerDelegate
-
-- (BOOL)shouldPlayAudio {
-    return (self.volumeToggleButton.state == NSControlStateValueOn);
-}
 
 - (void)screenRecordingDidStart {
     self.screenRecordingButton.contentTintColor = [NSColor controlAccentColor];
@@ -849,7 +844,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     
     CGRect statusLabelFrame = self.statusLabel.frame;
     statusLabelFrame.origin.x = driveLightsRightEdge + 5;
-    statusLabelFrame.size.width = self.volumeToggleButton.frame.origin.x - statusLabelFrame.origin.x - 5;
+    statusLabelFrame.size.width = self.screenRecordingButton.frame.origin.x - statusLabelFrame.origin.x - 5;
     self.statusLabel.frame = statusLabelFrame;
     
     if (self.driveLightButtons.count != oldDriveLightButtonsCount) {
@@ -1051,7 +1046,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         self.driveLightButtonTemplate.frame.origin.x +                                      // left margin
         self.driveLightButtonTemplate.frame.size.width * self.driveLightButtons.count +     // drive light buttons
         40 +                                                                                // a healthy margin
-        (self.window.frame.size.width - self.volumeToggleButton.frame.origin.x);            // buttons on the right
+        (self.window.frame.size.width - self.screenRecordingButton.frame.origin.x);            // buttons on the right
     // ...but no less than 2 pt per Apple ][ pixel
     Video &video = GetVideo();
     if (minimumSize.width < video.GetFrameBufferBorderlessWidth() * scale) {

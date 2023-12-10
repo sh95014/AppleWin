@@ -35,7 +35,6 @@ extern const NSNotificationName EmulatorDidRebootNotification;
 
 @protocol EmulatorViewControllerDelegate <NSObject>
 
-- (BOOL)shouldPlayAudio;
 - (void)terminateWithReason:(NSString *)reason;
 
 - (void)screenRecordingDidStart;

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22154" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22154"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,7 +26,6 @@
                 <outlet property="showHideStatusBarMenuItem" destination="Qa1-0n-abD" id="jQF-tx-pGh"/>
                 <outlet property="statusBarView" destination="Mnw-rf-Y9b" id="vHG-8g-HKh"/>
                 <outlet property="statusLabel" destination="v5N-tl-es5" id="dzw-S4-KXI"/>
-                <outlet property="volumeToggleButton" destination="cQ9-oO-i17" id="JYX-Xo-KGm"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -280,7 +279,7 @@
                                     <action selector="driveLightAction:" target="Voe-Tx-rLC" id="sbG-RH-fSd"/>
                                 </connections>
                             </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v5N-tl-es5">
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v5N-tl-es5">
                                 <rect key="frame" x="43" y="9" width="669" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" title="Label" id="GCW-F3-7D6">
@@ -311,14 +310,6 @@
                                     <action selector="saveScreenshotAction:" target="Voe-Tx-rLC" id="RPa-OV-IIl"/>
                                 </connections>
                             </button>
-                            <button toolTip="Toggle audio on or off" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cQ9-oO-i17">
-                                <rect key="frame" x="718" y="-0.5" width="33.5" height="33.5"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="speaker.slash" catalog="system" imagePosition="only" alignment="center" alternateImage="speaker" state="on" imageScaling="proportionallyDown" inset="2" id="JHc-Xt-b47">
-                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="system" size="18"/>
-                                </buttonCell>
-                            </button>
                         </subviews>
                     </customView>
                 </subviews>
@@ -331,7 +322,5 @@
         <image name="circle" catalog="system" width="15" height="15"/>
         <image name="circle.fill" catalog="system" width="15" height="15"/>
         <image name="record.circle" catalog="system" width="15" height="15"/>
-        <image name="speaker" catalog="system" width="14" height="14"/>
-        <image name="speaker.slash" catalog="system" width="13" height="15"/>
     </resources>
 </document>

@@ -85,9 +85,6 @@
 /* Class = "NSMenu"; title = "File"; ObjectID = "bib-Uj-vzu"; */
 "bib-Uj-vzu.title" = "檔案";
 
-/* Class = "NSButton"; ibShadowedToolTip = "Toggle audio on or off"; ObjectID = "cQ9-oO-i17"; */
-"cQ9-oO-i17.ibShadowedToolTip" = "切換聲音開關";
-
 /* Class = "NSMenuItem"; title = "File"; ObjectID = "dMs-cI-mzQ"; */
 "dMs-cI-mzQ.title" = "檔案";
 

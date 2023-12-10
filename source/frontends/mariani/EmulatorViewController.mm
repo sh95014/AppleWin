@@ -200,13 +200,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     NSDate *start = [NSDate now];
 #endif
     
-    if (self.delegate == nil || [self.delegate shouldPlayAudio]) {
-        sa2::writeAudio("", gEmulatorOptions.audioBuffer);
-    }
-#ifdef DEBUG
-    NSTimeInterval audioWriteTimeOffset = -[start timeIntervalSinceNow];
-#endif
-
     bool quit = false;
     frame->ProcessEvents(quit);
     if (quit) {
@@ -244,8 +237,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     if (duration > 1.0 / TARGET_FPS) {
         // oops, took too long
         NSLog(@"Frame time exceeded: %f ms", duration * 1000);
-        NSLog(@"    Write audio:                %f ms", (audioWriteTimeOffset * 1000));
-        NSLog(@"    Process events:             %f ms", (eventProcessingTimeOffset - audioWriteTimeOffset) * 1000);
+        NSLog(@"    Process events:             %f ms", eventProcessingTimeOffset * 1000);
         NSLog(@"    Execute:                    %f ms", (executionTimeOffset - eventProcessingTimeOffset) * 1000);
     }
 #endif // DEBUG

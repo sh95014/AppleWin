@@ -194,14 +194,14 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     }
     
     AudioStreamBasicDescription absd = { 0 };
-    absd.mSampleRate = myBuffer->sampleRate;
+    absd.mSampleRate = mySampleRate;
     absd.mFormatID = kAudioFormatLinearPCM;
     absd.mFormatFlags = kAudioFormatFlagIsSignedInteger;
     absd.mFramesPerPacket = 1;
-    absd.mChannelsPerFrame = (UInt32)myBuffer->channels;
+    absd.mChannelsPerFrame = (UInt32)myChannels;
     absd.mBitsPerChannel = sizeof(SInt16) * CHAR_BIT;
-    absd.mBytesPerPacket = sizeof(SInt16) * (UInt32)myBuffer->channels;
-    absd.mBytesPerFrame = sizeof(SInt16) * (UInt32)myBuffer->channels;
+    absd.mBytesPerPacket = sizeof(SInt16) * (UInt32)myChannels;
+    absd.mBytesPerFrame = sizeof(SInt16) * (UInt32)myChannels;
     if (AudioUnitSetProperty(outputUnit,
                              kAudioUnitProperty_StreamFormat,
                              kAudioUnitScope_Input,
@@ -257,6 +257,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     AudioUnitUninitialize(outputUnit);
     AudioComponentInstanceDispose(outputUnit);
     outputUnit = 0;
+    return S_OK;
 #endif // USE_COREAUDIO
   }
 
@@ -292,14 +293,12 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 
   sa2::SoundInfo DirectSoundGenerator::getInfo()
   {
-    // FIXME: The #ifdef'ed out bits probably need to be restored to use CoreAudio in sa2.
-
     DWORD dwStatus;
     GetStatus(&dwStatus);
 
     sa2::SoundInfo info;
     info.running = dwStatus & DSBSTATUS_PLAYING;
-    info.channels = myChannels;
+    info.channels = (UInt32)myChannels;
     info.volume = GetLogarithmicVolume();
     info.numberOfUnderruns = GetBufferUnderruns();
 
@@ -338,7 +337,7 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
 #ifdef USE_COREAUDIO
   void DirectSoundGenerator::setVolumeIfNecessary()
   {
-    const double logVolume = myBuffer->GetLogarithmicVolume();
+    const double logVolume = GetLogarithmicVolume();
     // same formula as QAudio::convertVolume()
     const Float32 linVolume = logVolume > 0.99 ? 1.0 : -std::log(1.0 - logVolume) / std::log(100.0);
     if (fabs(linVolume - volume) > FLT_EPSILON) {
@@ -368,15 +367,15 @@ OSStatus DirectSoundRenderProc(void * inRefCon,
     DirectSoundGenerator *dsg = (DirectSoundGenerator *)inRefCon;
     UInt8 * data = (UInt8 *)ioData->mBuffers[0].mData;
     
-    DWORD size = (DWORD)(inNumberFrames * dsg->myBuffer->channels * sizeof(SInt16));
+    DWORD size = (DWORD)(inNumberFrames * dsg->myChannels * sizeof(SInt16));
     
     LPVOID lpvAudioPtr1, lpvAudioPtr2;
     DWORD dwAudioBytes1, dwAudioBytes2;
-    dsg->myBuffer->Read(size,
-                        &lpvAudioPtr1,
-                        &dwAudioBytes1,
-                        &lpvAudioPtr2,
-                        &dwAudioBytes2);
+    dsg->Read(size,
+              &lpvAudioPtr1,
+              &dwAudioBytes1,
+              &lpvAudioPtr2,
+              &dwAudioBytes2);
     
     // copy the first part from the ring buffer
     if (lpvAudioPtr1 && dwAudioBytes1)
