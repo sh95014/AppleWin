@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		97419F302AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
 		97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
+		9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
+		9765C6182B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -142,7 +144,6 @@
 		B00BE9EA2A291BD100F288F9 /* InspectorPanels.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00BE9EC2A291BD100F288F9 /* InspectorPanels.xib */; };
 		B00ECB7A279EEB600041E16C /* guiddef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7ED277A21400002A6C3 /* guiddef.cpp */; };
 		B00ECB7B279EEB600041E16C /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = B0689D162781984F0029EB7D /* UserDefaults.m */; };
-		B00ECB7C279EEB600041E16C /* sdirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E81E277B512500FC14A3 /* sdirectsound.cpp */; };
 		B00ECB7E279EEB600041E16C /* MarianiFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0689D082780B9B60029EB7D /* MarianiFrame.cpp */; };
 		B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB710277A1BA30002A6C3 /* Util_MemoryTextFile.cpp */; };
 		B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E850277B6FFE00FC14A3 /* fileregistry.cpp */; };
@@ -269,7 +270,6 @@
 		B045FE862782984F006E36F9 /* Apple2e_Enhanced.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE702782984E006E36F9 /* Apple2e_Enhanced.rom */; };
 		B045FE872782984F006E36F9 /* Mockingboard-D.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE712782984F006E36F9 /* Mockingboard-D.rom */; };
 		B049E800277A36CE00FC14A3 /* PropertySheetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E7EA277A36CE00FC14A3 /* PropertySheetHelper.cpp */; };
-		B049E820277B512500FC14A3 /* sdirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E81E277B512500FC14A3 /* sdirectsound.cpp */; };
 		B049E826277B52B200FC14A3 /* sdlframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E824277B52B200FC14A3 /* sdlframe.cpp */; };
 		B049E832277B5E3700FC14A3 /* commonframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E830277B5E3700FC14A3 /* commonframe.cpp */; };
 		B049E83F277B61AC00FC14A3 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E83D277B61AC00FC14A3 /* utils.cpp */; };
@@ -701,6 +701,7 @@
 
 /* Begin PBXFileReference section */
 		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
+		9765C6162B26452B00C8AF42 /* cadirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cadirectsound.cpp; sourceTree = "<group>"; };
 		97B92FC82B13AFBA000D8B98 /* sdlframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlframe.h; path = source/frontends/sdl/sdlframe.h; sourceTree = "<group>"; };
 		97B92FC92B13AFBA000D8B98 /* processfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = processfile.h; path = source/frontends/sdl/processfile.h; sourceTree = "<group>"; };
 		97B92FCB2B13AFBA000D8B98 /* sdirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdirectsound.cpp; path = source/frontends/sdl/sdirectsound.cpp; sourceTree = "<group>"; };
@@ -1466,6 +1467,7 @@
 			children = (
 				B032DE24277A0C23006DC0F7 /* AppDelegate.h */,
 				B032DE25277A0C23006DC0F7 /* AppDelegate.mm */,
+				9765C6162B26452B00C8AF42 /* cadirectsound.cpp */,
 				B049E8A8277C59D500FC14A3 /* CommonTypes.h */,
 				B049E8A0277C44B100FC14A3 /* EmulatorRenderer.h */,
 				B049E8A1277C44B100FC14A3 /* EmulatorRenderer.m */,
@@ -2928,7 +2930,6 @@
 				B0F527092A2C1F2200288820 /* DisassemblyTableViewController.mm in Sources */,
 				B00ECB7A279EEB600041E16C /* guiddef.cpp in Sources */,
 				B00ECB7B279EEB600041E16C /* UserDefaults.m in Sources */,
-				B00ECB7C279EEB600041E16C /* sdirectsound.cpp in Sources */,
 				B00ECB7E279EEB600041E16C /* MarianiFrame.cpp in Sources */,
 				B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */,
 				B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */,
@@ -2966,6 +2967,7 @@
 				B00ECBA2279EEB600041E16C /* strsafe.cpp in Sources */,
 				B00ECBA3279EEB600041E16C /* winhandles.cpp in Sources */,
 				B0F5270D2A2C1F2200288820 /* NSColor+AppleWin.mm in Sources */,
+				9765C6182B26452B00C8AF42 /* cadirectsound.cpp in Sources */,
 				B00ECBA4279EEB600041E16C /* Debugger_Symbols.cpp in Sources */,
 				B00ECBA6279EEB600041E16C /* winuser.cpp in Sources */,
 				B00ECBA7279EEB600041E16C /* timeapi.cpp in Sources */,
@@ -3003,7 +3005,6 @@
 				B0F526FA2A2C1F2100288820 /* DisassemblyTableViewController.mm in Sources */,
 				B09AB80D277A21410002A6C3 /* guiddef.cpp in Sources */,
 				B0689D182781984F0029EB7D /* UserDefaults.m in Sources */,
-				B049E820277B512500FC14A3 /* sdirectsound.cpp in Sources */,
 				B0689D0A2780B9B60029EB7D /* MarianiFrame.cpp in Sources */,
 				B09AB72E277A1BA40002A6C3 /* Util_MemoryTextFile.cpp in Sources */,
 				B049E852277B6FFE00FC14A3 /* fileregistry.cpp in Sources */,
@@ -3041,6 +3042,7 @@
 				B09AB812277A21410002A6C3 /* strsafe.cpp in Sources */,
 				B09AB811277A21410002A6C3 /* winhandles.cpp in Sources */,
 				B0F526FE2A2C1F2100288820 /* NSColor+AppleWin.mm in Sources */,
+				9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */,
 				B09AB72A277A1BA40002A6C3 /* Debugger_Symbols.cpp in Sources */,
 				B09AB803277A21410002A6C3 /* winuser.cpp in Sources */,
 				B09AB804277A21410002A6C3 /* timeapi.cpp in Sources */,
