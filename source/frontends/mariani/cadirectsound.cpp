@@ -9,6 +9,7 @@
 #include <AudioToolbox/AudioToolbox.h>
 #include "windows.h"
 #include "Core.h"
+#include "AppDelegate.h"
 
 namespace
 {
@@ -191,6 +192,7 @@ IDirectSoundBuffer * iCreateDirectSoundBuffer(LPCDSBUFFERDESC lpcDSBufferDesc)
         std::shared_ptr<DirectSoundGenerator> generator = std::make_shared<DirectSoundGenerator>(lpcDSBufferDesc, deviceName, audioBuffer);
         DirectSoundGenerator * ptr = generator.get();
         activeSoundGenerators[ptr] = generator;
+        ptr->audioOutput = RegisterAudioOutput(ptr->myChannels, ptr->mySampleRate);
         return ptr;
     }
     catch (const std::exception & e)

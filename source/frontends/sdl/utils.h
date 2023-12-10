@@ -2,7 +2,6 @@
 
 #ifndef MARIANI
 #include <SDL.h>
-#endif
 #include <memory>
 #include <iosfwd>
 #include <string>
@@ -10,7 +9,6 @@
 namespace sa2
 {
 
-#ifndef MARIANI
   void printVideoInfo(std::ostream & os);
 
   void printAudioInfo(std::ostream & os);
@@ -25,6 +23,6 @@ namespace sa2
                           const std::string & text);
 
   std::string decorateSDLError(const std::string & prefix);
-#endif // MARIANI
 
 }
+#endif // MARIANI

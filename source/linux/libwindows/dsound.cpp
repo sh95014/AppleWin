@@ -206,10 +206,6 @@ HRESULT IDirectSound::CreateSoundBuffer( LPCDSBUFFERDESC lpcDSBufferDesc, IDirec
 
   IDirectSoundBuffer * dsb = iCreateDirectSoundBuffer(lpcDSBufferDesc);
 
-#ifdef MARIANI
-  dsb->audioOutput = RegisterAudioOutput(dsb->myChannels, dsb->mySampleRate);
-#endif
-
   *lplpDirectSoundBuffer = dsb;
   return dsb ? DS_OK : DSERR_GENERIC;
 }

@@ -20,7 +20,6 @@
 #import "programoptions.h"
 #import "sdirectsound.h"
 #import "MarianiFrame.h"
-#import "utils.h"
 #import "version.h"
 
 // AppleWin
