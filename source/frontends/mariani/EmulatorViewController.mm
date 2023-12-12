@@ -37,10 +37,10 @@
 #import "context.h"
 
 #import "benchmark.h"
+#import "Core.h"
 #import "fileregistry.h"
 #import "programoptions.h"
 #import "sdirectsound.h"
-#import "MarianiFrame.h"
 
 #import "CommonTypes.h"
 #import "MarianiFrame.h"
@@ -199,15 +199,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     NSDate *start = [NSDate now];
 #endif
     
-    bool quit = false;
-    frame->ProcessEvents(quit);
-    if (quit) {
-        [self.delegate terminateWithReason:@"requested by frame"];
-    }
-#ifdef DEBUG
-    NSTimeInterval eventProcessingTimeOffset = -[start timeIntervalSinceNow];
-#endif
-
     frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
 #ifdef DEBUG
     NSTimeInterval executionTimeOffset = -[start timeIntervalSinceNow];
@@ -236,8 +227,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     if (duration > 1.0 / TARGET_FPS) {
         // oops, took too long
         NSLog(@"Frame time exceeded: %f ms", duration * 1000);
-        NSLog(@"    Process events:             %f ms", eventProcessingTimeOffset * 1000);
-        NSLog(@"    Execute:                    %f ms", (executionTimeOffset - eventProcessingTimeOffset) * 1000);
+        NSLog(@"    Execute:                    %f ms", executionTimeOffset * 1000);
     }
 #endif // DEBUG
 }
