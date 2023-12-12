@@ -166,7 +166,6 @@
 		B00ECB98279EEB600041E16C /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E841277B61CB00FC14A3 /* speed.cpp */; };
 		B00ECB99279EEB600041E16C /* Debugger_Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB71E277A1BA40002A6C3 /* Debugger_Console.cpp */; };
 		B00ECB9A279EEB600041E16C /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B032DE25277A0C23006DC0F7 /* AppDelegate.mm */; };
-		B00ECB9B279EEB600041E16C /* sdlframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E824277B52B200FC14A3 /* sdlframe.cpp */; };
 		B00ECB9C279EEB600041E16C /* Debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB718277A1BA40002A6C3 /* Debug.cpp */; };
 		B00ECB9D279EEB600041E16C /* ptreeregistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E853277B702000FC14A3 /* ptreeregistry.cpp */; };
 		B00ECB9E279EEB600041E16C /* PreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B0927419277D9403003FFB79 /* PreferencesWindowController.m */; };
@@ -270,7 +269,6 @@
 		B045FE862782984F006E36F9 /* Apple2e_Enhanced.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE702782984E006E36F9 /* Apple2e_Enhanced.rom */; };
 		B045FE872782984F006E36F9 /* Mockingboard-D.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE712782984F006E36F9 /* Mockingboard-D.rom */; };
 		B049E800277A36CE00FC14A3 /* PropertySheetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E7EA277A36CE00FC14A3 /* PropertySheetHelper.cpp */; };
-		B049E826277B52B200FC14A3 /* sdlframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E824277B52B200FC14A3 /* sdlframe.cpp */; };
 		B049E832277B5E3700FC14A3 /* commonframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E830277B5E3700FC14A3 /* commonframe.cpp */; };
 		B049E83F277B61AC00FC14A3 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E83D277B61AC00FC14A3 /* utils.cpp */; };
 		B049E843277B61CB00FC14A3 /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E841277B61CB00FC14A3 /* speed.cpp */; };
@@ -811,8 +809,6 @@
 		B049E7FB277A36CE00FC14A3 /* PageAdvanced.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageAdvanced.h; path = source/Configuration/PageAdvanced.h; sourceTree = "<group>"; };
 		B049E7FC277A36CE00FC14A3 /* PageAdvanced.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageAdvanced.cpp; path = source/Configuration/PageAdvanced.cpp; sourceTree = "<group>"; };
 		B049E822277B517700FC14A3 /* libSDL2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDL2.a; path = /opt/homebrew/Cellar/sdl2/2.0.20/lib/libSDL2.a; sourceTree = "<absolute>"; };
-		B049E824277B52B200FC14A3 /* sdlframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sdlframe.cpp; path = source/frontends/sdl/sdlframe.cpp; sourceTree = "<group>"; };
-		B049E825277B52B200FC14A3 /* sdlframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sdlframe.h; path = source/frontends/sdl/sdlframe.h; sourceTree = "<group>"; };
 		B049E830277B5E3700FC14A3 /* commonframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = commonframe.cpp; path = source/frontends/common2/commonframe.cpp; sourceTree = "<group>"; };
 		B049E831277B5E3700FC14A3 /* commonframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = commonframe.h; path = source/frontends/common2/commonframe.h; sourceTree = "<group>"; };
 		B049E83C277B61AC00FC14A3 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = source/frontends/common2/utils.h; sourceTree = "<group>"; };
@@ -1422,7 +1418,6 @@
 				B09AB68F277A15A90002A6C3 /* libyaml */,
 				B09AB5E4277A14850002A6C3 /* AppleWin */,
 				B049E82F277B5E2600FC14A3 /* common2 */,
-				B049E81D277B50E100FC14A3 /* sdl */,
 				B032DE23277A0C23006DC0F7 /* mariani */,
 				B032DE36277A0C24006DC0F7 /* marianiTests */,
 				B032DE40277A0C24006DC0F7 /* marianiUITests */,
@@ -1591,15 +1586,6 @@
 				B049E7FA277A36CE00FC14A3 /* PropertySheetHelper.h */,
 			);
 			name = Configuration;
-			sourceTree = "<group>";
-		};
-		B049E81D277B50E100FC14A3 /* sdl */ = {
-			isa = PBXGroup;
-			children = (
-				B049E824277B52B200FC14A3 /* sdlframe.cpp */,
-				B049E825277B52B200FC14A3 /* sdlframe.h */,
-			);
-			name = sdl;
 			sourceTree = "<group>";
 		};
 		B049E82F277B5E2600FC14A3 /* common2 */ = {
@@ -2936,7 +2922,6 @@
 				B00ECB98279EEB600041E16C /* speed.cpp in Sources */,
 				B00ECB99279EEB600041E16C /* Debugger_Console.cpp in Sources */,
 				B00ECB9A279EEB600041E16C /* AppDelegate.mm in Sources */,
-				B00ECB9B279EEB600041E16C /* sdlframe.cpp in Sources */,
 				B00ECB9C279EEB600041E16C /* Debug.cpp in Sources */,
 				B00ECB9D279EEB600041E16C /* ptreeregistry.cpp in Sources */,
 				97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */,
@@ -3011,7 +2996,6 @@
 				B049E843277B61CB00FC14A3 /* speed.cpp in Sources */,
 				B09AB73C277A1BA40002A6C3 /* Debugger_Console.cpp in Sources */,
 				B032DE26277A0C23006DC0F7 /* AppDelegate.mm in Sources */,
-				B049E826277B52B200FC14A3 /* sdlframe.cpp in Sources */,
 				B09AB736277A1BA40002A6C3 /* Debug.cpp in Sources */,
 				B049E855277B702100FC14A3 /* ptreeregistry.cpp in Sources */,
 				97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */,

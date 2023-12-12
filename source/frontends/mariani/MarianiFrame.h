@@ -7,7 +7,10 @@
 
 #pragma once
 
-#include "sdlframe.h"
+#include "commonframe.h"
+#include "Common.h"
+#include "Configuration/Config.h"
+#include "speed.h"
 
 namespace common2
 {
@@ -17,13 +20,14 @@ namespace common2
 namespace mariani
 {
 
-  class MarianiFrame : public sa2::SDLFrame
+  class MarianiFrame : public common2::CommonFrame
   {
   public:
     MarianiFrame(const common2::EmulatorOptions & options);
 
+    void Begin() override;
+
     void VideoPresentScreen() override;
-    void Initialize(bool resetVideoState) override;
 
     int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
     void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
@@ -35,12 +39,28 @@ namespace mariani
 
     void *FrameBufferData();
 
+    void ResetSpeed();
+    void SetFullSpeed(const bool value);
+    bool CanDoFullSpeed();
+
+    void ExecuteOneFrame(const uint64_t microseconds);
+
+    void ChangeMode(const AppMode_e mode);
+    void SingleStep();
+
+    void ResetHardware();
+    bool HardwareChanged() const;
+
   protected:
     virtual std::string getResourcePath(const std::string & filename) override;
 
+    void ExecuteInRunningMode(const uint64_t microseconds);
+    void ExecuteInDebugMode(const uint64_t microseconds);
+    void Execute(const DWORD uCycles);
+
   private:
-    // FIXME: without this hack the app crashes randomly elsewhere
-    unsigned char padding[1024];
+    common2::Speed mySpeed;
+    CConfigNeedingRestart myHardwareConfig;
   };
 
 }
