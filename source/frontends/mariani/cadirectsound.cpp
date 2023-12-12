@@ -31,6 +31,11 @@ namespace
                              const char * deviceName,
                              const size_t ms);
         
+        virtual HRESULT Unlock(LPVOID lpvAudioPtr1,
+                               DWORD dwAudioBytes1,
+                               LPVOID lpvAudioPtr2,
+                               DWORD dwAudioBytes2) override;
+        
         virtual HRESULT Release() override;
         
         friend OSStatus DirectSoundRenderProc(void * inRefCon,
@@ -40,11 +45,14 @@ namespace
                                               UInt32 inNumberFrames,
                                               AudioBufferList * ioData);
         
-        void setVolumeIfNecessary();
+        void SetVolumeIfNecessary();
+        
+        void SetAudioOutput(int inAudioOutput);
         
     private:
         AudioUnit outputUnit;
         Float32 volume;
+        int audioOutput;
     };
     
     std::unordered_map<DirectSoundGenerator *, std::shared_ptr<DirectSoundGenerator>> activeSoundGenerators;
@@ -55,6 +63,7 @@ namespace
         : IDirectSoundBuffer(lpcDSBufferDesc)
         , outputUnit(0)
         , volume(0)
+        , audioOutput(-1)
     {
         AudioComponentDescription desc = { 0 };
         desc.componentType = kAudioUnitType_Output;
@@ -104,7 +113,7 @@ namespace
             return;
         }
         
-        setVolumeIfNecessary();
+        SetVolumeIfNecessary();
         
         if (AudioUnitInitialize(outputUnit) != noErr) {
             fprintf(stderr, "can't initialize output unit\n");
@@ -113,6 +122,18 @@ namespace
         
         OSStatus status = AudioOutputUnitStart(outputUnit);
         fprintf(stderr, "output unit %p, status %d\n", outputUnit, status);
+    }
+    
+    HRESULT DirectSoundGenerator::Unlock(LPVOID lpvAudioPtr1,
+                                         DWORD dwAudioBytes1,
+                                         LPVOID lpvAudioPtr2,
+                                         DWORD dwAudioBytes2)
+    {
+        // send audio to be optionally recorded
+        if (dwAudioBytes1 + dwAudioBytes2) {
+            SubmitAudio(this->audioOutput, lpvAudioPtr1, dwAudioBytes1, lpvAudioPtr2, dwAudioBytes2);
+        }
+        return IDirectSoundBuffer::Unlock(lpvAudioPtr1, dwAudioBytes1, lpvAudioPtr2, dwAudioBytes2);
     }
     
     HRESULT DirectSoundGenerator::Release()
@@ -124,7 +145,7 @@ namespace
         return S_OK;
     }
     
-    void DirectSoundGenerator::setVolumeIfNecessary()
+    void DirectSoundGenerator::SetVolumeIfNecessary()
     {
         const double logVolume = GetLogarithmicVolume();
         // same formula as QAudio::convertVolume()
@@ -137,10 +158,15 @@ namespace
                                       linVolume,
                                       0) == noErr) {
                 volume = linVolume;
-            } else {
+            }
+            else {
                 fprintf(stderr, "can't set volume\n");
             }
         }
+    }
+    
+    void DirectSoundGenerator::SetAudioOutput(int inAudioOutput) {
+        audioOutput = inAudioOutput;
     }
     
     OSStatus DirectSoundRenderProc(void * inRefCon,
@@ -160,23 +186,20 @@ namespace
         dsg->Read(size, &lpvAudioPtr1, &dwAudioBytes1, &lpvAudioPtr2, &dwAudioBytes2);
         
         // copy the first part from the ring buffer
-        if (lpvAudioPtr1 && dwAudioBytes1)
-        {
+        if (lpvAudioPtr1 && dwAudioBytes1) {
             memcpy(data, lpvAudioPtr1, dwAudioBytes1);
         }
         // copy the second (wrapped-around) part of the ring buffer, if any
-        if (lpvAudioPtr2 && dwAudioBytes2)
-        {
+        if (lpvAudioPtr2 && dwAudioBytes2) {
             memcpy(data + dwAudioBytes1, lpvAudioPtr2, dwAudioBytes2);
         }
         // doesn't seem ever necessary, but fill the rest of the requested buffer with silence
         // if DirectSoundGenerator doesn't have enough
-        if (size > dwAudioBytes1 + dwAudioBytes2)
-        {
+        if (size > dwAudioBytes1 + dwAudioBytes2) {
             memset(data + dwAudioBytes1 + dwAudioBytes2, 0, size - (dwAudioBytes1 + dwAudioBytes2));
         }
         
-        dsg->setVolumeIfNecessary();
+        dsg->SetVolumeIfNecessary();
         
         return noErr;
     }
@@ -185,18 +208,16 @@ namespace
 
 IDirectSoundBuffer * iCreateDirectSoundBuffer(LPCDSBUFFERDESC lpcDSBufferDesc)
 {
-    try
-    {
+    try {
         const char * deviceName = audioDeviceName.empty() ? nullptr : audioDeviceName.c_str();
         
         std::shared_ptr<DirectSoundGenerator> generator = std::make_shared<DirectSoundGenerator>(lpcDSBufferDesc, deviceName, audioBuffer);
         DirectSoundGenerator * ptr = generator.get();
         activeSoundGenerators[ptr] = generator;
-        ptr->audioOutput = RegisterAudioOutput(ptr->myChannels, ptr->mySampleRate);
+        ptr->SetAudioOutput(RegisterAudioOutput(ptr->myChannels, ptr->mySampleRate));
         return ptr;
     }
-    catch (const std::exception & e)
-    {
+    catch (const std::exception & e) {
         // once this fails, no point in trying again next time
         g_bDisableDirectSound = true;
         g_bDisableDirectSoundMockingboard = true;

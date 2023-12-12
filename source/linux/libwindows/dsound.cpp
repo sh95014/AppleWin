@@ -3,10 +3,6 @@
 
 #include <cstring>
 
-#ifdef MARIANI
-#include "AppDelegate.h"
-#endif
-
 IDirectSoundBuffer::IDirectSoundBuffer(LPCDSBUFFERDESC lpcDSBufferDesc)
   : mySoundBuffer(lpcDSBufferDesc->dwBufferBytes)
   , myNumberOfUnderruns(0)
@@ -22,15 +18,6 @@ HRESULT IDirectSoundBuffer::Unlock( LPVOID lpvAudioPtr1, DWORD dwAudioBytes1, LP
 {
   const size_t totalWrittenBytes = dwAudioBytes1 + dwAudioBytes2;
   this->myWritePosition = (this->myWritePosition + totalWrittenBytes) % this->mySoundBuffer.size();
-
-#ifdef MARIANI
-  // send audio to be optionally recorded
-  if (totalWrittenBytes)
-  {
-    SubmitAudio(this->audioOutput, lpvAudioPtr1, dwAudioBytes1, lpvAudioPtr2, dwAudioBytes2);
-  }
-#endif // MARIANI
-
   myMutex.unlock();
   return DS_OK;
 }

@@ -130,10 +130,6 @@ public:
   size_t GetBufferUnderruns() const;
   void ResetUnderruns();
   double GetLogarithmicVolume() const;  // in [0, 1]
-
-#ifdef MARIANI
-  int audioOutput;
-#endif
 };
 typedef class IDirectSoundBuffer *LPDIRECTSOUNDBUFFER,**LPLPDIRECTSOUNDBUFFER;
 
