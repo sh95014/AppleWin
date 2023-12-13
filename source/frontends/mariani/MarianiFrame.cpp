@@ -27,18 +27,10 @@ namespace mariani
 {
 
   MarianiFrame::MarianiFrame(const common2::EmulatorOptions & options)
-    : CommonFrame()
-    , mySpeed(options.fixedSpeed)
+    : CommonFrame(options)
   {
     g_sProgramDir = GetSupportDirectory();
     g_sBuiltinSymbolsDir = GetBuiltinSymbolsDirectory();
-  }
-
-  void MarianiFrame::Begin()
-  {
-    CommonFrame::Begin();
-    mySpeed.reset();
-    ResetHardware();
   }
 
   void MarianiFrame::VideoPresentScreen()
@@ -117,140 +109,6 @@ namespace mariani
   std::string MarianiFrame::Video_GetScreenShotFolder() const
   {
     return {};
-  }
-
-  void MarianiFrame::Execute(const DWORD cyclesToExecute)
-  {
-    const bool bVideoUpdate = !g_bFullSpeed;
-    const UINT dwClksPerFrame = NTSC_GetCyclesPerFrame();
-    
-    // do it in the same batches as AppleWin (1 ms)
-    const DWORD fExecutionPeriodClks = g_fCurrentCLK6502 * (1.0 / 1000.0);  // 1 ms
-    
-    DWORD totalCyclesExecuted = 0;
-    // check at the end because we want to always execute at least 1 cycle even for "0"
-    do
-    {
-      _ASSERT(cyclesToExecute >= totalCyclesExecuted);
-      const DWORD thisCyclesToExecute = std::min(fExecutionPeriodClks, cyclesToExecute - totalCyclesExecuted);
-      const DWORD executedCycles = CpuExecute(thisCyclesToExecute, bVideoUpdate);
-      totalCyclesExecuted += executedCycles;
-      
-      GetCardMgr().Update(executedCycles);
-      SpkrUpdate(executedCycles);
-      
-      g_dwCyclesThisFrame = (g_dwCyclesThisFrame + executedCycles) % dwClksPerFrame;
-    } while (totalCyclesExecuted < cyclesToExecute);
-  }
-
-  void MarianiFrame::ExecuteInRunningMode(const uint64_t microseconds)
-  {
-    SetFullSpeed(CanDoFullSpeed());
-    const DWORD cyclesToExecute = mySpeed.getCyclesTillNext(microseconds);  // this checks g_bFullSpeed
-    Execute(cyclesToExecute);
-  }
-
-  void MarianiFrame::ExecuteInDebugMode(const uint64_t microseconds)
-  {
-    // In AppleWin this is called without a timer for just one iteration
-    // because we run a "frame" at a time, we need a bit of ingenuity
-    const DWORD cyclesToExecute = mySpeed.getCyclesAtFixedSpeed(microseconds);
-    const uint64_t target = g_nCumulativeCycles + cyclesToExecute;
-    
-    while (g_nAppMode == MODE_STEPPING && g_nCumulativeCycles < target)
-    {
-      DebugContinueStepping();
-    }
-  }
-
-  void MarianiFrame::ExecuteOneFrame(const uint64_t microseconds)
-  {
-    // when running in adaptive speed
-    // the value msNextFrame is only a hint for when the next frame will arrive
-    switch (g_nAppMode)
-    {
-    case MODE_RUNNING:
-      ExecuteInRunningMode(microseconds);
-      break;
-    case MODE_STEPPING:
-      ExecuteInDebugMode(microseconds);
-      break;
-    default:
-      break;
-    };
-  }
-
-  void MarianiFrame::ChangeMode(const AppMode_e mode)
-  {
-    if (mode != g_nAppMode)
-    {
-      switch (mode)
-      {
-      case MODE_RUNNING:
-        DebugExitDebugger();
-        SoundCore_SetFade(FADE_IN);
-        break;
-      case MODE_DEBUG:
-        DebugBegin();
-        CmdWindowViewConsole(0);
-        break;
-      default:
-        g_nAppMode = mode;
-        SoundCore_SetFade(FADE_OUT);
-        break;
-      }
-      FrameRefreshStatus(DRAW_TITLE);
-      ResetSpeed();
-    }
-  }
-
-  void MarianiFrame::ResetSpeed()
-  {
-    mySpeed.reset();
-  }
-
-  void MarianiFrame::SetFullSpeed(const bool value)
-  {
-    if (g_bFullSpeed != value) {
-      if (value)
-      {
-        // entering full speed
-        GetCardMgr().GetMockingboardCardMgr().MuteControl(true);
-        VideoRedrawScreenDuringFullSpeed(0, true);
-      }
-      else
-      {
-        // leaving full speed
-        GetCardMgr().GetMockingboardCardMgr().MuteControl(false);
-        mySpeed.reset();
-      }
-      g_bFullSpeed = value;
-      g_nCpuCyclesFeedback = 0;
-    }
-  }
-
-  bool MarianiFrame::CanDoFullSpeed()
-  {
-    return (g_dwSpeed == SPEED_MAX) ||
-           (GetCardMgr().GetDisk2CardMgr().IsConditionForFullSpeed() && !Spkr_IsActive() && !GetCardMgr().GetMockingboardCardMgr().IsActive()) ||
-           IsDebugSteppingAtFullSpeed();
-  }
-
-  void MarianiFrame::SingleStep()
-  {
-    SetFullSpeed(CanDoFullSpeed());
-    Execute(0);
-  }
-
-  void MarianiFrame::ResetHardware()
-  {
-    myHardwareConfig.Reload();
-  }
-
-  bool MarianiFrame::HardwareChanged() const
-  {
-    const CConfigNeedingRestart currentConfig = CConfigNeedingRestart::Create();
-    return myHardwareConfig != currentConfig;
   }
 
 }
