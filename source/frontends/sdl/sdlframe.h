@@ -11,11 +11,6 @@
 #include <SDL.h>
 #endif
 
-namespace common2
-{
-  struct EmulatorOptions;
-}
-
 namespace sa2
 {
 
@@ -36,14 +31,7 @@ namespace sa2
 
     void ProcessEvents(bool &quit);
 
-    void ExecuteOneFrame(const uint64_t microseconds);
-    void ChangeMode(const AppMode_e mode);
-    void SingleStep();
-    void ResetHardware();
-    bool HardwareChanged() const;
-
     void FrameResetMachineState();
-    virtual void ResetSpeed();
 
     void LoadSnapshot() override;
 
@@ -75,12 +63,8 @@ namespace sa2
     void ProcessMouseMotion(const SDL_MouseMotionEvent & motion);
 #endif // MARIANI
 
-    void ExecuteInRunningMode(const uint64_t microseconds);
-    void ExecuteInDebugMode(const uint64_t microseconds);
-    void Execute(const DWORD uCycles);
-
-    void SetFullSpeed(const bool value);
-    bool CanDoFullSpeed();
+    void SetFullSpeed(const bool value) override;
+    bool CanDoFullSpeed() override;
 
 #ifndef MARIANI
     common2::Geometry getGeometryOrDefault(const std::optional<common2::Geometry> & geometry) const;
@@ -99,15 +83,11 @@ namespace sa2
 
     bool myScrollLockFullSpeed;
 
-    common2::Speed mySpeed;
-
     std::vector<PortFwd> myPortFwds;
 
 #ifndef MARIANI
     std::shared_ptr<SDL_Window> myWindow;
 #endif
-
-    CConfigNeedingRestart myHardwareConfig;
 
     common2::ControllerQuit myControllerQuit;
   };
