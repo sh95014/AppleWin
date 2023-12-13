@@ -1,6 +1,5 @@
 #pragma once
 
-#ifndef MARIANI
 #include <SDL.h>
 #include <memory>
 #include <iosfwd>
@@ -25,4 +24,3 @@ namespace sa2
   std::string decorateSDLError(const std::string & prefix);
 
 }
-#endif // MARIANI
