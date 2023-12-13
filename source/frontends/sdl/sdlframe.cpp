@@ -24,9 +24,7 @@
 
 #include <algorithm>
 
-#ifndef MARIANI
 #include <SDL_image.h>
-#endif
 
 // #define KEY_LOGGING_VERBOSE
 
@@ -37,7 +35,6 @@
 namespace
 {
 
-#ifndef MARIANI
   void processAppleKey(const SDL_KeyboardEvent & key, const bool forceCapsLock)
   {
     // using keycode (or scan code) one takes a physical view of the keyboard
@@ -124,7 +121,6 @@ namespace
 #endif
     }
   }
-#endif // MARIANI
 
 }
 
@@ -148,7 +144,6 @@ namespace sa2
   void SDLFrame::End()
   {
     CommonFrame::End();
-#ifndef MARIANI
     if (!myFullscreen)
     {
       common2::Geometry geometry;
@@ -156,12 +151,10 @@ namespace sa2
       SDL_GetWindowSize(myWindow.get(), &geometry.width, &geometry.height);
       saveGeometryToRegistry("sa2", geometry);
     }
-#endif // MARIANI
   }
 
   void SDLFrame::setGLSwapInterval(const int interval)
   {
-#ifndef MARIANI
     const int current = SDL_GL_GetSwapInterval();
     // in QEMU with GL_RENDERER: llvmpipe (LLVM 12.0.0, 256 bits)
     // SDL_GL_SetSwapInterval() always fails
@@ -169,7 +162,6 @@ namespace sa2
     {
       throw std::runtime_error(decorateSDLError("SDL_GL_SetSwapInterval"));
     }
-#endif // MARIANI
   }
 
   void SDLFrame::Begin()
@@ -183,25 +175,20 @@ namespace sa2
     if (drawflags & DRAW_TITLE)
     {
       GetAppleWindowTitle();
-#ifndef MARIANI
       SDL_SetWindowTitle(myWindow.get(), g_pAppTitle.c_str());
-#endif
     }
   }
 
   void SDLFrame::SetApplicationIcon()
   {
-#ifndef MARIANI
     const std::string path = getResourcePath("APPLEWIN.ICO");
     std::shared_ptr<SDL_Surface> icon(IMG_Load(path.c_str()), SDL_FreeSurface);
     if (icon)
     {
       SDL_SetWindowIcon(myWindow.get(), icon.get());
     }
-#endif // MARIANI
   }
 
-#ifndef MARIANI
   const std::shared_ptr<SDL_Window> & SDLFrame::GetWindow() const
   {
     return myWindow;
@@ -244,32 +231,26 @@ namespace sa2
       CommonFrame::GetBitmap(lpBitmapName, cb, lpvBits);
     }
   }
-#endif // MARIANI
 
   int SDLFrame::FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType)
   {
-#ifndef MARIANI
     // tabs do not render properly
     std::string s(lpText);
     std::replace(s.begin(), s.end(), '\t', ' ');
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, lpCaption, s.c_str(), nullptr);
     ResetSpeed();
-#endif // MARIANI
     return IDOK;
   }
 
   void SDLFrame::ProcessEvents(bool &quit)
   {
-#ifndef MARIANI
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0)
     {
       ProcessSingleEvent(e, quit);
     }
-#endif // MARIANI
   }
 
-#ifndef MARIANI
   void SDLFrame::ProcessSingleEvent(const SDL_Event & e, bool &quit)
   {
     switch (e.type)
@@ -599,7 +580,6 @@ namespace sa2
       }
     }
   }
-#endif // MARIANI
 
   void SDLFrame::getDragDropSlotAndDrive(size_t & slot, size_t & drive) const
   {
@@ -654,7 +634,6 @@ namespace sa2
     ResetHardware();
   }
 
-#ifndef MARIANI
   common2::Geometry SDLFrame::getGeometryOrDefault(const std::optional<common2::Geometry> & geometry) const
   {
     if (geometry)
@@ -674,7 +653,6 @@ namespace sa2
 
     return actual;
   }
-#endif // MARIANI
 
   std::shared_ptr<NetworkBackend> SDLFrame::CreateNetworkBackend(const std::string & interfaceName)
   {
