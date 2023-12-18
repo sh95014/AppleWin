@@ -58,6 +58,7 @@
 const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
 const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
 const NSNotificationName EmulatorDidRebootNotification = @"EmulatorDidRebootNotification";
+const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidChangeDisplayNotification";
 
 @interface AudioOutput : NSObject
 @property (assign) UInt32 channels;
@@ -124,7 +125,10 @@ std::shared_ptr<mariani::MarianiFrame> frame;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self rebuildView:NO];
+}
 
+- (void)rebuildView:(BOOL)notify {
     _view = (MTKView *)self.view;
     _view.enableSetNeedsDisplay = NO;
     _view.device = MTLCreateSystemDefaultDevice();
@@ -153,6 +157,10 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     _view.delegate = self.renderer;
     
     [self.renderer createTexture];
+    
+    if (notify) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidChangeDisplayNotification object:self];
+    }
 }
 
 - (void)start {
@@ -378,6 +386,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (void)reinitialize {
     frame->Destroy();
     frame->Initialize(true);
+    [self rebuildView:YES];
 }
 
 - (void)enterDebugMode {

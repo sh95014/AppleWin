@@ -173,11 +173,18 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         }
         return event;
     }];
-
+    
+    NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+    [[NSNotificationCenter defaultCenter] addObserverForName:EmulatorDidChangeDisplayNotification object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+        CGRect frame = [self windowRectAtScale:self.windowRectScale];
+        [self.window setFrame:frame display:YES animate:NO];
+    }];
+    
     [self.emulatorVC start];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.emulatorVC stop];
 
     Global::AppCleanup();
@@ -1068,6 +1075,11 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     frame.origin.y = windowFrame.origin.y + (windowFrame.size.height - frame.size.height) / 2;
     
     return frame;
+}
+
+- (double)windowRectScale {
+    Video &video = GetVideo();
+    return self.window.frame.size.width / video.GetFrameBufferBorderlessWidth();
 }
 
 - (void)scaleWindowByFactor:(double)factor {
