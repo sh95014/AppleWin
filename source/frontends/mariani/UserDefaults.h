@@ -16,6 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSURL *recordingsFolder;
 @property (nonatomic) NSURL *screenshotsFolder;
 
+@property (readonly) NSArray<NSString *> *joystickOptions;
+@property (nonatomic) NSInteger joystickMapping;
+@property (readonly) NSArray<NSString *> *joystickButtonOptions;
+@property (nonatomic) NSInteger joystickButton0Mapping;
+@property (nonatomic) NSInteger joystickButton1Mapping;
+
 @end
 
 NS_ASSUME_NONNULL_END

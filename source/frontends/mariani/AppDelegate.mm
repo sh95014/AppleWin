@@ -8,8 +8,6 @@
 #import "AppDelegate.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <Carbon/Carbon.h>
-#import <Foundation/NSProcessInfo.h>
-#import <GameController/GameController.h>
 #import "windows.h"
 
 #import "context.h"

@@ -7,7 +7,9 @@
 
 #pragma once
 
-#include "linux/paddle.h"
+#import "linux/paddle.h"
+#import <Foundation/Foundation.h>
+#import <GameController/GameController.h>
 
 namespace mariani
 {
@@ -17,6 +19,10 @@ class Gamepad : public Paddle
 public:
     bool getButton(int i) const override;
     double getAxis(int i) const override;
+
+private:
+    GCControllerButtonInput *inputForButton(GCExtendedGamepad *gamepad, int i) const;
+    GCControllerDirectionPad *thumbstick(GCExtendedGamepad *gamepad) const;
 };
 
 }

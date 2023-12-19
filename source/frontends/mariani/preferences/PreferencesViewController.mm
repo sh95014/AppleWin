@@ -9,6 +9,7 @@
 // created per pane. When necessary they use the "vcId" user-defined run-time
 // attribute to disambiguate.
 
+#import <GameController/GameController.h>
 #import "PreferencesViewController.h"
 #import "AppDelegate.h"
 #import "UserDefaults.h"
@@ -49,6 +50,7 @@ using namespace DiskImgLib;
 #define COMPUTER_PANE_ID        @"computer"
 #define AUDIO_VIDEO_PANE_ID     @"audioVideo"
 #define STORAGE_PANE_ID         @"storage"
+#define GAME_CONTROLLER_ID      @"gameController"
 
 @interface PreferencesViewController ()
 
@@ -77,6 +79,11 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSButton *storageHardDiskFolderButton;
 @property (strong) IBOutlet NSButton *storageCreateHardDiskButton;
 
+@property (weak) IBOutlet NSPopUpButton *gameController;
+@property (weak) IBOutlet NSPopUpButton *gameControllerJoystick;
+@property (weak) IBOutlet NSPopUpButton *gameControllerButton0;
+@property (weak) IBOutlet NSPopUpButton *gameControllerButton1;
+
 @property NSMutableDictionary *keyValueStore;
 @property BOOL configured;
 
@@ -102,6 +109,9 @@ BOOL configured;
         }
         else if ([vcId isEqualToString:STORAGE_PANE_ID]) {
             [self configureStorage];
+        }
+        else if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
+            [self configureGameController];
         }
         self.configured = YES;
     }
@@ -294,6 +304,35 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     }
     else {
         self.storageHardDiskFolderButton.title = @"";
+    }
+}
+
+- (void)configureGameController {
+    NSString *vcId = [self valueForKey:@"vcId"];
+    if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
+        UserDefaults *defaults = [UserDefaults sharedInstance];
+        
+#if 0 // FIXME need more than one controller to actually test
+        for (GCController *controller in [GCController controllers]) {
+            GCExtendedGamepad *gamePad = controller.extendedGamepad;
+            if (gamePad != nil) {
+                NSString *name = [NSString stringWithFormat:@"%@ %@", controller.vendorName, controller.productCategory];
+                [self.gameController addItemWithTitle:name];
+            }
+        }
+#else
+        GCController *controller = [GCController current];
+        NSString *name = [NSString stringWithFormat:@"%@ %@", controller.vendorName, controller.productCategory];
+        [self.gameController addItemWithTitle:name];
+        self.gameController.enabled = NO;
+#endif
+        
+        [self.gameControllerJoystick addItemsWithTitles:defaults.joystickOptions];
+        [self.gameControllerJoystick selectItemAtIndex:defaults.joystickMapping];
+        [self.gameControllerButton0 addItemsWithTitles:defaults.joystickButtonOptions];
+        [self.gameControllerButton0 selectItemAtIndex:defaults.joystickButton0Mapping];
+        [self.gameControllerButton1 addItemsWithTitles:defaults.joystickButtonOptions];
+        [self.gameControllerButton1 selectItemAtIndex:defaults.joystickButton1Mapping];
     }
 }
 
@@ -604,6 +643,21 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         }
         [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
     }
+}
+
+- (IBAction)mapJoystickAction:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    defaults.joystickMapping = self.gameControllerJoystick.indexOfSelectedItem;
+}
+
+- (IBAction)mapJoystickButton0Action:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    defaults.joystickButton0Mapping = self.gameControllerButton0.indexOfSelectedItem;
+}
+
+- (IBAction)mapJoystickButton1Action:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    defaults.joystickButton1Mapping = self.gameControllerButton1.indexOfSelectedItem;
 }
 
 #pragma mark - NSOpenSavePanelDelegate
