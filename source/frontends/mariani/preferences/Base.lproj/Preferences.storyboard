@@ -608,7 +608,7 @@
                                     <menu key="menu" id="MbW-BK-Gxf"/>
                                 </popUpButtonCell>
                                 <connections>
-                                    <action selector="slotAction:" target="cWg-fO-BCh" id="Lem-Ie-0J1"/>
+                                    <action selector="gameControllerAction:" target="ulv-ax-GcK" id="vw9-Uq-5ps"/>
                                 </connections>
                             </popUpButton>
                             <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="7z0-p8-5zO">

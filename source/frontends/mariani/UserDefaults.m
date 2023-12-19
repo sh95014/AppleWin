@@ -10,9 +10,12 @@
 
 #define RECORDINGS_FOLDER_KEY           @"RecordingsFolder"
 #define SCREENSHOTS_FOLDER_KEY          @"ScreenshotsFolder"
+#define GAME_CONTROLLER_KEY             @"GameController"
 #define JOYSTICK_MAPPING_KEY            @"JoystickMapping"
 #define JOYSTICK_BUTTON0_MAPPING_KEY    @"JoystickButton0Mapping"
 #define JOYSTICK_BUTTON1_MAPPING_KEY    @"JoystickButton1Mapping"
+
+NSString *NumericKeypadControllerIdentifier = @"NumericKeypadControllerIdentifier";
 
 @implementation UserDefaults
 
@@ -53,6 +56,35 @@
 - (void)setScreenshotsFolder:(NSURL *)screenshotsFolder {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setURL:screenshotsFolder forKey:SCREENSHOTS_FOLDER_KEY];
+}
+
+- (NSString *)gameController {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *name = [defaults stringForKey:GAME_CONTROLLER_KEY];
+    
+    if ([name isEqualToString:NumericKeypadControllerIdentifier]) {
+        return name;
+    } else if (name.length > 0) {
+        // make sure the selected controller is still conected
+        for (GCController *controller in [GCController controllers]) {
+            if ([controller.fullName isEqualToString:name]) {
+                return name;
+            }
+        }
+    }
+    
+    // fall back to current controller, if any
+    GCController *current = [GCController current];
+    if (current != nil) {
+        return current.fullName;
+    }
+    
+    return NumericKeypadControllerIdentifier;
+}
+
+- (void)setGameController:(NSString *)gameController {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:gameController forKey:GAME_CONTROLLER_KEY];
 }
 
 - (NSArray<NSString *> *)joystickOptions {
@@ -115,6 +147,14 @@
 - (void)setJoystickButton1Mapping:(NSInteger)joystickButton0Mapping {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:joystickButton0Mapping forKey:JOYSTICK_BUTTON1_MAPPING_KEY];
+}
+
+@end
+
+@implementation GCController (Mariani)
+
+- (NSString *)fullName {
+    return [NSString stringWithFormat:@"%@ %@", self.vendorName, self.productCategory];
 }
 
 @end

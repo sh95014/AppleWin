@@ -312,20 +312,13 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
         UserDefaults *defaults = [UserDefaults sharedInstance];
         
-#if 0 // FIXME need more than one controller to actually test
         for (GCController *controller in [GCController controllers]) {
             GCExtendedGamepad *gamePad = controller.extendedGamepad;
             if (gamePad != nil) {
-                NSString *name = [NSString stringWithFormat:@"%@ %@", controller.vendorName, controller.productCategory];
-                [self.gameController addItemWithTitle:name];
+                [self.gameController addItemWithTitle:controller.fullName];
             }
         }
-#else
-        GCController *controller = [GCController current];
-        NSString *name = [NSString stringWithFormat:@"%@ %@", controller.vendorName, controller.productCategory];
-        [self.gameController addItemWithTitle:name];
-        self.gameController.enabled = NO;
-#endif
+        [self.gameController addItemWithTitle:NSLocalizedString(@"Numeric Keypad", @"")];
         
         [self.gameControllerJoystick addItemsWithTitles:defaults.joystickOptions];
         [self.gameControllerJoystick selectItemAtIndex:defaults.joystickMapping];
@@ -642,6 +635,16 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
             }
         }
         [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
+    }
+}
+
+- (IBAction)gameControllerAction:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    if (self.gameController.selectedItem == self.gameController.lastItem) {
+        defaults.gameController = NumericKeypadControllerIdentifier;
+    }
+    else {
+        defaults.gameController = self.gameController.titleOfSelectedItem;
     }
 }
 
