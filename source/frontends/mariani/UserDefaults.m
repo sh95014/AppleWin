@@ -60,15 +60,15 @@ NSString *NumericKeypadControllerIdentifier = @"NumericKeypadControllerIdentifie
 
 - (NSString *)gameController {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *name = [defaults stringForKey:GAME_CONTROLLER_KEY];
+    NSString *fullName = [defaults stringForKey:GAME_CONTROLLER_KEY];
     
-    if ([name isEqualToString:NumericKeypadControllerIdentifier]) {
-        return name;
-    } else if (name.length > 0) {
+    if ([fullName isEqualToString:NumericKeypadControllerIdentifier]) {
+        return fullName;
+    } else if (fullName.length > 0) {
         // make sure the selected controller is still conected
         for (GCController *controller in [GCController controllers]) {
-            if ([controller.fullName isEqualToString:name]) {
-                return name;
+            if ([controller.fullName isEqualToString:fullName]) {
+                return fullName;
             }
         }
     }
@@ -155,6 +155,23 @@ NSString *NumericKeypadControllerIdentifier = @"NumericKeypadControllerIdentifie
 
 - (NSString *)fullName {
     return [NSString stringWithFormat:@"%@ %@", self.vendorName, self.productCategory];
+}
+
++ (GCController *)controllerNamed:(NSString *)fullName {
+    if (fullName != nil) {
+        for (GCController *controller in [GCController controllers]) {
+            if ([controller.fullName isEqualToString:fullName]) {
+                return controller;
+            }
+        }
+    }
+    return nil;
+}
+
++ (GCController *)defaultController {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *fullName = [defaults stringForKey:GAME_CONTROLLER_KEY];
+    return [self controllerNamed:fullName];
 }
 
 @end

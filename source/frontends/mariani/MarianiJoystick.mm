@@ -15,7 +15,7 @@ namespace mariani
 
 bool Gamepad::getButton(int i) const
 {
-    GCController *gc = [GCController current];
+    GCController *gc = [GCController defaultController];
     GCExtendedGamepad *gamepad = [gc extendedGamepad];
     GCControllerButtonInput *button = inputForButton(gamepad, i);
     return (button != nil) ? button.isPressed : 0;
@@ -23,7 +23,7 @@ bool Gamepad::getButton(int i) const
 
 double Gamepad::getAxis(int i) const
 {
-    GCController *gc = [GCController current];
+    GCController *gc = [GCController defaultController];
     GCExtendedGamepad *gamepad = [gc extendedGamepad];
     
     if (gamepad != nil) {
