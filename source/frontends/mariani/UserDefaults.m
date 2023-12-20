@@ -15,7 +15,8 @@
 #define JOYSTICK_BUTTON0_MAPPING_KEY    @"JoystickButton0Mapping"
 #define JOYSTICK_BUTTON1_MAPPING_KEY    @"JoystickButton1Mapping"
 
-NSString *NumericKeypadControllerIdentifier = @"NumericKeypadControllerIdentifier";
+NSString *GameControllerNone = @"GameControllerNone";
+NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 
 @implementation UserDefaults
 
@@ -62,7 +63,8 @@ NSString *NumericKeypadControllerIdentifier = @"NumericKeypadControllerIdentifie
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *fullName = [defaults stringForKey:GAME_CONTROLLER_KEY];
     
-    if ([fullName isEqualToString:NumericKeypadControllerIdentifier]) {
+    if ([fullName isEqualToString:GameControllerNone] ||
+        [fullName isEqualToString:GameControllerNumericKeypad]) {
         return fullName;
     } else if (fullName.length > 0) {
         // make sure the selected controller is still conected
@@ -79,7 +81,7 @@ NSString *NumericKeypadControllerIdentifier = @"NumericKeypadControllerIdentifie
         return current.fullName;
     }
     
-    return NumericKeypadControllerIdentifier;
+    return GameControllerNone;
 }
 
 - (void)setGameController:(NSString *)gameController {

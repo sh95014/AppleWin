@@ -311,14 +311,24 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     NSString *vcId = [self valueForKey:@"vcId"];
     if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
         UserDefaults *defaults = [UserDefaults sharedInstance];
-        
+        // GameControllerNone
+        [self.gameController addItemWithTitle:NSLocalizedString(@"None", @"")];
         for (GCController *controller in [GCController controllers]) {
             GCExtendedGamepad *gamePad = controller.extendedGamepad;
             if (gamePad != nil) {
                 [self.gameController addItemWithTitle:controller.fullName];
             }
         }
+        // GameControllerNumericKeypad
         [self.gameController addItemWithTitle:NSLocalizedString(@"Numeric Keypad", @"")];
+        
+        if ([defaults.gameController isEqualToString:GameControllerNone]) {
+            [self.gameController selectItemAtIndex:0];
+        } else if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
+            [self.gameController selectItem:self.gameController.lastItem];
+        } else {
+            [self.gameController selectItemWithTitle:defaults.gameController];
+        }
         
         [self.gameControllerJoystick addItemsWithTitles:defaults.joystickOptions];
         [self.gameControllerJoystick selectItemAtIndex:defaults.joystickMapping];
@@ -640,8 +650,10 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 
 - (IBAction)gameControllerAction:(id)sender {
     UserDefaults *defaults = [UserDefaults sharedInstance];
-    if (self.gameController.selectedItem == self.gameController.lastItem) {
-        defaults.gameController = NumericKeypadControllerIdentifier;
+    if (self.gameController.selectedItem == self.gameController.itemArray[0]) {
+        defaults.gameController = GameControllerNone;
+    } else if (self.gameController.selectedItem == self.gameController.lastItem) {
+        defaults.gameController = GameControllerNumericKeypad;
     }
     else {
         defaults.gameController = self.gameController.titleOfSelectedItem;

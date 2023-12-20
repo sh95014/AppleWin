@@ -10,7 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern NSString *NumericKeypadControllerIdentifier;
+extern NSString *GameControllerNone;
+extern NSString *GameControllerNumericKeypad;
 
 @interface UserDefaults : NSObject
 
