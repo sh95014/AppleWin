@@ -52,7 +52,8 @@ static inline uint16_t Read16(const uint8_t** pBuf, long* pLength)
         val = *(*pBuf)++;
         val |= *(*pBuf)++ << 8;
         *pLength -= 2;
-    } else {
+    }
+    else {
         // ought to throw an exception here
         assert(false);
         val = (uint16_t) -1;
@@ -169,31 +170,38 @@ NSString *ApplesoftBASICDataToRTF(NSData *data)
                 if (!inRem) {
                     [outputString RTFSetColor:kDefaultColor];
                 }
-            } else {
+            }
+            else {
                 /* simple character */
                 if (fUseRTF) {
                     if (*srcPtr == '"' && !inRem) {
                         if (!inQuote) {
                             [outputString RTFSetColor:kStringColor];
                             [outputString appendCharacter:*srcPtr];
-                        } else {
+                        }
+                        else {
                             [outputString appendCharacter:*srcPtr];
                             [outputString RTFSetColor:kDefaultColor];
                         }
                         inQuote = !inQuote;
-                    } else if (*srcPtr == ':' && !inRem && !inQuote) {
+                    }
+                    else if (*srcPtr == ':' && !inRem && !inQuote) {
                         [outputString RTFSetColor:kColonColor];
                         [outputString appendCharacter:*srcPtr];
                         [outputString RTFSetColor:kDefaultColor];
-                    } else if (inRem && *srcPtr == '\r') {
+                    }
+                    else if (inRem && *srcPtr == '\r') {
                         [outputString RTFNewPara];
-                    } else {
+                    }
+                    else {
                         [outputString appendCharacter:*srcPtr];
                     }
-                } else {
+                }
+                else {
                     if (inRem && *srcPtr == '\r') {
                         [outputString appendString:@"\r\n"];
-                    } else {
+                    }
+                    else {
                         [outputString appendCharacter:*srcPtr];
                     }
                 }
@@ -328,7 +336,8 @@ NSString *IntegerBASICDataToRTF(NSData *data)
                 [outputString RTFSetColor:kDefaultColor];
                 srcPtr++;
                 length--;
-            } else if (*srcPtr == 0x5d) {
+            }
+            else if (*srcPtr == 0x5d) {
                 /* start of REM statement, run to EOL */
                 [outputString RTFSetColor:kCommentColor];
                 [outputString appendFormat:@"%sREM ", trailingSpace ? "" : " "];
@@ -345,7 +354,8 @@ NSString *IntegerBASICDataToRTF(NSData *data)
                     NSLog(@"  INT ended while in a REM statement");
                     break;
                 }
-            } else if (*srcPtr >= 0xb0 && *srcPtr <= 0xb9) {
+            }
+            else if (*srcPtr >= 0xb0 && *srcPtr <= 0xb9) {
                 /* start of integer constant */
                 srcPtr++;
                 length--;
@@ -356,7 +366,8 @@ NSString *IntegerBASICDataToRTF(NSData *data)
                 int val;
                 val = Read16(&srcPtr, &length);
                 [outputString appendFormat:@"%d", val];
-            } else if (*srcPtr >= 0xc1 && *srcPtr <= 0xda) {
+            }
+            else if (*srcPtr >= 0xc1 && *srcPtr <= 0xda) {
                 /* start of variable name */
                 while ((*srcPtr >= 0xc1 && *srcPtr <= 0xda) ||
                        (*srcPtr >= 0xb0 && *srcPtr <= 0xb9))
@@ -366,7 +377,8 @@ NSString *IntegerBASICDataToRTF(NSData *data)
                     srcPtr++;
                     length--;
                 }
-            } else if (*srcPtr < 0x80) {
+            }
+            else if (*srcPtr < 0x80) {
                 /* found a token; try to get the whitespace right */
                 /* (maybe should've left whitespace on the ends of tokens
                     that are always followed by whitespace...?) */
@@ -379,7 +391,8 @@ NSString *IntegerBASICDataToRTF(NSData *data)
                 if ((token[0] >= 0x21 && token[0] <= 0x3f) || *srcPtr < 0x12) {
                     /* does not need leading space */
                     [outputString appendFormat:@"%s", token];
-                } else {
+                }
+                else {
                     /* needs leading space; combine with prev if it exists */
                     if (trailingSpace)
                         [outputString appendFormat:@"%s", token];
@@ -391,7 +404,8 @@ NSString *IntegerBASICDataToRTF(NSData *data)
                 [outputString RTFSetColor:kDefaultColor];
                 srcPtr++;
                 length--;
-            } else {
+            }
+            else {
                 /* should not happen */
                 NSLog(@"  INT unexpected value 0x%02x at byte %ld",
                     *srcPtr, srcPtr - (const uint8_t *)data.bytes);

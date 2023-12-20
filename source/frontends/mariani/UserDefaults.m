@@ -66,7 +66,8 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
     if ([fullName isEqualToString:GameControllerNone] ||
         [fullName isEqualToString:GameControllerNumericKeypad]) {
         return fullName;
-    } else if (fullName.length > 0) {
+    }
+    else if (fullName.length > 0) {
         // make sure the selected controller is still conected
         for (GCController *controller in [GCController controllers]) {
             if ([controller.fullName isEqualToString:fullName]) {

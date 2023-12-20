@@ -253,7 +253,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSArray *supportedTypes = nil;
     if ([sender isEqual:self.diskOpenPanel]) {
         supportedTypes = @[ @"BIN", @"DO", @"DSK", @"NIB", @"PO", @"WOZ", @"ZIP", @"GZIP", @"GZ" ];
-    } else if ([sender isEqual:self.tapeOpenPanel]) {
+    }
+    else if ([sender isEqual:self.tapeOpenPanel]) {
         supportedTypes = @[ @"WAV" ];
     }
     return [supportedTypes containsObject:url.pathExtension.uppercaseString];

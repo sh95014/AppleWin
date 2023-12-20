@@ -324,9 +324,11 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         
         if ([defaults.gameController isEqualToString:GameControllerNone]) {
             [self.gameController selectItemAtIndex:0];
-        } else if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
+        }
+        else if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
             [self.gameController selectItem:self.gameController.lastItem];
-        } else {
+        }
+        else {
             [self.gameController selectItemWithTitle:defaults.gameController];
         }
         
@@ -652,7 +654,8 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     UserDefaults *defaults = [UserDefaults sharedInstance];
     if (self.gameController.selectedItem == self.gameController.itemArray[0]) {
         defaults.gameController = GameControllerNone;
-    } else if (self.gameController.selectedItem == self.gameController.lastItem) {
+    }
+    else if (self.gameController.selectedItem == self.gameController.lastItem) {
         defaults.gameController = GameControllerNumericKeypad;
     }
     else {
