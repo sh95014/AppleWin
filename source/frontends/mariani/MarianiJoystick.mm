@@ -28,22 +28,25 @@ double Gamepad::getAxis(int i) const
     UserDefaults *defaults = [UserDefaults sharedInstance];
     if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
         double negativeVector = 0;
+        double neutralVector = 0;
         double positiveVector = 0;
         switch (i) {
             case 0:
-                negativeVector = int(keysDown.count('7') + keysDown.count('4') + keysDown.count('1'));
+                negativeVector = int(keysDown.count('1') + keysDown.count('4') + keysDown.count('7'));
+                neutralVector =  int(keysDown.count('2')                       + keysDown.count('8'));
                 positiveVector = int(keysDown.count('3') + keysDown.count('6') + keysDown.count('9'));
                 break;
             case 1:
                 negativeVector = int(keysDown.count('7') + keysDown.count('8') + keysDown.count('9'));
+                neutralVector =  int(keysDown.count('4')                       + keysDown.count('6'));
                 positiveVector = int(keysDown.count('1') + keysDown.count('2') + keysDown.count('3'));
                 break;
         }
-        if (positiveVector + negativeVector < 0.01) {
+        if (positiveVector + neutralVector + negativeVector < 0.01) {
             // avoid division by 0
             return PDL_CENTER;
         }
-        return (positiveVector - negativeVector) / (positiveVector + negativeVector);
+        return (positiveVector - negativeVector) / (positiveVector + neutralVector + negativeVector);
     }
     else {
         GCController *gc = [GCController defaultController];
