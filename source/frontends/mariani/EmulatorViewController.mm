@@ -209,9 +209,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
     
     frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
-#ifdef DEBUG
-    NSTimeInterval executionTimeOffset = -[start timeIntervalSinceNow];
-#endif
 
 #ifdef SHOW_EMULATED_CPU_SPEED
     self.frameCount++;
@@ -236,7 +233,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     if (duration > 1.0 / TARGET_FPS) {
         // oops, took too long
         NSLog(@"Frame time exceeded: %f ms", duration * 1000);
-        NSLog(@"    Execute:                    %f ms", executionTimeOffset * 1000);
     }
 #endif // DEBUG
 }
