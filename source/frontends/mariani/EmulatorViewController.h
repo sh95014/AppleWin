@@ -26,6 +26,7 @@
 #import <Cocoa/Cocoa.h>
 #import "CommonTypes.h"
 #import "EmulatorRenderer.h"
+#import "EmulatorView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,7 +50,7 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 
 @end
 
-@interface EmulatorViewController : NSViewController <EmulatorRendererDelegate>
+@interface EmulatorViewController : NSViewController <EmulatorRendererDelegate, EmulatorViewDelegate>
 
 @property (nullable, weak) id<EmulatorViewControllerDelegate> delegate;
 

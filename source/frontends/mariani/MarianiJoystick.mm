@@ -10,6 +10,8 @@
 #import "UserDefaults.h"
 #import <GameController/GameController.h>
 
+#define PDL_CENTER          0
+
 namespace mariani
 {
 
@@ -23,17 +25,39 @@ bool Gamepad::getButton(int i) const
 
 double Gamepad::getAxis(int i) const
 {
-    GCController *gc = [GCController defaultController];
-    GCExtendedGamepad *gamepad = [gc extendedGamepad];
-    
-    if (gamepad != nil) {
-        GCControllerDirectionPad *directionPad = thumbstick(gamepad);
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
+        double negativeVector = 0;
+        double positiveVector = 0;
         switch (i) {
-            case 0:  return directionPad.xAxis.value;
-            case 1:  return -directionPad.yAxis.value;
+            case 0:
+                negativeVector = int(keysDown.count('7') + keysDown.count('4') + keysDown.count('1'));
+                positiveVector = int(keysDown.count('3') + keysDown.count('6') + keysDown.count('9'));
+                break;
+            case 1:
+                negativeVector = int(keysDown.count('7') + keysDown.count('8') + keysDown.count('9'));
+                positiveVector = int(keysDown.count('1') + keysDown.count('2') + keysDown.count('3'));
+                break;
+        }
+        if (positiveVector + negativeVector < 0.01) {
+            // avoid division by 0
+            return PDL_CENTER;
+        }
+        return (positiveVector - negativeVector) / (positiveVector + negativeVector);
+    }
+    else {
+        GCController *gc = [GCController defaultController];
+        GCExtendedGamepad *gamepad = [gc extendedGamepad];
+        
+        if (gamepad != nil) {
+            GCControllerDirectionPad *directionPad = thumbstick(gamepad);
+            switch (i) {
+                case 0:  return directionPad.xAxis.value;
+                case 1:  return -directionPad.yAxis.value;
+            }
         }
     }
-    return 0;
+    return PDL_CENTER;
 }
 
 GCControllerButtonInput *Gamepad::inputForButton(GCExtendedGamepad *gamepad, int i) const
@@ -52,6 +76,8 @@ GCControllerButtonInput *Gamepad::inputForButton(GCExtendedGamepad *gamepad, int
             case 5:  return gamepad.rightTrigger;
             case 6:  return gamepad.leftShoulder;
             case 7:  return gamepad.rightShoulder;
+            case 8:  return gamepad.leftThumbstickButton;
+            case 9:  return gamepad.rightThumbstickButton;
         }
     }
     return NULL;
@@ -69,6 +95,24 @@ GCControllerDirectionPad *Gamepad::thumbstick(GCExtendedGamepad *gamepad) const
         }
     }
     return NULL;
+}
+
+void Gamepad::numericKeyDown(char key) {
+    if (key == '0') {
+        setButtonPressed(ourSolidApple);
+    }
+    else {
+        keysDown.insert(key);
+    }
+}
+
+void Gamepad::numericKeyUp(char key) {
+    if (key == '0') {
+        setButtonReleased(ourSolidApple);
+    }
+    else {
+        keysDown.erase(key);
+    }
 }
 
 }

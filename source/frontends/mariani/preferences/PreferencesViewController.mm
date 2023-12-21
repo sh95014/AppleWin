@@ -324,12 +324,21 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         
         if ([defaults.gameController isEqualToString:GameControllerNone]) {
             [self.gameController selectItemAtIndex:0];
+            self.gameControllerJoystick.enabled = NO;
+            self.gameControllerButton0.enabled = NO;
+            self.gameControllerButton1.enabled = NO;
         }
         else if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
             [self.gameController selectItem:self.gameController.lastItem];
+            self.gameControllerJoystick.enabled = NO;
+            self.gameControllerButton0.enabled = NO;
+            self.gameControllerButton1.enabled = NO;
         }
         else {
             [self.gameController selectItemWithTitle:defaults.gameController];
+            self.gameControllerJoystick.enabled = YES;
+            self.gameControllerButton0.enabled = YES;
+            self.gameControllerButton1.enabled = YES;
         }
         
         [self.gameControllerJoystick addItemsWithTitles:defaults.joystickOptions];
@@ -654,12 +663,21 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     UserDefaults *defaults = [UserDefaults sharedInstance];
     if (self.gameController.selectedItem == self.gameController.itemArray[0]) {
         defaults.gameController = GameControllerNone;
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
     }
     else if (self.gameController.selectedItem == self.gameController.lastItem) {
         defaults.gameController = GameControllerNumericKeypad;
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
     }
     else {
         defaults.gameController = self.gameController.titleOfSelectedItem;
+        self.gameControllerJoystick.enabled = YES;
+        self.gameControllerButton0.enabled = YES;
+        self.gameControllerButton1.enabled = YES;
     }
 }
 

@@ -121,6 +121,8 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
         GCInputRightTrigger,
         GCInputLeftShoulder,
         GCInputRightShoulder,
+        GCInputLeftThumbstickButton,
+        GCInputRightThumbstickButton,
     ];
 }
 

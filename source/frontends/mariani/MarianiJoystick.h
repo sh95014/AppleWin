@@ -20,9 +20,14 @@ public:
     bool getButton(int i) const override;
     double getAxis(int i) const override;
 
+    void numericKeyDown(char key);
+    void numericKeyUp(char key);
+
 private:
     GCControllerButtonInput *inputForButton(GCExtendedGamepad *gamepad, int i) const;
     GCControllerDirectionPad *thumbstick(GCExtendedGamepad *gamepad) const;
+
+    std::set<char> keysDown;
 };
 
 }

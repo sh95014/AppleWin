@@ -102,8 +102,9 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 extern common2::EmulatorOptions gEmulatorOptions;
 
 @implementation EmulatorViewController {
-    MTKView *_view;
+    EmulatorView *_view;
     FrameBuffer frameBuffer;
+    std::shared_ptr<mariani::Gamepad> gamepad;
 }
 
 std::shared_ptr<mariani::MarianiFrame> frame;
@@ -115,9 +116,8 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     
     self.registryContext = new RegistryContext(CreateFileRegistry(gEmulatorOptions));
     frame.reset(new mariani::MarianiFrame(gEmulatorOptions));
-
-    std::shared_ptr<Paddle> paddle(new mariani::Gamepad());
-    self.initialisation = new Initialisation(frame, paddle);
+    gamepad.reset(new mariani::Gamepad());
+    self.initialisation = new Initialisation(frame, gamepad);
     applyOptions(gEmulatorOptions);
     frame->Begin();
     self.savedAppMode = g_nAppMode;
@@ -129,9 +129,10 @@ std::shared_ptr<mariani::MarianiFrame> frame;
 }
 
 - (void)rebuildView:(BOOL)notify {
-    _view = (MTKView *)self.view;
+    _view = (EmulatorView *)self.view;
     _view.enableSetNeedsDisplay = NO;
     _view.device = MTLCreateSystemDefaultDevice();
+    _view.numericKeyDelegate = self;
 #ifdef DEBUG
     //  useful for debugging quad sizing issues.
     _view.clearColor = MTLClearColorMake(0.0, 0.15, 0.3, 0.3);
@@ -610,13 +611,23 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     [(EmulatorView *)self.view addStringToKeyboardBuffer:string];
 }
 
-#pragma mark - EmulatorRendererProtocol
+#pragma mark - EmulatorRendererDelegate
 
 - (BOOL)shouldOverscan {
     // the idealized display seems to show weird artifacts in the overscan
     // area, so we crop tightly
     Video &video = GetVideo();
     return (video.GetVideoType() != VT_COLOR_IDEALIZED);
+}
+
+#pragma mark - EmulatorViewDelegate
+
+- (void)emulatorView:(EmulatorView *)view numericKeyDown:(unichar)key {
+    gamepad->numericKeyDown(key);
+}
+
+- (void)emulatorView:(EmulatorView *)view numericKeyUp:(unichar)key {
+    gamepad->numericKeyUp(key);
 }
 
 @end
