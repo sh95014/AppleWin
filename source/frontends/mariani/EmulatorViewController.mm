@@ -178,13 +178,35 @@ std::shared_ptr<mariani::MarianiFrame> frame;
         (CGDirectDisplayID) [self.view.window.screen.deviceDescription[@"NSScreenNumber"] unsignedIntegerValue];
     CVDisplayLinkSetCurrentCGDisplay(_displayLink, viewDisplayID);
     CVDisplayLinkStart(self.displayLink);
+#ifdef SHOW_FPS
+    displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+    displayLinkCallbackCount = 0;
+#endif // SHOW_FPS
     
     self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
+    
+#ifdef SHOW_FPS
+    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        uint64_t duration = clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - displayLinkCallbackStartTime;
+        double fps = displayLinkCallbackCount / (duration / 1000000000.0);
+        [self.delegate updateStatus:[NSString stringWithFormat:@"%.3f fps", fps]];
+        
+        displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+        displayLinkCallbackCount = 0;
+    }];
+#endif // SHOW_FPS
 }
 
+#ifdef SHOW_FPS
+static uint64_t displayLinkCallbackStartTime;
+static NSUInteger displayLinkCallbackCount;
+#endif // SHOW_FPS
 static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *now, const CVTimeStamp *outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void *displayLinkContext)
 {
+#ifdef SHOW_FPS
+    displayLinkCallbackCount++;
+#endif
     dispatch_async(dispatch_get_main_queue(), ^{
         EmulatorViewController *emulatorVC = (__bridge EmulatorViewController *)displayLinkContext;
         emulatorVC->frameBuffer.data = frame->FrameBufferData();
