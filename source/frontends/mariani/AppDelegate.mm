@@ -677,7 +677,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         self.diskOpenPanel.canChooseDirectories = NO;
         self.diskOpenPanel.allowsMultipleSelection = NO;
         self.diskOpenPanel.canDownloadUbiquitousContents = YES;
-        self.diskOpenPanel.message = [NSString stringWithFormat:NSLocalizedString(@"Select disk image for slot %d drive %d", @"slot, drive"), slot, drive];
+        self.diskOpenPanel.message = [NSString stringWithFormat:NSLocalizedString(@"Select disk image for slot %d drive %d", @"slot, drive"), slot, drive + 1];
         self.diskOpenPanel.prompt = NSLocalizedString(@"Insert", @"..into drive");
         self.diskOpenPanel.delegate = self;
         
