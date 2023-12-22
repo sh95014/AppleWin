@@ -143,7 +143,7 @@
 		B00BE9E92A291BD100F288F9 /* InspectorPanels.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00BE9EC2A291BD100F288F9 /* InspectorPanels.xib */; };
 		B00BE9EA2A291BD100F288F9 /* InspectorPanels.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00BE9EC2A291BD100F288F9 /* InspectorPanels.xib */; };
 		B00ECB7A279EEB600041E16C /* guiddef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7ED277A21400002A6C3 /* guiddef.cpp */; };
-		B00ECB7B279EEB600041E16C /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = B0689D162781984F0029EB7D /* UserDefaults.m */; };
+		B00ECB7B279EEB600041E16C /* UserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0689D162781984F0029EB7D /* UserDefaults.mm */; };
 		B00ECB7E279EEB600041E16C /* MarianiFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0689D082780B9B60029EB7D /* MarianiFrame.cpp */; };
 		B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB710277A1BA30002A6C3 /* Util_MemoryTextFile.cpp */; };
 		B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E850277B6FFE00FC14A3 /* fileregistry.cpp */; };
@@ -398,7 +398,7 @@
 		B061855227B779EB00B6D04C /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = B061855127B779EB00B6D04C /* config.h */; };
 		B0689D0A2780B9B60029EB7D /* MarianiFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0689D082780B9B60029EB7D /* MarianiFrame.cpp */; };
 		B0689D0D2780C85F0029EB7D /* programoptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E84B277B6DE300FC14A3 /* programoptions.cpp */; };
-		B0689D182781984F0029EB7D /* UserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = B0689D162781984F0029EB7D /* UserDefaults.m */; };
+		B0689D182781984F0029EB7D /* UserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0689D162781984F0029EB7D /* UserDefaults.mm */; };
 		B07612302789E4BE009E79BE /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = B07612332789E4BE009E79BE /* About.xib */; };
 		B089EF2E27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
 		B089EF2F27BADA5200BDC415 /* Mariani.help in Resources */ = {isa = PBXBuildFile; fileRef = B089EF2D27BADA5200BDC415 /* Mariani.help */; };
@@ -518,6 +518,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		97E011F82B36481F00A64C87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A50859A72B204C8100325B36;
+			remoteInfo = "Hex Fiend Tests";
+		};
 		B017D6932A3A4C8900FE6D1E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B032DE19277A0C23006DC0F7 /* Project object */;
@@ -851,7 +858,7 @@
 		B0689D082780B9B60029EB7D /* MarianiFrame.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MarianiFrame.cpp; sourceTree = "<group>"; };
 		B0689D092780B9B60029EB7D /* MarianiFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarianiFrame.h; sourceTree = "<group>"; };
 		B0689D152781984F0029EB7D /* UserDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
-		B0689D162781984F0029EB7D /* UserDefaults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UserDefaults.m; sourceTree = "<group>"; };
+		B0689D162781984F0029EB7D /* UserDefaults.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = UserDefaults.mm; sourceTree = "<group>"; };
 		B07612322789E4BE009E79BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/About.xib; sourceTree = "<group>"; };
 		B07612352789E4C2009E79BE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/About.strings"; sourceTree = "<group>"; };
 		B089EF2D27BADA5200BDC415 /* Mariani.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Mariani.help; sourceTree = "<group>"; };
@@ -1472,7 +1479,7 @@
 				B049E8A4277C4F0E00FC14A3 /* ShaderTypes.h */,
 				B049E8A6277C4F6D00FC14A3 /* Shaders.metal */,
 				B0689D152781984F0029EB7D /* UserDefaults.h */,
-				B0689D162781984F0029EB7D /* UserDefaults.m */,
+				B0689D162781984F0029EB7D /* UserDefaults.mm */,
 				B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */,
 				B0DB46E22A36E42600B4E670 /* preferences */,
 				B0F526F42A2C1E0200288820 /* browser */,
@@ -1633,6 +1640,7 @@
 				B06184AC27B7303100B6D04C /* HexFiendling.app */,
 				B06184AE27B7303100B6D04C /* HexFiend_Framework Tests.xctest */,
 				B06184B027B7303100B6D04C /* hexf */,
+				97E011F92B36481F00A64C87 /* Hex Fiend Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2657,6 +2665,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		97E011F92B36481F00A64C87 /* Hex Fiend Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Hex Fiend Tests.xctest";
+			remoteRef = 97E011F82B36481F00A64C87 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		B06184A427B7303100B6D04C /* Hex Fiend.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
@@ -2909,7 +2924,7 @@
 				B0F527162A2C1F2200288820 /* ConsoleViewController.mm in Sources */,
 				B0F527092A2C1F2200288820 /* DisassemblyTableViewController.mm in Sources */,
 				B00ECB7A279EEB600041E16C /* guiddef.cpp in Sources */,
-				B00ECB7B279EEB600041E16C /* UserDefaults.m in Sources */,
+				B00ECB7B279EEB600041E16C /* UserDefaults.mm in Sources */,
 				B00ECB7E279EEB600041E16C /* MarianiFrame.cpp in Sources */,
 				B00ECB7F279EEB600041E16C /* Util_MemoryTextFile.cpp in Sources */,
 				B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */,
@@ -2984,7 +2999,7 @@
 				B0F527072A2C1F2100288820 /* ConsoleViewController.mm in Sources */,
 				B0F526FA2A2C1F2100288820 /* DisassemblyTableViewController.mm in Sources */,
 				B09AB80D277A21410002A6C3 /* guiddef.cpp in Sources */,
-				B0689D182781984F0029EB7D /* UserDefaults.m in Sources */,
+				B0689D182781984F0029EB7D /* UserDefaults.mm in Sources */,
 				B0689D0A2780B9B60029EB7D /* MarianiFrame.cpp in Sources */,
 				B09AB72E277A1BA40002A6C3 /* Util_MemoryTextFile.cpp in Sources */,
 				B049E852277B6FFE00FC14A3 /* fileregistry.cpp in Sources */,

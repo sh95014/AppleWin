@@ -113,6 +113,11 @@ BOOL configured;
         else if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
             [self configureGameController];
         }
+        
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        [center addObserver:self selector:@selector(updateGameControllers) name:GCControllerDidConnectNotification object:nil];
+        [center addObserver:self selector:@selector(updateGameControllers) name:GCControllerDidDisconnectNotification object:nil];
+
         self.configured = YES;
     }
 }
@@ -310,43 +315,49 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 - (void)configureGameController {
     NSString *vcId = [self valueForKey:@"vcId"];
     if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
+        [self updateGameControllers];
+        
         UserDefaults *defaults = [UserDefaults sharedInstance];
-        // GameControllerNone
-        [self.gameController addItemWithTitle:NSLocalizedString(@"None", @"")];
-        for (GCController *controller in [GCController controllers]) {
-            GCExtendedGamepad *gamePad = controller.extendedGamepad;
-            if (gamePad != nil) {
-                [self.gameController addItemWithTitle:controller.fullName];
-            }
-        }
-        // GameControllerNumericKeypad
-        [self.gameController addItemWithTitle:NSLocalizedString(@"Numeric Keypad", @"")];
-        
-        if ([defaults.gameController isEqualToString:GameControllerNone]) {
-            [self.gameController selectItemAtIndex:0];
-            self.gameControllerJoystick.enabled = NO;
-            self.gameControllerButton0.enabled = NO;
-            self.gameControllerButton1.enabled = NO;
-        }
-        else if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
-            [self.gameController selectItem:self.gameController.lastItem];
-            self.gameControllerJoystick.enabled = NO;
-            self.gameControllerButton0.enabled = NO;
-            self.gameControllerButton1.enabled = NO;
-        }
-        else {
-            [self.gameController selectItemWithTitle:defaults.gameController];
-            self.gameControllerJoystick.enabled = YES;
-            self.gameControllerButton0.enabled = YES;
-            self.gameControllerButton1.enabled = YES;
-        }
-        
         [self.gameControllerJoystick addItemsWithTitles:defaults.joystickOptions];
         [self.gameControllerJoystick selectItemAtIndex:defaults.joystickMapping];
         [self.gameControllerButton0 addItemsWithTitles:defaults.joystickButtonOptions];
         [self.gameControllerButton0 selectItemAtIndex:defaults.joystickButton0Mapping];
         [self.gameControllerButton1 addItemsWithTitles:defaults.joystickButtonOptions];
         [self.gameControllerButton1 selectItemAtIndex:defaults.joystickButton1Mapping];
+    }
+}
+
+- (void)updateGameControllers {
+    // GameControllerNone
+    [self.gameController removeAllItems];
+    [self.gameController addItemWithTitle:NSLocalizedString(@"None", @"")];
+    for (GCController *controller in [GCController controllers]) {
+        GCExtendedGamepad *gamePad = controller.extendedGamepad;
+        if (gamePad != nil) {
+            [self.gameController addItemWithTitle:controller.fullName];
+        }
+    }
+    // GameControllerNumericKeypad
+    [self.gameController addItemWithTitle:NSLocalizedString(@"Numeric Keypad", @"")];
+    
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    if ([defaults.gameController isEqualToString:GameControllerNone]) {
+        [self.gameController selectItemAtIndex:0];
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
+    }
+    else if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
+        [self.gameController selectItem:self.gameController.lastItem];
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
+    }
+    else {
+        [self.gameController selectItemWithTitle:defaults.gameController];
+        self.gameControllerJoystick.enabled = YES;
+        self.gameControllerButton0.enabled = YES;
+        self.gameControllerButton1.enabled = YES;
     }
 }
 

@@ -33,9 +33,6 @@ extern NSString *GameControllerNumericKeypad;
 
 @property (readonly) NSString *fullName;
 
-+ (GCController *)defaultController;
-+ (GCController *)controllerNamed:(NSString *)fullName;
-
 @end
 
 NS_ASSUME_NONNULL_END
