@@ -364,6 +364,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     panel.canChooseDirectories = YES;
     panel.allowsMultipleSelection = NO;
     panel.canDownloadUbiquitousContents = YES;
+    panel.message = NSLocalizedString(@"Select folder to save screen recordings into", @"");
     
     if ([panel runModal] == NSModalResponseOK) {
         self.generalRecordingsFolderButton.title = [panel.URL.path stringByAbbreviatingWithTildeInPath];
@@ -379,6 +380,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     panel.canChooseDirectories = YES;
     panel.allowsMultipleSelection = NO;
     panel.canDownloadUbiquitousContents = YES;
+    panel.message = NSLocalizedString(@"Select folder to save screenshots into", @"");
     
     if ([panel runModal] == NSModalResponseOK) {
         self.generalScreenshotsFolderButton.title = [panel.URL.path stringByAbbreviatingWithTildeInPath];
@@ -564,6 +566,8 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     panel.canChooseDirectories = NO;
     panel.allowsMultipleSelection = NO;
     panel.canDownloadUbiquitousContents = YES;
+    panel.message = NSLocalizedString(@"Select hard disk image", @"");
+    panel.prompt = NSLocalizedString(@"Connect", @"");
     panel.delegate = self;
     
     if ([panel runModal] == NSModalResponseOK) {

@@ -441,3 +441,24 @@
 
 /* No comment provided by engineer. */
 "None" = "None";
+
+/* No comment provided by engineer. */
+"Connect" = "Connect";
+
+/* ..into drive */
+"Insert" = "Insert";
+
+/* slot, drive */
+"Select disk image for slot %d drive %d" = "Select disk image for slot %1$d drive %2$d";
+
+/* No comment provided by engineer. */
+"Select folder to save screen recordings into" = "Select folder to save screen recordings into";
+
+/* No comment provided by engineer. */
+"Select folder to save screenshots into" = "Select folder to save screenshots into";
+
+/* No comment provided by engineer. */
+"Select hard disk image" = "Select hard disk image";
+
+/* No comment provided by engineer. */
+"Select tape image" = "Select tape image";
