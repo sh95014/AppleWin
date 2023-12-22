@@ -179,7 +179,8 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     CVDisplayLinkSetCurrentCGDisplay(_displayLink, viewDisplayID);
     CVDisplayLinkStart(self.displayLink);
     
-    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *now, const CVTimeStamp *outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void *displayLinkContext)
