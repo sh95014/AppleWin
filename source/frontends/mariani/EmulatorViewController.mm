@@ -445,7 +445,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (BOOL)emulationHardwareChanged {
-    self.audioOutputs = [NSMutableArray array];
     return frame->HardwareChanged();
 }
 

@@ -32,6 +32,9 @@ namespace mariani
 
   protected:
     virtual std::string getResourcePath(const std::string & filename) override;
+    
+    // FIXME: without this hack the app crashes randomly elsewhere
+    unsigned char padding[1];
   };
 
 }
