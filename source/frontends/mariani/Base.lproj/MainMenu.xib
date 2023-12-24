@@ -140,11 +140,6 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="Dgm-5U-zFQ"/>
-                            <menuItem title="Select All" enabled="NO" keyEquivalent="a" id="3Mn-nF-6QZ">
-                                <connections>
-                                    <action selector="selectAll:" target="-1" id="yej-5t-Xam"/>
-                                </connections>
-                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>

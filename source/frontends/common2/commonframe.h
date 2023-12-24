@@ -1,9 +1,11 @@
 #pragma once
 
 #include "linux/linuxframe.h"
+
 #include "Common.h"
 #include "Configuration/Config.h"
-#include "speed.h"
+
+#include "frontends/common2/speed.h"
 #include <vector>
 #include <string>
 
@@ -30,6 +32,8 @@ namespace common2
     void ResetHardware();
     bool HardwareChanged() const;
 
+    void LoadSnapshot() override;
+
   protected:
     virtual std::string getResourcePath(const std::string & filename) = 0;
 
@@ -42,9 +46,11 @@ namespace common2
     void ExecuteInDebugMode(const uint64_t microseconds);
     void Execute(const DWORD uCycles);
 
+    const bool myAllowVideoUpdate;
+    Speed mySpeed;
+
     std::vector<BYTE> myResource;
 
-    Speed mySpeed;
 
   private:
     CConfigNeedingRestart myHardwareConfig;

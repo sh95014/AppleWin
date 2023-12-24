@@ -307,7 +307,8 @@
         self.toggleRunningButton.image = [NSImage imageWithSystemSymbolName:@"forward.frame" accessibilityDescription:toolTip];
         self.toggleRunningButton.toolTip = toolTip;
         self.toggleRunningButton.state = NSControlStateValueOff;
-    } else {
+    }
+    else {
         NSString *toolTip = NSLocalizedString(@"Pause Execution", @"");
         self.toggleRunningButton.image = [NSImage imageWithSystemSymbolName:@"pause" accessibilityDescription:toolTip];
         self.toggleRunningButton.toolTip = toolTip;

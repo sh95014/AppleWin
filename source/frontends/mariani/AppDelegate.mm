@@ -8,8 +8,6 @@
 #import "AppDelegate.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <Carbon/Carbon.h>
-#import <Foundation/NSProcessInfo.h>
-#import <GameController/GameController.h>
 #import "windows.h"
 
 #import "context.h"
@@ -173,11 +171,18 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         }
         return event;
     }];
-
+    
+    NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
+    [[NSNotificationCenter defaultCenter] addObserverForName:EmulatorDidChangeDisplayNotification object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
+        CGRect frame = [self windowRectAtScale:self.windowRectScale];
+        [self.window setFrame:frame display:YES animate:NO];
+    }];
+    
     [self.emulatorVC start];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.emulatorVC stop];
 
     Global::AppCleanup();
@@ -248,7 +253,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSArray *supportedTypes = nil;
     if ([sender isEqual:self.diskOpenPanel]) {
         supportedTypes = @[ @"BIN", @"DO", @"DSK", @"NIB", @"PO", @"WOZ", @"ZIP", @"GZIP", @"GZ" ];
-    } else if ([sender isEqual:self.tapeOpenPanel]) {
+    }
+    else if ([sender isEqual:self.tapeOpenPanel]) {
         supportedTypes = @[ @"WAV" ];
     }
     return [supportedTypes containsObject:url.pathExtension.uppercaseString];
@@ -359,6 +365,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     self.tapeOpenPanel.canChooseDirectories = NO;
     self.tapeOpenPanel.allowsMultipleSelection = NO;
     self.tapeOpenPanel.canDownloadUbiquitousContents = YES;
+    self.tapeOpenPanel.message = NSLocalizedString(@"Select tape image", @"");
     self.tapeOpenPanel.delegate = self;
     
     if ([self.tapeOpenPanel runModal] == NSModalResponseOK) {
@@ -670,6 +677,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         self.diskOpenPanel.canChooseDirectories = NO;
         self.diskOpenPanel.allowsMultipleSelection = NO;
         self.diskOpenPanel.canDownloadUbiquitousContents = YES;
+        self.diskOpenPanel.message = [NSString stringWithFormat:NSLocalizedString(@"Select disk image for slot %d drive %d", @"slot, drive"), slot, drive + 1];
+        self.diskOpenPanel.prompt = NSLocalizedString(@"Insert", @"..into drive");
         self.diskOpenPanel.delegate = self;
         
         if ([self.diskOpenPanel runModal] == NSModalResponseOK) {
@@ -1068,6 +1077,11 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     frame.origin.y = windowFrame.origin.y + (windowFrame.size.height - frame.size.height) / 2;
     
     return frame;
+}
+
+- (double)windowRectScale {
+    Video &video = GetVideo();
+    return self.window.frame.size.width / video.GetFrameBufferBorderlessWidth();
 }
 
 - (void)scaleWindowByFactor:(double)factor {

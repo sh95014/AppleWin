@@ -262,7 +262,8 @@ enum DisassemblyTableColumns {
                             [NSColor colorForType:NSColorTypeBreakpoint], [NSColor colorForType:NSColorTypeBreakpointBackground]
                         ]];
                         imageView = [NSImageView imageViewWithImage:[image imageWithSymbolConfiguration:config]];
-                    } else {
+                    }
+                    else {
                         imageView = [NSImageView imageViewWithImage:image];
                         imageView.contentTintColor = [NSColor colorForType:NSColorTypeBreakpointBackground];
                     }
@@ -294,7 +295,8 @@ enum DisassemblyTableColumns {
                         [NSColor colorForType:NSColorTypeBookmark], [NSColor colorForType:NSColorTypeBookmarkBackground]
                     ]];
                     imageView = [NSImageView imageViewWithImage:[image imageWithSymbolConfiguration:config]];
-                } else {
+                }
+                else {
                     imageView = [NSImageView imageViewWithImage:image];
                     imageView.contentTintColor = [NSColor colorForType:NSColorTypeBookmarkBackground];
                 }

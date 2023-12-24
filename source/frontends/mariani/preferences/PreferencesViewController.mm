@@ -9,6 +9,7 @@
 // created per pane. When necessary they use the "vcId" user-defined run-time
 // attribute to disambiguate.
 
+#import <GameController/GameController.h>
 #import "PreferencesViewController.h"
 #import "AppDelegate.h"
 #import "UserDefaults.h"
@@ -49,6 +50,7 @@ using namespace DiskImgLib;
 #define COMPUTER_PANE_ID        @"computer"
 #define AUDIO_VIDEO_PANE_ID     @"audioVideo"
 #define STORAGE_PANE_ID         @"storage"
+#define GAME_CONTROLLER_ID      @"gameController"
 
 @interface PreferencesViewController ()
 
@@ -77,6 +79,11 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSButton *storageHardDiskFolderButton;
 @property (strong) IBOutlet NSButton *storageCreateHardDiskButton;
 
+@property (weak) IBOutlet NSPopUpButton *gameController;
+@property (weak) IBOutlet NSPopUpButton *gameControllerJoystick;
+@property (weak) IBOutlet NSPopUpButton *gameControllerButton0;
+@property (weak) IBOutlet NSPopUpButton *gameControllerButton1;
+
 @property NSMutableDictionary *keyValueStore;
 @property BOOL configured;
 
@@ -103,6 +110,14 @@ BOOL configured;
         else if ([vcId isEqualToString:STORAGE_PANE_ID]) {
             [self configureStorage];
         }
+        else if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
+            [self configureGameController];
+        }
+        
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        [center addObserver:self selector:@selector(updateGameControllers) name:GCControllerDidConnectNotification object:nil];
+        [center addObserver:self selector:@selector(updateGameControllers) name:GCControllerDidDisconnectNotification object:nil];
+
         self.configured = YES;
     }
 }
@@ -297,6 +312,55 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     }
 }
 
+- (void)configureGameController {
+    NSString *vcId = [self valueForKey:@"vcId"];
+    if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
+        [self updateGameControllers];
+        
+        UserDefaults *defaults = [UserDefaults sharedInstance];
+        [self.gameControllerJoystick addItemsWithTitles:defaults.joystickOptions];
+        [self.gameControllerJoystick selectItemAtIndex:defaults.joystickMapping];
+        [self.gameControllerButton0 addItemsWithTitles:defaults.joystickButtonOptions];
+        [self.gameControllerButton0 selectItemAtIndex:defaults.joystickButton0Mapping];
+        [self.gameControllerButton1 addItemsWithTitles:defaults.joystickButtonOptions];
+        [self.gameControllerButton1 selectItemAtIndex:defaults.joystickButton1Mapping];
+    }
+}
+
+- (void)updateGameControllers {
+    // GameControllerNone
+    [self.gameController removeAllItems];
+    [self.gameController addItemWithTitle:NSLocalizedString(@"None", @"")];
+    for (GCController *controller in [GCController controllers]) {
+        GCExtendedGamepad *gamePad = controller.extendedGamepad;
+        if (gamePad != nil) {
+            [self.gameController addItemWithTitle:controller.fullName];
+        }
+    }
+    // GameControllerNumericKeypad
+    [self.gameController addItemWithTitle:NSLocalizedString(@"Numeric Keypad", @"")];
+    
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    if ([defaults.gameController isEqualToString:GameControllerNone]) {
+        [self.gameController selectItemAtIndex:0];
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
+    }
+    else if ([defaults.gameController isEqualToString:GameControllerNumericKeypad]) {
+        [self.gameController selectItem:self.gameController.lastItem];
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
+    }
+    else {
+        [self.gameController selectItemWithTitle:defaults.gameController];
+        self.gameControllerJoystick.enabled = YES;
+        self.gameControllerButton0.enabled = YES;
+        self.gameControllerButton1.enabled = YES;
+    }
+}
+
 #pragma mark - Actions
 
 - (IBAction)toggleDeveloperTools:(id)sender {
@@ -311,6 +375,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     panel.canChooseDirectories = YES;
     panel.allowsMultipleSelection = NO;
     panel.canDownloadUbiquitousContents = YES;
+    panel.message = NSLocalizedString(@"Select folder to save screen recordings into", @"");
     
     if ([panel runModal] == NSModalResponseOK) {
         self.generalRecordingsFolderButton.title = [panel.URL.path stringByAbbreviatingWithTildeInPath];
@@ -326,6 +391,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     panel.canChooseDirectories = YES;
     panel.allowsMultipleSelection = NO;
     panel.canDownloadUbiquitousContents = YES;
+    panel.message = NSLocalizedString(@"Select folder to save screenshots into", @"");
     
     if ([panel runModal] == NSModalResponseOK) {
         self.generalScreenshotsFolderButton.title = [panel.URL.path stringByAbbreviatingWithTildeInPath];
@@ -511,6 +577,8 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     panel.canChooseDirectories = NO;
     panel.allowsMultipleSelection = NO;
     panel.canDownloadUbiquitousContents = YES;
+    panel.message = NSLocalizedString(@"Select hard disk image", @"");
+    panel.prompt = NSLocalizedString(@"Connect", @"");
     panel.delegate = self;
     
     if ([panel runModal] == NSModalResponseOK) {
@@ -604,6 +672,43 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         }
         [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
     }
+}
+
+- (IBAction)gameControllerAction:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    if (self.gameController.selectedItem == self.gameController.itemArray[0]) {
+        defaults.gameController = GameControllerNone;
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
+    }
+    else if (self.gameController.selectedItem == self.gameController.lastItem) {
+        defaults.gameController = GameControllerNumericKeypad;
+        self.gameControllerJoystick.enabled = NO;
+        self.gameControllerButton0.enabled = NO;
+        self.gameControllerButton1.enabled = NO;
+    }
+    else {
+        defaults.gameController = self.gameController.titleOfSelectedItem;
+        self.gameControllerJoystick.enabled = YES;
+        self.gameControllerButton0.enabled = YES;
+        self.gameControllerButton1.enabled = YES;
+    }
+}
+
+- (IBAction)mapJoystickAction:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    defaults.joystickMapping = self.gameControllerJoystick.indexOfSelectedItem;
+}
+
+- (IBAction)mapJoystickButton0Action:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    defaults.joystickButton0Mapping = self.gameControllerButton0.indexOfSelectedItem;
+}
+
+- (IBAction)mapJoystickButton1Action:(id)sender {
+    UserDefaults *defaults = [UserDefaults sharedInstance];
+    defaults.joystickButton1Mapping = self.gameControllerButton1.indexOfSelectedItem;
 }
 
 #pragma mark - NSOpenSavePanelDelegate

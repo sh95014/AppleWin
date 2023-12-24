@@ -4,9 +4,6 @@
 /* Class = "NSTableColumn"; headerCell.title = "Opcode"; ObjectID = "84C-0j-mzK"; */
 "84C-0j-mzK.headerCell.title" = "Opcode";
 
-/* Class = "NSTabViewItem"; label = "Breakpoints"; ObjectID = "a4C-59-YzF"; */
-"a4C-59-YzF.label" = "Breakpoints";
-
 /* Class = "NSMenuItem"; title = "Bookmark 5"; ObjectID = "bBV-lB-9mI"; */
 "bBV-lB-9mI.title" = "Bookmark 5";
 

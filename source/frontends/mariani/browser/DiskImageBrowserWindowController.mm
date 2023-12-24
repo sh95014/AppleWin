@@ -303,9 +303,11 @@ NSArray *fileTypeStrings = @[
     uint64_t size;
     if (file->IsDirectory()) {
         size = file->GetDataLength();
-    } else if (file->GetRsrcLength() >= 0) {
+    }
+    else if (file->GetRsrcLength() >= 0) {
         size = file->GetDataLength() + file->GetRsrcLength();
-    } else {
+    }
+    else {
         size = file->GetDataLength();
     }
     if (size > 999999999) {

@@ -10,11 +10,8 @@
 #include "Core.h"
 #include "Utilities.h"
 #include "SaveState.h"
-#include "Speaker.h"
 #include "SoundCore.h"
 #include "Interface.h"
-#include "NTSC.h"
-#include "CPU.h"
 #include "MouseInterface.h"
 #include "Debugger/Debug.h"
 
@@ -625,13 +622,6 @@ namespace sa2
   {
     ResetMachineState();  // this changes g_bFullSpeed
     ResetSpeed();
-  }
-
-  void SDLFrame::LoadSnapshot()
-  {
-    common2::CommonFrame::LoadSnapshot();
-    ResetSpeed();
-    ResetHardware();
   }
 
   common2::Geometry SDLFrame::getGeometryOrDefault(const std::optional<common2::Geometry> & geometry) const

@@ -7,6 +7,8 @@
 
 #import "EmulatorView.h"
 #import "Carbon/Carbon.h"
+#import "UserDefaults.h"
+
 #import "linux/keyboardbuffer.h"
 #import "linux/paddle.h"
 
@@ -103,6 +105,21 @@ enum {
         case kVK_Tab:
             ch = ASCII_HT;
             break;
+        case kVK_ANSI_Keypad0:   // fallthrough
+        case kVK_ANSI_Keypad1:   // fallthrough
+        case kVK_ANSI_Keypad2:   // fallthrough
+        case kVK_ANSI_Keypad3:   // fallthrough
+        case kVK_ANSI_Keypad4:   // fallthrough
+        case kVK_ANSI_Keypad6:   // fallthrough
+        case kVK_ANSI_Keypad7:   // fallthrough
+        case kVK_ANSI_Keypad8:   // fallthrough
+        case kVK_ANSI_Keypad9: { // fallthrough
+            if ([[UserDefaults sharedInstance].gameController isEqualToString:GameControllerNumericKeypad]) {
+                [self.numericKeyDelegate emulatorView:self numericKeyDown:[event.charactersIgnoringModifiers characterAtIndex:0]];
+                return;
+            }
+            // fallthrough
+        }
         default: {
             unichar raw = [event.charactersIgnoringModifiers characterAtIndex:0];
             if (event.modifierFlags & NSEventModifierFlagControl) {
@@ -147,6 +164,25 @@ enum {
     }
     else {
         NSLog(@"Ignored key code 0x%02X", event.keyCode);
+    }
+}
+
+- (void)keyUp:(NSEvent *)event {
+    switch (event.keyCode) {
+        case kVK_ANSI_Keypad0:   // fallthrough
+        case kVK_ANSI_Keypad1:   // fallthrough
+        case kVK_ANSI_Keypad2:   // fallthrough
+        case kVK_ANSI_Keypad3:   // fallthrough
+        case kVK_ANSI_Keypad4:   // fallthrough
+        case kVK_ANSI_Keypad6:   // fallthrough
+        case kVK_ANSI_Keypad7:   // fallthrough
+        case kVK_ANSI_Keypad8:   // fallthrough
+        case kVK_ANSI_Keypad9: { // fallthrough
+            if ([[UserDefaults sharedInstance].gameController isEqualToString:GameControllerNumericKeypad]) {
+                [self.numericKeyDelegate emulatorView:self numericKeyUp:[event.charactersIgnoringModifiers characterAtIndex:0]];
+            }
+            break;
+        }
     }
 }
 

@@ -58,6 +58,7 @@
 const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
 const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
 const NSNotificationName EmulatorDidRebootNotification = @"EmulatorDidRebootNotification";
+const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidChangeDisplayNotification";
 
 @interface AudioOutput : NSObject
 @property (assign) UInt32 channels;
@@ -101,8 +102,9 @@ const NSNotificationName EmulatorDidRebootNotification = @"EmulatorDidRebootNoti
 extern common2::EmulatorOptions gEmulatorOptions;
 
 @implementation EmulatorViewController {
-    MTKView *_view;
+    EmulatorView *_view;
     FrameBuffer frameBuffer;
+    std::shared_ptr<mariani::Gamepad> gamepad;
 }
 
 std::shared_ptr<mariani::MarianiFrame> frame;
@@ -114,9 +116,8 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     
     self.registryContext = new RegistryContext(CreateFileRegistry(gEmulatorOptions));
     frame.reset(new mariani::MarianiFrame(gEmulatorOptions));
-
-    std::shared_ptr<Paddle> paddle(new mariani::Gamepad());
-    self.initialisation = new Initialisation(frame, paddle);
+    gamepad.reset(new mariani::Gamepad());
+    self.initialisation = new Initialisation(frame, gamepad);
     applyOptions(gEmulatorOptions);
     frame->Begin();
     self.savedAppMode = g_nAppMode;
@@ -124,10 +125,14 @@ std::shared_ptr<mariani::MarianiFrame> frame;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self rebuildView:NO];
+}
 
-    _view = (MTKView *)self.view;
+- (void)rebuildView:(BOOL)notify {
+    _view = (EmulatorView *)self.view;
     _view.enableSetNeedsDisplay = NO;
     _view.device = MTLCreateSystemDefaultDevice();
+    _view.numericKeyDelegate = self;
 #ifdef DEBUG
     //  useful for debugging quad sizing issues.
     _view.clearColor = MTLClearColorMake(0.0, 0.15, 0.3, 0.3);
@@ -153,6 +158,10 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     _view.delegate = self.renderer;
     
     [self.renderer createTexture];
+    
+    if (notify) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidChangeDisplayNotification object:self];
+    }
 }
 
 - (void)start {
@@ -169,12 +178,35 @@ std::shared_ptr<mariani::MarianiFrame> frame;
         (CGDirectDisplayID) [self.view.window.screen.deviceDescription[@"NSScreenNumber"] unsignedIntegerValue];
     CVDisplayLinkSetCurrentCGDisplay(_displayLink, viewDisplayID);
     CVDisplayLinkStart(self.displayLink);
+#ifdef SHOW_FPS
+    displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+    displayLinkCallbackCount = 0;
+#endif // SHOW_FPS
     
-    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
+    
+#ifdef SHOW_FPS
+    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        uint64_t duration = clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - displayLinkCallbackStartTime;
+        double fps = displayLinkCallbackCount / (duration / 1000000000.0);
+        [self.delegate updateStatus:[NSString stringWithFormat:@"%.3f fps", fps]];
+        
+        displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+        displayLinkCallbackCount = 0;
+    }];
+#endif // SHOW_FPS
 }
 
+#ifdef SHOW_FPS
+static uint64_t displayLinkCallbackStartTime;
+static NSUInteger displayLinkCallbackCount;
+#endif // SHOW_FPS
 static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *now, const CVTimeStamp *outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void *displayLinkContext)
 {
+#ifdef SHOW_FPS
+    displayLinkCallbackCount++;
+#endif
     dispatch_async(dispatch_get_main_queue(), ^{
         EmulatorViewController *emulatorVC = (__bridge EmulatorViewController *)displayLinkContext;
         emulatorVC->frameBuffer.data = frame->FrameBufferData();
@@ -200,9 +232,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
     
     frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
-#ifdef DEBUG
-    NSTimeInterval executionTimeOffset = -[start timeIntervalSinceNow];
-#endif
 
 #ifdef SHOW_EMULATED_CPU_SPEED
     self.frameCount++;
@@ -227,7 +256,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     if (duration > 1.0 / TARGET_FPS) {
         // oops, took too long
         NSLog(@"Frame time exceeded: %f ms", duration * 1000);
-        NSLog(@"    Execute:                    %f ms", executionTimeOffset * 1000);
     }
 #endif // DEBUG
 }
@@ -378,6 +406,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (void)reinitialize {
     frame->Destroy();
     frame->Initialize(true);
+    [self rebuildView:YES];
 }
 
 - (void)enterDebugMode {
@@ -601,13 +630,23 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     [(EmulatorView *)self.view addStringToKeyboardBuffer:string];
 }
 
-#pragma mark - EmulatorRendererProtocol
+#pragma mark - EmulatorRendererDelegate
 
 - (BOOL)shouldOverscan {
     // the idealized display seems to show weird artifacts in the overscan
     // area, so we crop tightly
     Video &video = GetVideo();
     return (video.GetVideoType() != VT_COLOR_IDEALIZED);
+}
+
+#pragma mark - EmulatorViewDelegate
+
+- (void)emulatorView:(EmulatorView *)view numericKeyDown:(unichar)key {
+    gamepad->numericKeyDown(key);
+}
+
+- (void)emulatorView:(EmulatorView *)view numericKeyUp:(unichar)key {
+    gamepad->numericKeyUp(key);
 }
 
 @end

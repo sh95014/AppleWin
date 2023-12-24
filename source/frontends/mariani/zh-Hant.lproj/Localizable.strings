@@ -276,3 +276,36 @@
 
 /* No comment provided by engineer. */
 "Toggle Breakpoint" = "切換中斷點";
+
+/* No comment provided by engineer. */
+"MEGA Audio" = "MEGA Audio (音效卡)";
+
+/* No comment provided by engineer. */
+"SD Music (sound)" = "SD Music (音效卡)";
+
+/* No comment provided by engineer. */
+"Numeric Keypad" = "數字鍵盤";
+
+/* No comment provided by engineer. */
+"None" = "無";
+
+/* No comment provided by engineer. */
+"Connect" = "連接";
+
+/* ..into drive */
+"Insert" = "插入";
+
+/* slot, drive */
+"Select disk image for slot %d drive %d" = "為插槽 %1$d 磁碟機 %2$d 選擇映像檔";
+
+/* No comment provided by engineer. */
+"Select folder to save screen recordings into" = "選擇儲存螢幕錄影的資料夾";
+
+/* No comment provided by engineer. */
+"Select folder to save screenshots into" = "選擇儲存螢幕快照的資料夾";
+
+/* No comment provided by engineer. */
+"Select hard disk image" = "選擇硬碟映像檔";
+
+/* No comment provided by engineer. */
+"Select tape image" = "選擇錄音帶映像檔";

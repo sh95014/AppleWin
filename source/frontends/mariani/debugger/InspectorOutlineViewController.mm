@@ -7,6 +7,8 @@
 
 #import "InspectorOutlineViewController.h"
 #import "CapsuleView.h"
+#import "CharacterMappings.h"
+#import "EmulatorViewController.h"
 #import "HexDigitFormatter.h"
 #import "NSColor+AppleWin.h"
 
@@ -121,25 +123,6 @@ static NSDictionary *annunciatorIconMapping = @{
               [NSImage imageWithSystemSymbolName:@"3.circle.fill" accessibilityDescription:@""] ],
 };
 
-static NSArray *appleIIeCharacters = @[
-    @"␠",    @"!", @"\"", @"#", @"$", @"%", @"&", @"'", @"(", @")", @"*", @"+", @",",  @"-", @".", @"/",
-    @"0",    @"1", @"2",  @"3", @"4", @"5", @"6", @"7", @"8", @"9", @":", @";", @"<",  @"=", @">", @"?",
-    @"@",    @"a", @"b",  @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l",  @"m", @"n", @"o",
-    @"p",    @"q", @"r",  @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"[", @"\\", @"]", @"^", @"_",
-    @"NBSP", @"╵", @"╴",  @"╷", @"╶", @"┘", @"┐", @"┌", @"└", @"─", @"│", @"┴", @"┤",  @"┬", @"├", @"┼",
-    @"◤",    @"◥", @"▒",  @"▘", @"▝", @"▀", @"▖", @"▗", @"▚", @"▌", @"",  @"",  @"←",  @"↑", @"→", @"↓",
-    @"`",    @"A", @"B",  @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L",  @"M", @"N", @"O",
-    @"P",    @"Q", @"R",  @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", @"{", @"|",  @"}", @"~", @"",
-    @"@",    @"A", @"B",  @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L",  @"M", @"N", @"O",
-    @"P",    @"Q", @"R",  @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", @"[", @"\\", @"]", @"^", @"_",
-    @"␠",    @"!", @"\"", @"#", @"$", @"%", @"&", @"'", @"(", @")", @"*", @"+", @",",  @"-", @".", @"/",
-    @"0",    @"1", @"2",  @"3", @"4", @"5", @"6", @"7", @"8", @"9", @":", @";", @"<",  @"=", @">", @"?",
-    @"@",    @"A", @"B",  @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L",  @"M", @"N", @"O",
-    @"P",    @"Q", @"R",  @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", @"[", @"\\", @"]", @"^", @"_",
-    @"␠",    @"!", @"\"", @"#", @"$", @"%", @"&", @"'", @"(", @")", @"*", @"+", @",",  @"-", @".", @"/",
-    @"0",    @"1", @"2",  @"3", @"4", @"5", @"6", @"7", @"8", @"9", @":", @";", @"<",  @"=", @">", @"?"
-];
-
 static NSDictionary<NSNumber *, NSNumber *> *tagToColorMapping = @{
     @(1) : @(NSColorTypeSwitchAddress),
     @(2) : @(NSColorTypeRegisterLabel),
@@ -149,6 +132,11 @@ static NSDictionary<NSNumber *, NSNumber *> *tagToColorMapping = @{
 
 - (id)initWithOutlineView:(NSOutlineView *)outlineView {
     if ((self = [super init]) != nil) {
+        ConfigureCharacterMappings();
+        [[NSNotificationCenter defaultCenter] addObserverForName:EmulatorDidRebootNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+            ConfigureCharacterMappings();
+        }];
+        
         self.view = self.outlineView = outlineView;
         self.outlineView.dataSource = self;
         self.outlineView.delegate = self;
@@ -359,15 +347,17 @@ static NSArray *topLevelLabels = @[
 }
 
 - (void)refreshLabel:(NSTextField *)label value:(NSInteger)value with:(NSTextField *)textField {
-    NSString *character = appleIIeCharacters[value];
+    NSArray *mapping = GetVideo().VideoGetSWAltCharSet() ? alternateCharacterMapping : defaultCharacterMapping;
+    NSString *character = mapping[value];
     label.stringValue = [NSString stringWithFormat:@"%@", character];
     CGFloat fontHeight;
+    
     if (character.length == 1) {
-        label.font = [NSFont monospacedSystemFontOfSize:REGISTER_FONT_SIZE weight:REGISTER_FONT_WEIGHT];
+        label.font = [NSFont fontWithName:@"Print Char 21" size:REGISTER_FONT_SIZE];
         label.wantsLayer = NO;
         label.layer.borderWidth = 0;
         label.alignment = NSTextAlignmentNatural;
-        fontHeight = label.font.boundingRectForFont.size.height;
+        fontHeight = label.font.boundingRectForFont.size.height + 2;
     }
     else {
         label.font = [NSFont monospacedSystemFontOfSize:REGISTER_SMALLFONT_SIZE weight:REGISTER_FONT_WEIGHT];

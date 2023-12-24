@@ -21,6 +21,7 @@ namespace common2
 
   CommonFrame::CommonFrame(const EmulatorOptions & options)
     : mySpeed(options.fixedSpeed)
+    , myAllowVideoUpdate(!options.noVideoUpdate)
   {
   }
 
@@ -150,7 +151,7 @@ namespace common2
 
   void CommonFrame::Execute(const DWORD cyclesToExecute)
   {
-    const bool bVideoUpdate = !g_bFullSpeed;
+    const bool bVideoUpdate = myAllowVideoUpdate && !g_bFullSpeed;
     const UINT dwClksPerFrame = NTSC_GetCyclesPerFrame();
 
     // do it in the same batches as AppleWin (1 ms)
@@ -212,6 +213,13 @@ namespace common2
   {
     const CConfigNeedingRestart currentConfig = CConfigNeedingRestart::Create();
     return myHardwareConfig != currentConfig;
+  }
+
+  void CommonFrame::LoadSnapshot()
+  {
+    LinuxFrame::LoadSnapshot();
+    ResetSpeed();
+    ResetHardware();
   }
 
 }

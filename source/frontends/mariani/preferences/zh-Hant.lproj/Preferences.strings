@@ -90,3 +90,18 @@
 
 /* Class = "NSButtonCell"; title = "Create New Hard Disk"; ObjectID = "lZG-5R-Dzg"; */
 "lZG-5R-Dzg.title" = "新建硬碟映像檔";
+
+/* Class = "NSTextFieldCell"; title = "Button 0"; ObjectID = "2wM-ew-aAs"; */
+"2wM-ew-aAs.title" = "按鈕 0";
+
+/* Class = "NSTextFieldCell"; title = "Joystick"; ObjectID = "DDQ-zs-4v1"; */
+"DDQ-zs-4v1.title" = "搖桿";
+
+/* Class = "NSTextFieldCell"; title = "Button 1"; ObjectID = "Gd8-iG-129"; */
+"Gd8-iG-129.title" = "按鈕 1";
+
+/* Class = "NSTextFieldCell"; title = "Controller"; ObjectID = "gNJ-0R-mXw"; */
+"gNJ-0R-mXw.title" = "控制器";
+
+/* Class = "NSViewController"; title = "Game Controller"; ObjectID = "ulv-ax-GcK"; */
+"ulv-ax-GcK.title" = "遊戲控制器";
