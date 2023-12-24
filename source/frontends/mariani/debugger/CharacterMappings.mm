@@ -83,13 +83,39 @@ static NSArray *mouseTextCharacters2 = @[
 ];
 
 static NSArray *inverseLowercaseCharacters = @[
+    // inverse “`ab…mno”
     @"\uE160", @"\uE161", @"\uE162", @"\uE163", @"\uE164", @"\uE165", @"\uE166", @"\uE167",
     @"\uE168", @"\uE169", @"\uE16A", @"\uE16B", @"\uE16C", @"\uE16D", @"\uE16E", @"\uE16F",
 ];
 
 static NSArray *inverseLowercaseCharacters2 = @[
+    // inverse “`ab…mno”
     @"\uE170", @"\uE171", @"\uE172", @"\uE173", @"\uE174", @"\uE175", @"\uE176", @"\uE177",
     @"\uE178", @"\uE179", @"\uE17A", @"\uE17B", @"\uE17C", @"\uE17D", @"\uE17E", @"\uE17F",
+];
+
+static NSArray *uppercaseCharacters2P82 = @[
+    // “PQR…ЩЧ_”
+    @"\u0050", @"\u0051", @"\u0052", @"\u0053", @"\u0054", @"\u0055", @"\u0056", @"\u0057",
+    @"\u0058", @"\u0059", @"\u005A", @"\uE9F8", @"\u005C", @"\uE9F9", @"\uE9F7", @"\u005F",
+];
+
+static NSArray *uppercaseCharactersP82 = @[
+    // “ЮAB…MNO”
+    @"\uE9FE", @"\u0041", @"\u0042", @"\u0043", @"\u0044", @"\u0045", @"\u0046", @"\u0047",
+    @"\u0048", @"\u0049", @"\u004A", @"\u004B", @"\u004C", @"\u004D", @"\u004E", @"\u004F",
+];
+
+static NSArray *uppercaseCyrillicCharacters = @[
+    // “@АБ…МНО”
+    @"\u0040", @"\uE9E0", @"\uE9E1", @"\uE9F6", @"\uE9E4", @"\uE9E5", @"\uE9F4", @"\uE9E3",
+    @"\uE9F5", @"\uE9E8", @"\uE9E9", @"\uE9EA", @"\uE9EB", @"\uE9EC", @"\uE9ED", @"\uE9EE",
+];
+
+static NSArray *uppercaseCyrillicCharacters2 = @[
+    // “ПЯР…]^■”
+    @"\uE9EF", @"\uE9FF", @"\uE9F0", @"\uE9F1", @"\uE9F2", @"\uE9F3", @"\uE9E6", @"\uE9E2",
+    @"\uE9FC", @"\uE9FA", @"\uE9E7", @"\u005B", @"\uE9F9", @"\u005D", @"\u005E", @"\uE120",
 ];
 
 NSArray *defaultCharacterMapping = nil;
@@ -98,7 +124,26 @@ NSArray *alternateCharacterMapping = nil;
 void ConfigureCharacterMappings(void) {
     NSMutableArray *mapping = [NSMutableArray array];
     
-    if (IsAppleIIeOrAbove(g_Apple2Type)) {
+    if (g_Apple2Type == A2TYPE_PRAVETS82) {
+        // Pravets 82, CHARSET82.bmp
+        [mapping addObjectsFromArray:inverseUppercaseCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters2];
+        [mapping addObjectsFromArray:inversePunctuationCharacters];
+        [mapping addObjectsFromArray:inverseDigitCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters2];
+        [mapping addObjectsFromArray:inversePunctuationCharacters];
+        [mapping addObjectsFromArray:inverseDigitCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters2P82];
+        [mapping addObjectsFromArray:punctuationCharacters];
+        [mapping addObjectsFromArray:digitCharacters];
+        [mapping addObjectsFromArray:uppercaseCharactersP82];
+        [mapping addObjectsFromArray:uppercaseCharacters2P82];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters2];
+    }
+    else if (IsAppleIIeOrAbove(g_Apple2Type)) {
         // Regular //e, CHARSET4.BMP top group
         [mapping addObjectsFromArray:inverseUppercaseCharacters];
         [mapping addObjectsFromArray:inverseUppercaseCharacters2];
