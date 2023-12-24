@@ -912,7 +912,7 @@ void Uthernet2::resetRXTXBuffers(const size_t i)
 void Uthernet2::openSystemSocket(const size_t i, const int type, const int protocol, const int status)
 {
     Socket &s = mySockets[i];
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__APPLE__)
     const Socket::socket_t fd = socket(AF_INET, type, protocol);
 #else
     const Socket::socket_t fd = socket(AF_INET, type | SOCK_NONBLOCK, protocol);
