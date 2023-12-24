@@ -11,6 +11,10 @@
 		97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
 		9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
 		9765C6182B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
+		976D11AB2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
+		976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
+		976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
+		976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -709,6 +713,8 @@
 /* Begin PBXFileReference section */
 		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
 		9765C6162B26452B00C8AF42 /* cadirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cadirectsound.cpp; sourceTree = "<group>"; };
+		976D11A92B379D9000EEA1D6 /* CharacterMappings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharacterMappings.h; sourceTree = "<group>"; };
+		976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = CharacterMappings.mm; sourceTree = "<group>"; };
 		97B92FC82B13AFBA000D8B98 /* sdlframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlframe.h; path = source/frontends/sdl/sdlframe.h; sourceTree = "<group>"; };
 		97B92FC92B13AFBA000D8B98 /* processfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = processfile.h; path = source/frontends/sdl/processfile.h; sourceTree = "<group>"; };
 		97B92FCB2B13AFBA000D8B98 /* sdirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdirectsound.cpp; path = source/frontends/sdl/sdirectsound.cpp; sourceTree = "<group>"; };
@@ -2177,6 +2183,8 @@
 				B0AA395B2A2A6CEF00A3F665 /* HexDigitFormatter.m */,
 				B00BE9ED2A291C0000F288F9 /* InspectorOutlineViewController.h */,
 				B00BE9EE2A291C0000F288F9 /* InspectorOutlineViewController.mm */,
+				976D11A92B379D9000EEA1D6 /* CharacterMappings.h */,
+				976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */,
 				B00BE9CC2A271C5700F288F9 /* NSColor+AppleWin.h */,
 				B00BE9CD2A271C5700F288F9 /* NSColor+AppleWin.mm */,
 				B0F9E3C22A2AC58E009C1D3F /* SymbolTable.h */,
@@ -2291,6 +2299,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2360,6 +2369,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				976D11AB2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2960,6 +2970,7 @@
 				B00ECBA0279EEB600041E16C /* EmulatorView.mm in Sources */,
 				B00ECBA1279EEB600041E16C /* Debugger_Range.cpp in Sources */,
 				B00ECBA2279EEB600041E16C /* strsafe.cpp in Sources */,
+				976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */,
 				B00ECBA3279EEB600041E16C /* winhandles.cpp in Sources */,
 				B0F5270D2A2C1F2200288820 /* NSColor+AppleWin.mm in Sources */,
 				9765C6182B26452B00C8AF42 /* cadirectsound.cpp in Sources */,
@@ -3035,6 +3046,7 @@
 				B049E8AD277C880800FC14A3 /* EmulatorView.mm in Sources */,
 				B09AB72D277A1BA40002A6C3 /* Debugger_Range.cpp in Sources */,
 				B09AB812277A21410002A6C3 /* strsafe.cpp in Sources */,
+				976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */,
 				B09AB811277A21410002A6C3 /* winhandles.cpp in Sources */,
 				B0F526FE2A2C1F2100288820 /* NSColor+AppleWin.mm in Sources */,
 				9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */,
