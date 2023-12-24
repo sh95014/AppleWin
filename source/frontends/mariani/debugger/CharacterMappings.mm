@@ -94,13 +94,19 @@ static NSArray *inverseLowercaseCharacters2 = @[
     @"\uE178", @"\uE179", @"\uE17A", @"\uE17B", @"\uE17C", @"\uE17D", @"\uE17E", @"\uE17F",
 ];
 
-static NSArray *uppercaseCharacters2P82 = @[
+static NSArray *uppercaseCharacters2_P82 = @[
     // “PQR…ЩЧ_”
     @"\u0050", @"\u0051", @"\u0052", @"\u0053", @"\u0054", @"\u0055", @"\u0056", @"\u0057",
     @"\u0058", @"\u0059", @"\u005A", @"\uE9F8", @"\u005C", @"\uE9F9", @"\uE9F7", @"\u005F",
 ];
 
-static NSArray *uppercaseCharactersP82 = @[
+static NSArray *uppercaseCharacters2_P8M = @[
+    // “PQR…]Ч_”
+    @"\u0050", @"\u0051", @"\u0052", @"\u0053", @"\u0054", @"\u0055", @"\u0056", @"\u0057",
+    @"\u0058", @"\u0059", @"\u005A", @"\u005B", @"\u005C", @"\u005D", @"\uE9F7", @"\u005F",
+];
+
+static NSArray *uppercaseCharacters_P82 = @[
     // “ЮAB…MNO”
     @"\uE9FE", @"\u0041", @"\u0042", @"\u0043", @"\u0044", @"\u0045", @"\u0046", @"\u0047",
     @"\u0048", @"\u0049", @"\u004A", @"\u004B", @"\u004C", @"\u004D", @"\u004E", @"\u004F",
@@ -116,6 +122,12 @@ static NSArray *uppercaseCyrillicCharacters2 = @[
     // “ПЯР…]^■”
     @"\uE9EF", @"\uE9FF", @"\uE9F0", @"\uE9F1", @"\uE9F2", @"\uE9F3", @"\uE9E6", @"\uE9E2",
     @"\uE9FC", @"\uE9FA", @"\uE9E7", @"\u005B", @"\uE9F9", @"\u005D", @"\u005E", @"\uE120",
+];
+
+static NSArray *uppercaseCyrillicCharacters2_P8M = @[
+    // “ПЯР…]^■”
+    @"\uE9EF", @"\uE9FF", @"\uE9F0", @"\uE9F1", @"\uE9F2", @"\uE9F3", @"\uE9E6", @"\uE9E2",
+    @"\uE9FC", @"\uE9FA", @"\uE9E7", @"\u005B", @"\u005C", @"\u005D", @"\u005E", @"\uE120",
 ];
 
 NSArray *defaultCharacterMapping = nil;
@@ -135,13 +147,32 @@ void ConfigureCharacterMappings(void) {
         [mapping addObjectsFromArray:inversePunctuationCharacters];
         [mapping addObjectsFromArray:inverseDigitCharacters];
         [mapping addObjectsFromArray:uppercaseCharacters];
-        [mapping addObjectsFromArray:uppercaseCharacters2P82];
+        [mapping addObjectsFromArray:uppercaseCharacters2_P82];
         [mapping addObjectsFromArray:punctuationCharacters];
         [mapping addObjectsFromArray:digitCharacters];
-        [mapping addObjectsFromArray:uppercaseCharactersP82];
-        [mapping addObjectsFromArray:uppercaseCharacters2P82];
+        [mapping addObjectsFromArray:uppercaseCharacters_P82];
+        [mapping addObjectsFromArray:uppercaseCharacters2_P82];
         [mapping addObjectsFromArray:uppercaseCyrillicCharacters];
         [mapping addObjectsFromArray:uppercaseCyrillicCharacters2];
+    }
+    else if (g_Apple2Type == A2TYPE_PRAVETS8M) {
+        // Pravets 8M, CHARSET8M.bmp
+        [mapping addObjectsFromArray:inverseUppercaseCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters2];
+        [mapping addObjectsFromArray:inversePunctuationCharacters];
+        [mapping addObjectsFromArray:inverseDigitCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters2];
+        [mapping addObjectsFromArray:inversePunctuationCharacters];
+        [mapping addObjectsFromArray:inverseDigitCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters2_P82];
+        [mapping addObjectsFromArray:punctuationCharacters];
+        [mapping addObjectsFromArray:digitCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters_P82];
+        [mapping addObjectsFromArray:uppercaseCharacters2_P8M];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters2_P8M];
     }
     else if (IsAppleIIeOrAbove(g_Apple2Type)) {
         // Regular //e, CHARSET4.BMP top group
