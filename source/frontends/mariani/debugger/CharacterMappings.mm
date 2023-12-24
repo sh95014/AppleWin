@@ -130,6 +130,52 @@ static NSArray *uppercaseCyrillicCharacters2_P8M = @[
     @"\uE9FC", @"\uE9FA", @"\uE9E7", @"\u005B", @"\u005C", @"\u005D", @"\u005E", @"\uE120",
 ];
 
+static NSArray *inverseUppercaseCyrillicCharacters_P8A = @[
+    // inverse “ЮАБ…МНО”
+    // FIXME: "Print Char 21" doesn't have inverse cyrillic characters
+    @"\uE9FE", @"\uE9E0", @"\uE9E1", @"\uE9F6", @"\uE9E4", @"\uE9E5", @"\uE9F4", @"\uE9E3",
+    @"\uE9F5", @"\uE9E8", @"\uE9E9", @"\uE9EA", @"\uE9EB", @"\uE9EC", @"\uE9ED", @"\uE9EE",
+];
+
+static NSArray *inverseUppercaseCyrillicCharacters2_P8A = @[
+    // inverse “ПЯР…ЩЧ▦”
+    // FIXME: "Print Char 21" doesn't have inverse cyrillic characters
+    @"\uE9EF", @"\uE9FF", @"\uE9F0", @"\uE9F1", @"\uE9F2", @"\uE9F3", @"\uE9E6", @"\uE9E2",
+    @"\uE9FC", @"\uE9FA", @"\uE9E7", @"\uE9F8", @"\uE9E7", @"\uE9F9", @"\uE9F7", @"\uE07F",
+];
+
+static NSArray *uppercaseCyrillicCharacters_P8A = @[
+    // “ЮАБ…МНО”
+    @"\uE9FE", @"\uE9E0", @"\uE9E1", @"\uE9F6", @"\uE9E4", @"\uE9E5", @"\uE9F4", @"\uE9E3",
+    @"\uE9F5", @"\uE9E8", @"\uE9E9", @"\uE9EA", @"\uE9EB", @"\uE9EC", @"\uE9ED", @"\uE9EE",
+];
+
+static NSArray *uppercaseCyrillicCharacters2_P8A = @[
+    // “ПЯР…ЩЧ▦”
+    @"\uE9EF", @"\uE9FF", @"\uE9F0", @"\uE9F1", @"\uE9F2", @"\uE9F3", @"\uE9E6", @"\uE9E2",
+    @"\uE9FC", @"\uE9FA", @"\uE9E7", @"\uE9F8", @"\uE9E7", @"\uE9F9", @"\uE9F7", @"\uE07F",
+];
+
+static NSArray *lowercaseCharacters2_P8A = @[
+    // “pqr…}~□”
+    @"\u0070", @"\u0071", @"\u0072", @"\u0073", @"\u0074", @"\u0075", @"\u0076", @"\u0077",
+    @"\u0078", @"\u0079", @"\u007A", @"\u007B", @"\u007C", @"\u007D", @"\u007E", @"\uED3F",
+];
+
+static NSArray *lowercaseCyrillicCharacters = @[
+    // “юаб…мно”
+    @"\uEA1E", @"\uEA00", @"\uEA01", @"\uEA16", @"\uEA04", @"\uEA05", @"\uEA14", @"\uEA03",
+    @"\uEA15", @"\uEA08", @"\uEA09", @"\uEA0A", @"\uEA0B", @"\uEA0C", @"\uEA0D", @"\uEA0E",
+];
+
+static NSArray *lowercaseCyrillicCharacters2 = @[
+    // “пяр…щч▦”
+    @"\uEA0F", @"\uEA1F", @"\uEA10", @"\uEA11", @"\uEA12", @"\uEA13", @"\uEA06", @"\uEA02",
+    @"\uEA1C", @"\uEA1A", @"\uEA07", @"\uEA18", @"\uEA07", @"\uEA19", @"\uEA17", @"\uE07F",
+];
+
+
+
 NSArray *defaultCharacterMapping = nil;
 NSArray *alternateCharacterMapping = nil;
 
@@ -174,6 +220,25 @@ void ConfigureCharacterMappings(void) {
         [mapping addObjectsFromArray:uppercaseCyrillicCharacters];
         [mapping addObjectsFromArray:uppercaseCyrillicCharacters2_P8M];
     }
+    else if (g_Apple2Type == A2TYPE_PRAVETS8A) {
+        // Pravets 8A, CHARSET8C.bmp top group
+        [mapping addObjectsFromArray:inverseUppercaseCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters2];
+        [mapping addObjectsFromArray:inversePunctuationCharacters];
+        [mapping addObjectsFromArray:inverseDigitCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters2];
+        [mapping addObjectsFromArray:inversePunctuationCharacters];
+        [mapping addObjectsFromArray:inverseDigitCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCyrillicCharacters_P8A];
+        [mapping addObjectsFromArray:inverseUppercaseCyrillicCharacters2_P8A];
+        [mapping addObjectsFromArray:punctuationCharacters];
+        [mapping addObjectsFromArray:digitCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters2];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters_P8A];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters2_P8A];
+    }
     else if (IsAppleIIeOrAbove(g_Apple2Type)) {
         // Regular //e, CHARSET4.BMP top group
         [mapping addObjectsFromArray:inverseUppercaseCharacters];
@@ -215,11 +280,29 @@ void ConfigureCharacterMappings(void) {
     
     defaultCharacterMapping = [NSArray arrayWithArray:mapping];
     alternateCharacterMapping = nil;
+    [mapping removeAllObjects];
     
-    if (IsAppleIIeOrAbove(g_Apple2Type)) {
-        [mapping removeAllObjects];
-        
-        // MouseText //e, CHARSET4.BMP middle group
+    if (g_Apple2Type == A2TYPE_PRAVETS8A) {
+        // Pravets 8A alternate character set, CHARSET8C.bmp bottom group
+        [mapping addObjectsFromArray:inverseUppercaseCharacters];
+        [mapping addObjectsFromArray:inverseUppercaseCharacters2];
+        [mapping addObjectsFromArray:inversePunctuationCharacters];
+        [mapping addObjectsFromArray:inverseDigitCharacters];
+        [mapping addObjectsFromArray:lowercaseCharacters];
+        [mapping addObjectsFromArray:lowercaseCharacters2_P8A];
+        [mapping addObjectsFromArray:lowercaseCyrillicCharacters];
+        [mapping addObjectsFromArray:lowercaseCyrillicCharacters2];
+        [mapping addObjectsFromArray:inverseUppercaseCyrillicCharacters_P8A];
+        [mapping addObjectsFromArray:inverseUppercaseCyrillicCharacters2_P8A];
+        [mapping addObjectsFromArray:punctuationCharacters];
+        [mapping addObjectsFromArray:digitCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters];
+        [mapping addObjectsFromArray:uppercaseCharacters2];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters_P8A];
+        [mapping addObjectsFromArray:uppercaseCyrillicCharacters2_P8A];
+    }
+    else if (IsAppleIIeOrAbove(g_Apple2Type)) {
+        // //e MouseText, CHARSET4.BMP middle group
         [mapping addObjectsFromArray:inverseUppercaseCharacters];
         [mapping addObjectsFromArray:inverseUppercaseCharacters2];
         [mapping addObjectsFromArray:inversePunctuationCharacters];
@@ -236,7 +319,9 @@ void ConfigureCharacterMappings(void) {
         [mapping addObjectsFromArray:uppercaseCharacters2];
         [mapping addObjectsFromArray:lowercaseCharacters];
         [mapping addObjectsFromArray:lowercaseCharacters2];
-        
+    }
+    
+    if (mapping.count > 0) {
         alternateCharacterMapping = [NSArray arrayWithArray:mapping];
     }
 }
