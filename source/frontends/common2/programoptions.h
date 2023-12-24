@@ -35,7 +35,7 @@ namespace common2
 
     bool benchmark = false;
     bool headless = false;
-    bool ntsc = false;  // only for applen
+    bool noVideoUpdate = false;  // only for applen
 
     bool paddleSquaring = true;  // turn the x/y range to a square
     // on my PC it is something like
@@ -71,7 +71,8 @@ namespace common2
     std::vector<std::string> natPortFwds;
   };
 
-  bool getEmulatorOptions(int argc, const char * argv [], const std::string & edition, EmulatorOptions & options);
+  enum class OptionsType { applen, sa2 };
+  bool getEmulatorOptions(int argc, const char * argv [], OptionsType type, const std::string & edition, EmulatorOptions & options);
 
   void applyOptions(const EmulatorOptions & options);
 
