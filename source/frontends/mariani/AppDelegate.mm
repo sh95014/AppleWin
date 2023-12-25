@@ -26,6 +26,7 @@
 #import "CPU.h"
 #import "Interface.h"
 #import "NTSC.h"
+#import "Pravets.h"
 #import "Utilities.h"
 #import "Video.h"
 
@@ -153,11 +154,11 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         const BOOL control = (event.modifierFlags & NSEventModifierFlagControl) != 0;
         const BOOL option = (event.modifierFlags & NSEventModifierFlagOption) != 0;
         const BOOL command = (event.modifierFlags & NSEventModifierFlagCommand) != 0;
+        Video &video = GetVideo();
         switch (event.keyCode) {
             case kVK_F9:
                 if (shift && control && !option && !command) {
                     // ^⇧F9: toggle 50% scan lines
-                    Video &video = GetVideo();
                     video.SetVideoStyle(VideoStyle_e(video.GetVideoStyle() ^ VS_HALF_SCANLINES));
                     [self applyVideoModeChange];
                     return nil;
@@ -167,6 +168,21 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                     NSMenuItem *newItem = [self.displayTypeMenu itemWithTag:(video.GetVideoType() + 1) % NUM_VIDEO_MODES];
                     [self displayTypeAction:newItem];
                     return nil;
+                }
+            case kVK_F10:
+                switch (g_Apple2Type) {
+                    case A2TYPE_APPLE2E:
+                    case A2TYPE_APPLE2EENHANCED:
+                    case A2TYPE_BASE64A:
+                        // toggle rocker switch
+                        video.SetVideoRomRockerSwitch(!video.GetVideoRomRockerSwitch());
+                        NTSC_VideoInitAppleType();
+                        break;
+                    case A2TYPE_PRAVETS8A:
+                        GetPravets().ToggleP8ACapsLock();
+                        break;
+                    default:
+                        break;
                 }
         }
         return event;
