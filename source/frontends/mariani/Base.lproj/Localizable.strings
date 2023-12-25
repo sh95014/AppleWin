@@ -1,8 +1,41 @@
 /* No comment provided by engineer. */
+"%.1f GB" = "%.1f GB";
+
+/* No comment provided by engineer. */
+"%.1f KB" = "%.1f KB";
+
+/* No comment provided by engineer. */
+"%.1f MB" = "%.1f MB";
+
+/* No comment provided by engineer. */
+"%llu bytes" = "%llu bytes";
+
+/* No comment provided by engineer. */
+"(Based on AppleWin Version %s)" = "(Based on AppleWin Version %s)";
+
+/* no date available */
+"-" = "-";
+
+/* No comment provided by engineer. */
+"0 bytes" = "0 bytes";
+
+/* No comment provided by engineer. */
+"1 byte" = "1 byte";
+
+/* No comment provided by engineer. */
+"2 bytes" = "2 bytes";
+
+/* No comment provided by engineer. */
 "4play (joystick)" = "4play (joystick)";
 
 /* No comment provided by engineer. */
 "80-column text card (1K)" = "80-column text card (1K)";
+
+/* No comment provided by engineer. */
+"About %@" = "About %@";
+
+/* No comment provided by engineer. */
+"Annunciators" = "Annunciators";
 
 /* No comment provided by engineer. */
 "Apple //c Emulator" = "Apple //c Emulator";
@@ -38,10 +71,22 @@
 "Base64A Emulator" = "Base64A Emulator";
 
 /* No comment provided by engineer. */
+"Black & White" = "Black & White";
+
+/* default file name for new blank disk */
+"Blank" = "Blank";
+
+/* No comment provided by engineer. */
 "Cancel" = "Cancel";
 
 /* No comment provided by engineer. */
 "Changes to hardware configuration require the emulator to be rebooted to take effect." = "Changes to hardware configuration require the emulator to be rebooted to take effect.";
+
+/* No comment provided by engineer. */
+"Clear Breakpoint" = "Clear Breakpoint";
+
+/* No comment provided by engineer. */
+"Color" = "Color";
 
 /* Color rendering from AppleWin 1.25 (GH#357) */
 "Color (Composite Idealized)" = "Color (Composite Idealized)";
@@ -56,13 +101,31 @@
 "Color TV" = "Color TV";
 
 /* No comment provided by engineer. */
+"Connect" = "Connect";
+
+/* No comment provided by engineer. */
+"Copy" = "Copy";
+
+/* No comment provided by engineer. */
+"Copy Screenshot" = "Copy Screenshot";
+
+/* No comment provided by engineer. */
 "Echo (speech)" = "Echo (speech)";
 
 /* eject disk image */
 "Eject" = "Eject";
 
 /* No comment provided by engineer. */
+"End Emulation" = "End Emulation";
+
+/* No comment provided by engineer. */
+"Ending Emulation" = "Ending Emulation";
+
+/* No comment provided by engineer. */
 "Enhanced Apple //e Emulator" = "Enhanced Apple //e Emulator";
+
+/* browse disk image */
+"Examine…" = "Examine…";
 
 /* No comment provided by engineer. */
 "Extended 80-column text card (64K)" = "Extended 80-column text card (64K)";
@@ -79,8 +142,23 @@
 /* No comment provided by engineer. */
 "Hide Status Bar" = "Hide Status Bar";
 
+/* ..into drive */
+"Insert" = "Insert";
+
+/* default name for new screen recording */
+"Mariani Recording" = "Mariani Recording";
+
+/* default name for new screenshot */
+"Mariani Screen Shot" = "Mariani Screen Shot";
+
+/* No comment provided by engineer. */
+"MEGA Audio" = "MEGA Audio";
+
 /* No comment provided by engineer. */
 "Mockingboard C (sound)" = "Mockingboard C (sound)";
+
+/* No comment provided by engineer. */
+"Mono" = "Mono";
 
 /* No comment provided by engineer. */
 "Monochrome (Amber)" = "Monochrome (Amber)";
@@ -101,7 +179,19 @@
 "No" = "No";
 
 /* No comment provided by engineer. */
+"None" = "None";
+
+/* No comment provided by engineer. */
+"Numeric Keypad" = "Numeric Keypad";
+
+/* No comment provided by engineer. */
 "OK" = "OK";
+
+/* open another disk image */
+"Other Disk…" = "Other Disk…";
+
+/* No comment provided by engineer. */
+"Pause Execution" = "Pause Execution";
 
 /* No comment provided by engineer. */
 "Phasor (sound)" = "Phasor (sound)";
@@ -125,325 +215,19 @@
 "Reboot Emulator" = "Reboot Emulator";
 
 /* No comment provided by engineer. */
-"Saturn 128K (memory)" = "Saturn 128K (memory)";
-
-/* No comment provided by engineer. */
-"Show Status Bar" = "Show Status Bar";
-
-/* No comment provided by engineer. */
-"Slot %d Drive %d" = "Slot %1$d Drive %2$d";
-
-/* No comment provided by engineer. */
-"SNES MAX (game controller)" = "SNES MAX (game controller)";
-
-/* No comment provided by engineer. */
-"Software Automatic Mouth (speech)" = "Software Automatic Mouth (speech)";
-
-/* No comment provided by engineer. */
-"TK3000 //e Emulator" = "TK3000 //e Emulator";
-
-/* No comment provided by engineer. */
-"Unknown" = "Unknown";
-
-/* No comment provided by engineer. */
-"Uthernet I (network)" = "Uthernet I (network)";
-
-/* No comment provided by engineer. */
-"Uthernet II (network)" = "Uthernet II (network)";
-
-/* No comment provided by engineer. */
-"VidHD (video)" = "VidHD (video)";
-
-/* No comment provided by engineer. */
-"Yes" = "Yes";
-
-/* No comment provided by engineer. */
-"Z-80" = "Z-80";
-
-/* empty slot */
-"—" = "—";
-
-/* open another disk image */
-"Other Disk…" = "Other Disk…";
-
-/* create new blank disk image */
-"New Blank Disk" = "New Blank Disk";
-
-/* default file name for new blank disk */
-"Blank" = "Blank";
-
-/* default name for new screen recording */
-"Mariani Recording" = "Mariani Recording";
-
-/* default name for new screenshot */
-"Mariani Screen Shot" = "Mariani Screen Shot";
-
-/* No comment provided by engineer. */
-"Version %@ (%@)" = "Version %1$@ (%2$@)";
-
-/* No comment provided by engineer. */
-"%.1f GB" = "%.1f GB";
-
-/* No comment provided by engineer. */
-"%.1f KB" = "%.1f KB";
-
-/* No comment provided by engineer. */
-"%.1f MB" = "%.1f MB";
-
-/* No comment provided by engineer. */
-"%llu bytes" = "%llu bytes";
-
-/* no date available */
-"-" = "-";
-
-/* No comment provided by engineer. */
-"0 bytes" = "0 bytes";
-
-/* No comment provided by engineer. */
-"1 byte" = "1 byte";
-
-/* No comment provided by engineer. */
-"2 bytes" = "2 bytes";
-
-/* No comment provided by engineer. */
-"Unnamed" = "Unnamed";
-
-/* No comment provided by engineer. */
-"End Emulation" = "End Emulation";
-
-/* No comment provided by engineer. */
-"Ending Emulation" = "Ending Emulation";
-
-/* No comment provided by engineer. */
-"This will end the emulation and any unsaved changes will be lost." = "This will end the emulation and any unsaved changes will be lost.";
-
-/* No comment provided by engineer. */
-"About %@" = "About %@";
-
-/* No comment provided by engineer. */
-"\n\nAdvanced disk image features include code from the CiderPress and HexFiend projects." = "\n\nAdvanced disk image features include code from the CiderPress and HexFiend projects.";
-
-/* No comment provided by engineer. */
-"Unable to interpret the data format stored on this disk." = "Unable to interpret the data format stored on this disk.";
-
-/* No comment provided by engineer. */
-"Unknown Disk Format" = "Unknown Disk Format";
-
-/* browse disk image */
-"Examine…" = "Examine…";
-
-/* No comment provided by engineer. */
-"Slot %d Hard Disk" = "Slot %d Hard Disk";
-
-/* No comment provided by engineer. */
-"Copy" = "Copy";
-
-/* No comment provided by engineer. */
-"Copy Screenshot" = "Copy Screenshot";
-
-/* Title Suffix */
-" **OVERWRITE MODE**" = " **OVERWRITE MODE**";
-
-/* Title Suffix */
-" **READ-ONLY MODE**" = " **READ-ONLY MODE**";
-
-/* No comment provided by engineer. */
-"%@ has been successfully installed." = "%@ has been successfully installed.";
-
-/* No comment provided by engineer. */
-"(Based on AppleWin Version %s)" = "(Based on AppleWin Version %s)";
-
-/* No comment provided by engineer. */
-"(bytes are not valid UTF-8)" = "(bytes are not valid UTF-8)";
-
-/* No comment provided by engineer. */
-"(error %ld)" = "(error %ld)";
-
-/* No comment provided by engineer. */
-"(internal error)" = "(internal error)";
-
-/* No comment provided by engineer. */
-"(select a contiguous range)" = "(select a contiguous range)";
-
-/* No comment provided by engineer. */
-"(select a power of 2 bytes)" = "(select a power of 2 bytes)";
-
-/* No comment provided by engineer. */
-"(select less data)" = "(select less data)";
-
-/* No comment provided by engineer. */
-"(select more data)" = "(select more data)";
-
-/* No comment provided by engineer. */
-"(select some data)" = "(select some data)";
-
-/* No comment provided by engineer. */
-"Anchor Template at Offset %lu" = "Anchor Template at Offset %lu";
-
-/* No comment provided by engineer. */
-"Annunciators" = "Annunciators";
-
-/* No comment provided by engineer. */
-"Black & White" = "Black & White";
-
-/* No comment provided by engineer. */
-"Bookmark" = "Bookmark";
-
-/* No comment provided by engineer. */
-"Cancel Save" = "Cancel Save";
-
-/* No comment provided by engineer. */
-"Clear Breakpoint" = "Clear Breakpoint";
-
-/* No comment provided by engineer. */
-"Close, Discarding Any Changes" = "Close, Discarding Any Changes";
-
-/* No comment provided by engineer. */
-"Color" = "Color";
-
-/* No comment provided by engineer. */
-"Compare Front Documents" = "Compare Front Documents";
-
-/* No comment provided by engineer. */
-"Compare Range of Front Documents" = "Compare Range of Front Documents";
-
-/* No comment provided by engineer. */
-"Copy Value" = "Copy Value";
-
-/* No comment provided by engineer. */
-"Custom…" = "Custom…";
-
-/* No comment provided by engineer. */
-"Do Not Show Again" = "Do Not Show Again";
-
-/* Recovery suggestion for opening a character device at a given path */
-"Do you want to open the corresponding character device at path '%@'?" = "Do you want to open the corresponding character device at path '%@'?";
-
-/* No comment provided by engineer. */
-"Enter a custom byte grouping" = "Enter a custom byte grouping";
-
-/* No comment provided by engineer. */
-"Failed to convert text" = "Failed to convert text";
-
-/* No comment provided by engineer. */
-"Failed to launch and connect helper." = "Failed to launch and connect helper.";
-
-/* No comment provided by engineer. */
-"Failed to open folder." = "Failed to open folder.";
-
-/* No comment provided by engineer. */
-"Failed to run command: %@" = "Failed to run command: %@";
-
-/* No comment provided by engineer. */
-"Highlight Selection" = "Highlight Selection";
-
-/* No comment provided by engineer. */
-"How long?" = "How long?";
-
-/* No comment provided by engineer. */
-"How many tweaks?" = "How many tweaks?";
-
-/* No comment provided by engineer. */
-"Large Clipboard" = "Large Clipboard";
-
-/* No comment provided by engineer. */
-"Local" = "Local";
-
-/* No comment provided by engineer. */
-"Mono" = "Mono";
-
-/* No comment provided by engineer. */
-"None" = "None";
-
-/* Recovery option for opening a character device at a given path */
-"Open character device" = "Open character device";
-
-/* No comment provided by engineer. */
-"Open Templates Folder" = "Open Templates Folder";
-
-/* No comment provided by engineer. */
-"Other…" = "Other…";
-
-/* No comment provided by engineer. */
-"Pause Execution" = "Pause Execution";
-
-/* No comment provided by engineer. */
-"Please select an extended attribute to open." = "Please select an extended attribute to open.";
-
-/* No comment provided by engineer. */
-"Refresh" = "Refresh";
+"Reboot?" = "Reboot?";
 
 /* No comment provided by engineer. */
 "Registers" = "Registers";
 
 /* No comment provided by engineer. */
-"Remove All Highlights" = "Remove All Highlights";
-
-/* Menu item title for remove bookmark */
-"Remove Bookmark" = "Remove Bookmark";
-
-/* Menu item title for removing a particular bookmark */
-"Remove Bookmark %ld" = "Remove Bookmark %ld";
-
-/* No comment provided by engineer. */
-"Remove Highlight" = "Remove Highlight";
-
-/* No comment provided by engineer. */
 "Resume Execution" = "Resume Execution";
 
 /* No comment provided by engineer. */
-"Scroll to Offset" = "Scroll to Offset";
-
-/* No comment provided by engineer. */
-"Select Bytes" = "Select Bytes";
-
-/* No comment provided by engineer. */
-"Show in Template" = "Show in Template";
-
-/* No comment provided by engineer. */
-"Show Welcome" = "Show Welcome";
-
-/* No comment provided by engineer. */
-"Switches C0xx" = "Switches C0xx";
-
-/* No comment provided by engineer. */
-"Template not applicable" = "Template not applicable";
-
-/* No comment provided by engineer. */
-"The %@ tool failed to install (%@)." = "The %1$@ tool failed to install (%2$@).";
-
-/* Error description for opening a file that's busy */
-"The file at path '%@' could not be opened because it is busy." = "The file at path '%@' could not be opened because it is busy.";
-
-/* Failure reason for opening a file that's busy */
-"The file is busy." = "The file is busy.";
-
-/* No comment provided by engineer. */
-"The text \"%@\" could not be converted to the current encoding \"%@\". The encoding may not support these characters." = "The text \"%1$@\" could not be converted to the current encoding \"%2$@\". The encoding may not support these characters.";
-
-/* No comment provided by engineer. */
-"To save that document, you must close this one." = "To save that document, you must close this one.";
-
-/* No comment provided by engineer. */
-"Toggle Bookmark" = "Toggle Bookmark";
-
-/* No comment provided by engineer. */
-"Toggle Breakpoint" = "Toggle Breakpoint";
-
-/* No comment provided by engineer. */
-"MEGA Audio" = "MEGA Audio";
+"Saturn 128K (memory)" = "Saturn 128K (memory)";
 
 /* No comment provided by engineer. */
 "SD Music (sound)" = "SD Music (sound)";
-
-/* No comment provided by engineer. */
-"Numeric Keypad" = "Numeric Keypad";
-
-/* No comment provided by engineer. */
-"Connect" = "Connect";
-
-/* ..into drive */
-"Insert" = "Insert";
 
 /* slot, drive */
 "Select disk image for slot %d drive %d" = "Select disk image for slot %1$d drive %2$d";
@@ -461,7 +245,67 @@
 "Select tape image" = "Select tape image";
 
 /* No comment provided by engineer. */
-"Reboot?" = "Reboot?";
+"Show Status Bar" = "Show Status Bar";
+
+/* No comment provided by engineer. */
+"Slot %d Drive %d" = "Slot %1$d Drive %2$d";
+
+/* No comment provided by engineer. */
+"Slot %d Hard Disk" = "Slot %d Hard Disk";
+
+/* No comment provided by engineer. */
+"SNES MAX (game controller)" = "SNES MAX (game controller)";
+
+/* No comment provided by engineer. */
+"Software Automatic Mouth (speech)" = "Software Automatic Mouth (speech)";
+
+/* No comment provided by engineer. */
+"Switches C0xx" = "Switches C0xx";
+
+/* No comment provided by engineer. */
+"This will end the emulation and any unsaved changes will be lost." = "This will end the emulation and any unsaved changes will be lost.";
 
 /* No comment provided by engineer. */
 "This will restart the emulation and any unsaved changes will be lost." = "This will restart the emulation and any unsaved changes will be lost.";
+
+/* No comment provided by engineer. */
+"TK3000 //e Emulator" = "TK3000 //e Emulator";
+
+/* No comment provided by engineer. */
+"Toggle Bookmark" = "Toggle Bookmark";
+
+/* No comment provided by engineer. */
+"Toggle Breakpoint" = "Toggle Breakpoint";
+
+/* No comment provided by engineer. */
+"Unable to interpret the data format stored on this disk." = "Unable to interpret the data format stored on this disk.";
+
+/* No comment provided by engineer. */
+"Unknown" = "Unknown";
+
+/* No comment provided by engineer. */
+"Unknown Disk Format" = "Unknown Disk Format";
+
+/* No comment provided by engineer. */
+"Unnamed" = "Unnamed";
+
+/* No comment provided by engineer. */
+"Uthernet I (network)" = "Uthernet I (network)";
+
+/* No comment provided by engineer. */
+"Uthernet II (network)" = "Uthernet II (network)";
+
+/* No comment provided by engineer. */
+"Version %@ (%@)" = "Version %1$@ (%2$@)";
+
+/* No comment provided by engineer. */
+"VidHD (video)" = "VidHD (video)";
+
+/* No comment provided by engineer. */
+"Yes" = "Yes";
+
+/* No comment provided by engineer. */
+"Z-80" = "Z-80";
+
+/* empty slot */
+"—" = "—";
