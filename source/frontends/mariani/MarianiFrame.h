@@ -7,16 +7,14 @@
 
 #pragma once
 
-#include "commonframe.h"
 #include "Configuration/Config.h"
+#include "commonframe.h"
 
-namespace mariani
-{
+namespace mariani {
 
-  class MarianiFrame : public common2::CommonFrame
-  {
-  public:
-    MarianiFrame(const common2::EmulatorOptions & options);
+class MarianiFrame : public common2::CommonFrame {
+public:
+    MarianiFrame(const common2::EmulatorOptions& options);
 
     void VideoPresentScreen() override;
 
@@ -28,13 +26,13 @@ namespace mariani
 
     virtual std::string Video_GetScreenShotFolder() const override;
 
-    void *FrameBufferData();
+    void* FrameBufferData();
 
-  protected:
-    virtual std::string getResourcePath(const std::string & filename) override;
-    
+protected:
+    virtual std::string getResourcePath(const std::string& filename) override;
+
     // FIXME: without this hack the app crashes randomly elsewhere
     unsigned char padding[1];
-  };
+};
 
 }
