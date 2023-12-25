@@ -440,9 +440,6 @@
 "Numeric Keypad" = "Numeric Keypad";
 
 /* No comment provided by engineer. */
-"None" = "None";
-
-/* No comment provided by engineer. */
 "Connect" = "Connect";
 
 /* ..into drive */
@@ -462,3 +459,9 @@
 
 /* No comment provided by engineer. */
 "Select tape image" = "Select tape image";
+
+/* No comment provided by engineer. */
+"Reboot?" = "Reboot?";
+
+/* No comment provided by engineer. */
+"This will restart the emulation and any unsaved changes will be lost." = "This will restart the emulation and any unsaved changes will be lost.";

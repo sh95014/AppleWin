@@ -309,3 +309,9 @@
 
 /* No comment provided by engineer. */
 "Select tape image" = "選擇錄音帶映像檔";
+
+/* No comment provided by engineer. */
+"Reboot?" = "重啟模擬器？";
+
+/* No comment provided by engineer. */
+"This will restart the emulation and any unsaved changes will be lost." = "這將重啟模擬器，尚未儲存的資料也將會被刪除。";

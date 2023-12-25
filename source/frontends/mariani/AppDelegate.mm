@@ -156,6 +156,22 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         const BOOL command = (event.modifierFlags & NSEventModifierFlagCommand) != 0;
         Video &video = GetVideo();
         switch (event.keyCode) {
+            case kVK_F2: {
+                NSAlert *alert = [[NSAlert alloc] init];
+                
+                alert.messageText = NSLocalizedString(@"Reboot?", @"");
+                alert.informativeText = NSLocalizedString(@"This will restart the emulation and any unsaved changes will be lost.", @"");
+                alert.alertStyle = NSAlertStyleWarning;
+                alert.icon = [NSImage imageWithSystemSymbolName:@"hand.raised" accessibilityDescription:@""];
+                [alert addButtonWithTitle:NSLocalizedString(@"Reboot", @"")];
+                [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+                [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
+                    if (returnCode == NSAlertFirstButtonReturn) {
+                        [self rebootEmulatorAction:self];
+                    }
+                }];
+                break;
+            }
             case kVK_F5:
                 dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(SLOT6)).DriveSwap();
                 break;
