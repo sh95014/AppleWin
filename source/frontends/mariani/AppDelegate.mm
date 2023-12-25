@@ -156,6 +156,9 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         const BOOL command = (event.modifierFlags & NSEventModifierFlagCommand) != 0;
         Video &video = GetVideo();
         switch (event.keyCode) {
+            case kVK_F5:
+                dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(SLOT6)).DriveSwap();
+                break;
             case kVK_F9:
                 if (shift && control && !option && !command) {
                     // ^⇧F9: toggle 50% scan lines
