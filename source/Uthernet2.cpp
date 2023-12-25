@@ -77,12 +77,8 @@ typedef int socklen_t;
 
 #endif
 
-// fix SOCK_NONBLOCK for e.g. macOS
-#ifndef SOCK_NONBLOCK
-// DISCALIMER
-// totally untested, use at your own risk
+#ifdef __APPLE__
 #include <fcntl.h>
-#define SOCK_NONBLOCK O_NONBLOCK
 #endif
 
 // Dest MAC + Source MAC + Ether Type
@@ -930,6 +926,8 @@ void Uthernet2::openSystemSocket(const size_t i, const int type, const int proto
 #ifdef _MSC_VER
         u_long on = 1;
         ioctlsocket(fd, FIONBIO, &on);
+#elif __APPLE__
+        fcntl(fd, O_NONBLOCK);
 #endif
         s.setFD(fd, status);
     }
