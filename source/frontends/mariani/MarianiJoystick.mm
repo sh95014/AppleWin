@@ -11,8 +11,7 @@
 
 #define PDL_CENTER          0
 
-namespace mariani
-{
+namespace mariani {
 
 Gamepad::Gamepad()
 {

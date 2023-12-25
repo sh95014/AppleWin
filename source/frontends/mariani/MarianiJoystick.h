@@ -11,8 +11,7 @@
 #import <Foundation/Foundation.h>
 #import <GameController/GameController.h>
 
-namespace mariani
-{
+namespace mariani {
 
 class Gamepad : public Paddle
 {

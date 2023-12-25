@@ -31,10 +31,6 @@ MarianiFrame::MarianiFrame(const common2::EmulatorOptions& options)
     g_sBuiltinSymbolsDir = GetBuiltinSymbolsDirectory();
 }
 
-void MarianiFrame::VideoPresentScreen()
-{
-}
-
 int MarianiFrame::FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType)
 {
     int returnValue = ShowModalAlertOfType(uType, lpCaption, lpText);
@@ -112,11 +108,6 @@ void* MarianiFrame::FrameBufferData()
 std::string MarianiFrame::getResourcePath(const std::string& filename)
 {
     return std::string(PathToResourceNamed(filename.c_str()));
-}
-
-std::string MarianiFrame::Video_GetScreenShotFolder() const
-{
-    return {};
 }
 
 }
