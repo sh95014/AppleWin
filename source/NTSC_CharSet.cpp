@@ -35,6 +35,7 @@ unsigned char csbits_pravets82[1][256][8];	// Pravets 82
 unsigned char csbits_pravets8M[1][256][8];	// Pravets 8M
 unsigned char csbits_pravets8C[2][256][8];	// Pravets 8A & 8C
 unsigned char csbits_base64a[2][256][8];	// Base 64A
+unsigned char csbits_mpf3[2][256][8];		// MPF-III
 
 
 //
@@ -222,6 +223,11 @@ static void userVideoRom2K(csbits_t csbits, const BYTE* pVideoRom, const eApple2
 				// On the Base 64A bits are ordered 1345672.
 				d = (n >> 2) | ((n & 2) >> 1) | ((n & 4) << 4);
 			}
+			else if (type == A2TYPE_MPF3)
+			{
+				// FIXME: I don't actually know how the character generator works on the MPF
+				d = (n & 0x7F) ^ 0x7F;
+			}
 			else
 			{
 				// UTAII:8-30 "TEXT ROM pattern is ... reversed"
@@ -266,6 +272,16 @@ static void VideoRomForBase64A(void)
 	userVideoRom2K(&csbits_base64a[1], pVideoRom + Video::kVideoRomSize2K, A2TYPE_BASE64A, 0);
 }
 
+static void VideoRomForMPF3(void)
+{
+	BYTE* pVideoRom = GetFrame().GetResource(IDR_MPF3_VIDEO_ROM, "ROM", Video::kVideoRomSize4K);
+	if (pVideoRom == NULL)
+		return;
+
+	userVideoRom2K(&csbits_mpf3[0], pVideoRom, A2TYPE_MPF3, 0);
+	userVideoRom2K(&csbits_mpf3[1], pVideoRom + Video::kVideoRomSize2K, A2TYPE_MPF3, 0);
+}
+
 
 //-------------------------------------
 
@@ -285,6 +301,7 @@ void make_csbits(void)
 
 	VideoRomForIIJPlus();	// GH#773
 	VideoRomForBase64A();	// GH#806
+	VideoRomForMPF3();
 
 	// Try to use any user-provided video ROM for Original/Enhanced //e
 	userVideoRomForIIe();

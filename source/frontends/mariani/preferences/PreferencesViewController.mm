@@ -166,7 +166,7 @@ BOOL configured;
 const eApple2Type computerTypes[] = {
     A2TYPE_APPLE2, A2TYPE_APPLE2PLUS, A2TYPE_APPLE2JPLUS, A2TYPE_APPLE2E,
     A2TYPE_APPLE2EENHANCED, A2TYPE_PRAVETS82, A2TYPE_PRAVETS8M,
-    A2TYPE_PRAVETS8A, A2TYPE_TK30002E, A2TYPE_BASE64A
+    A2TYPE_PRAVETS8A, A2TYPE_TK30002E, A2TYPE_BASE64A, A2TYPE_MPF3
 };
 
 // CT_Empty is being used as the terminator here. the UI will insert an empty
@@ -751,6 +751,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         @(A2TYPE_PRAVETS8A):        NSLocalizedString(@"Pravets 8A Emulator", @""),
         @(A2TYPE_TK30002E):         NSLocalizedString(@"TK3000 //e Emulator", @""),
         @(A2TYPE_BASE64A):          NSLocalizedString(@"Base64A Emulator", @""),
+        @(A2TYPE_MPF3):             NSLocalizedString(@"Microprofessor-III Emulator", @""),
     };
 }
 

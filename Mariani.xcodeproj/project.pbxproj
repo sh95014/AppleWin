@@ -15,6 +15,10 @@
 		976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
 		976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
 		976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
+		97D12AC72B3A5A6D00904141 /* MPF3-VIDEO.ROM in Resources */ = {isa = PBXBuildFile; fileRef = 97D12AC42B3A5A6D00904141 /* MPF3-VIDEO.ROM */; };
+		97D12AC82B3A5A6D00904141 /* MPF3-VIDEO.ROM in Resources */ = {isa = PBXBuildFile; fileRef = 97D12AC42B3A5A6D00904141 /* MPF3-VIDEO.ROM */; };
+		97D12ACD2B3A76C000904141 /* MPF3.ROM in Resources */ = {isa = PBXBuildFile; fileRef = 97D12ACA2B3A76C000904141 /* MPF3.ROM */; };
+		97D12ACE2B3A76C000904141 /* MPF3.ROM in Resources */ = {isa = PBXBuildFile; fileRef = 97D12ACA2B3A76C000904141 /* MPF3.ROM */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -726,6 +730,8 @@
 		97B92FD32B13AFBA000D8B98 /* gamepad.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad.cpp; path = source/frontends/sdl/gamepad.cpp; sourceTree = "<group>"; };
 		97B92FD42B13AFCD000D8B98 /* sdlrendererframe.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdlrendererframe.cpp; path = source/frontends/sdl/renderer/sdlrendererframe.cpp; sourceTree = "<group>"; };
 		97B92FD52B13AFCD000D8B98 /* sdlrendererframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlrendererframe.h; path = source/frontends/sdl/renderer/sdlrendererframe.h; sourceTree = "<group>"; };
+		97D12AC42B3A5A6D00904141 /* MPF3-VIDEO.ROM */ = {isa = PBXFileReference; lastKnownFileType = file; name = "MPF3-VIDEO.ROM"; path = "resource/MPF3-VIDEO.ROM"; sourceTree = SOURCE_ROOT; };
+		97D12ACA2B3A76C000904141 /* MPF3.ROM */ = {isa = PBXFileReference; lastKnownFileType = file; name = MPF3.ROM; path = resource/MPF3.ROM; sourceTree = SOURCE_ROOT; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1538,6 +1544,8 @@
 				B045FE602782984E006E36F9 /* Hddrvr.bin */,
 				B045FE712782984F006E36F9 /* Mockingboard-D.rom */,
 				B045FE5F2782984E006E36F9 /* MouseInterface.rom */,
+				97D12ACA2B3A76C000904141 /* MPF3.ROM */,
+				97D12AC42B3A5A6D00904141 /* MPF3-VIDEO.ROM */,
 				B045FE6D2782984E006E36F9 /* Parallel.rom */,
 				B045FE692782984E006E36F9 /* PRAVETS8C.ROM */,
 				B045FE612782984E006E36F9 /* PRAVETS8M.ROM */,
@@ -2745,6 +2753,8 @@
 				B0F43FDE295E4BAD00E79AD7 /* CHARSET82.bmp in Resources */,
 				B00ECBD1279EEB600041E16C /* DISK2.rom in Resources */,
 				B00ECBD2279EEB600041E16C /* MainMenu.xib in Resources */,
+				97D12AC82B3A5A6D00904141 /* MPF3-VIDEO.ROM in Resources */,
+				97D12ACE2B3A76C000904141 /* MPF3.ROM in Resources */,
 				B00ECBD3279EEB600041E16C /* About.xib in Resources */,
 				B0F43FDC295E4BAD00E79AD7 /* CHARSET4.BMP in Resources */,
 				B00ECBD4279EEB600041E16C /* Apple2_JPlus_Video.rom in Resources */,
@@ -2791,6 +2801,8 @@
 				B0F43FDD295E4BAD00E79AD7 /* CHARSET82.bmp in Resources */,
 				B045FE7B2782984F006E36F9 /* DISK2.rom in Resources */,
 				B032DE2B277A0C24006DC0F7 /* MainMenu.xib in Resources */,
+				97D12AC72B3A5A6D00904141 /* MPF3-VIDEO.ROM in Resources */,
+				97D12ACD2B3A76C000904141 /* MPF3.ROM in Resources */,
 				B07612302789E4BE009E79BE /* About.xib in Resources */,
 				B0F43FDB295E4BAD00E79AD7 /* CHARSET4.BMP in Resources */,
 				B045FE822782984F006E36F9 /* Apple2_JPlus_Video.rom in Resources */,
