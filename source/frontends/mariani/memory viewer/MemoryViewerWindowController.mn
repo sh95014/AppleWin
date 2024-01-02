@@ -106,7 +106,7 @@
 
     unsigned int i = 0;
     void *bank;
-    while ((bank = MemGetBankPtr(i)) != NULL) {
+    while ((bank = MemGetBankPtr(i, true)) != NULL) {
         self.memoryRangeSegmentedControl.segmentCount = self.memoryRangeSegmentedControl.segmentCount + 1;
         
         NSString *label = [NSString stringWithFormat:NSLocalizedString(@"Bank %u", @""), i];
