@@ -48,6 +48,7 @@ namespace common2
     bool run = true;  // false if options include "-h"
 
     bool fixedSpeed = false; // default adaptive
+    bool syncWithTimer = false;
     size_t audioBuffer = 46; // in ms -> corresponds to 2048 samples (keep below 90ms)
 
     int sdlDriver = -1; // default = -1 to let SDL choose
@@ -71,7 +72,7 @@ namespace common2
     std::vector<std::string> natPortFwds;
   };
 
-  enum class OptionsType { applen, sa2 };
+  enum class OptionsType { none, applen, sa2 };
   bool getEmulatorOptions(int argc, const char * argv [], OptionsType type, const std::string & edition, EmulatorOptions & options);
 
   void applyOptions(const EmulatorOptions & options);

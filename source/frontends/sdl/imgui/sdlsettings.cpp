@@ -688,11 +688,13 @@ namespace sa2
       SDL_GetVersion(&sdl);
       ImGui::Text("SDL version %d.%d.%d", sdl.major, sdl.minor, sdl.patch);
       ImGui::Text("Dear ImGui %s", ImGui::GetVersion());
-    }
 
-    ImGui::Separator();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui::Text("FPS: %d", int(io.Framerate));
+      ImGui::Separator();
+      const int glSwap = SDL_GL_GetSwapInterval();
+      ImGui::Text("GL Swap: %d", glSwap);
+      ImGuiIO& io = ImGui::GetIO();
+      ImGui::Text("FPS: %d", int(io.Framerate));
+    }
 
     ImGui::End();
   }
@@ -775,7 +777,7 @@ namespace sa2
 
         size_t i = 0;
         void * bank;
-        while ((bank = MemGetBankPtr(i)))
+        while ((bank = MemGetBankPtr(i, true)))
         {
           const std::string name = "Bank " + std::to_string(i);
           banks.push_back({bank, 0, _6502_MEM_LEN, name});
