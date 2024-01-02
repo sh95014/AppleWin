@@ -33,7 +33,7 @@ int main(int argc, const char *argv[]) {
         }
     }
     
-    if (!getEmulatorOptions(awArgc, awArgv, common2::OptionsType::sa2, "macOS", gEmulatorOptions)) {
+    if (!getEmulatorOptions(awArgc, awArgv, common2::OptionsType::none, "macOS", gEmulatorOptions)) {
         return -1;
     }
     return NSApplicationMain(macArgc, macArgv);
