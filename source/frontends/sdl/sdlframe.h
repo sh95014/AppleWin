@@ -1,6 +1,6 @@
 #pragma once
 
-#include "frontends/common2/commonframe.h"
+#include "frontends/common2/gnuframe.h"
 #include "frontends/common2/controllerquit.h"
 #include "frontends/common2/programoptions.h"
 #include "linux/network/portfwds.h"
@@ -9,7 +9,7 @@
 namespace sa2
 {
 
-  class SDLFrame : public virtual common2::CommonFrame
+  class SDLFrame : public common2::GNUFrame
   {
   public:
     SDLFrame(const common2::EmulatorOptions & options);
@@ -21,6 +21,8 @@ namespace sa2
     int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
     void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
     std::shared_ptr<NetworkBackend> CreateNetworkBackend(const std::string & interfaceName) override;
+
+    virtual bool Quit() const = 0;
 
     void ProcessEvents(bool &quit);
 
@@ -34,6 +36,8 @@ namespace sa2
     bool & getPreserveAspectRatio();
 
     const common2::Speed & getSpeed() const;
+
+    void SaveSnapshot();
 
     static void setGLSwapInterval(const int interval);
 

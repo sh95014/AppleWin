@@ -3,12 +3,11 @@
 #include "frontends/sdl/sdlframe.h"
 #include "frontends/sdl/imgui/sdlsettings.h"
 #include "frontends/sdl/imgui/glselector.h"
-#include "frontends/common2/gnuframe.h"
 
 namespace sa2
 {
 
-  class SDLImGuiFrame : public SDLFrame, public common2::GNUFrame
+  class SDLImGuiFrame : public SDLFrame
   {
   public:
     SDLImGuiFrame(const common2::EmulatorOptions & options);
@@ -18,6 +17,8 @@ namespace sa2
     void VideoPresentScreen() override;
     void ResetSpeed() override;
     void Initialize(bool resetVideoState) override;
+
+    bool Quit() const override;
 
   protected:
 

@@ -3,7 +3,7 @@
 class SY6522
 {
 public:
-	SY6522(UINT slot, bool isMegaAudio) : m_slot(slot), m_isMegaAudio(isMegaAudio)
+	SY6522(UINT slot, bool isMegaAudio) : m_slot(slot), m_isMegaAudio(isMegaAudio), m_isBusDriven(false)
 	{
 		for (UINT i = 0; i < kNumTimersPer6522; i++)
 			m_syncEvent[i] = NULL;
@@ -28,7 +28,6 @@ public:
 	void StopTimer2(void);
 	bool IsTimer2Active(void) { return m_timer2Active; }
 
-	void UpdatePortAForHiZ(void);
 	void UpdateIFR(BYTE clr_ifr, BYTE set_ifr = 0);
 
 	void UpdateTimer1(USHORT clocks);
@@ -53,8 +52,9 @@ public:
 	USHORT GetRegT1C(void) { return m_regs.TIMER1_COUNTER.w; }
 	USHORT GetRegT2C(void) { return m_regs.TIMER2_COUNTER.w; }
 	void GetRegs(BYTE regs[SIZE_6522_REGS]) { memcpy(&regs[0], (BYTE*)&m_regs, SIZE_6522_REGS); }	// For debugger
-	void SetRegORA(BYTE reg) { m_regs.ORA = reg; }
+	void SetRegIRA(BYTE reg) { m_regs.ORA = reg; }
 	bool IsTimer1IrqDelay(void) { return m_timer1IrqDelay ? true : false; }
+	void SetBusBeingDriven(bool state) { m_isBusDriven = state; }
 
 	BYTE Read(BYTE nReg);
 	void Write(BYTE nReg, BYTE nValue);
@@ -145,6 +145,7 @@ private:
 	class SyncEvent* m_syncEvent[kNumTimersPer6522];
 	UINT m_slot;
 	bool m_isMegaAudio;
+	bool m_isBusDriven;
 
 	static const UINT kExtraMegaAudioTimerCycles = kExtraTimerCycles + 1;
 };

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "frontends/common2/commonframe.h"
 #include "frontends/common2/gnuframe.h"
 
 #include <memory>
@@ -14,7 +13,7 @@ namespace na2
   class EvDevPaddle;
   struct NCurses;
 
-  class NFrame : public virtual common2::CommonFrame, public common2::GNUFrame
+  class NFrame : public common2::GNUFrame
   {
   public:
     NFrame(const common2::EmulatorOptions & options, const std::shared_ptr<EvDevPaddle> & paddle);
@@ -34,6 +33,7 @@ namespace na2
     void ChangeRows(const int x);
 
     void Init(int rows, int columns);
+    void ReInit();
 
   private:
 
@@ -66,6 +66,7 @@ namespace na2
     bool UpdateDHiResCell(Video &, int x, int y, int xpixel, int ypixel, int offset);
 
     void InitialiseNCurses();
+    void ForceInit(int rows, int columns);
   };
 
 }
