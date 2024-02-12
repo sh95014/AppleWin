@@ -226,12 +226,9 @@ void MockingboardCard::WriteToORB(BYTE subunit, BYTE subunitForAY/*=0*/)
 #else
 	if (m_phasorEnable)
 	{
-		const int kAY1 = 2;		// Phasor mode: bit4=0 (active low)  selects the 1st AY8913, ie. the only AY8913 in Mockingboard mode (confirmed on real Phasor h/w)
-								// Echo+  mode: bit3=1 (active high) selects the 1st AY8913
-		const int kAY2 = 1;		// Phasor mode: bit3=0 (active low)  selects the 2nd AY8913 attached to this 6522 (unavailable in Mockingboard mode)
-								// Echo+  mode: bit4=1 (active high) selects the 2nd AY8913
-		const int nAY_CS =	(m_phasorMode == PH_EchoPlus) ? ((value >> 4) & 1) | ((value >> 2) & 2)	// swap bits 4 & 3
-							: (m_phasorMode == PH_Phasor) ? (~(value >> 3) & 3)
+		const int kAY1 = 2;		// Phasor/Echo+ mode: bit4=0 (active low) selects the 1st AY8913, ie. the only AY8913 in Mockingboard mode (confirmed on real Phasor h/w)
+		const int kAY2 = 1;		// Phasor/Echo+ mode: bit3=0 (active low) selects the 2nd AY8913 attached to this 6522 (unavailable in Mockingboard mode)
+		const int nAY_CS =	(m_phasorMode == PH_Phasor || m_phasorMode == PH_EchoPlus) ? (~(value >> 3) & 3)
 							: kAY1; // Anything else is Mockingboard
 
 		if (m_phasorMode == PH_EchoPlus)
@@ -258,7 +255,10 @@ void MockingboardCard::WriteToORB(BYTE subunit, BYTE subunitForAY/*=0*/)
 	{
 		if ((value & 4) == 0)
 		{
-			AY8913_Reset(subunit);
+			if (QueryType() == CT_SDMusic)
+				AY8913_Reset(subunitForAY);	// to do: check that AYs can be independently reset
+			else
+				AY8913_Reset(subunit);
 			return;
 		}
 
@@ -279,6 +279,9 @@ void MockingboardCard::AY8913_Reset(BYTE subunit)
 		AY8910_reset(subunit, AY8913_DEVICE_B);		// GH#1197: Reset both AYs regardless of Phasor mode & chip-select bits
 
 	m_MBSubUnit[subunit].Reset(QueryType());
+
+	if (QueryType() == CT_SDMusic)
+		m_MBSubUnit[0].SetBusState(false);
 }
 
 void MockingboardCard::AY8913_Write(BYTE subunit, BYTE ay, BYTE value)
@@ -286,6 +289,7 @@ void MockingboardCard::AY8913_Write(BYTE subunit, BYTE ay, BYTE value)
 	m_regAccessedFlag = true;
 	MB_SUBUNIT* pMB = &m_MBSubUnit[subunit];
 	SY6522& r6522 = (QueryType() != CT_SDMusic) ? pMB->sy6522 : m_MBSubUnit[0].sy6522;
+	bool busState = false;	// Default: Mockingboard or Phasor(any mode) will read PortA inputs as high.
 
 	// Determine the AY8913 inputs
 	int nBDIR = (value & 2) ? 1 : 0;
@@ -299,7 +303,8 @@ void MockingboardCard::AY8913_Write(BYTE subunit, BYTE ay, BYTE value)
 	if (!m_phasorEnable || m_phasorMode == PH_Mockingboard)
 		_ASSERT(ay == AY8913_DEVICE_A);
 	if (nAYFunc == AY_READ || nAYFunc == AY_WRITE || nAYFunc == AY_LATCH)
-		_ASSERT(state == AY_INACTIVE);
+		if ((nAYFunc != state) || (m_phasorEnable && m_phasorMode != PH_EchoPlus))	// Deater's Xmas2023 demo interleaves writes to both AY's (need this line to avoid ASSERT for Echo+)
+			_ASSERT(state == AY_INACTIVE);
 #endif
 
 	if (state == AY_INACTIVE)	// GH#320: functions only work from inactive state
@@ -311,12 +316,11 @@ void MockingboardCard::AY8913_Write(BYTE subunit, BYTE ay, BYTE value)
 
 			case AY_READ:		// 5: READ FROM PSG (need to set DDRA to input)
 				{
-					bool busState = true;			// Initially default to true
-
 					if (pMB->isChipSelected[ay] && pMB->isAYLatchedAddressValid[ay])
+					{
 						r6522.SetRegIRA(AYReadReg(subunit, ay, pMB->nAYCurrentRegister[ay]) & (r6522.GetReg(SY6522::rDDRA) ^ 0xff));
-					else
-						busState = false;
+						busState = true;
+					}
 
 					if (m_phasorEnable && m_phasorMode == PH_Phasor)	// GH#1192
 					{
@@ -326,8 +330,6 @@ void MockingboardCard::AY8913_Write(BYTE subunit, BYTE ay, BYTE value)
 								r6522.SetRegIRA(r6522.GetReg(SY6522::rORA) | (AYReadReg(subunit, AY8913_DEVICE_B, pMB->nAYCurrentRegister[AY8913_DEVICE_B]) & (r6522.GetReg(SY6522::rDDRA) ^ 0xff)));
 						}
 					}
-
-					pMB->SetBusState(busState);
 				}
 				break;
 
@@ -378,8 +380,10 @@ void MockingboardCard::AY8913_Write(BYTE subunit, BYTE ay, BYTE value)
 
 	state = nAYFunc;
 
-	if (state == AY_INACTIVE)		// Mockingboard or Phasor(any mode) will read PortA inputs as high.
-		pMB->SetBusState(false);
+	if (QueryType() == CT_SDMusic)
+		m_MBSubUnit[0].SetBusState(busState);
+	else
+		pMB->SetBusState(busState);
 }
 
 //-----------------------------------------------------------------------------
