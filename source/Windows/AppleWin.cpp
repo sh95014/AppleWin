@@ -770,9 +770,11 @@ static void RepeatInitialization(void)
 			GetCardMgr().GetParallelPrinterCard()->SetEnableDumpToRealPrinter(true);
 		}
 
-		if (g_cmdLine.slotInsert[SLOT3] != CT_Empty && g_cmdLine.slotInsert[SLOT3] == CT_VidHD)	// For now just support VidHD in slot 3
+		if (g_cmdLine.slotInsert[SLOT3] != CT_Empty)
 		{
-			GetCardMgr().Insert(SLOT3, g_cmdLine.slotInsert[SLOT3]);
+			// NB. Only support Saturn in slot 3, otherwise there's more Config UI to change
+			if (g_cmdLine.slotInsert[SLOT3] == CT_VidHD || g_cmdLine.slotInsert[SLOT3] == CT_Saturn128K)	// For now just support VidHD and Saturn128 in slot 3)
+				GetCardMgr().Insert(SLOT3, g_cmdLine.slotInsert[SLOT3]);
 		}
 
 		if (g_cmdLine.slotInsert[SLOT4] != CT_Empty)
@@ -803,7 +805,11 @@ static void RepeatInitialization(void)
 			if (GetCardMgr().QuerySlot(i) == CT_Disk2 && g_cmdLine.slotInfo[i].isDiskII13)
 				dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(i)).SetFirmware13Sector();
 			if (GetCardMgr().QuerySlot(i) == CT_GenericHDD)
+			{
 				dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(i)).SetUserNumBlocks(g_cmdLine.uHarddiskNumBlocks);
+				if (g_cmdLine.useHdcFirmwareV1)
+					dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(i)).UseHdcFirmwareV1();
+			}
 		}
 
 		// Create window after inserting/removing VidHD card (as it affects width & height)

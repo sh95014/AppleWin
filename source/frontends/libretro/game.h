@@ -1,9 +1,10 @@
 #pragma once
 
-#include "frontends/common2/controllerquit.h"
+#include "frontends/common2/controllerdoublepress.h"
 #include "frontends/libretro/environment.h"
 #include "frontends/libretro/diskcontrol.h"
 #include "frontends/libretro/rkeyboard.h"
+#include "frontends/libretro/rdirectsound.h"
 
 #include <memory>
 #include <chrono>
@@ -57,11 +58,12 @@ namespace ra2
     std::shared_ptr<RegistryContext> myRegistryContext;
     std::shared_ptr<RetroFrame> myFrame;
 
-    common2::ControllerQuit myControllerQuit;
+    common2::ControllerDoublePress myControllerQuit;
+    common2::ControllerDoublePress myControllerReset;
 
     std::vector<int> myButtonStates;
 
-    size_t myAudioChannelsSelected;
+    eAudioSource myAudioSource;
 
     KeyboardType myKeyboardType;
 
