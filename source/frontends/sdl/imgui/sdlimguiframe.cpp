@@ -177,7 +177,7 @@ namespace sa2
     const ImVec2 uv0(0, 1);
     const ImVec2 uv1(1, 0);
 
-    const float menuBarHeight = mySettings.drawMenuBar(this);
+    const float menuBarHeight = mySettings.drawMenuBar(this, !myFullscreen);
     myDeadTopZone = menuBarHeight;
 
     if (mySettings.windowed)
@@ -208,14 +208,15 @@ namespace sa2
     }
   }
 
-  void SDLImGuiFrame::GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, double & x, double & y) const
+  void SDLImGuiFrame::GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, float & x, float & y) const
   {
     // this currently ignores a windowed apple video and applies to the whole sdl window
-    int width, height;
-    SDL_GetWindowSize(myWindow.get(), &width, &height);
+    int w, h;
+    SDL_GetWindowSize(myWindow.get(), &w, &h);
 
-    const int posY = std::max(motion.y - myDeadTopZone, 0);
-    height = std::max(height - myDeadTopZone, 1);  // a real window has a minimum size of 1
+    const float posY = std::max(motion.y - myDeadTopZone, 0.0f);
+    const float height = std::max(h - myDeadTopZone, 1.0f);  // a real window has a minimum size of 1
+    const float width = w;
 
     x = GetRelativePosition(motion.x, width);
     y = GetRelativePosition(posY, height);
@@ -259,6 +260,7 @@ namespace sa2
         {
           return; // do not pass on
         }
+        break;
       }
     case SDL_MOUSEBUTTONDOWN:
     case SDL_MOUSEBUTTONUP:
@@ -269,10 +271,52 @@ namespace sa2
         {
           return; // do not pass on
         }
+        break;
       }
     }
 
     SDLFrame::ProcessSingleEvent(event, quit);
+  }
+
+  void SDLImGuiFrame::ProcessKeyDown(const SDL_KeyboardEvent & key, bool &quit)
+  {
+    // a bit of care is required
+    // since we do not want to trigger twice (here and SDLFrame)
+    // we need to ensure the modifiers are consistent
+    if (!key.repeat)
+    {
+      const size_t modifiers = getCanonicalModifiers(key);
+
+      switch (key.keysym.sym)
+      {
+      case SDLK_F8:
+        {
+          if (modifiers == KMOD_NONE)
+          {
+            mySettings.toggleSettings();
+          }
+          break;
+        }
+      case SDLK_F3:
+        {
+          if (modifiers == KMOD_NONE)
+          {
+            mySettings.showDiskTab();
+          }
+          break;
+        }
+      case SDLK_F1:
+        {
+          if (modifiers == KMOD_NONE)
+          {
+            mySettings.toggleShortcuts();
+          }
+          break;
+        }
+      }
+    }
+
+    SDLFrame::ProcessKeyDown(key, quit);
   }
 
   bool SDLImGuiFrame::Quit() const

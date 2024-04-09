@@ -51,7 +51,7 @@ namespace sa2
 
   void printRendererInfo(std::ostream & os,
                          const std::shared_ptr<SDL_Renderer> & ren,
-                         const Uint32 pixelFormat,
+                         const SDL_PixelFormatEnum pixelFormat,
                          const int selectedDriver)
   {
     SDL_RendererInfo info;
@@ -118,6 +118,26 @@ namespace sa2
   std::string decorateSDLError(const std::string & prefix)
   {
     return prefix + ": " + SDL_GetError();
+  }
+
+  size_t getCanonicalModifiers(const SDL_KeyboardEvent & key)
+  {
+    // simplification of the handling of left and right version of the modifiers
+    // so we can use equality == comparisons
+    size_t modifiers = KMOD_NONE;
+    if (key.keysym.mod & KMOD_CTRL)
+    {
+      modifiers |= KMOD_CTRL;
+    }
+    if (key.keysym.mod & KMOD_SHIFT)
+    {
+      modifiers |= KMOD_SHIFT;
+    }
+    if (key.keysym.mod & KMOD_ALT)
+    {
+      modifiers |= KMOD_ALT;
+    }
+    return modifiers;
   }
 
 }

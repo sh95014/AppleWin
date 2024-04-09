@@ -23,7 +23,8 @@ namespace sa2
   protected:
 
     void ProcessSingleEvent(const SDL_Event & event, bool & quit) override;
-    void GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, double & x, double & y) const override;
+    void ProcessKeyDown(const SDL_KeyboardEvent & key, bool &quit) override;
+    void GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, float & x, float & y) const override;
 
   private:
 
@@ -37,7 +38,7 @@ namespace sa2
     size_t myBorderlessHeight;
     float myOriginalAspectRatio;
 
-    int myDeadTopZone; // for mouse position
+    float myDeadTopZone; // for mouse position
     bool myPresenting; // VideoPresentScreen() is NOT REENTRANT
 
     SDL_GLContext myGLContext;
