@@ -6,6 +6,7 @@
 //  Forked from frontends/sdl/sdirectsound.cpp
 //
 
+#include <unordered_map>
 #include <AudioToolbox/AudioToolbox.h>
 #include "windows.h"
 #include "Core.h"
