@@ -4,8 +4,8 @@
 #include "linux/linuxframe.h"
 #include "linux/registryclass.h"
 #include "linux/paddle.h"
-#include "linux/duplicates/PropertySheet.h"
 
+#include "Configuration/PropertySheet.h"
 #include "Debugger/Debug.h"
 
 #include "Interface.h"
@@ -94,9 +94,9 @@ RegistryContext::~RegistryContext()
   Registry::instance.reset();
 }
 
-void InitialiseEmulator()
+void InitialiseEmulator(const AppMode_e mode)
 {
-  g_nAppMode = MODE_RUNNING;
+  g_nAppMode = mode;
   LogFileOutput("Initialisation\n");
 
   g_bFullSpeed = false;

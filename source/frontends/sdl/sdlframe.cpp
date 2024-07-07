@@ -449,6 +449,10 @@ namespace sa2
           {
             CycleVideoType();
           }
+          else if (modifiers == KMOD_CTRL)
+          {
+            ToggleMouseCursor();
+          }
           break;
         }
       case SDLK_F6:
@@ -531,8 +535,7 @@ namespace sa2
         }
       case SDLK_PAUSE:
         {
-          const AppMode_e newMode = (g_nAppMode == MODE_RUNNING) ? MODE_PAUSED : MODE_RUNNING;
-          ChangeMode(newMode);
+          TogglePaused();
           break;
         }
       case SDLK_CAPSLOCK:
@@ -635,6 +638,11 @@ namespace sa2
     return myPreserveAspectRatio;
   }
 
+  bool & SDLFrame::getAutoBoot()
+  {
+    return myAutoBoot;
+  }
+
   void SDLFrame::SetFullSpeed(const bool value)
   {
     CommonFrame::SetFullSpeed(value);
@@ -689,7 +697,7 @@ namespace sa2
     #ifdef U2_USE_SLIRP
       return std::make_shared<SlirpBackend>(myPortFwds);
     #else
-      return std::make_shared<PCapBackend>(interfaceName);
+      return common2::GNUFrame::CreateNetworkBackend(interfaceName);
     #endif
   }
 
