@@ -15,6 +15,12 @@
 		976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
 		976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
 		976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
+		97ACC9C22C3B2C3E0028821E /* PageConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BC2C3B2C3E0028821E /* PageConfig.cpp */; };
+		97ACC9C32C3B2C3E0028821E /* PageInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BD2C3B2C3E0028821E /* PageInput.cpp */; };
+		97ACC9C42C3B2C3E0028821E /* PageSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BE2C3B2C3E0028821E /* PageSound.cpp */; };
+		97ACC9C52C3B2C3E0028821E /* PageAdvanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BF2C3B2C3E0028821E /* PageAdvanced.cpp */; };
+		97ACC9C62C3B2C3E0028821E /* PageConfigTfe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9C02C3B2C3E0028821E /* PageConfigTfe.cpp */; };
+		97ACC9C72C3B2C3E0028821E /* PageDisk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9C12C3B2C3E0028821E /* PageDisk.cpp */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -480,8 +486,6 @@
 		B0F43FD8295E4BAD00E79AD7 /* CHARSET8C.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD3295E4BAD00E79AD7 /* CHARSET8C.bmp */; };
 		B0F43FD9295E4BAD00E79AD7 /* CHARSET8M.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD4295E4BAD00E79AD7 /* CHARSET8M.bmp */; };
 		B0F43FDA295E4BAD00E79AD7 /* CHARSET8M.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD4295E4BAD00E79AD7 /* CHARSET8M.bmp */; };
-		B0F43FDB295E4BAD00E79AD7 /* CHARSET4.BMP in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD5295E4BAD00E79AD7 /* CHARSET4.BMP */; };
-		B0F43FDC295E4BAD00E79AD7 /* CHARSET4.BMP in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD5295E4BAD00E79AD7 /* CHARSET4.BMP */; };
 		B0F43FDD295E4BAD00E79AD7 /* CHARSET82.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */; };
 		B0F43FDE295E4BAD00E79AD7 /* CHARSET82.bmp in Resources */ = {isa = PBXBuildFile; fileRef = B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */; };
 		B0F526F72A2C1F1300288820 /* DebuggerWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0F97BB22A25A8F100461923 /* DebuggerWindowController.mm */; };
@@ -713,6 +717,13 @@
 		9765C6162B26452B00C8AF42 /* cadirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cadirectsound.cpp; sourceTree = "<group>"; };
 		976D11A92B379D9000EEA1D6 /* CharacterMappings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharacterMappings.h; sourceTree = "<group>"; };
 		976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = CharacterMappings.mm; sourceTree = "<group>"; };
+		97ACC9BC2C3B2C3E0028821E /* PageConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageConfig.cpp; path = source/linux/duplicates/PageConfig.cpp; sourceTree = "<group>"; };
+		97ACC9BD2C3B2C3E0028821E /* PageInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageInput.cpp; path = source/linux/duplicates/PageInput.cpp; sourceTree = "<group>"; };
+		97ACC9BE2C3B2C3E0028821E /* PageSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageSound.cpp; path = source/linux/duplicates/PageSound.cpp; sourceTree = "<group>"; };
+		97ACC9BF2C3B2C3E0028821E /* PageAdvanced.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageAdvanced.cpp; path = source/linux/duplicates/PageAdvanced.cpp; sourceTree = "<group>"; };
+		97ACC9C02C3B2C3E0028821E /* PageConfigTfe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageConfigTfe.cpp; path = source/linux/duplicates/PageConfigTfe.cpp; sourceTree = "<group>"; };
+		97ACC9C12C3B2C3E0028821E /* PageDisk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageDisk.cpp; path = source/linux/duplicates/PageDisk.cpp; sourceTree = "<group>"; };
+		97ACC9C82C3B2C490028821E /* tfearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tfearch.cpp; path = source/linux/duplicates/tfearch.cpp; sourceTree = "<group>"; };
 		97B92FC82B13AFBA000D8B98 /* sdlframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlframe.h; path = source/frontends/sdl/sdlframe.h; sourceTree = "<group>"; };
 		97B92FC92B13AFBA000D8B98 /* processfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = processfile.h; path = source/frontends/sdl/processfile.h; sourceTree = "<group>"; };
 		97B92FCB2B13AFBA000D8B98 /* sdirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdirectsound.cpp; path = source/frontends/sdl/sdirectsound.cpp; sourceTree = "<group>"; };
@@ -1058,7 +1069,6 @@
 		B09AB7AD277A20FA0002A6C3 /* resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resources.h; path = source/linux/resources.h; sourceTree = "<group>"; };
 		B09AB7C8277A21180002A6C3 /* Joystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Joystick.cpp; path = source/linux/duplicates/Joystick.cpp; sourceTree = "<group>"; };
 		B09AB7C9277A21180002A6C3 /* Debugger_Win32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger_Win32.cpp; path = source/linux/duplicates/Debugger_Win32.cpp; sourceTree = "<group>"; };
-		B09AB7CA277A21180002A6C3 /* PropertySheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PropertySheet.h; path = source/linux/duplicates/PropertySheet.h; sourceTree = "<group>"; };
 		B09AB7CB277A21180002A6C3 /* Debugger_Display.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger_Display.cpp; path = source/linux/duplicates/Debugger_Display.cpp; sourceTree = "<group>"; };
 		B09AB7CC277A21180002A6C3 /* Registry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Registry.cpp; path = source/linux/duplicates/Registry.cpp; sourceTree = "<group>"; };
 		B09AB7CD277A21180002A6C3 /* SerialComms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SerialComms.cpp; path = source/linux/duplicates/SerialComms.cpp; sourceTree = "<group>"; };
@@ -1249,7 +1259,6 @@
 		B0F43FD1295E49FD00E79AD7 /* joystickapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joystickapi.h; path = source/linux/libwindows/joystickapi.h; sourceTree = "<group>"; };
 		B0F43FD3295E4BAD00E79AD7 /* CHARSET8C.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET8C.bmp; path = resource/CHARSET8C.bmp; sourceTree = SOURCE_ROOT; };
 		B0F43FD4295E4BAD00E79AD7 /* CHARSET8M.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET8M.bmp; path = resource/CHARSET8M.bmp; sourceTree = SOURCE_ROOT; };
-		B0F43FD5295E4BAD00E79AD7 /* CHARSET4.BMP */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET4.BMP; path = resource/CHARSET4.BMP; sourceTree = SOURCE_ROOT; };
 		B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET82.bmp; path = resource/CHARSET82.bmp; sourceTree = SOURCE_ROOT; };
 		B0F526DC2A2C0EB600288820 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Debugger.strings"; sourceTree = "<group>"; };
 		B0F526E02A2C0EC600288820 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InspectorPanels.strings"; sourceTree = "<group>"; };
@@ -1546,7 +1555,6 @@
 				B045FE6E2782984E006E36F9 /* ThunderClockPlus.rom */,
 				B045FE622782984E006E36F9 /* TK3000e.rom */,
 				B045FE632782984E006E36F9 /* TKClock.rom */,
-				B0F43FD5295E4BAD00E79AD7 /* CHARSET4.BMP */,
 				B0F43FD3295E4BAD00E79AD7 /* CHARSET8C.bmp */,
 				B0F43FD4295E4BAD00E79AD7 /* CHARSET8M.bmp */,
 				B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */,
@@ -1877,11 +1885,17 @@
 				B09AB7CF277A21180002A6C3 /* FourPlay.cpp */,
 				B09AB7C8277A21180002A6C3 /* Joystick.cpp */,
 				B09AB7D0277A21180002A6C3 /* Keyboard.cpp */,
+				97ACC9BF2C3B2C3E0028821E /* PageAdvanced.cpp */,
+				97ACC9BC2C3B2C3E0028821E /* PageConfig.cpp */,
+				97ACC9C02C3B2C3E0028821E /* PageConfigTfe.cpp */,
+				97ACC9C12C3B2C3E0028821E /* PageDisk.cpp */,
+				97ACC9BD2C3B2C3E0028821E /* PageInput.cpp */,
+				97ACC9BE2C3B2C3E0028821E /* PageSound.cpp */,
 				B09AB7CE277A21180002A6C3 /* PropertySheet.cpp */,
-				B09AB7CA277A21180002A6C3 /* PropertySheet.h */,
 				B09AB7CC277A21180002A6C3 /* Registry.cpp */,
 				B09AB7CD277A21180002A6C3 /* SerialComms.cpp */,
 				B09AB7D1277A21180002A6C3 /* SNESMAX.cpp */,
+				97ACC9C82C3B2C490028821E /* tfearch.cpp */,
 			);
 			name = duplicates;
 			sourceTree = "<group>";
@@ -2746,7 +2760,6 @@
 				B00ECBD1279EEB600041E16C /* DISK2.rom in Resources */,
 				B00ECBD2279EEB600041E16C /* MainMenu.xib in Resources */,
 				B00ECBD3279EEB600041E16C /* About.xib in Resources */,
-				B0F43FDC295E4BAD00E79AD7 /* CHARSET4.BMP in Resources */,
 				B00ECBD4279EEB600041E16C /* Apple2_JPlus_Video.rom in Resources */,
 				B00ECBD5279EEB600041E16C /* Preferences.storyboard in Resources */,
 				B00ECBD6279EEB600041E16C /* TK3000e.rom in Resources */,
@@ -2792,7 +2805,6 @@
 				B045FE7B2782984F006E36F9 /* DISK2.rom in Resources */,
 				B032DE2B277A0C24006DC0F7 /* MainMenu.xib in Resources */,
 				B07612302789E4BE009E79BE /* About.xib in Resources */,
-				B0F43FDB295E4BAD00E79AD7 /* CHARSET4.BMP in Resources */,
 				B045FE822782984F006E36F9 /* Apple2_JPlus_Video.rom in Resources */,
 				B0F0138C2785A211002936B4 /* Preferences.storyboard in Resources */,
 				B045FE782782984F006E36F9 /* TK3000e.rom in Resources */,
@@ -2837,6 +2849,7 @@
 				B0BAB4AA29B42CAA008F54D7 /* MockingboardCardManager.cpp in Sources */,
 				B0098D06277E1D4F00F38E0C /* unzip.c in Sources */,
 				B0098C88277E140100F38E0C /* RGBMonitor.cpp in Sources */,
+				97ACC9C42C3B2C3E0028821E /* PageSound.cpp in Sources */,
 				B0098C9D277E144E00F38E0C /* slirp2.cpp in Sources */,
 				B0098C7E277E140100F38E0C /* CPU.cpp in Sources */,
 				B0098C95277E140100F38E0C /* Mockingboard.cpp in Sources */,
@@ -2849,6 +2862,7 @@
 				B0098C8D277E140100F38E0C /* Pravets.cpp in Sources */,
 				B0098C99277E140100F38E0C /* DiskImageHelper.cpp in Sources */,
 				B0098CB3277E148600F38E0C /* z80mem.cpp in Sources */,
+				97ACC9C72C3B2C3E0028821E /* PageDisk.cpp in Sources */,
 				B0098C92277E140100F38E0C /* SSI263.cpp in Sources */,
 				B0098CA8277E147500F38E0C /* Joystick.cpp in Sources */,
 				B0098C9C277E143200F38E0C /* benchmark.cpp in Sources */,
@@ -2875,11 +2889,13 @@
 				B05778E6285D7F5B00614907 /* DNS.cpp in Sources */,
 				B0F8500527D1B44F0015F642 /* PCapBackend.cpp in Sources */,
 				B0F84FFC27D1B3F30015F642 /* Uthernet2.cpp in Sources */,
+				97ACC9C52C3B2C3E0028821E /* PageAdvanced.cpp in Sources */,
 				B0098C8B277E140100F38E0C /* z80emu.cpp in Sources */,
 				B0098CA2277E144E00F38E0C /* registryclass.cpp in Sources */,
 				B0098C94277E140100F38E0C /* AY8910.cpp in Sources */,
 				B089EF3427BB051900BDC415 /* StrFormat.cpp in Sources */,
 				B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */,
+				97ACC9C32C3B2C3E0028821E /* PageInput.cpp in Sources */,
 				B0F97BA22A253DD500461923 /* portfwds.cpp in Sources */,
 				B095D52F27ED7D0000498D51 /* IPRaw.cpp in Sources */,
 				B0098C9F277E144E00F38E0C /* linuxframe.cpp in Sources */,
@@ -2893,12 +2909,14 @@
 				B0098C93277E140100F38E0C /* LanguageCard.cpp in Sources */,
 				B0098CAA277E147500F38E0C /* FourPlay.cpp in Sources */,
 				B0098C90277E140100F38E0C /* Speaker.cpp in Sources */,
+				97ACC9C22C3B2C3E0028821E /* PageConfig.cpp in Sources */,
 				B0098C8E277E140100F38E0C /* 6821.cpp in Sources */,
 				B05778E3285D7F0E00614907 /* Config.cpp in Sources */,
 				B0098D04277E1D4F00F38E0C /* mztools.c in Sources */,
 				B0098C8C277E140100F38E0C /* MouseInterface.cpp in Sources */,
 				B0098C85277E140100F38E0C /* Card.cpp in Sources */,
 				B0F43FCF295E48DA00E79AD7 /* CopyProtectionDongles.cpp in Sources */,
+				97ACC9C62C3B2C3E0028821E /* PageConfigTfe.cpp in Sources */,
 				B0098C7D277E140100F38E0C /* SaveState.cpp in Sources */,
 				B0098D07277E1D4F00F38E0C /* ioapi.c in Sources */,
 				B0098C81277E140100F38E0C /* Disk.cpp in Sources */,
