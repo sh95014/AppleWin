@@ -107,7 +107,9 @@ void* MarianiFrame::FrameBufferData()
 
 std::string MarianiFrame::getResourcePath(const std::string& filename)
 {
-    return std::string(PathToResourceNamed(filename.c_str()));
+    const char *path = PathToResourceNamed(filename.c_str());
+    assert(path != NULL); // did you add the resource to the project and targets?
+    return std::string(path);
 }
 
 }

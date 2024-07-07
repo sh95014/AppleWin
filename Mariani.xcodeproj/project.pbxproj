@@ -21,6 +21,10 @@
 		97ACC9C52C3B2C3E0028821E /* PageAdvanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BF2C3B2C3E0028821E /* PageAdvanced.cpp */; };
 		97ACC9C62C3B2C3E0028821E /* PageConfigTfe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9C02C3B2C3E0028821E /* PageConfigTfe.cpp */; };
 		97ACC9C72C3B2C3E0028821E /* PageDisk.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9C12C3B2C3E0028821E /* PageDisk.cpp */; };
+		97ACC9CB2C3B2EBE0028821E /* Apple2_Video.rom in Resources */ = {isa = PBXBuildFile; fileRef = 97ACC9CA2C3B2EBE0028821E /* Apple2_Video.rom */; };
+		97ACC9CC2C3B2EBE0028821E /* Apple2_Video.rom in Resources */ = {isa = PBXBuildFile; fileRef = 97ACC9CA2C3B2EBE0028821E /* Apple2_Video.rom */; };
+		97ACC9CF2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom in Resources */ = {isa = PBXBuildFile; fileRef = 97ACC9CD2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom */; };
+		97ACC9D02C3B30B30028821E /* Apple2e_Enhanced_Video.rom in Resources */ = {isa = PBXBuildFile; fileRef = 97ACC9CD2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -724,6 +728,8 @@
 		97ACC9C02C3B2C3E0028821E /* PageConfigTfe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageConfigTfe.cpp; path = source/linux/duplicates/PageConfigTfe.cpp; sourceTree = "<group>"; };
 		97ACC9C12C3B2C3E0028821E /* PageDisk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageDisk.cpp; path = source/linux/duplicates/PageDisk.cpp; sourceTree = "<group>"; };
 		97ACC9C82C3B2C490028821E /* tfearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tfearch.cpp; path = source/linux/duplicates/tfearch.cpp; sourceTree = "<group>"; };
+		97ACC9CA2C3B2EBE0028821E /* Apple2_Video.rom */ = {isa = PBXFileReference; lastKnownFileType = file; name = Apple2_Video.rom; path = resource/Apple2_Video.rom; sourceTree = SOURCE_ROOT; };
+		97ACC9CD2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom */ = {isa = PBXFileReference; lastKnownFileType = file; name = Apple2e_Enhanced_Video.rom; path = resource/Apple2e_Enhanced_Video.rom; sourceTree = SOURCE_ROOT; };
 		97B92FC82B13AFBA000D8B98 /* sdlframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlframe.h; path = source/frontends/sdl/sdlframe.h; sourceTree = "<group>"; };
 		97B92FC92B13AFBA000D8B98 /* processfile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = processfile.h; path = source/frontends/sdl/processfile.h; sourceTree = "<group>"; };
 		97B92FCB2B13AFBA000D8B98 /* sdirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdirectsound.cpp; path = source/frontends/sdl/sdirectsound.cpp; sourceTree = "<group>"; };
@@ -1537,7 +1543,9 @@
 				B045FE6C2782984E006E36F9 /* Apple2_JPlus_Video.rom */,
 				B045FE672782984E006E36F9 /* Apple2_JPlus.rom */,
 				B045FE5D2782984E006E36F9 /* Apple2_Plus.rom */,
+				97ACC9CA2C3B2EBE0028821E /* Apple2_Video.rom */,
 				B045FE6F2782984E006E36F9 /* Apple2.rom */,
+				97ACC9CD2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom */,
 				B045FE702782984E006E36F9 /* Apple2e_Enhanced.rom */,
 				B045FE5C2782984E006E36F9 /* Apple2e.rom */,
 				B045FE642782984E006E36F9 /* Base64A_German_Video.rom */,
@@ -2740,6 +2748,7 @@
 			files = (
 				B00ECBC2279EEB600041E16C /* PRAVETS82.ROM in Resources */,
 				B00ECBC5279EEB600041E16C /* PRAVETS8M.ROM in Resources */,
+				97ACC9CF2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom in Resources */,
 				B089EF2F27BADA5200BDC415 /* Mariani.help in Resources */,
 				B00ECBC6279EEB600041E16C /* TKClock.rom in Resources */,
 				B00ECBC7279EEB600041E16C /* PRAVETS8C.ROM in Resources */,
@@ -2765,6 +2774,7 @@
 				B00ECBD6279EEB600041E16C /* TK3000e.rom in Resources */,
 				B0F97BA82A259F1800461923 /* Debugger.xib in Resources */,
 				B00ECBD7279EEB600041E16C /* Mockingboard-D.rom in Resources */,
+				97ACC9CC2C3B2EBE0028821E /* Apple2_Video.rom in Resources */,
 				B0F97BC22A26758E00461923 /* APPLE2E.SYM in Resources */,
 				B00ECBD8279EEB600041E16C /* Base64A.rom in Resources */,
 				B00ECBD9279EEB600041E16C /* Apple2_Plus.rom in Resources */,
@@ -2785,6 +2795,7 @@
 			files = (
 				B045FE802782984F006E36F9 /* PRAVETS82.ROM in Resources */,
 				B045FE772782984F006E36F9 /* PRAVETS8M.ROM in Resources */,
+				97ACC9D02C3B30B30028821E /* Apple2e_Enhanced_Video.rom in Resources */,
 				B089EF2E27BADA5200BDC415 /* Mariani.help in Resources */,
 				B045FE792782984F006E36F9 /* TKClock.rom in Resources */,
 				B045FE7F2782984F006E36F9 /* PRAVETS8C.ROM in Resources */,
@@ -2810,6 +2821,7 @@
 				B045FE782782984F006E36F9 /* TK3000e.rom in Resources */,
 				B0F97BA72A259F1800461923 /* Debugger.xib in Resources */,
 				B045FE872782984F006E36F9 /* Mockingboard-D.rom in Resources */,
+				97ACC9CB2C3B2EBE0028821E /* Apple2_Video.rom in Resources */,
 				B0F97BC12A26758E00461923 /* APPLE2E.SYM in Resources */,
 				B045FE7E2782984F006E36F9 /* Base64A.rom in Resources */,
 				B045FE732782984F006E36F9 /* Apple2_Plus.rom in Resources */,
