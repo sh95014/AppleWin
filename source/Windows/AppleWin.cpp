@@ -784,31 +784,43 @@ static void RepeatInitialization(void)
 
 		if (g_cmdLine.slotInsert[SLOT5] != CT_Empty)
 		{
-			if (GetCardMgr().QuerySlot(SLOT5) != CT_Disk2)	// Ignore if already got Disk2 in slot 5
+			if (GetCardMgr().QuerySlot(SLOT5) != g_cmdLine.slotInsert[SLOT5])	// Ignore if already got this card type in slot 5
 				GetCardMgr().Insert(SLOT5, g_cmdLine.slotInsert[SLOT5]);
 		}
 
 		if (g_cmdLine.slotInsert[SLOT6] == CT_Disk2)	// For now just support Disk2 in slot 6
 		{
-			if (GetCardMgr().QuerySlot(SLOT6) != CT_Disk2)	// Ignore if already got Disk2 in slot 6
+			if (GetCardMgr().QuerySlot(SLOT6) != g_cmdLine.slotInsert[SLOT6])	// Ignore if already got this card type in slot 6
 				GetCardMgr().Insert(SLOT6, g_cmdLine.slotInsert[SLOT6]);
 		}
 
 		if (g_cmdLine.slotInsert[SLOT7] != CT_Empty)
 		{
-			if (GetCardMgr().QuerySlot(SLOT7) != CT_GenericHDD)	// Ignore if already got HDC in slot 7
+			if (GetCardMgr().QuerySlot(SLOT7) != g_cmdLine.slotInsert[SLOT7])	// Ignore if already got this card type in slot 7
 				GetCardMgr().Insert(SLOT7, g_cmdLine.slotInsert[SLOT7]);
 		}
 
 		for (UINT i = SLOT0; i < NUM_SLOTS; i++)
 		{
 			if (GetCardMgr().QuerySlot(i) == CT_Disk2 && g_cmdLine.slotInfo[i].isDiskII13)
+			{
 				dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(i)).SetFirmware13Sector();
-			if (GetCardMgr().QuerySlot(i) == CT_GenericHDD)
+			}
+			else if (GetCardMgr().QuerySlot(i) == CT_GenericHDD)
 			{
 				dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(i)).SetUserNumBlocks(g_cmdLine.uHarddiskNumBlocks);
 				if (g_cmdLine.useHdcFirmwareV1)
 					dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(i)).UseHdcFirmwareV1();
+				if (g_cmdLine.useHdcFirmwareV2)
+					dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(i)).UseHdcFirmwareV2();
+				dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(i)).SetHdcFirmwareMode(g_cmdLine.slotInfo[i].useHdcFirmwareMode);
+			}
+			else if (GetCardMgr().GetMockingboardCardMgr().IsMockingboard(i))
+			{
+				if (g_cmdLine.slotInfo[i].useBad6522A)
+					dynamic_cast<MockingboardCard&>(GetCardMgr().GetRef(i)).UseBad6522A();
+				if (g_cmdLine.slotInfo[i].useBad6522B)
+					dynamic_cast<MockingboardCard&>(GetCardMgr().GetRef(i)).UseBad6522B();
 			}
 		}
 
@@ -855,10 +867,12 @@ static void RepeatInitialization(void)
 			g_cmdLine.szImageName_drive[SLOT6][DRIVE_1] = g_cmdLine.szImageName_drive[SLOT6][DRIVE_2] = NULL;	// Don't insert on a restart
 
 			InsertHardDisks(SLOT5, g_cmdLine.szImageName_harddisk[SLOT5], temp);
-			g_cmdLine.szImageName_harddisk[SLOT5][HARDDISK_1] = g_cmdLine.szImageName_harddisk[SLOT5][HARDDISK_2] = NULL;	// Don't insert on a restart
+			for (UINT i = 0; i < NUM_HARDDISKS; i++)
+				g_cmdLine.szImageName_harddisk[SLOT5][i] = NULL;	// Don't insert on a restart
 
 			InsertHardDisks(SLOT7, g_cmdLine.szImageName_harddisk[SLOT7], g_cmdLine.bBoot);
-			g_cmdLine.szImageName_harddisk[SLOT7][HARDDISK_1] = g_cmdLine.szImageName_harddisk[SLOT7][HARDDISK_2] = NULL;	// Don't insert on a restart
+			for (UINT i = 0; i < NUM_HARDDISKS; i++)
+				g_cmdLine.szImageName_harddisk[SLOT7][i] = NULL;	// Don't insert on a restart
 
 			if (g_cmdLine.bSlotEmpty[SLOT7])
 			{

@@ -821,7 +821,7 @@ static BYTE __stdcall IO_Cxxx(WORD programcounter, WORD address, BYTE write, BYT
 		if ((address >= APPLE_SLOT_BEGIN) && (address <= APPLE_SLOT_END))
 		{
 			const UINT uSlot = (address>>8)&0x7;
-			if (uSlot != 3)
+			if (IS_APPLE2 || uSlot != SLOT3)
 			{
 				if (ExpansionRom[uSlot])
 					IO_SELECT |= 1<<uSlot;
@@ -846,7 +846,7 @@ static BYTE __stdcall IO_Cxxx(WORD programcounter, WORD address, BYTE write, BYT
 		if (IO_SELECT && IO_STROBE)
 		{
 			// Enable Peripheral Expansion ROM
-			UINT uSlot=1;
+			UINT uSlot = SLOT1;
 			for (; uSlot<NUM_SLOTS; uSlot++)
 			{
 				if (IO_SELECT & (1<<uSlot))
@@ -912,8 +912,8 @@ static BYTE __stdcall IO_Cxxx(WORD programcounter, WORD address, BYTE write, BYT
 		const UINT uSlot = (address>>8)&0x7;
 		const bool bPeripheralSlotRomEnabled = IS_APPLE2 ? true	// A][
 													     :		// A//e or above
-			  ( !SW_INTCXROM   &&					// Peripheral (card) ROMs enabled in $C100..$C7FF
-		      !(!SW_SLOTC3ROM  && uSlot == 3) );	// Internal C3 ROM disabled in $C300 when slot == 3
+			  ( !SW_INTCXROM   &&						// Peripheral (card) ROMs enabled in $C100..$C7FF
+		      !(!SW_SLOTC3ROM  && uSlot == SLOT3) );	// Internal C3 ROM disabled in $C300 when slot == 3
 
 		// Fix for GH#149 and GH#164
 		if (bPeripheralSlotRomEnabled && !IsCardInSlot(uSlot))	// Slot is empty
@@ -1006,7 +1006,7 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 	IORead[uSlot+8]		= IOReadC0;
 	IOWrite[uSlot+8]	= IOWriteC0;
 
-	if (uSlot == 0)		// Don't trash C0xx handlers
+	if (uSlot == SLOT0)		// Don't trash C0xx handlers
 		return;
 
 	//
@@ -1274,8 +1274,11 @@ static void UpdatePaging(BOOL initialize)
 	// PAGING SHADOW TABLE
 	//
 	// NB. the condition 'loop <= 1' is there because:
-	// . Page0 (ZP)    : memdirty[0] is set when the 6502 CPU does a ZP-write, but perhaps older versions didn't set this flag (eg. the asm version?).
-	// . Page1 (stack) : memdirty[1] is NOT set when the 6502 CPU writes to this page with JSR, etc.
+	// . Page0 (ZP) and Page1 (stack) are written to so often that it's almost certain that they'll be dirty every time this function is called.
+	// Note also that:
+	// . Page0 (ZP)    : memdirty[0] is set when the 6502 CPU writes to ZP.
+	// . Page1 (stack) : memdirty[1] is NOT set when the 6502 CPU writes to this page with JSR, PHA, etc.
+	// Ultimately this is an optimisation (due to Page1 writes not setting memdirty[1]) and Page0 could be optimised to also not set memdirty[0].
 
 	for (loop = 0x00; loop < 0x100; loop++)
 	{
@@ -1348,19 +1351,6 @@ bool MemCheckSLOTC3ROM()
 bool MemCheckINTCXROM()
 {
 	return SW_INTCXROM ? true : false;
-}
-
-//===========================================================================
-
-static void BackMainImage(void)
-{
-	for (UINT loop = 0; loop < 256; loop++)
-	{
-		if (memshadow[loop] && ((*(memdirty+loop) & 1) || (loop <= 1)))
-			memcpy(memshadow[loop], mem+(loop << 8), 256);
-
-		*(memdirty+loop) &= ~1;
-	}
 }
 
 //===========================================================================
@@ -1450,14 +1440,27 @@ LPBYTE MemGetMainPtr(const WORD offset)
 
 //===========================================================================
 
+static void BackMainImage(void)
+{
+	for (UINT loop = 0; loop < 256; loop++)
+	{
+		if (memshadow[loop] && ((*(memdirty + loop) & 1) || (loop <= 1)))
+			memcpy(memshadow[loop], mem + (loop << 8), 256);
+
+		*(memdirty + loop) &= ~1;
+	}
+}
+
+//-------------------------------------
+
 // Used by:
 // . Savestate: MemSaveSnapshotMemory(), MemLoadSnapshotAux()
 // . VidHD    : SaveSnapshot(), LoadSnapshot()
 // . Debugger : CmdMemorySave(), CmdMemoryLoad()
-LPBYTE MemGetBankPtr(const UINT nBank, const bool isSaveSnapshotOrDebugging)
+LPBYTE MemGetBankPtr(const UINT nBank, const bool isSaveSnapshotOrDebugging/*=true*/)
 {
 	// Only call BackMainImage() when a consistent 64K bank is needed, eg. for saving snapshot or debugging
-	// - for snapshot loads it's pointless, and worse it can corrupt pages 0 & 1 for aux banks (GH#1262)
+	// - for snapshot *loads* it's redundant, and worse it can corrupt pages 0 & 1 for aux banks, so must be avoided (GH#1262)
 	if (isSaveSnapshotOrDebugging)
 		BackMainImage();	// Flush any dirty pages to back-buffer
 
@@ -2417,7 +2420,7 @@ static const std::string& MemGetSnapshotAuxMemStructName(void)
 
 static void MemSaveSnapshotMemory(YamlSaveHelper& yamlSaveHelper, bool bIsMainMem, UINT bank=0, UINT size=64*1024)
 {
-	LPBYTE pMemBase = MemGetBankPtr(bank, true);
+	LPBYTE pMemBase = MemGetBankPtr(bank);
 
 	if (bIsMainMem)
 	{

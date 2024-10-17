@@ -14,9 +14,15 @@ struct CmdLine
 		SlotInfo()
 		{
 			isDiskII13 = false;
+			useHdcFirmwareMode = HdcDefault;
+			useBad6522A = false;
+			useBad6522B = false;
 		}
 
 		bool isDiskII13;
+		HdcMode useHdcFirmwareMode;
+		bool useBad6522A;
+		bool useBad6522B;
 	};
 
 	CmdLine()
@@ -35,6 +41,7 @@ struct CmdLine
 		supportExtraMBCardTypes = false;
 		noDisk2StepperDefer = false;
 		useHdcFirmwareV1 = false;
+		useHdcFirmwareV2 = false;
 		szSnapshotName = NULL;
 		szScreenshotFilename = NULL;
 		uHarddiskNumBlocks = 0;
@@ -80,6 +87,7 @@ struct CmdLine
 	bool supportExtraMBCardTypes;
 	bool noDisk2StepperDefer;	// debug
 	bool useHdcFirmwareV1;	// debug
+	bool useHdcFirmwareV2;
 	SS_CARDTYPE slotInsert[NUM_SLOTS];
 	SlotInfo slotInfo[NUM_SLOTS];
 	LPCSTR szImageName_drive[NUM_SLOTS][NUM_DRIVES];
