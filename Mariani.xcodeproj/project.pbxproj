@@ -3453,7 +3453,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3489,7 +3489,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3689,7 +3689,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3729,7 +3729,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
