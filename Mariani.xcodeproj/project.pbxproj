@@ -15,6 +15,8 @@
 		976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
 		976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
 		976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
+		979E45D62CF56C2700D6A957 /* HDC-SmartPort.bin in Resources */ = {isa = PBXBuildFile; fileRef = 979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */; };
+		979E45D72CF56C2700D6A957 /* HDC-SmartPort.bin in Resources */ = {isa = PBXBuildFile; fileRef = 979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */; };
 		97ACC9C22C3B2C3E0028821E /* PageConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BC2C3B2C3E0028821E /* PageConfig.cpp */; };
 		97ACC9C32C3B2C3E0028821E /* PageInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BD2C3B2C3E0028821E /* PageInput.cpp */; };
 		97ACC9C42C3B2C3E0028821E /* PageSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BE2C3B2C3E0028821E /* PageSound.cpp */; };
@@ -721,6 +723,7 @@
 		9765C6162B26452B00C8AF42 /* cadirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cadirectsound.cpp; sourceTree = "<group>"; };
 		976D11A92B379D9000EEA1D6 /* CharacterMappings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharacterMappings.h; sourceTree = "<group>"; };
 		976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = CharacterMappings.mm; sourceTree = "<group>"; };
+		979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = "HDC-SmartPort.bin"; path = "resource/HDC-SmartPort.bin"; sourceTree = SOURCE_ROOT; };
 		97ACC9BC2C3B2C3E0028821E /* PageConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageConfig.cpp; path = source/linux/duplicates/PageConfig.cpp; sourceTree = "<group>"; };
 		97ACC9BD2C3B2C3E0028821E /* PageInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageInput.cpp; path = source/linux/duplicates/PageInput.cpp; sourceTree = "<group>"; };
 		97ACC9BE2C3B2C3E0028821E /* PageSound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageSound.cpp; path = source/linux/duplicates/PageSound.cpp; sourceTree = "<group>"; };
@@ -1552,6 +1555,7 @@
 				B045FE682782984E006E36F9 /* Base64A.rom */,
 				B045FE5E2782984E006E36F9 /* DISK2-13sector.rom */,
 				B045FE652782984E006E36F9 /* DISK2.rom */,
+				979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */,
 				B045FE602782984E006E36F9 /* Hddrvr.bin */,
 				B045FE712782984F006E36F9 /* Mockingboard-D.rom */,
 				B045FE5F2782984E006E36F9 /* MouseInterface.rom */,
@@ -2765,6 +2769,7 @@
 				B0F97BC02A26758E00461923 /* A2_BASIC.SYM in Resources */,
 				B00BE9EA2A291BD100F288F9 /* InspectorPanels.xib in Resources */,
 				B00ECBD0279EEB600041E16C /* DISK2-13sector.rom in Resources */,
+				979E45D72CF56C2700D6A957 /* HDC-SmartPort.bin in Resources */,
 				B0F43FDE295E4BAD00E79AD7 /* CHARSET82.bmp in Resources */,
 				B00ECBD1279EEB600041E16C /* DISK2.rom in Resources */,
 				B00ECBD2279EEB600041E16C /* MainMenu.xib in Resources */,
@@ -2812,6 +2817,7 @@
 				B0F97BBF2A26758E00461923 /* A2_BASIC.SYM in Resources */,
 				B00BE9E92A291BD100F288F9 /* InspectorPanels.xib in Resources */,
 				B045FE742782984F006E36F9 /* DISK2-13sector.rom in Resources */,
+				979E45D62CF56C2700D6A957 /* HDC-SmartPort.bin in Resources */,
 				B0F43FDD295E4BAD00E79AD7 /* CHARSET82.bmp in Resources */,
 				B045FE7B2782984F006E36F9 /* DISK2.rom in Resources */,
 				B032DE2B277A0C24006DC0F7 /* MainMenu.xib in Resources */,
@@ -3432,7 +3438,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -3468,7 +3474,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -3665,7 +3671,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
@@ -3705,7 +3711,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";

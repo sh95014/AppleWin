@@ -183,8 +183,7 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     displayLinkCallbackCount = 0;
 #endif // SHOW_FPS
     
-    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
+    [self startRunLoopTimer];
     
 #ifdef SHOW_FPS
     [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
@@ -213,6 +212,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [[emulatorVC renderer] updateTextureWithData:emulatorVC->frameBuffer.data];
     });
     return kCVReturnSuccess;
+}
+
+- (void)startRunLoopTimer {
+    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)runLoopTimerFired {
@@ -399,7 +403,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)reboot {
+    // don't try to run the emulator during a restart
+    [self.runLoopTimer invalidate];
     frame->Restart();
+    [self startRunLoopTimer];
     [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidRebootNotification object:self];
 }
 
