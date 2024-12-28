@@ -27,6 +27,15 @@
 		97ACC9CC2C3B2EBE0028821E /* Apple2_Video.rom in Resources */ = {isa = PBXBuildFile; fileRef = 97ACC9CA2C3B2EBE0028821E /* Apple2_Video.rom */; };
 		97ACC9CF2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom in Resources */ = {isa = PBXBuildFile; fileRef = 97ACC9CD2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom */; };
 		97ACC9D02C3B30B30028821E /* Apple2e_Enhanced_Video.rom in Resources */ = {isa = PBXBuildFile; fileRef = 97ACC9CD2C3B2ED60028821E /* Apple2e_Enhanced_Video.rom */; };
+		97D1D54F2D2085D80088C2A2 /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 97D1D5442D2085D80088C2A2 /* crypt.h */; };
+		97D1D5502D2085D80088C2A2 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 97D1D5452D2085D80088C2A2 /* zip.h */; };
+		97D1D5522D2085D80088C2A2 /* iowin32.h in Headers */ = {isa = PBXBuildFile; fileRef = 97D1D5472D2085D80088C2A2 /* iowin32.h */; };
+		97D1D5552D2085D80088C2A2 /* mztools.h in Headers */ = {isa = PBXBuildFile; fileRef = 97D1D54A2D2085D80088C2A2 /* mztools.h */; };
+		97D1D5562D2085D80088C2A2 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 97D1D54B2D2085D80088C2A2 /* ioapi.h */; };
+		97D1D5572D2085D80088C2A2 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = 97D1D54C2D2085D80088C2A2 /* unzip.h */; };
+		97D1D5582D20873D0088C2A2 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 97D1D5462D2085D80088C2A2 /* unzip.c */; };
+		97D1D5592D2087400088C2A2 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 97D1D5422D2085D80088C2A2 /* zip.c */; };
+		97D1D55A2D20875B0088C2A2 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 97D1D5482D2085D80088C2A2 /* ioapi.c */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -151,10 +160,6 @@
 		B0098CF1277E171200F38E0C /* paddle.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A3277A20FA0002A6C3 /* paddle.h */; };
 		B0098CF2277E171200F38E0C /* FourPlay.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB639277A14DB0002A6C3 /* FourPlay.h */; };
 		B0098CF3277E187900F38E0C /* libAppleWin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0098BFA277E0F6800F38E0C /* libAppleWin.a */; };
-		B0098D03277E1D4E00F38E0C /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = B09AB6D8277A16600002A6C3 /* zip.c */; };
-		B0098D04277E1D4F00F38E0C /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = B09AB6D2277A16600002A6C3 /* mztools.c */; };
-		B0098D06277E1D4F00F38E0C /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = B09AB6D0277A16600002A6C3 /* unzip.c */; };
-		B0098D07277E1D4F00F38E0C /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = B09AB6D5277A16600002A6C3 /* ioapi.c */; };
 		B0098D08277E244F00F38E0C /* Registry.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5EF277A14DA0002A6C3 /* Registry.h */; };
 		B00BE9E92A291BD100F288F9 /* InspectorPanels.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00BE9EC2A291BD100F288F9 /* InspectorPanels.xib */; };
 		B00BE9EA2A291BD100F288F9 /* InspectorPanels.xib in Resources */ = {isa = PBXBuildFile; fileRef = B00BE9EC2A291BD100F288F9 /* InspectorPanels.xib */; };
@@ -746,6 +751,17 @@
 		97B92FD32B13AFBA000D8B98 /* gamepad.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = gamepad.cpp; path = source/frontends/sdl/gamepad.cpp; sourceTree = "<group>"; };
 		97B92FD42B13AFCD000D8B98 /* sdlrendererframe.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = sdlrendererframe.cpp; path = source/frontends/sdl/renderer/sdlrendererframe.cpp; sourceTree = "<group>"; };
 		97B92FD52B13AFCD000D8B98 /* sdlrendererframe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sdlrendererframe.h; path = source/frontends/sdl/renderer/sdlrendererframe.h; sourceTree = "<group>"; };
+		97D1D5422D2085D80088C2A2 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = minizip/zip.c; sourceTree = "<group>"; };
+		97D1D5432D2085D80088C2A2 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mztools.c; path = minizip/mztools.c; sourceTree = "<group>"; };
+		97D1D5442D2085D80088C2A2 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypt.h; path = minizip/crypt.h; sourceTree = "<group>"; };
+		97D1D5452D2085D80088C2A2 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = minizip/zip.h; sourceTree = "<group>"; };
+		97D1D5462D2085D80088C2A2 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unzip.c; path = minizip/unzip.c; sourceTree = "<group>"; };
+		97D1D5472D2085D80088C2A2 /* iowin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iowin32.h; path = minizip/iowin32.h; sourceTree = "<group>"; };
+		97D1D5482D2085D80088C2A2 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi.c; path = minizip/ioapi.c; sourceTree = "<group>"; };
+		97D1D5492D2085D80088C2A2 /* iowin32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = iowin32.c; path = minizip/iowin32.c; sourceTree = "<group>"; };
+		97D1D54A2D2085D80088C2A2 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mztools.h; path = minizip/mztools.h; sourceTree = "<group>"; };
+		97D1D54B2D2085D80088C2A2 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioapi.h; path = minizip/ioapi.h; sourceTree = "<group>"; };
+		97D1D54C2D2085D80088C2A2 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = minizip/unzip.h; sourceTree = "<group>"; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1014,18 +1030,6 @@
 		B09AB697277A15D90002A6C3 /* dumper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = dumper.c; path = src/dumper.c; sourceTree = "<group>"; };
 		B09AB698277A15D90002A6C3 /* scanner.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = scanner.c; path = src/scanner.c; sourceTree = "<group>"; };
 		B09AB699277A15D90002A6C3 /* reader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = reader.c; path = src/reader.c; sourceTree = "<group>"; };
-		B09AB6CF277A16600002A6C3 /* iowin32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iowin32.h; path = zip_lib/iowin32.h; sourceTree = "<group>"; };
-		B09AB6D0277A16600002A6C3 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = unzip.c; path = zip_lib/unzip.c; sourceTree = "<group>"; };
-		B09AB6D1277A16600002A6C3 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = zip_lib/unzip.h; sourceTree = "<group>"; };
-		B09AB6D2277A16600002A6C3 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mztools.c; path = zip_lib/mztools.c; sourceTree = "<group>"; };
-		B09AB6D3277A16600002A6C3 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mztools.h; path = zip_lib/mztools.h; sourceTree = "<group>"; };
-		B09AB6D4277A16600002A6C3 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioapi.h; path = zip_lib/ioapi.h; sourceTree = "<group>"; };
-		B09AB6D5277A16600002A6C3 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ioapi.c; path = zip_lib/ioapi.c; sourceTree = "<group>"; };
-		B09AB6D6277A16600002A6C3 /* iowin32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = iowin32.c; path = zip_lib/iowin32.c; sourceTree = "<group>"; };
-		B09AB6D7277A16600002A6C3 /* ChangeLogUnzip */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ChangeLogUnzip; path = zip_lib/ChangeLogUnzip; sourceTree = "<group>"; };
-		B09AB6D8277A16600002A6C3 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zip.c; path = zip_lib/zip.c; sourceTree = "<group>"; };
-		B09AB6D9277A16600002A6C3 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypt.h; path = zip_lib/crypt.h; sourceTree = "<group>"; };
-		B09AB6DA277A16600002A6C3 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = zip_lib/zip.h; sourceTree = "<group>"; };
 		B09AB701277A18540002A6C3 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = win32/config.h; sourceTree = "<group>"; };
 		B09AB706277A1BA30002A6C3 /* Debugger_Disassembler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger_Disassembler.cpp; path = source/Debugger/Debugger_Disassembler.cpp; sourceTree = "<group>"; };
 		B09AB707277A1BA30002A6C3 /* Debugger_DisassemblerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debugger_DisassemblerData.h; path = source/Debugger/Debugger_DisassemblerData.h; sourceTree = "<group>"; };
@@ -1431,6 +1435,24 @@
 			name = sa2;
 			sourceTree = "<group>";
 		};
+		97D1D5392D2085C90088C2A2 /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				97D1D5442D2085D80088C2A2 /* crypt.h */,
+				97D1D5482D2085D80088C2A2 /* ioapi.c */,
+				97D1D54B2D2085D80088C2A2 /* ioapi.h */,
+				97D1D5492D2085D80088C2A2 /* iowin32.c */,
+				97D1D5472D2085D80088C2A2 /* iowin32.h */,
+				97D1D5432D2085D80088C2A2 /* mztools.c */,
+				97D1D54A2D2085D80088C2A2 /* mztools.h */,
+				97D1D5462D2085D80088C2A2 /* unzip.c */,
+				97D1D54C2D2085D80088C2A2 /* unzip.h */,
+				97D1D5422D2085D80088C2A2 /* zip.c */,
+				97D1D5452D2085D80088C2A2 /* zip.h */,
+			);
+			name = minizip;
+			sourceTree = "<group>";
+		};
 		97FF91B32A9965CA006A62A3 /* scripting */ = {
 			isa = PBXGroup;
 			children = (
@@ -1445,7 +1467,7 @@
 			children = (
 				B08DC27527C06B03004987FC /* Mariani-Universal-Info.plist */,
 				B089EF3027BADA8100BDC415 /* Mariani-Info.plist */,
-				B09AB6CE277A164F0002A6C3 /* zip_lib */,
+				97D1D5392D2085C90088C2A2 /* minizip */,
 				B09AB68F277A15A90002A6C3 /* libyaml */,
 				B09AB5E4277A14850002A6C3 /* AppleWin */,
 				B049E82F277B5E2600FC14A3 /* common2 */,
@@ -1804,25 +1826,6 @@
 			);
 			path = libyaml;
 			sourceTree = SOURCE_ROOT;
-		};
-		B09AB6CE277A164F0002A6C3 /* zip_lib */ = {
-			isa = PBXGroup;
-			children = (
-				B09AB6D7277A16600002A6C3 /* ChangeLogUnzip */,
-				B09AB6D9277A16600002A6C3 /* crypt.h */,
-				B09AB6D5277A16600002A6C3 /* ioapi.c */,
-				B09AB6D4277A16600002A6C3 /* ioapi.h */,
-				B09AB6D6277A16600002A6C3 /* iowin32.c */,
-				B09AB6CF277A16600002A6C3 /* iowin32.h */,
-				B09AB6D2277A16600002A6C3 /* mztools.c */,
-				B09AB6D3277A16600002A6C3 /* mztools.h */,
-				B09AB6D0277A16600002A6C3 /* unzip.c */,
-				B09AB6D1277A16600002A6C3 /* unzip.h */,
-				B09AB6D8277A16600002A6C3 /* zip.c */,
-				B09AB6DA277A16600002A6C3 /* zip.h */,
-			);
-			name = zip_lib;
-			sourceTree = "<group>";
 		};
 		B09AB705277A1B830002A6C3 /* Debugger */ = {
 			isa = PBXGroup;
@@ -2259,8 +2262,11 @@
 				B0098CDE277E171100F38E0C /* benchmark.h in Headers */,
 				B0098CDB277E171100F38E0C /* PropertySheetHelper.h in Headers */,
 				B0098CE0277E171100F38E0C /* DiskImage.h in Headers */,
+				97D1D5552D2085D80088C2A2 /* mztools.h in Headers */,
 				B0098CCA277E171100F38E0C /* VidHD.h in Headers */,
+				97D1D5562D2085D80088C2A2 /* ioapi.h in Headers */,
 				B0098CE8277E171100F38E0C /* Core.h in Headers */,
+				97D1D5522D2085D80088C2A2 /* iowin32.h in Headers */,
 				B0098CCD277E171100F38E0C /* ParallelPrinter.h in Headers */,
 				B0098CBB277E171100F38E0C /* DiskLog.h in Headers */,
 				B089EF3327BB051900BDC415 /* StrFormat.h in Headers */,
@@ -2268,6 +2274,7 @@
 				B0F43FD2295E49FD00E79AD7 /* joystickapi.h in Headers */,
 				B0F43FD0295E48DA00E79AD7 /* CopyProtectionDongles.h in Headers */,
 				B0098CBD277E171100F38E0C /* LanguageCard.h in Headers */,
+				97D1D5502D2085D80088C2A2 /* zip.h in Headers */,
 				B0098CCB277E171100F38E0C /* 6821.h in Headers */,
 				B0098CB7277E171100F38E0C /* SSI263Phonemes.h in Headers */,
 				B0098CE9277E171200F38E0C /* Disk.h in Headers */,
@@ -2277,6 +2284,7 @@
 				B0098CDA277E171100F38E0C /* SynchronousEventManager.h in Headers */,
 				B0098CD6277E171100F38E0C /* SAM.h in Headers */,
 				B0098CC6277E171100F38E0C /* cassettetape.h in Headers */,
+				97D1D5572D2085D80088C2A2 /* unzip.h in Headers */,
 				B0F84FFD27D1B3F30015F642 /* W5100.h in Headers */,
 				B0098CD4277E171100F38E0C /* Tape.h in Headers */,
 				B0098CB8277E171100F38E0C /* linuxinterface.h in Headers */,
@@ -2284,6 +2292,7 @@
 				B0098CC5277E171100F38E0C /* NTSC.h in Headers */,
 				B0098CDC277E171100F38E0C /* Interface.h in Headers */,
 				B0098CE1277E171100F38E0C /* Harddisk.h in Headers */,
+				97D1D54F2D2085D80088C2A2 /* crypt.h in Headers */,
 				B0098CBF277E171100F38E0C /* NTSC_CharSet.h in Headers */,
 				B0098CBE277E171100F38E0C /* linuxframe.h in Headers */,
 				B0098CEF277E171200F38E0C /* Video.h in Headers */,
@@ -2865,7 +2874,6 @@
 			files = (
 				B0F8500227D1B44F0015F642 /* NetworkBackend.cpp in Sources */,
 				B0BAB4AA29B42CAA008F54D7 /* MockingboardCardManager.cpp in Sources */,
-				B0098D06277E1D4F00F38E0C /* unzip.c in Sources */,
 				B0098C88277E140100F38E0C /* RGBMonitor.cpp in Sources */,
 				97ACC9C42C3B2C3E0028821E /* PageSound.cpp in Sources */,
 				B0098C9D277E144E00F38E0C /* slirp2.cpp in Sources */,
@@ -2910,6 +2918,7 @@
 				97ACC9C52C3B2C3E0028821E /* PageAdvanced.cpp in Sources */,
 				B0098C8B277E140100F38E0C /* z80emu.cpp in Sources */,
 				B0098CA2277E144E00F38E0C /* registryclass.cpp in Sources */,
+				97D1D5582D20873D0088C2A2 /* unzip.c in Sources */,
 				B0098C94277E140100F38E0C /* AY8910.cpp in Sources */,
 				B089EF3427BB051900BDC415 /* StrFormat.cpp in Sources */,
 				B0098C9B277E141600F38E0C /* PropertySheetHelper.cpp in Sources */,
@@ -2918,7 +2927,6 @@
 				B095D52F27ED7D0000498D51 /* IPRaw.cpp in Sources */,
 				B0098C9F277E144E00F38E0C /* linuxframe.cpp in Sources */,
 				B0098C76277E140100F38E0C /* CmdLine.cpp in Sources */,
-				B0098D03277E1D4E00F38E0C /* zip.c in Sources */,
 				B0098C8F277E140100F38E0C /* NTSC_CharSet.cpp in Sources */,
 				B0098C84277E140100F38E0C /* Utilities.cpp in Sources */,
 				B0098CA1277E144E00F38E0C /* context.cpp in Sources */,
@@ -2926,17 +2934,17 @@
 				B0098C7C277E140100F38E0C /* Core.cpp in Sources */,
 				B0098C93277E140100F38E0C /* LanguageCard.cpp in Sources */,
 				B0098CAA277E147500F38E0C /* FourPlay.cpp in Sources */,
+				97D1D55A2D20875B0088C2A2 /* ioapi.c in Sources */,
 				B0098C90277E140100F38E0C /* Speaker.cpp in Sources */,
 				97ACC9C22C3B2C3E0028821E /* PageConfig.cpp in Sources */,
 				B0098C8E277E140100F38E0C /* 6821.cpp in Sources */,
 				B05778E3285D7F0E00614907 /* Config.cpp in Sources */,
-				B0098D04277E1D4F00F38E0C /* mztools.c in Sources */,
+				97D1D5592D2087400088C2A2 /* zip.c in Sources */,
 				B0098C8C277E140100F38E0C /* MouseInterface.cpp in Sources */,
 				B0098C85277E140100F38E0C /* Card.cpp in Sources */,
 				B0F43FCF295E48DA00E79AD7 /* CopyProtectionDongles.cpp in Sources */,
 				97ACC9C62C3B2C3E0028821E /* PageConfigTfe.cpp in Sources */,
 				B0098C7D277E140100F38E0C /* SaveState.cpp in Sources */,
-				B0098D07277E1D4F00F38E0C /* ioapi.c in Sources */,
 				B0098C81277E140100F38E0C /* Disk.cpp in Sources */,
 				B0098C96277E140100F38E0C /* VidHD.cpp in Sources */,
 				B0098C7A277E140100F38E0C /* CardManager.cpp in Sources */,
@@ -3390,6 +3398,7 @@
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = (
+					.,
 					source,
 					source/linux/libwindows,
 					libyaml/include,
@@ -3416,6 +3425,7 @@
 					"$(inherited)",
 				);
 				HEADER_SEARCH_PATHS = (
+					.,
 					source,
 					source/linux/libwindows,
 					libyaml/include,
