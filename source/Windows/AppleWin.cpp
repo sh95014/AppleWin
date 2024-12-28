@@ -179,7 +179,7 @@ static void ContinueExecution(void)
 	const bool bWasFullSpeed = g_bFullSpeed;
 	g_bFullSpeed =	 (g_dwSpeed == SPEED_MAX) || 
 					 bScrollLock_FullSpeed ||
-					 (GetCardMgr().GetDisk2CardMgr().IsConditionForFullSpeed() && !Spkr_IsActive() && !GetCardMgr().GetMockingboardCardMgr().IsActive()) ||
+					 (GetCardMgr().GetDisk2CardMgr().IsConditionForFullSpeed() && !Spkr_IsActive() && !GetCardMgr().GetMockingboardCardMgr().IsActiveToPreventFullSpeed()) ||
 					 IsDebugSteppingAtFullSpeed();
 
 	if (g_bFullSpeed)
@@ -219,18 +219,18 @@ static void ContinueExecution(void)
 	const UINT uCyclesToExecuteWithFeedback = (nCyclesWithFeedback >= 0) ? nCyclesWithFeedback
 																		 : 0;
 
-	const DWORD uCyclesToExecute = (g_nAppMode == MODE_RUNNING)		? uCyclesToExecuteWithFeedback
+	const uint32_t uCyclesToExecute = (g_nAppMode == MODE_RUNNING)		? uCyclesToExecuteWithFeedback
 												/* MODE_STEPPING */ : 0;
 
 	const bool bVideoUpdate = !g_bFullSpeed;
-	const DWORD uActualCyclesExecuted = CpuExecute(uCyclesToExecute, bVideoUpdate);
+	const uint32_t uActualCyclesExecuted = CpuExecute(uCyclesToExecute, bVideoUpdate);
 	g_dwCyclesThisFrame += uActualCyclesExecuted;
 
 	GetCardMgr().Update(uActualCyclesExecuted);
 
 	//
 
-	DWORD uSpkrActualCyclesExecuted = uActualCyclesExecuted;
+	uint32_t uSpkrActualCyclesExecuted = uActualCyclesExecuted;
 
 	bool bModeStepping_WaitTimer = false;
 	if (g_nAppMode == MODE_STEPPING && !IsDebugSteppingAtFullSpeed())
@@ -959,6 +959,7 @@ static void RepeatInitialization(void)
 			// Override value just loaded from Registry by LoadConfiguration()
 			// . NB. Registry value is not updated with this cmd-line value
 			Snapshot_SetFilename(g_cmdLine.szSnapshotName);
+			Snapshot_SetIgnoreHdcFirmware(g_cmdLine.snapshotIgnoreHdcFirmware);
 			Snapshot_LoadState();
 			g_cmdLine.bBoot = true;
 			g_cmdLine.szSnapshotName = NULL;

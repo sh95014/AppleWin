@@ -128,7 +128,8 @@
 	enum
 	{
 		// raised from 13 to 31 for Contiki
-		MAX_SYMBOLS_LEN = 31
+		// raised from 31 to 51 (GH#1342)
+		MAX_SYMBOLS_LEN = 51
 	};
 
 // Bookmarks ______________________________________________________________________________________
@@ -217,7 +218,7 @@
 		bool                 bTemp    ; // If true then remove BP when hit or stepping cancelled (eg. G xxxx)
 		bool                 bHit     ; // true when the breakpoint has just been hit
 		bool                 bStop    ; // true if the debugger stops when it is hit
-		DWORD                nHitCount; // number of times the breakpoint was hit
+		uint32_t             nHitCount; // number of times the breakpoint was hit
 	};
 
 	typedef Breakpoint_t Bookmark_t;

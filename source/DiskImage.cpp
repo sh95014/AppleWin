@@ -73,6 +73,10 @@ ImageError_e ImageOpen(	const std::string & pszImageFilename,
 			*ppImageInfo = NULL;
 			Err = eIMAGE_ERROR_UNSUPPORTED_HDV;
 		}
+
+		if (Err == eIMAGE_ERROR_NONE)
+			*pWriteProtected = pImageInfo->bWriteProtected;
+
 		return Err;
 	}
 
@@ -162,7 +166,7 @@ void ImageWriteTrack(	ImageInfo* const pImageInfo,
 		eImageType imageType = pImageInfo->pImageType->GetType();
 		if (imageType == eImageWOZ1 || imageType == eImageWOZ2)
 		{
-			DWORD dummy;
+			uint32_t dummy;
 			bool res = sg_DiskImageHelper.WOZUpdateInfo(pImageInfo, dummy);
 			_ASSERT(res);
 		}

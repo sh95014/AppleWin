@@ -60,7 +60,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // This is not available in Windows CRT:
 // https://en.cppreference.com/w/c/memory/aligned_alloc
 
-#ifdef _MSC_VER
+#ifdef _WIN32
 // VirtualAlloc is aligned
 #define ALIGNED_ALLOC(size) (LPBYTE)VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_READWRITE)
 #define ALIGNED_FREE(ptr) VirtualFree(ptr, 0, MEM_RELEASE)
@@ -225,7 +225,7 @@ static LPBYTE	pCxRomPeripheral	= NULL;
 
 static LPBYTE g_pMemMainLanguageCard = NULL;
 
-static DWORD   g_memmode = LanguageCardUnit::kMemModeInitialState;
+static uint32_t   g_memmode = LanguageCardUnit::kMemModeInitialState;
 static BOOL    modechanging = 0;				// An Optimisation: means delay calling UpdatePaging() for 1 instruction
 
 static UINT    memrompages = 1;
@@ -244,7 +244,7 @@ static const UINT kNumAnnunciators = 4;
 static bool g_Annunciator[kNumAnnunciators] = {};
 
 static const UINT num64KPages = 2;  // number of 64K pages used to create hardware circular buffer
-#ifdef _MSC_VER
+#ifdef _WIN32
 static HANDLE g_hMemImage = NULL;	// NB. When not initialised, this handle is NULL (not INVALID_HANDLE_VALUE)
 #else
 static FILE * g_hMemTempFile = NULL;
@@ -1090,16 +1090,16 @@ static bool IsCardInSlot(UINT slot)
 
 //===========================================================================
 
-DWORD GetMemMode(void)
+uint32_t GetMemMode(void)
 {
 	return g_memmode;
 }
 
-void SetMemMode(DWORD uNewMemMode)
+void SetMemMode(uint32_t uNewMemMode)
 {
 #if defined(_DEBUG) && 0
-	static DWORD dwOldDiff = 0;
-	DWORD dwDiff = g_memmode ^ uNewMemMode;
+	static uint32_t dwOldDiff = 0;
+	uint32_t dwDiff = g_memmode ^ uNewMemMode;
 	dwDiff &= ~(MF_SLOTC3ROM | MF_INTCXROM);
 	if (dwOldDiff != dwDiff)
 	{
@@ -1528,7 +1528,7 @@ bool MemIsAddrCodeMemory(const USHORT addr)
 
 static void FreeMemImage(void)
 {
-#ifdef _MSC_VER
+#ifdef _WIN32
 	if (g_hMemImage)
 	{
 		for (UINT i = 0; i < num64KPages; i++)
@@ -1559,7 +1559,7 @@ static void FreeMemImage(void)
 
 static LPBYTE AllocMemImage(void)
 {
-#ifdef _MSC_VER
+#ifdef _WIN32
 	LPBYTE baseAddr = NULL;
 
 	// Allocate memory for 'memimage' (and the alias 'mem')
@@ -1952,7 +1952,7 @@ void MemInitializeFromSnapshot(void)
 	}
 }
 
-inline DWORD getRandomTime()
+inline uint32_t getRandomTime()
 {
 	return rand() ^ timeGetTime(); // We can't use g_nCumulativeCycles as it will be zero on a fresh execution.
 }
@@ -1993,7 +1993,7 @@ void MemReset()
 	//   F2. Ctrl-F2. CALL-151, C050 C053 C057
 	// OR
 	//   F2, Ctrl-F2, F7, HGR
-	DWORD randTime = getRandomTime();
+	uint32_t randTime = getRandomTime();
 	MemoryInitPattern_e eMemoryInitPattern = static_cast<MemoryInitPattern_e>(g_nMemoryClearType);
 
 	if (g_nMemoryClearType < 0)	// random
@@ -2173,7 +2173,7 @@ static void DebugFlip(WORD address, ULONG nExecutedCycles)
 BYTE __stdcall MemSetPaging(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nExecutedCycles)
 {
 	address &= 0xFF;
-	DWORD lastmemmode = g_memmode;
+	uint32_t lastmemmode = g_memmode;
 #if defined(_DEBUG) && defined(DEBUG_FLIP_TIMINGS)
 	DebugFlip(address, nExecutedCycles);
 #endif

@@ -18,11 +18,14 @@
 #include "emulator.h"
 #include "memorycontainer.h"
 #include "qdirectsound.h"
-#include "gamepadpaddle.h"
 #include "preferences.h"
 #include "configuration.h"
 #include "audioinfo.h"
 #include "qtframe.h"
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#include "gamepadpaddle.h"
+#endif
 
 #include <QMdiSubWindow>
 #include <QMessageBox>
@@ -193,7 +196,7 @@ void QApple::on_timer()
 
     const qint64 maximumToRun = 10 * myOptions.msGap * audioAdjustedSpeed * 1.0e-3;  // just to avoid crazy times (e.g. debugging)
     const qint64 toRun = std::min(targetCycles - currentCycles, maximumToRun);
-    const DWORD uCyclesToExecute = toRun;
+    const uint32_t uCyclesToExecute = toRun;
 
     const bool bVideoUpdate = true;
 
@@ -205,7 +208,7 @@ void QApple::on_timer()
     int count = 0;
     do
     {
-        const DWORD uActualCyclesExecuted = CpuExecute(uCyclesToExecute, bVideoUpdate);
+        const uint32_t uActualCyclesExecuted = CpuExecute(uCyclesToExecute, bVideoUpdate);
         g_dwCyclesThisFrame += uActualCyclesExecuted;
         cardManager.Update(uActualCyclesExecuted);
         SpkrUpdate(uActualCyclesExecuted);
@@ -346,8 +349,10 @@ void QApple::reloadOptions()
 {
     myFrame->FrameRefreshStatus(DRAW_TITLE);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Paddle::instance = GamepadPaddle::fromName(myOptions.gamepadName);
     Paddle::setSquaring(myOptions.gamepadSquaring);
+#endif
     QDirectSound::setOptions(myOptions.msAudioBuffer);
 }
 

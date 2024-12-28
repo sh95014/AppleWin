@@ -69,7 +69,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define SSI_CTTRAMP	0x03
 #define SSI_FILFREQ	0x04
 
-const DWORD SAMPLE_RATE_SSI263 = 22050;
+const uint32_t SAMPLE_RATE_SSI263 = 22050;
 
 //-----------------------------------------------------------------------------
 
@@ -417,7 +417,7 @@ void SSI263::Update(void)
 	if (!SSI263SingleVoice.bActive)
 		return;
 
-	if (g_bFullSpeed)	// ie. only true when IsPhonemeActive() is true
+	if (g_bFullSpeed)	// NB. if true, then it's irrespective of IsPhonemeActive()
 	{
 		if (m_phonemeLengthRemaining)
 		{
@@ -444,7 +444,7 @@ void SSI263::Update(void)
 
 	// NB. next call to this function: nowNormalSpeed = false
 	if (nowNormalSpeed)
-		m_byteOffset = (DWORD)-1;	// ...which resets m_numSamplesError below
+		m_byteOffset = (uint32_t)-1;	// ...which resets m_numSamplesError below
 
 	//-------------
 
@@ -455,7 +455,7 @@ void SSI263::Update(void)
 
 	bool prefillBufferOnInit = false;
 
-	if (m_byteOffset == (DWORD)-1)
+	if (m_byteOffset == (uint32_t)-1)
 	{
 		// First time in this func (or transitioned from full-speed to normal speed, or a ring-buffer reset)
 #ifdef DBG_SSI263_UPDATE
@@ -577,7 +577,7 @@ void SSI263::Update(void)
 			// When the AppleWin code restarts and reads the ring-buffer position it'll be at a random point, and maybe nearly full (>50% full)
 			// - so the code waits until it drains (nNumSamples=0 each time)
 			// - but it takes a large number of calls to this func to drain to an acceptable level
-			m_byteOffset = (DWORD)-1;
+			m_byteOffset = (uint32_t)-1;
 #if defined(DBG_SSI263_UPDATE)
 			double fTicksSecs = (double)GetTickCount() / 1000.0;
 			LogOutput("%010.3f: [SSUpdt%1d]    Reset ring-buffer\n", fTicksSecs, m_device);
@@ -658,7 +658,7 @@ void SSI263::Update(void)
 	short *pDSLockedBuffer0, *pDSLockedBuffer1;
 
 	hr = DSGetLock(SSI263SingleVoice.lpDSBvoice,
-		m_byteOffset, (DWORD)nNumSamples * sizeof(short) * m_kNumChannels,
+		m_byteOffset, (uint32_t)nNumSamples * sizeof(short) * m_kNumChannels,
 		&pDSLockedBuffer0, &dwDSLockedBufferSize0,
 		&pDSLockedBuffer1, &dwDSLockedBufferSize1);
 	if (FAILED(hr))
@@ -674,7 +674,7 @@ void SSI263::Update(void)
 	if (FAILED(hr))
 		return;
 
-	m_byteOffset = (m_byteOffset + (DWORD)nNumSamples*sizeof(short)*m_kNumChannels) % m_kDSBufferByteSize;
+	m_byteOffset = (m_byteOffset + (uint32_t)nNumSamples*sizeof(short)*m_kNumChannels) % m_kDSBufferByteSize;
 
 	//
 
@@ -697,9 +697,14 @@ void SSI263::Update(void)
 	if (m_phonemeLeadoutLength == 0)
 	{
 		if (!m_isVotraxPhoneme)
-			Play(m_durationPhoneme & PHONEME_MASK);		// Repeat this phoneme again
+		{
+			if ((m_ctrlArtAmp & CONTROL_MASK) == 0)
+				Play(m_durationPhoneme & PHONEME_MASK);		// Repeat this phoneme again
+		}
 //		else	// GH#1318 - remove for now, as TR v5.1 can start with repeating phoneme in debugger 'g' mode!
+//		{
 //			Play(m_Votrax2SSI263[m_votraxPhoneme]);		// Votrax phoneme repeats too (tested in MAME 0.262)
+//		}
 	}
 }
 
@@ -837,6 +842,9 @@ bool SSI263::DSInit(void)
 	// Create single SSI263 voice
 	//
 
+	if (!g_bDSAvailable)
+		return false;
+
 	HRESULT hr = DSGetSoundBuffer(&SSI263SingleVoice, DSBCAPS_CTRLVOLUME, m_kDSBufferByteSize, SAMPLE_RATE_SSI263, m_kNumChannels, "SSI263");
 	LogFileOutput("SSI263::DSInit: DSGetSoundBuffer(), hr=0x%08X\n", hr);
 	if (FAILED(hr))
@@ -911,7 +919,7 @@ void SSI263::Unmute(void)
 	}
 }
 
-void SSI263::SetVolume(DWORD dwVolume, DWORD dwVolumeMax)
+void SSI263::SetVolume(uint32_t dwVolume, uint32_t dwVolumeMax)
 {
 	SSI263SingleVoice.dwUserVolume = dwVolume;
 
