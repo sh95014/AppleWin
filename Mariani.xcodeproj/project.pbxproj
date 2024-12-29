@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		973F68112D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */; };
+		973F68122D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */; };
+		973F681C2D21E7CC00309C45 /* NSWindow+AccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */; };
+		973F681D2D21E7CC00309C45 /* NSWindow+AccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */; };
 		97419F302AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
 		97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
 		9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
@@ -724,6 +728,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSWindow+AccessoryView.h"; sourceTree = "<group>"; };
+		973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+AccessoryView.m"; sourceTree = "<group>"; };
 		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
 		9765C6162B26452B00C8AF42 /* cadirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cadirectsound.cpp; sourceTree = "<group>"; };
 		976D11A92B379D9000EEA1D6 /* CharacterMappings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharacterMappings.h; sourceTree = "<group>"; };
@@ -2221,6 +2227,8 @@
 				B08CFE4827889D44002B841D /* DiskImageWrapper.mm */,
 				B043659327B8769E00329469 /* NSMutableString+RTF.h */,
 				B043659427B8769E00329469 /* NSMutableString+RTF.m */,
+				973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */,
+				973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */,
 				B0F25BCF2789B2DB0080523F /* DiskImageBrowser.xib */,
 			);
 			path = browser;
@@ -2320,6 +2328,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				973F68122D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2390,6 +2399,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				973F68112D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AB2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2979,6 +2989,7 @@
 				B00ECB8C279EEB600041E16C /* utils.cpp in Sources */,
 				B00ECB8D279EEB600041E16C /* winnls.cpp in Sources */,
 				B00ECB8E279EEB600041E16C /* misc.cpp in Sources */,
+				973F681D2D21E7CC00309C45 /* NSWindow+AccessoryView.m in Sources */,
 				B00ECB90279EEB600041E16C /* DiskImageBrowserWindowController.mm in Sources */,
 				B00ECB92279EEB600041E16C /* Speech.cpp in Sources */,
 				B00ECB93279EEB600041E16C /* EmulatorRenderer.m in Sources */,
@@ -3054,6 +3065,7 @@
 				B049E83F277B61AC00FC14A3 /* utils.cpp in Sources */,
 				B09AB81A277A21410002A6C3 /* winnls.cpp in Sources */,
 				B09AB80F277A21410002A6C3 /* misc.cpp in Sources */,
+				973F681C2D21E7CC00309C45 /* NSWindow+AccessoryView.m in Sources */,
 				B08CFE56278949F2002B841D /* DiskImageBrowserWindowController.mm in Sources */,
 				B09AB674277A14DB0002A6C3 /* Speech.cpp in Sources */,
 				B049E8A3277C44B100FC14A3 /* EmulatorRenderer.m in Sources */,

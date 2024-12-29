@@ -35,6 +35,7 @@
 #import "DiskImg.h"
 #import <HexFiend/HexFiend.h>
 #import "DataFormatBASIC.h"
+#import "NSWindow+AccessoryView.h"
 
 using namespace DiskImgLib;
 
@@ -79,6 +80,9 @@ using namespace DiskImgLib;
 @property DiskFS *diskFS;
 
 @property (strong) HFController *hfController;
+@property (strong) HFLayoutRepresenter *layoutRep;
+@property (strong) HFHexTextRepresenter *hexRep;
+@property (assign) BOOL showingHexView;
 
 @end
 
@@ -341,7 +345,16 @@ NSArray *fileTypeStrings = @[
 - (void)previewFile:(FSItem *)fsItem withData:(NSData *)data {
     self.filePreviewPanel.contentView.subviews = @[];
     self.filePreviewPanel.title = fsItem.name;
-
+    self.showingHexView = YES;
+    
+    // window title bar button to toggle hex view
+    NSImage *image = [NSImage imageWithSystemSymbolName:@"sidebar.right" accessibilityDescription:@""];
+    NSButton *toggleHexViewButton = [NSButton buttonWithImage:image target:self action:@selector(toggleHexView:)];
+    toggleHexViewButton.bezelStyle = NSBezelStyleAccessoryBar;
+    toggleHexViewButton.bordered = NO;
+    CGFloat x = self.filePreviewPanel.frame.size.width - 45;
+    [self.filePreviewPanel addViewToTitleBar:toggleHexViewButton atXPosition:x];
+    
     NSView *layoutView;
     
     const BOOL isApplesoftBASIC = [fsItem.kind hasPrefix:@"BAS"];
@@ -369,31 +382,25 @@ NSArray *fileTypeStrings = @[
         [byteArray insertByteSlice:byteSlice inRange:HFRangeMake(0, 0)];
         [self.hfController setByteArray:byteArray];
         
-        HFLayoutRepresenter *layoutRep = [[HFLayoutRepresenter alloc] init];
+        self.layoutRep = [[HFLayoutRepresenter alloc] init];
         HFLineCountingRepresenter *lcRep = [[HFLineCountingRepresenter alloc] init];
-        HFHexTextRepresenter *hexRep = [[HFHexTextRepresenter alloc] init];
+        self.hexRep = [[HFHexTextRepresenter alloc] init];
         HFStringEncodingTextRepresenter *asciiRep = [[HFStringEncodingTextRepresenter alloc] init];
         HFVerticalScrollerRepresenter *scrollRep = [[HFVerticalScrollerRepresenter alloc] init];
         HFStatusBarRepresenter *statusRep = [[HFStatusBarRepresenter alloc] init];
         
-        [self.hfController addRepresenter:layoutRep];
+        [self.hfController addRepresenter:self.layoutRep];
         [self.hfController addRepresenter:lcRep];
-        [self.hfController addRepresenter:hexRep];
         [self.hfController addRepresenter:asciiRep];
         [self.hfController addRepresenter:scrollRep];
         [self.hfController addRepresenter:statusRep];
         
-        [layoutRep addRepresenter:lcRep];
-        [layoutRep addRepresenter:hexRep];
-        [layoutRep addRepresenter:asciiRep];
-        [layoutRep addRepresenter:scrollRep];
-        [layoutRep addRepresenter:statusRep];
+        [self.layoutRep addRepresenter:lcRep];
+        [self.layoutRep addRepresenter:asciiRep];
+        [self.layoutRep addRepresenter:scrollRep];
+        [self.layoutRep addRepresenter:statusRep];
         
-        // shrink the window to exactly fit desired bytes per row
-        CGRect frame = self.filePreviewPanel.frame;
-        frame.size.width = [layoutRep minimumViewWidthForBytesPerLine:16];
-        [self.filePreviewPanel setFrame:frame display:NO];
-        layoutView = [layoutRep view];
+        layoutView = [self layoutHFView];
     }
     
     [layoutView setFrame:self.filePreviewPanel.contentView.bounds];
@@ -401,6 +408,28 @@ NSArray *fileTypeStrings = @[
     [self.filePreviewPanel.contentView addSubview:layoutView];
     
     [self.filePreviewPanel orderFront:self];
+}
+
+- (NSView *)layoutHFView {
+    if (self.showingHexView) {
+        [self.hfController addRepresenter:self.hexRep];
+        [self.layoutRep addRepresenter:self.hexRep];
+    }
+    else {
+        [self.hfController removeRepresenter:self.hexRep];
+        [self.layoutRep removeRepresenter:self.hexRep];
+    }
+    
+    // shrink the window to exactly fit desired bytes per row
+    CGRect frame = self.filePreviewPanel.frame;
+    frame.size.width = [self.layoutRep minimumViewWidthForBytesPerLine:self.showingHexView ? 16 : 80];
+    [self.filePreviewPanel setFrame:frame display:NO];
+    return [self.layoutRep view];
+}
+
+- (void)toggleHexView:(id)sender {
+    self.showingHexView = !self.showingHexView;
+    [self layoutHFView];
 }
 
 @end
