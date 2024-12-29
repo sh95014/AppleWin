@@ -133,7 +133,7 @@ std::shared_ptr<mariani::MarianiFrame> frame;
     _view.enableSetNeedsDisplay = NO;
     _view.device = MTLCreateSystemDefaultDevice();
     _view.numericKeyDelegate = self;
-#ifdef DEBUG
+#ifdef DEBUG_BLUE_BACKGROUND
     //  useful for debugging quad sizing issues.
     _view.clearColor = MTLClearColorMake(0.0, 0.15, 0.3, 0.3);
 #endif
