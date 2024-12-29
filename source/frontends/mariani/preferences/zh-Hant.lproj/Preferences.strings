@@ -31,8 +31,8 @@
 /* Class = "NSButton"; ibShadowedToolTip = "Enables faster but less authentic disk access"; ObjectID = "T3p-Y6-znB"; */
 "T3p-Y6-znB.ibShadowedToolTip" = "啟動較快但不真實的磁碟存取速度";
 
-/* Class = "NSButtonCell"; title = "Show developer tools in menu"; ObjectID = "WZG-yc-ihw"; */
-"WZG-yc-ihw.title" = "在選單裡顯示開發者項目";
+/* Class = "NSButtonCell"; title = "Map Delete key to Left Arrow"; ObjectID = "WZG-yc-ihw"; */
+"WZG-yc-ihw.title" = "將 delete 鍵對映至左箭頭鍵";
 
 /* Class = "NSTextFieldCell"; title = "4:"; ObjectID = "bzG-BW-JSW"; */
 "bzG-BW-JSW.title" = "4:";

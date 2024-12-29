@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="Nar-td-vuO">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="Nar-td-vuO">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -72,19 +72,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="110"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Sk-BC-urJ">
-                                <rect key="frame" x="88" y="73" width="272" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="check" title="Show developer tools in menu" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="WZG-yc-ihw">
-                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="toggleDeveloperTools:" target="FE3-Py-9oA" id="9CA-oJ-Xel"/>
-                                </connections>
-                            </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1jL-0T-Ueg">
-                                <rect key="frame" x="18" y="48" width="120" height="16"/>
+                                <rect key="frame" x="18" y="74" width="120" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Screenshots:" id="rzE-im-fXn">
                                     <font key="font" metaFont="system"/>
@@ -93,7 +82,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kMV-5F-R0o">
-                                <rect key="frame" x="144" y="45" width="286" height="19"/>
+                                <rect key="frame" x="144" y="71" width="286" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="roundRect" title="Button" bezelStyle="roundedRect" image="folder" catalog="system" imagePosition="trailing" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5k3-sD-Bqh">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -104,7 +93,7 @@
                                 </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8xS-yz-Uo1">
-                                <rect key="frame" x="18" y="22" width="120" height="16"/>
+                                <rect key="frame" x="18" y="48" width="120" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Recordings:" id="zxc-fb-W3p">
                                     <font key="font" metaFont="system"/>
@@ -113,7 +102,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yKR-pP-KWE">
-                                <rect key="frame" x="144" y="19" width="286" height="19"/>
+                                <rect key="frame" x="144" y="45" width="286" height="19"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="roundRect" title="Button" bezelStyle="roundedRect" image="folder" catalog="system" imagePosition="right" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="WV6-AZ-bPD">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -123,13 +112,24 @@
                                     <action selector="recordingsFolderAction:" target="FE3-Py-9oA" id="pnB-1N-yKL"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Sk-BC-urJ">
+                                <rect key="frame" x="88" y="19" width="342" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="Map Delete key to Left Arrow" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="WZG-yc-ihw">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="toggleMapDeleteKeyToLeftArrow:" target="FE3-Py-9oA" id="JP5-rE-pJy"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="vcId" value="general"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <outlet property="generalDeveloperToolsButton" destination="3Sk-BC-urJ" id="e42-jh-Eku"/>
+                        <outlet property="generalMapDeleteKeyToLeftArrowButton" destination="3Sk-BC-urJ" id="RBM-0C-hBE"/>
                         <outlet property="generalRecordingsFolderButton" destination="yKR-pP-KWE" id="fSH-Bs-DCJ"/>
                         <outlet property="generalScreenshotsFolderButton" destination="kMV-5F-R0o" id="Z4Z-8o-8uT"/>
                     </connections>

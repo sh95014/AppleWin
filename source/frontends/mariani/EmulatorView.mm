@@ -82,7 +82,11 @@ enum {
             ch = ASCII_CR;
             break;
         case kVK_Delete:
-            if (event.modifierFlags & NSEventModifierFlagOption) {
+            // A macOS user might be accustomed to using [delete] key as backspace, so
+            // leaving that as an option for now ([delete]->left arrow, [option]+[delete]
+            // to delete).
+            if (![UserDefaults sharedInstance].mapDeleteKeyToLeftArrow ||
+                event.modifierFlags & NSEventModifierFlagOption) {
                 ch = ASCII_DEL;
                 break;
             }

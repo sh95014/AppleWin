@@ -54,9 +54,9 @@ using namespace DiskImgLib;
 
 @interface PreferencesViewController ()
 
-@property (strong) IBOutlet NSButton *generalDeveloperToolsButton;
 @property (strong) IBOutlet NSButton *generalScreenshotsFolderButton;
 @property (strong) IBOutlet NSButton *generalRecordingsFolderButton;
+@property (strong) IBOutlet NSButton *generalMapDeleteKeyToLeftArrowButton;
 
 @property (strong) IBOutlet NSPopUpButton *computerMainBoardButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot1Button;
@@ -152,14 +152,13 @@ BOOL configured;
 - (void)configureGeneral {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    self.generalDeveloperToolsButton.state = NSControlStateValueOff;
-    self.generalDeveloperToolsButton.enabled = NO;
-
     NSURL *folder = [[UserDefaults sharedInstance] screenshotsFolder];
     self.generalScreenshotsFolderButton.title = [folder.path stringByAbbreviatingWithTildeInPath];
 
     folder = [[UserDefaults sharedInstance] recordingsFolder];
     self.generalRecordingsFolderButton.title = [folder.path stringByAbbreviatingWithTildeInPath];
+
+    self.generalMapDeleteKeyToLeftArrowButton.state = [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow ? NSControlStateValueOn : NSControlStateValueOff;
 }
 
 // types of main boards, ordered as we want them to appear in UI
@@ -363,8 +362,11 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 
 #pragma mark - Actions
 
-- (IBAction)toggleDeveloperTools:(id)sender {
+- (IBAction)toggleMapDeleteKeyToLeftArrow:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
+
+    BOOL mapDeleteKeyToLeftArrow = [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow;
+    [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow = !mapDeleteKeyToLeftArrow;
 }
 
 - (IBAction)recordingsFolderAction:(id)sender {

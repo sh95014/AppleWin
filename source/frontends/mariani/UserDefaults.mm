@@ -11,6 +11,7 @@
 
 #define RECORDINGS_FOLDER_KEY           @"RecordingsFolder"
 #define SCREENSHOTS_FOLDER_KEY          @"ScreenshotsFolder"
+#define MAP_DELETE_KEY_TO_LEFT_ARROW    @"MapDeleteKeyToLeftArrow"
 #define GAME_CONTROLLER_KEY             @"GameController"
 #define JOYSTICK_MAPPING_KEY            @"JoystickMapping"
 #define JOYSTICK_BUTTON0_MAPPING_KEY    @"JoystickButton0Mapping"
@@ -58,6 +59,14 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 - (void)setScreenshotsFolder:(NSURL *)screenshotsFolder {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setURL:screenshotsFolder forKey:SCREENSHOTS_FOLDER_KEY];
+}
+
+- (BOOL)mapDeleteKeyToLeftArrow {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:MAP_DELETE_KEY_TO_LEFT_ARROW];
+}
+
+- (void)setMapDeleteKeyToLeftArrow:(BOOL)mapDeleteKeyToLeftArrow {
+    [[NSUserDefaults standardUserDefaults] setBool:mapDeleteKeyToLeftArrow forKey:MAP_DELETE_KEY_TO_LEFT_ARROW];
 }
 
 - (NSString *)gameController {
