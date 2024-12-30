@@ -93,6 +93,8 @@ using namespace DiskImgLib;
 @property (strong) MemoryViewerWindowController *memoryWC;
 @property (strong) DebuggerWindowController *debuggerWC;
 
+@property (atomic) NSInteger driveSwapCount;
+
 @end
 
 static void DiskImgMsgHandler(const char *file, int line, const char *msg);
@@ -172,9 +174,15 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 }];
                 break;
             }
-            case kVK_F5:
+            case kVK_F5: {
+                self.driveSwapCount++;
                 dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(SLOT6)).DriveSwap();
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    self.driveSwapCount--;
+                    [self updateDriveLights];
+                });
                 break;
+            }
             case kVK_F9:
                 if (shift && control && !option && !command) {
                     // ^⇧F9: toggle 50% scan lines
@@ -978,6 +986,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 - (void)updateDriveLights {
+    NSColor *driveSwappingColor = [NSColor controlAccentColor];
+    
     if (self.hasStatusBar) {
         for (NSButton *driveLightButton in self.driveLightButtons) {
             CardManager &cardManager = GetCardMgr();
@@ -992,7 +1002,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                     else {
                         driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.dashed" accessibilityDescription:@""];
                     }
-                    driveLightButton.contentTintColor = [NSColor secondaryLabelColor];
+                    driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
                 }
                 else {
                     Disk_Status_e status[NUM_DRIVES];
@@ -1004,7 +1014,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                         else {
                             driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
                         }
-                        driveLightButton.contentTintColor = [NSColor controlAccentColor];
+                        driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
                     }
                     else {
                         if (card->GetProtect(drive)) {
@@ -1013,7 +1023,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                         else {
                             driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
                         }
-                        driveLightButton.contentTintColor = [NSColor secondaryLabelColor];
+                        driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
                     }
                 }
             }
@@ -1023,11 +1033,11 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 card->GetLightStatus(&status);
                 if (status != DISK_STATUS_OFF) {
                     driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
-                    driveLightButton.contentTintColor = [NSColor controlAccentColor];
+                    driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
                 }
                 else {
                     driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
-                    driveLightButton.contentTintColor = [NSColor secondaryLabelColor];
+                    driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
                 }
             }
         }
