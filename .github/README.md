@@ -37,7 +37,7 @@ Experimental support for printers is available in a [branch](https://github.com/
 The easiest way to build Mariani is to satisfy the dependencies using [Homebrew](https://brew.sh). After you install Homebrew, pick up the required packages below:
 
 ```
-brew install Boost libslirp
+brew install libslirp
 ```
 
 ### Checkout
@@ -58,7 +58,7 @@ Load up the Xcode project, make sure you select the "Mariani" scheme, and then t
 lipo -create -arch arm64 /opt/homebrew/lib/$1 -arch x86_64 /usr/local/homebrew/lib/$1 -output $1
 ```
 
-You'll need to run that script for everything that the "StaticWrapper Universal" target needs to link against, which are currently `libintl.a`, `libglib-2.0.a`, `libslirp.a`, and `libboost_program_options.a`. The Xcode project expects them to be placed in `../universal/` relative to itself but you can change that to your liking.
+You'll need to run that script for everything that the "StaticWrapper Universal" target needs to link against, which are currently `libintl.a`, `libglib-2.0.a`, and `libslirp.a`. The Xcode project expects them to be placed in `../universal/` relative to itself but you can change that to your liking.
 
 ## Build sa2
 
@@ -69,7 +69,7 @@ sa2 is the binary produced by Andrea's port. It's not the focus of this reposito
 sa2 needs more external libraries than Mariani, which you can grab for macOS using [Homebrew](https://brew.sh). After you install Homebrew, pick up the required packages below:
 
 ```
-brew install cmake pkgconfig libyaml minizip libslirp libpcap Boost sdl2 sdl2_image
+brew install cmake pkgconfig libyaml minizip libslirp libpcap sdl2 sdl2_image
 ```
 
 ### Checkout
