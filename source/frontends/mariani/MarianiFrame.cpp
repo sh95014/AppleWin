@@ -168,18 +168,19 @@ std::pair<const unsigned char *, unsigned int> MarianiFrame::GetResourceData(WOR
     const int fd = open(path, O_RDONLY);
     if (fd != -1)
     {
-        std::vector<unsigned char> data;
+        std::pair<RomMap::iterator, bool> p;
         off_t size = 0;
         struct stat stdbuf;
         if ((fstat(fd, &stdbuf) == 0) && S_ISREG(stdbuf.st_mode))
         {
             size = stdbuf.st_size;
-            data = std::vector<unsigned char>(size);
-            read(fd, data.data(), size);
-            roms.insert_or_assign(id, data);
+            std::vector<unsigned char> v(size);
+            read(fd, v.data(), size);
+            p = roms.insert_or_assign(id, v);
         }
         close(fd);
-        return std::pair(data.data(), size);
+        // p's 'first' is the RomMap iterator, and the iterator's 'second' is the vector
+        return std::pair(p.first->second.data(), p.first->second.size());
     }
     else
     {

@@ -35,7 +35,8 @@ protected:
     virtual std::pair<const unsigned char *, unsigned int> GetResourceData(WORD id) const override;
 
 private:
-    mutable std::map<unsigned int, std::vector<unsigned char>> roms;
+    typedef std::map<unsigned int, std::vector<unsigned char>> RomMap;
+    mutable RomMap roms;
     
     // FIXME: without this hack the app crashes randomly elsewhere
     unsigned char padding[1];
