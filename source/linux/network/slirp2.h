@@ -2,7 +2,9 @@
 
 #include "Tfe/NetworkBackend.h"
 
+#ifndef MARIANI
 #include "linux/linux_config.h"
+#endif
 
 #ifdef SLIRP_FOUND
 // disable to use libpcap in all cases

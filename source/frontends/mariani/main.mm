@@ -6,16 +6,17 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "argparser.h"
 #import "programoptions.h"
 
 common2::EmulatorOptions gEmulatorOptions;
 
-int main(int argc, const char *argv[]) {
+int main(int argc, char * const argv[]) {
     // need to split the argv[] into two halves, one for AppleWin to ingest, and the
     // other for NSApplicationMain().
     int awArgc, macArgc;
-    const char **awArgv = (const char **)malloc(sizeof(*awArgv) * argc);
-    const char **macArgv = (const char **)malloc(sizeof(*macArgv) * argc);
+    char **awArgv = (char **)malloc(sizeof(*awArgv) * argc);
+    char **macArgv = (char **)malloc(sizeof(*macArgv) * argc);
     awArgv[0] = macArgv[0] = argv[0];
     awArgc = macArgc = 1;
     
@@ -36,5 +37,5 @@ int main(int argc, const char *argv[]) {
     if (!getEmulatorOptions(awArgc, awArgv, common2::OptionsType::none, "macOS", gEmulatorOptions)) {
         return -1;
     }
-    return NSApplicationMain(macArgc, macArgv);
+    return NSApplicationMain(macArgc, (const char **)macArgv);
 }

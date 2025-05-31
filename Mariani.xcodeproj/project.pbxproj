@@ -15,6 +15,16 @@
 		97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
 		9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
 		9765C6182B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
+		976892F42DEB58030040CB83 /* linuxsoundbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 976892F22DEB58030040CB83 /* linuxsoundbuffer.h */; };
+		976892F52DEB58030040CB83 /* linuxsoundbuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 976892F32DEB58030040CB83 /* linuxsoundbuffer.cpp */; };
+		976892F82DEB62D80040CB83 /* argparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 976892F72DEB62D80040CB83 /* argparser.cpp */; };
+		976892F92DEB62D80040CB83 /* argparser.h in Headers */ = {isa = PBXBuildFile; fileRef = 976892F62DEB62D80040CB83 /* argparser.h */; };
+		976892FA2DEB62D80040CB83 /* argparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 976892F72DEB62D80040CB83 /* argparser.cpp */; };
+		976892FB2DEB62D80040CB83 /* argparser.h in Headers */ = {isa = PBXBuildFile; fileRef = 976892F62DEB62D80040CB83 /* argparser.h */; };
+		976893002DEB72F10040CB83 /* cadirectsound.h in Headers */ = {isa = PBXBuildFile; fileRef = 976892FF2DEB72F10040CB83 /* cadirectsound.h */; };
+		976893012DEB72F10040CB83 /* cadirectsound.h in Headers */ = {isa = PBXBuildFile; fileRef = 976892FF2DEB72F10040CB83 /* cadirectsound.h */; };
+		9768930B2DEB8F7B0040CB83 /* bitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 976893092DEB8F7B0040CB83 /* bitmap.h */; };
+		9768930C2DEB8F7B0040CB83 /* bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9768930A2DEB8F7B0040CB83 /* bitmap.cpp */; };
 		976D11AB2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
 		976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
 		976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
@@ -91,7 +101,6 @@
 		B0098CA0277E144E00F38E0C /* version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A4277A20FA0002A6C3 /* version.cpp */; };
 		B0098CA1277E144E00F38E0C /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB79E277A20FA0002A6C3 /* context.cpp */; };
 		B0098CA2277E144E00F38E0C /* registryclass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A6277A20FA0002A6C3 /* registryclass.cpp */; };
-		B0098CA4277E144E00F38E0C /* resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB798277A20FA0002A6C3 /* resources.cpp */; };
 		B0098CA7277E144E00F38E0C /* paddle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7A2277A20FA0002A6C3 /* paddle.cpp */; };
 		B0098CA8277E147500F38E0C /* Joystick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7C8277A21180002A6C3 /* Joystick.cpp */; };
 		B0098CA9277E147500F38E0C /* SNESMAX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7D1277A21180002A6C3 /* SNESMAX.cpp */; };
@@ -107,7 +116,6 @@
 		B0098CB3277E148600F38E0C /* z80mem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E7CF277A339700FC14A3 /* z80mem.cpp */; };
 		B0098CB6277E171100F38E0C /* Card.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB618277A14DB0002A6C3 /* Card.h */; };
 		B0098CB7277E171100F38E0C /* SSI263Phonemes.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB61A277A14DB0002A6C3 /* SSI263Phonemes.h */; };
-		B0098CB8277E171100F38E0C /* linuxinterface.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB79B277A20FA0002A6C3 /* linuxinterface.h */; };
 		B0098CBA277E171100F38E0C /* SoundCore.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB649277A14DB0002A6C3 /* SoundCore.h */; };
 		B0098CBB277E171100F38E0C /* DiskLog.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB5EB277A14DA0002A6C3 /* DiskLog.h */; };
 		B0098CBC277E171100F38E0C /* registryclass.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7A0277A20FA0002A6C3 /* registryclass.h */; };
@@ -137,7 +145,6 @@
 		B0098CD5277E171100F38E0C /* MouseInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB647277A14DB0002A6C3 /* MouseInterface.h */; };
 		B0098CD6277E171100F38E0C /* SAM.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB641277A14DB0002A6C3 /* SAM.h */; };
 		B0098CD7277E171100F38E0C /* daa.h in Headers */ = {isa = PBXBuildFile; fileRef = B049E7CB277A339600FC14A3 /* daa.h */; };
-		B0098CD8277E171100F38E0C /* resources.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB7AD277A20FA0002A6C3 /* resources.h */; };
 		B0098CDA277E171100F38E0C /* SynchronousEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB650277A14DB0002A6C3 /* SynchronousEventManager.h */; };
 		B0098CDB277E171100F38E0C /* PropertySheetHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B049E7FA277A36CE00FC14A3 /* PropertySheetHelper.h */; };
 		B0098CDC277E171100F38E0C /* Interface.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB62C277A14DB0002A6C3 /* Interface.h */; };
@@ -187,7 +194,6 @@
 		B00ECB94279EEB600041E16C /* Debugger_Assembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB71D277A1BA40002A6C3 /* Debugger_Assembler.cpp */; };
 		B00ECB95279EEB600041E16C /* commonframe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E830277B5E3700FC14A3 /* commonframe.cpp */; };
 		B00ECB96279EEB600041E16C /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7F9277A21410002A6C3 /* fileapi.cpp */; };
-		B00ECB97279EEB600041E16C /* dsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7E5277A21400002A6C3 /* dsound.cpp */; };
 		B00ECB98279EEB600041E16C /* speed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B049E841277B61CB00FC14A3 /* speed.cpp */; };
 		B00ECB99279EEB600041E16C /* Debugger_Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB71E277A1BA40002A6C3 /* Debugger_Console.cpp */; };
 		B00ECB9A279EEB600041E16C /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B032DE25277A0C23006DC0F7 /* AppDelegate.mm */; };
@@ -454,7 +460,6 @@
 		B09AB801277A21410002A6C3 /* dmusicc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7E1277A21400002A6C3 /* dmusicc.cpp */; };
 		B09AB803277A21410002A6C3 /* winuser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7E3277A21400002A6C3 /* winuser.cpp */; };
 		B09AB804277A21410002A6C3 /* timeapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7E4277A21400002A6C3 /* timeapi.cpp */; };
-		B09AB805277A21410002A6C3 /* dsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7E5277A21400002A6C3 /* dsound.cpp */; };
 		B09AB809277A21410002A6C3 /* winstrings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7E9277A21400002A6C3 /* winstrings.cpp */; };
 		B09AB80D277A21410002A6C3 /* guiddef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7ED277A21400002A6C3 /* guiddef.cpp */; };
 		B09AB80F277A21410002A6C3 /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB7EF277A21400002A6C3 /* misc.cpp */; };
@@ -732,6 +737,13 @@
 		973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+AccessoryView.m"; sourceTree = "<group>"; };
 		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
 		9765C6162B26452B00C8AF42 /* cadirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cadirectsound.cpp; sourceTree = "<group>"; };
+		976892F22DEB58030040CB83 /* linuxsoundbuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = linuxsoundbuffer.h; path = source/linux/linuxsoundbuffer.h; sourceTree = "<group>"; };
+		976892F32DEB58030040CB83 /* linuxsoundbuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = linuxsoundbuffer.cpp; path = source/linux/linuxsoundbuffer.cpp; sourceTree = "<group>"; };
+		976892F62DEB62D80040CB83 /* argparser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = argparser.h; path = source/frontends/common2/argparser.h; sourceTree = "<group>"; };
+		976892F72DEB62D80040CB83 /* argparser.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = argparser.cpp; path = source/frontends/common2/argparser.cpp; sourceTree = "<group>"; };
+		976892FF2DEB72F10040CB83 /* cadirectsound.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cadirectsound.h; sourceTree = "<group>"; };
+		976893092DEB8F7B0040CB83 /* bitmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bitmap.h; path = source/linux/bitmap.h; sourceTree = "<group>"; };
+		9768930A2DEB8F7B0040CB83 /* bitmap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = bitmap.cpp; path = source/linux/bitmap.cpp; sourceTree = "<group>"; };
 		976D11A92B379D9000EEA1D6 /* CharacterMappings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharacterMappings.h; sourceTree = "<group>"; };
 		976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = CharacterMappings.mm; sourceTree = "<group>"; };
 		979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = "HDC-SmartPort.bin"; path = "resource/HDC-SmartPort.bin"; sourceTree = SOURCE_ROOT; };
@@ -900,7 +912,7 @@
 		B061852C27B778EA00B6D04C /* libnufx.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnufx.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B061855127B779EB00B6D04C /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = source/frontends/mariani/nufxlib/config.h; sourceTree = "<group>"; };
 		B0689D082780B9B60029EB7D /* MarianiFrame.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MarianiFrame.cpp; sourceTree = "<group>"; };
-		B0689D092780B9B60029EB7D /* MarianiFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarianiFrame.h; sourceTree = "<group>"; };
+		B0689D092780B9B60029EB7D /* MarianiFrame.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = MarianiFrame.h; sourceTree = "<group>"; };
 		B0689D152781984F0029EB7D /* UserDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
 		B0689D162781984F0029EB7D /* UserDefaults.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = UserDefaults.mm; sourceTree = "<group>"; };
 		B07612322789E4BE009E79BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/About.xib; sourceTree = "<group>"; };
@@ -1066,11 +1078,8 @@
 		B09AB720277A1BA40002A6C3 /* Debugger_Win32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debugger_Win32.h; path = source/Debugger/Debugger_Win32.h; sourceTree = "<group>"; };
 		B09AB721277A1BA40002A6C3 /* Debugger_Color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger_Color.cpp; path = source/Debugger/Debugger_Color.cpp; sourceTree = "<group>"; };
 		B09AB722277A1BA40002A6C3 /* Debugger_Help.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debugger_Help.h; path = source/Debugger/Debugger_Help.h; sourceTree = "<group>"; };
-		B09AB723277A1BA40002A6C3 /* DebugDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DebugDefs.h; path = source/Debugger/DebugDefs.h; sourceTree = "<group>"; };
 		B09AB763277A1E380002A6C3 /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resource.h; path = resource/resource.h; sourceTree = "<group>"; };
-		B09AB798277A20FA0002A6C3 /* resources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = resources.cpp; path = source/linux/resources.cpp; sourceTree = "<group>"; };
 		B09AB799277A20FA0002A6C3 /* cassettetape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cassettetape.cpp; path = source/linux/cassettetape.cpp; sourceTree = "<group>"; };
-		B09AB79B277A20FA0002A6C3 /* linuxinterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linuxinterface.h; path = source/linux/linuxinterface.h; sourceTree = "<group>"; };
 		B09AB79C277A20FA0002A6C3 /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = context.h; path = source/linux/context.h; sourceTree = "<group>"; };
 		B09AB79D277A20FA0002A6C3 /* linuxframe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linuxframe.h; path = source/linux/linuxframe.h; sourceTree = "<group>"; };
 		B09AB79E277A20FA0002A6C3 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = context.cpp; path = source/linux/context.cpp; sourceTree = "<group>"; };
@@ -1085,7 +1094,6 @@
 		B09AB7A7277A20FA0002A6C3 /* keyboardbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = keyboardbuffer.h; path = source/linux/keyboardbuffer.h; sourceTree = "<group>"; };
 		B09AB7A8277A20FA0002A6C3 /* linuxframe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = linuxframe.cpp; path = source/linux/linuxframe.cpp; sourceTree = "<group>"; };
 		B09AB7A9277A20FA0002A6C3 /* benchmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = benchmark.h; path = source/linux/benchmark.h; sourceTree = "<group>"; };
-		B09AB7AD277A20FA0002A6C3 /* resources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resources.h; path = source/linux/resources.h; sourceTree = "<group>"; };
 		B09AB7C8277A21180002A6C3 /* Joystick.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Joystick.cpp; path = source/linux/duplicates/Joystick.cpp; sourceTree = "<group>"; };
 		B09AB7C9277A21180002A6C3 /* Debugger_Win32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger_Win32.cpp; path = source/linux/duplicates/Debugger_Win32.cpp; sourceTree = "<group>"; };
 		B09AB7CB277A21180002A6C3 /* Debugger_Display.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debugger_Display.cpp; path = source/linux/duplicates/Debugger_Display.cpp; sourceTree = "<group>"; };
@@ -1103,7 +1111,6 @@
 		B09AB7E2277A21400002A6C3 /* wingdi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wingdi.h; path = source/linux/libwindows/wingdi.h; sourceTree = "<group>"; };
 		B09AB7E3277A21400002A6C3 /* winuser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = winuser.cpp; path = source/linux/libwindows/winuser.cpp; sourceTree = "<group>"; };
 		B09AB7E4277A21400002A6C3 /* timeapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timeapi.cpp; path = source/linux/libwindows/timeapi.cpp; sourceTree = "<group>"; };
-		B09AB7E5277A21400002A6C3 /* dsound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dsound.cpp; path = source/linux/libwindows/dsound.cpp; sourceTree = "<group>"; };
 		B09AB7E6277A21400002A6C3 /* guiddef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = guiddef.h; path = source/linux/libwindows/guiddef.h; sourceTree = "<group>"; };
 		B09AB7E7277A21400002A6C3 /* winbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = winbase.h; path = source/linux/libwindows/winbase.h; sourceTree = "<group>"; };
 		B09AB7E8277A21400002A6C3 /* timeapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timeapi.h; path = source/linux/libwindows/timeapi.h; sourceTree = "<group>"; };
@@ -1512,6 +1519,7 @@
 				B032DE24277A0C23006DC0F7 /* AppDelegate.h */,
 				B032DE25277A0C23006DC0F7 /* AppDelegate.mm */,
 				9765C6162B26452B00C8AF42 /* cadirectsound.cpp */,
+				976892FF2DEB72F10040CB83 /* cadirectsound.h */,
 				B049E8A8277C59D500FC14A3 /* CommonTypes.h */,
 				B049E8A0277C44B100FC14A3 /* EmulatorRenderer.h */,
 				B049E8A1277C44B100FC14A3 /* EmulatorRenderer.m */,
@@ -1652,6 +1660,8 @@
 		B049E82F277B5E2600FC14A3 /* common2 */ = {
 			isa = PBXGroup;
 			children = (
+				976892F72DEB62D80040CB83 /* argparser.cpp */,
+				976892F62DEB62D80040CB83 /* argparser.h */,
 				B049E830277B5E3700FC14A3 /* commonframe.cpp */,
 				B049E831277B5E3700FC14A3 /* commonframe.h */,
 				B049E850277B6FFE00FC14A3 /* fileregistry.cpp */,
@@ -1838,7 +1848,6 @@
 			children = (
 				B09AB718277A1BA40002A6C3 /* Debug.cpp */,
 				B09AB717277A1BA40002A6C3 /* Debug.h */,
-				B09AB723277A1BA40002A6C3 /* DebugDefs.h */,
 				B09AB71D277A1BA40002A6C3 /* Debugger_Assembler.cpp */,
 				B09AB711277A1BA30002A6C3 /* Debugger_Assembler.h */,
 				B09AB721277A1BA40002A6C3 /* Debugger_Color.cpp */,
@@ -1875,6 +1884,8 @@
 			children = (
 				B09AB79F277A20FA0002A6C3 /* benchmark.cpp */,
 				B09AB7A9277A20FA0002A6C3 /* benchmark.h */,
+				9768930A2DEB8F7B0040CB83 /* bitmap.cpp */,
+				976893092DEB8F7B0040CB83 /* bitmap.h */,
 				B09AB79E277A20FA0002A6C3 /* context.cpp */,
 				B09AB79C277A20FA0002A6C3 /* context.h */,
 				B09AB7C7277A21000002A6C3 /* duplicates */,
@@ -1882,14 +1893,13 @@
 				B09AB7DC277A21300002A6C3 /* libwindows */,
 				B09AB7A8277A20FA0002A6C3 /* linuxframe.cpp */,
 				B09AB79D277A20FA0002A6C3 /* linuxframe.h */,
-				B09AB79B277A20FA0002A6C3 /* linuxinterface.h */,
+				976892F32DEB58030040CB83 /* linuxsoundbuffer.cpp */,
+				976892F22DEB58030040CB83 /* linuxsoundbuffer.h */,
 				B09AB81D277A21510002A6C3 /* network */,
 				B09AB7A2277A20FA0002A6C3 /* paddle.cpp */,
 				B09AB7A3277A20FA0002A6C3 /* paddle.h */,
 				B09AB7A6277A20FA0002A6C3 /* registryclass.cpp */,
 				B09AB7A0277A20FA0002A6C3 /* registryclass.h */,
-				B09AB798277A20FA0002A6C3 /* resources.cpp */,
-				B09AB7AD277A20FA0002A6C3 /* resources.h */,
 				B09AB799277A20FA0002A6C3 /* cassettetape.cpp */,
 				B09AB7A1277A20FA0002A6C3 /* cassettetape.h */,
 				B09AB7A4277A20FA0002A6C3 /* version.cpp */,
@@ -1926,7 +1936,6 @@
 			children = (
 				B09AB7E1277A21400002A6C3 /* dmusicc.cpp */,
 				B09AB7DD277A21400002A6C3 /* dmusicc.h */,
-				B09AB7E5277A21400002A6C3 /* dsound.cpp */,
 				B09AB7F5277A21400002A6C3 /* dsound.h */,
 				B09AB7F9277A21410002A6C3 /* fileapi.cpp */,
 				B09AB7EA277A21400002A6C3 /* fileapi.h */,
@@ -2261,7 +2270,6 @@
 				B0098CB6277E171100F38E0C /* Card.h in Headers */,
 				B0098CCF277E171100F38E0C /* z80.h in Headers */,
 				B0098CDF277E171100F38E0C /* SNESMAX.h in Headers */,
-				B0098CD8277E171100F38E0C /* resources.h in Headers */,
 				B0098CE7277E171100F38E0C /* z80emu.h in Headers */,
 				B0F8500427D1B44F0015F642 /* NetworkBackend.h in Headers */,
 				B0098CDD277E171100F38E0C /* Memory.h in Headers */,
@@ -2279,11 +2287,13 @@
 				B0098CBB277E171100F38E0C /* DiskLog.h in Headers */,
 				B089EF3327BB051900BDC415 /* StrFormat.h in Headers */,
 				B0BAB4AC29B42CAA008F54D7 /* MockingboardCardManager.h in Headers */,
+				976892F42DEB58030040CB83 /* linuxsoundbuffer.h in Headers */,
 				B0F43FD2295E49FD00E79AD7 /* joystickapi.h in Headers */,
 				B0F43FD0295E48DA00E79AD7 /* CopyProtectionDongles.h in Headers */,
 				B0098CBD277E171100F38E0C /* LanguageCard.h in Headers */,
 				97D1D5502D2085D80088C2A2 /* zip.h in Headers */,
 				B0098CCB277E171100F38E0C /* 6821.h in Headers */,
+				9768930B2DEB8F7B0040CB83 /* bitmap.h in Headers */,
 				B0098CB7277E171100F38E0C /* SSI263Phonemes.h in Headers */,
 				B0098CE9277E171200F38E0C /* Disk.h in Headers */,
 				B0098CEE277E171200F38E0C /* NoSlotClock.h in Headers */,
@@ -2295,7 +2305,6 @@
 				97D1D5572D2085D80088C2A2 /* unzip.h in Headers */,
 				B0F84FFD27D1B3F30015F642 /* W5100.h in Headers */,
 				B0098CD4277E171100F38E0C /* Tape.h in Headers */,
-				B0098CB8277E171100F38E0C /* linuxinterface.h in Headers */,
 				B0098CED277E171200F38E0C /* z80mem.h in Headers */,
 				B0098CC5277E171100F38E0C /* NTSC.h in Headers */,
 				B0098CDC277E171100F38E0C /* Interface.h in Headers */,
@@ -2328,6 +2337,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				976892FB2DEB62D80040CB83 /* argparser.h in Headers */,
+				976893012DEB72F10040CB83 /* cadirectsound.h in Headers */,
 				973F68122D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
 			);
@@ -2399,6 +2410,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				976892F92DEB62D80040CB83 /* argparser.h in Headers */,
+				976893002DEB72F10040CB83 /* cadirectsound.h in Headers */,
 				973F68112D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AB2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
 			);
@@ -2888,6 +2901,7 @@
 				97ACC9C42C3B2C3E0028821E /* PageSound.cpp in Sources */,
 				B0098C9D277E144E00F38E0C /* slirp2.cpp in Sources */,
 				B0098C7E277E140100F38E0C /* CPU.cpp in Sources */,
+				9768930C2DEB8F7B0040CB83 /* bitmap.cpp in Sources */,
 				B0098C95277E140100F38E0C /* Mockingboard.cpp in Sources */,
 				B0098CA0277E144E00F38E0C /* version.cpp in Sources */,
 				B0098CAB277E147500F38E0C /* Keyboard.cpp in Sources */,
@@ -2912,7 +2926,6 @@
 				B0098C98277E140100F38E0C /* DiskImage.cpp in Sources */,
 				B0098CAD277E147500F38E0C /* SerialComms.cpp in Sources */,
 				B0098CB1277E148600F38E0C /* z80.cpp in Sources */,
-				B0098CA4277E144E00F38E0C /* resources.cpp in Sources */,
 				B0098C82277E140100F38E0C /* Memory.cpp in Sources */,
 				B0098CAC277E147500F38E0C /* Debugger_Display.cpp in Sources */,
 				B0098CB2277E148600F38E0C /* daa.cpp in Sources */,
@@ -2937,6 +2950,7 @@
 				B095D52F27ED7D0000498D51 /* IPRaw.cpp in Sources */,
 				B0098C9F277E144E00F38E0C /* linuxframe.cpp in Sources */,
 				B0098C76277E140100F38E0C /* CmdLine.cpp in Sources */,
+				976892F52DEB58030040CB83 /* linuxsoundbuffer.cpp in Sources */,
 				B0098C8F277E140100F38E0C /* NTSC_CharSet.cpp in Sources */,
 				B0098C84277E140100F38E0C /* Utilities.cpp in Sources */,
 				B0098CA1277E144E00F38E0C /* context.cpp in Sources */,
@@ -2981,6 +2995,7 @@
 				B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
 				B00ECB81279EEB600041E16C /* main.mm in Sources */,
 				B00ECB82279EEB600041E16C /* programoptions.cpp in Sources */,
+				976892FA2DEB62D80040CB83 /* argparser.cpp in Sources */,
 				B043659827B8769E00329469 /* NSMutableString+RTF.m in Sources */,
 				B00ECB86279EEB600041E16C /* Debugger_Color.cpp in Sources */,
 				B00ECB88279EEB600041E16C /* Shaders.metal in Sources */,
@@ -2996,7 +3011,6 @@
 				B00ECB94279EEB600041E16C /* Debugger_Assembler.cpp in Sources */,
 				B00ECB95279EEB600041E16C /* commonframe.cpp in Sources */,
 				B00ECB96279EEB600041E16C /* fileapi.cpp in Sources */,
-				B00ECB97279EEB600041E16C /* dsound.cpp in Sources */,
 				B0F5270B2A2C1F2200288820 /* SymbolTable.mm in Sources */,
 				B0F5270A2A2C1F2200288820 /* HexDigitFormatter.m in Sources */,
 				B00ECB98279EEB600041E16C /* speed.cpp in Sources */,
@@ -3057,6 +3071,7 @@
 				B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
 				B032DE2D277A0C24006DC0F7 /* main.mm in Sources */,
 				B0689D0D2780C85F0029EB7D /* programoptions.cpp in Sources */,
+				976892F82DEB62D80040CB83 /* argparser.cpp in Sources */,
 				B043659727B8769E00329469 /* NSMutableString+RTF.m in Sources */,
 				B09AB73F277A1BA40002A6C3 /* Debugger_Color.cpp in Sources */,
 				B049E8A7277C4F6D00FC14A3 /* Shaders.metal in Sources */,
@@ -3072,7 +3087,6 @@
 				B09AB73B277A1BA40002A6C3 /* Debugger_Assembler.cpp in Sources */,
 				B049E832277B5E3700FC14A3 /* commonframe.cpp in Sources */,
 				B09AB819277A21410002A6C3 /* fileapi.cpp in Sources */,
-				B09AB805277A21410002A6C3 /* dsound.cpp in Sources */,
 				B0F526FC2A2C1F2100288820 /* SymbolTable.mm in Sources */,
 				B0F526FB2A2C1F2100288820 /* HexDigitFormatter.m in Sources */,
 				B049E843277B61CB00FC14A3 /* speed.cpp in Sources */,

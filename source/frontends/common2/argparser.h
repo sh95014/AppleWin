@@ -8,7 +8,8 @@ namespace common2
     {
         none,
         applen,
-        sa2
+        sa2,
+        macOS,
     };
 
     bool getEmulatorOptions(

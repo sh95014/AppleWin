@@ -13,7 +13,9 @@
 #include "NTSC.h"
 #include "Speaker.h"
 
+#ifndef MARIANI
 #include "apple2roms_data.h"
+#endif
 
 namespace common2
 {

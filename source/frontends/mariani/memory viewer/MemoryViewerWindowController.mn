@@ -46,6 +46,9 @@
 
 @implementation MemoryViewerWindowController
 
+// This was in Debugger/DebugDefs.h but got removed upstream
+static const unsigned int _6502_IO_BEGIN        = 0xC000;
+
 - (id)init {
     if ((self = [super init]) != nil) {
         if (![[NSBundle mainBundle] loadNibNamed:@"MemoryViewerWindow" owner:self topLevelObjects:nil]) {
