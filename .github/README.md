@@ -48,7 +48,7 @@ Now grab the source code:
 git clone https://github.com/sh95014/AppleWin.git --recursive
 ```
 
-Load up the Xcode project, and build the "Mariani" target for "My Mac".
+Load up the Xcode project, make sure you select the "Mariani" scheme, and then target for "My Mac".
 
 "Mariani Universal" is the target used to build a universal (x86 and ARM) app, and will *not* build out of the box. Homebrew does not support universal libraries, so you'll have to follow [these instructions](https://medium.com/mkdir-awesome/how-to-install-x86-64-homebrew-packages-on-apple-m1-macbook-54ba295230f) on an Apple Silicon Mac to install the x86 versions of the relevant libraries. Here's a handy script to combine them into universal shared libraries:
 
