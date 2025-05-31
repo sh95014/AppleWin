@@ -406,7 +406,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     // don't try to run the emulator during a restart
     [self.runLoopTimer invalidate];
     frame->Restart();
-    [_view clearKeyboardBuffer];
     [self startRunLoopTimer];
     [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidRebootNotification object:self];
 }

@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) id<EmulatorViewDelegate> numericKeyDelegate;
 
 - (void)addStringToKeyboardBuffer:(NSString *)string;
-- (void)clearKeyboardBuffer;
 
 @end
 

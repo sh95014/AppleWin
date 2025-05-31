@@ -15,7 +15,6 @@
 #import "StdAfx.h"
 #import "Core.h"
 #import "CardManager.h"
-#import "Keyboard.h"
 #import "MouseInterface.h"
 
 @interface EmulatorView ()
@@ -235,10 +234,6 @@ enum {
             }
         }
     }];
-}
-
-- (void)clearKeyboardBuffer {
-    KeybReset();
 }
 
 - (void)mouseDown:(NSEvent *)event {
