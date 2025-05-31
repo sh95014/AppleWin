@@ -255,7 +255,6 @@
 		B017D6922A3A4C6000FE6D1E /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DCA229887FA900F61989 /* libresolv.tbd */; };
 		B017D6962A3A557800FE6D1E /* libglib-2.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */; };
 		B017D6972A3A557800FE6D1E /* libintl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6882A3A4C2700FE6D1E /* libintl.a */; };
-		B017D6992A3A55E900FE6D1E /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		B017D69B2A3A563C00FE6D1E /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B017D6892A3A4C2700FE6D1E /* libslirp.a */; };
 		B020F8A62785D30E0071D3C7 /* stdafx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B020F8A32785D30E0071D3C7 /* stdafx.cpp */; };
 		B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B020F8A82785EA440071D3C7 /* AVFoundation.framework */; };
@@ -476,7 +475,6 @@
 		B0BAB4AC29B42CAA008F54D7 /* MockingboardCardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A929B42CAA008F54D7 /* MockingboardCardManager.h */; };
 		B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
 		B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
-		B0E1DC8C298874EF00F61989 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC8B298874EF00F61989 /* libboost_program_options.a */; };
 		B0E1DC8E2988751000F61989 /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC8D2988751000F61989 /* libslirp.a */; };
 		B0E1DC8F2988753900F61989 /* libStaticWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC80298874A800F61989 /* libStaticWrapper.a */; };
 		B0E1DC94298878B000F61989 /* StaticLibraryWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */; };
@@ -1347,7 +1345,6 @@
 				B017D6972A3A557800FE6D1E /* libintl.a in Frameworks */,
 				B017D6962A3A557800FE6D1E /* libglib-2.0.a in Frameworks */,
 				B017D69B2A3A563C00FE6D1E /* libslirp.a in Frameworks */,
-				B017D6992A3A55E900FE6D1E /* libboost_program_options.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1414,7 +1411,6 @@
 				B0E1DC9829887A7C00F61989 /* libintl.a in Frameworks */,
 				B0E1DC9629887A5D00F61989 /* libglib-2.0.a in Frameworks */,
 				B0E1DC8E2988751000F61989 /* libslirp.a in Frameworks */,
-				B0E1DC8C298874EF00F61989 /* libboost_program_options.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
