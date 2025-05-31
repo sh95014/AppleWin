@@ -274,6 +274,9 @@
     <ClCompile Include="source\MockingboardCardManager.cpp">
       <Filter>Source Files\Emulator</Filter>
     </ClCompile>
+    <ClCompile Include="source\Windows\DXSoundBuffer.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\CommonVICE\6510core.h">
@@ -495,9 +498,6 @@
     <ClInclude Include="source\z80emu.h">
       <Filter>Source Files\Emulator</Filter>
     </ClInclude>
-    <ClInclude Include="source\Debugger\DebugDefs.h">
-      <Filter>Source Files\Debugger</Filter>
-    </ClInclude>
     <ClInclude Include="source\Debugger\Util_MemoryTextFile.h">
       <Filter>Source Files\Debugger</Filter>
     </ClInclude>
@@ -620,6 +620,12 @@
     </ClInclude>
     <ClInclude Include="source\MemoryDefs.h">
       <Filter>Source Files\Emulator</Filter>
+    </ClInclude>
+    <ClInclude Include="source\SoundBuffer.h">
+      <Filter>Source Files\Emulator</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Windows\DXSoundBuffer.h">
+      <Filter>Source Files\Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

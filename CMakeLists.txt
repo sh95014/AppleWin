@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 
+if (POLICY CMP0167)
+  cmake_policy(SET CMP0167 NEW)
+endif()
+
 project(applewin HOMEPAGE_URL "https://github.com/audetto/AppleWin")
 
 option(BUILD_APPLEN   "build ncurses frontend")
@@ -15,7 +19,7 @@ if (NOT (BUILD_APPLEN OR BUILD_QAPPLE OR BUILD_SA2 OR BUILD_LIBRETRO))
   set(BUILD_LIBRETRO ON)
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # this is originally a Windows project, so it uses _DEBUG, not NDEBUG
@@ -37,19 +41,21 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-execute_process(COMMAND uname -m
-  OUTPUT_VARIABLE UNAME
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
 execute_process(
   COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/compile_commands.json ${CMAKE_SOURCE_DIR}/compile_commands.json
 )
 
 include_directories(source)
 
+add_subdirectory(libyaml)
+add_subdirectory(minizip)
 add_subdirectory(source)
-add_subdirectory(source/linux/libwindows)
+add_subdirectory(resource)
 add_subdirectory(test/TestCPU6502)
+
+if (NOT WIN32)
+  add_subdirectory(source/linux/libwindows)
+endif()
 
 if (BUILD_LIBRETRO OR BUILD_APPLEN OR BUILD_SA2)
   add_subdirectory(source/frontends/common2)
@@ -59,16 +65,21 @@ if (BUILD_APPLEN)
   add_subdirectory(source/frontends/ncurses)
 endif()
 
-if (BUILD_QAPPLE)
-  add_subdirectory(source/frontends/qt)
-endif()
-
-if (BUILD_SA2)
-  add_subdirectory(source/frontends/sdl)
-endif()
-
 if (BUILD_LIBRETRO)
   add_subdirectory(source/frontends/libretro)
+endif()
+
+if (NOT WIN32)
+  # not supported yet
+
+  if (BUILD_QAPPLE)
+    add_subdirectory(source/frontends/qt)
+  endif()
+
+  if (BUILD_SA2)
+    add_subdirectory(source/frontends/sdl)
+  endif()
+
 endif()
 
 file(STRINGS resource/version.h VERSION_FILE LIMIT_COUNT 1)
@@ -80,7 +91,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Apple ][ emulator for Linux")
 set(CPACK_PACKAGE_CONTACT "audetto <mariofutire@gmail.com>")
 
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libyaml-0-2,libminizip1,libqt5gui5,libqt5widgets5,libqt5multimedia5,libqt5gamepad5,libncursesw6,libevdev2,libsdl2-image-2.0-0,libsdl2-2.0-0,libgles2,libpcap0.8,libslirp0,libboost-program-options1.74.0|libboost-program-options1.81.0|libboost-program-options1.83.0")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5gui5,libqt5widgets5,libqt5multimedia5,libqt5gamepad5,libncursesw6,libevdev2,libsdl2-image-2.0-0,libsdl2-2.0-0,libgles2,libpcap0.8,libslirp0,libboost-program-options1.74.0|libboost-program-options1.81.0|libboost-program-options1.83.0")
 
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv2")
 set(CPACK_RPM_PACKAGE_GROUP "Applications/Emulators")

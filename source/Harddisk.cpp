@@ -297,7 +297,7 @@ void HarddiskInterfaceCard::LoadLastDiskImage(const int drive)
 	char pathname[MAX_PATH];
 
 	std::string regSection = RegGetConfigSlotSection(m_slot);
-	if (RegLoadString(regSection.c_str(), regKey.c_str(), TRUE, pathname, MAX_PATH, TEXT("")) && (pathname[0] != 0))
+	if (RegLoadString(regSection.c_str(), regKey.c_str(), TRUE, pathname, MAX_PATH, "") && (pathname[0] != 0))
 	{
 		m_saveDiskImage = false;
 		bool res = Insert(drive, pathname);
@@ -461,12 +461,12 @@ bool HarddiskInterfaceCard::Insert(const int iDrive, const std::string& pathname
 
 bool HarddiskInterfaceCard::SelectImage(const int drive, LPCSTR pszFilename)
 {
-	TCHAR directory[MAX_PATH];
-	TCHAR filename[MAX_PATH];
+	char directory[MAX_PATH];
+	char filename[MAX_PATH];
 
 	StringCbCopy(filename, MAX_PATH, pszFilename);
 
-	RegLoadString(TEXT(REG_PREFS), TEXT(REGVALUE_PREF_HDV_START_DIR), 1, directory, MAX_PATH, TEXT(""));
+	RegLoadString(REG_PREFS, REGVALUE_PREF_HDV_START_DIR, 1, directory, MAX_PATH, "");
 	std::string title = StrFormat("Select HDV Image For HDD %d", drive + 1);
 
 	OPENFILENAME ofn;
@@ -474,8 +474,8 @@ bool HarddiskInterfaceCard::SelectImage(const int drive, LPCSTR pszFilename)
 	ofn.lStructSize     = sizeof(OPENFILENAME);
 	ofn.hwndOwner       = GetFrame().g_hFrameWindow;
 	ofn.hInstance       = GetFrame().g_hInstance;
-	ofn.lpstrFilter     = TEXT("Hard Disk Images (*.hdv,*.po,*.2mg,*.2img,*.gz,*.zip)\0*.hdv;*.po;*.2mg;*.2img;*.gz;*.zip\0")
-						  TEXT("All Files\0*.*\0");
+	ofn.lpstrFilter     = "Hard Disk Images (*.hdv,*.po,*.2mg,*.2img,*.gz,*.zip)\0*.hdv;*.po;*.2mg;*.2img;*.gz;*.zip\0"
+						  "All Files\0*.*\0";
 	ofn.lpstrFile       = filename;
 	ofn.nMaxFile        = MAX_PATH;
 	ofn.lpstrInitialDir = directory;
@@ -488,7 +488,7 @@ bool HarddiskInterfaceCard::SelectImage(const int drive, LPCSTR pszFilename)
 	{
 		std::string openFilename = filename;
 		if ((!ofn.nFileExtension) || !filename[ofn.nFileExtension])
-			openFilename += TEXT(".hdv");
+			openFilename += ".hdv";
 		
 		if (Insert(drive, openFilename))
 		{
@@ -505,7 +505,7 @@ bool HarddiskInterfaceCard::SelectImage(const int drive, LPCSTR pszFilename)
 
 bool HarddiskInterfaceCard::Select(const int iDrive)
 {
-	return SelectImage(iDrive, TEXT(""));
+	return SelectImage(iDrive, "");
 }
 
 //===========================================================================
@@ -589,7 +589,7 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 	switch (addrIdx)
 	{
 	case 0x0:	// EXECUTE & RETURN STATUS
-		r = pCard->CmdExecute(pHDD);
+		r = pCard->CmdExecute(pHDD, nExecutedCycles);
 		pCard->m_command = (pCard->m_command & SP_Cmd_base) ? SP_Cmd_busyStatus : BLK_Cmd_Status;	// Subsequent reads from IO addr 0x0 just executes 'Status' cmd
 		_ASSERT(pCard->m_fifoIdx == 0);
 		pCard->m_fifoIdx = 0;
@@ -644,7 +644,7 @@ BYTE __stdcall HarddiskInterfaceCard::IORead(WORD pc, WORD addr, BYTE bWrite, BY
 	return r;
 }
 
-BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD)
+BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD, const ULONG nExecutedCycles)
 {
 	LOG_DISK("slot-%d, HDD-%d(%02X): Cmd=%02X ", m_slot, (m_command & SP_Cmd_base) ? m_unitNum : GetProDOSBlockDeviceUnit(), m_unitNum, m_command);
 
@@ -664,7 +664,6 @@ BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD)
 
 	const UINT CYCLES_FOR_DMA_RW_BLOCK = HD_BLOCK_SIZE;
 	const UINT CYCLES_FOR_FORMATTING_1_BLOCK = 100;	// Arbitrary
-	const UINT PAGE_SIZE = 256;
 
 	pHDD->m_error = DEVICE_OK;
 
@@ -679,7 +678,7 @@ BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD)
 		LOG_DISK("ST-BSY: %02X\n", pHDD->m_error);
 		break;
 	case SP_Cmd_status:
-		pHDD->m_error = SmartPortCmdStatus(pHDD);
+		pHDD->m_error = SmartPortCmdStatus(pHDD, nExecutedCycles);
 		LOG_DISK("ST: %02X (statusCode: %02X)\n", pHDD->m_error, m_statusCode);
 		break;
 	case BLK_Cmd_Read:
@@ -695,8 +694,7 @@ BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD)
 			{
 				pHDD->m_buf_ptr = 0;
 
-				// Apple II's MMU could be setup so that read & write memory is different,
-				// so can't use 'mem' (like we can for HDD block writes)
+				// Apple II's MMU could be setup so that read & write memory is different, so use 'memwrite' not 'mem'.
 				WORD dstAddr = pHDD->m_memblock;
 				UINT remaining = HD_BLOCK_SIZE;
 				BYTE* pSrc = pHDD->m_buf;
@@ -716,7 +714,7 @@ BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD)
 					}
 
 					// handle both page-aligned & non-page aligned destinations
-					UINT size = PAGE_SIZE - (dstAddr & 0xff);
+					UINT size = _6502_PAGE_SIZE - (dstAddr & 0xff);
 					if (size > remaining) size = remaining;	// clip the last memcpy for the unaligned case
 
 					if (g_nAppMode == MODE_STEPPING)
@@ -724,7 +722,7 @@ BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD)
 
 					memcpy(page + (dstAddr & 0xff), pSrc, size);
 					pSrc += size;
-					dstAddr = (dstAddr + size) & (MEMORY_LENGTH - 1);	// wraps at 64KiB boundary
+					dstAddr = (dstAddr + size) & (_6502_MEM_LEN - 1);	// wraps at 64KiB boundary
 
 					remaining -= size;
 				}
@@ -795,22 +793,23 @@ BYTE HarddiskInterfaceCard::CmdExecute(HardDiskDrive* pHDD)
 			}
 			else
 			{
-				// NB. Do the writes in units of PAGE_SIZE so that DMA breakpoints are consistent with reads
+				// NB. Do the writes in units of _6502_PAGE_SIZE so that DMA breakpoints are consistent with reads.
+				// NB. Use `CopyBytesFromMemoryPage()`, as 'mem' may not be valid.
 				WORD srcAddr = pHDD->m_memblock;
 				UINT remaining = HD_BLOCK_SIZE;
 				BYTE* pDst = pHDD->m_buf;
 
 				while (remaining)
 				{
-					UINT size = PAGE_SIZE - (srcAddr & 0xff);
+					UINT size = _6502_PAGE_SIZE - (srcAddr & 0xff);
 					if (size > remaining) size = remaining;	// clip the last memcpy for the unaligned case
 
 					if (g_nAppMode == MODE_STEPPING)
 						breakpointHit = DebuggerCheckMemBreakpoints(srcAddr, size, false);
 
-					memcpy(pDst, mem + srcAddr, size);
+					CopyBytesFromMemoryPage(pDst, srcAddr, size);
 					pDst += size;
-					srcAddr = (srcAddr + size) & (MEMORY_LENGTH - 1);	// wraps at 64KiB boundary
+					srcAddr = (srcAddr + size) & (_6502_MEM_LEN - 1);	// wraps at 64KiB boundary
 
 					remaining -= size;
 				}
@@ -1033,26 +1032,22 @@ HardDiskDrive* HarddiskInterfaceCard::GetUnit(void)
 	return &m_hardDiskDrive[m_unitNum - 1];
 }
 
-void HarddiskInterfaceCard::SetIdString(WORD addr, const char* str)
+void HarddiskInterfaceCard::SetIdString(std::vector<BYTE>& status, const std::string& idStr)
 {
-	BYTE& idStrLen = mem[addr];	// ID string length
-	idStrLen = 0;
+	const BYTE kMaxIdStrLen = 16;
+	size_t idStrLen = idStr.length();
+	if (idStrLen > kMaxIdStrLen)
+		idStrLen = kMaxIdStrLen;
+	status.push_back((BYTE)idStrLen);	// Set 'ID string length'
 
-	WORD idStrAddr = addr + 1;
-	for (UINT i = 0; i < 16; i++)
-		mem[idStrAddr + i] = ' ';	// ID string padded with ASCII spaces
+	for (UINT i = 0; i < idStrLen; i++)
+		status.push_back(idStr[i]);
 
-	if (str == NULL)
-		return;
-
-	while (*str && idStrLen < 16)
-	{
-		idStrLen++;
-		mem[idStrAddr++] = *str++;
-	}
+	for (UINT i = idStrLen; i < kMaxIdStrLen; i++)
+		status.push_back(' ');	// ID string padded with ASCII spaces
 }
 
-BYTE HarddiskInterfaceCard::SmartPortCmdStatus(HardDiskDrive* pHDD)
+BYTE HarddiskInterfaceCard::SmartPortCmdStatus(HardDiskDrive* pHDD, const ULONG nExecutedCycles)
 {
 	// Make Firmware version: eg. 1.30.18.0 => 130.18
 	UINT fwVerMajorCheck = g_AppleWinVersion[0] * 100 + g_AppleWinVersion[1];
@@ -1066,8 +1061,8 @@ BYTE HarddiskInterfaceCard::SmartPortCmdStatus(HardDiskDrive* pHDD)
 
 	//
 
-	WORD statusListAddr = pHDD->m_memblock;
 	BYTE r = DEVICE_OK;
+	std::vector<BYTE> status;
 
 	if (m_unitNum == 0)	// Unit-0: SmartPort Controller
 	{
@@ -1079,19 +1074,18 @@ BYTE HarddiskInterfaceCard::SmartPortCmdStatus(HardDiskDrive* pHDD)
 		case SP_Cmd_status_GETDIB:
 		{
 			// SmartPort driver status (8 bytes)
-			mem[statusListAddr++] = numDevices;
+			status.push_back(numDevices);
 			for (UINT i = 0; i < 7; i++)
-				mem[statusListAddr++] = 0;	// reserved
+				status.push_back(0);		// reserved
 			if (m_statusCode == SP_Cmd_status_STATUS)
 				break;
 			// Device Information Block (DIB)
 			std::string idStr = "AppleWin SP";
-			SetIdString(statusListAddr, idStr.c_str());
-			statusListAddr += 17;
-			mem[statusListAddr++] = 0x00;	// device type (0x00: Apple II memory expansion card)
-			mem[statusListAddr++] = 0x00;	// device subtype (0x00: Apple II memory expansion card)
-			mem[statusListAddr++] = fwVerMajor;	// f/w version (major)
-			mem[statusListAddr++] = fwVerMinor;	// f/w version (minor)
+			SetIdString(status, idStr);
+			status.push_back(0x00);			// device type (0x00: Apple II memory expansion card)
+			status.push_back(0x00);			// device subtype (0x00: Apple II memory expansion card)
+			status.push_back(fwVerMajor);	// f/w version (major)
+			status.push_back(fwVerMinor);	// f/w version (minor)
 			break;
 		}
 		case SP_Cmd_status_GETDCB:
@@ -1117,12 +1111,12 @@ BYTE HarddiskInterfaceCard::SmartPortCmdStatus(HardDiskDrive* pHDD)
 			// . b3=format allowed, b2=media write protected (block devices only), b1=device currently interrupting (//c only), b0=device currently open (char device only)
 			BYTE generalStatus = isImageLoaded ? 0xF8 : 0xE8;			// Loaded: b#11111000: bwrlf--- / Not loaded: b#11101000: bwr-f---
 			if (pHDD->m_bWriteProtected) generalStatus |= (1 << 2);
-			mem[statusListAddr++] = generalStatus;
+			status.push_back(generalStatus);
 
 			const UINT imageSizeInBlocks = isImageLoaded ? GetImageSizeInBlocks(pHDD->m_imagehandle) : 0;
-			mem[statusListAddr++] = imageSizeInBlocks & 0xff;			// num blocks (lo)
-			mem[statusListAddr++] = (imageSizeInBlocks >> 8) & 0xff;	// num blocks (med)
-			mem[statusListAddr++] = (imageSizeInBlocks >> 16) & 0xff;	// num blocks (hi)
+			status.push_back(imageSizeInBlocks & 0xff);			// num blocks (lo)
+			status.push_back((imageSizeInBlocks >> 8) & 0xff);	// num blocks (med)
+			status.push_back((imageSizeInBlocks >> 16) & 0xff);	// num blocks (hi)
 
 			if (m_statusCode == SP_Cmd_status_STATUS)
 				break;
@@ -1131,12 +1125,11 @@ BYTE HarddiskInterfaceCard::SmartPortCmdStatus(HardDiskDrive* pHDD)
 			std::string idStr = "AppleWin SP D#";	// + "01".."99" (device number in decimal)
 			idStr += (char)('0' + m_unitNum / 10);
 			idStr += (char)('0' + m_unitNum % 10);
-			SetIdString(statusListAddr, idStr.c_str());
-			statusListAddr += 17;
-			mem[statusListAddr++] = 0x02;	// device type (0x02: Hard disk)
-			mem[statusListAddr++] = 0x20;	// device subtype (0x20: Hard disk)
-			mem[statusListAddr++] = fwVerMajor;	// f/w version (major)
-			mem[statusListAddr++] = fwVerMinor;	// f/w version (minor)
+			SetIdString(status, idStr);
+			status.push_back(0x02);			// device type (0x02: Hard disk)
+			status.push_back(0x20);			// device subtype (0x20: Hard disk)
+			status.push_back(fwVerMajor);	// f/w version (major)
+			status.push_back(fwVerMinor);	// f/w version (minor)
 			break;
 		}
 		case SP_Cmd_status_GETDCB:
@@ -1145,6 +1138,37 @@ BYTE HarddiskInterfaceCard::SmartPortCmdStatus(HardDiskDrive* pHDD)
 			pHDD->m_error = 1;
 			r = BADCTL;
 			break;
+		}
+	}
+
+	if (r == DEVICE_OK)
+	{
+		// Apple II's MMU could be setup so that read & write memory is different,
+		// so can't use 'mem' directly, instead use CpuWrite(). (GH#1319)
+		WORD statusListAddr = pHDD->m_memblock;
+
+		// Check that writes don't hit I/O space or ROM
+		BYTE page = statusListAddr >> 8;
+		const BYTE endPage = (statusListAddr + (WORD)status.size()) >> 8;	// OK if endPage wraps to 0x00
+		do
+		{
+			if (!memwrite[page])	// I/O space or ROM
+			{
+				if (g_nAppMode == MODE_STEPPING)
+					DebuggerBreakOnDmaToOrFromIoMemory(page<<8, true);
+				//else // Show MessageBox?
+
+				pHDD->m_error = 1;
+				r = BADCTL;
+				break;
+			}
+		}
+		while (page++ != endPage);
+
+		if (r == DEVICE_OK)
+		{
+			for (BYTE i : status)
+				CpuWrite(statusListAddr++, i, nExecutedCycles);
 		}
 	}
 
@@ -1272,7 +1296,7 @@ void HarddiskInterfaceCard::SaveSnapshot(YamlSaveHelper& yamlSaveHelper)
 	// New label
 	{
 		YamlSaveHelper::Label buffer(yamlSaveHelper, "%s:\n", SS_YAML_KEY_FIRMWARE);
-		yamlSaveHelper.SaveMemory(mem + APPLE_IO_BEGIN + m_slot * APPLE_SLOT_SIZE, APPLE_SLOT_SIZE);
+		yamlSaveHelper.SaveMemory(MemGetCxRomPeripheral() + m_slot * APPLE_SLOT_SIZE, APPLE_SLOT_SIZE);
 	}
 
 	for (UINT i = 0; i < NUM_HARDDISKS; i++)
@@ -1418,7 +1442,7 @@ bool HarddiskInterfaceCard::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT ve
 		userSelectedImageFolder |= LoadSnapshotHDDUnit(yamlLoadHelper, i, version);
 
 	if (!userSelectedImageFolder)
-		RegSaveString(TEXT(REG_PREFS), TEXT(REGVALUE_PREF_HDV_START_DIR), 1, Snapshot_GetPath());
+		RegSaveString(REG_PREFS, REGVALUE_PREF_HDV_START_DIR, 1, Snapshot_GetPath());
 
 	GetFrame().FrameRefreshStatus(DRAW_LEDS | DRAW_DISK_STATUS);
 

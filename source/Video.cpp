@@ -185,26 +185,26 @@ BYTE Video::VideoSetMode(WORD pc, WORD address, BYTE write, BYTE d, ULONG uExecu
 	address &= 0xFF;
 	switch (address)
 	{
-		case 0x00:                 g_uVideoMode &= ~VF_80STORE;                            break;
-		case 0x01:                 g_uVideoMode |=  VF_80STORE;                            break;
-		case 0x0C: if (!IS_APPLE2){g_uVideoMode &= ~VF_80COL; NTSC_SetVideoTextMode(40);}; break;
-		case 0x0D: if (!IS_APPLE2){g_uVideoMode |=  VF_80COL; NTSC_SetVideoTextMode(80);}; break;
-		case 0x0E: if (!IS_APPLE2) g_nAltCharSetOffset = 0;           break;	// Alternate char set off
-		case 0x0F: if (!IS_APPLE2) g_nAltCharSetOffset = 256;         break;	// Alternate char set on
+		case 0x00: g_uVideoMode &= ~VF_80STORE; break;
+		case 0x01: g_uVideoMode |=  VF_80STORE; break;
+		case 0x0C: if (!IS_APPLE2) { g_uVideoMode &= ~VF_80COL; NTSC_SetVideoTextMode(40); } break;
+		case 0x0D: if (!IS_APPLE2) { g_uVideoMode |=  VF_80COL; NTSC_SetVideoTextMode(80); } break;
+		case 0x0E: if (!IS_APPLE2) g_nAltCharSetOffset = 0;   break;	// Alternate char set off
+		case 0x0F: if (!IS_APPLE2) g_nAltCharSetOffset = 256; break;	// Alternate char set on
 		case 0x22: if (vidHD) vidHD->VideoIOWrite(pc, address, write, d, uExecutedCycles); break;	// VidHD IIgs video mode register
 		case 0x29: if (vidHD) vidHD->VideoIOWrite(pc, address, write, d, uExecutedCycles); break;	// VidHD IIgs video mode register
 		case 0x34: if (vidHD) vidHD->VideoIOWrite(pc, address, write, d, uExecutedCycles); break;	// VidHD IIgs video mode register
 		case 0x35: if (vidHD) vidHD->VideoIOWrite(pc, address, write, d, uExecutedCycles); break;	// VidHD IIgs video mode register
-		case 0x50: g_uVideoMode &= ~VF_TEXT;    break;
-		case 0x51: g_uVideoMode |=  VF_TEXT;    break;
-		case 0x52: g_uVideoMode &= ~VF_MIXED;   break;
-		case 0x53: g_uVideoMode |=  VF_MIXED;   break;
-		case 0x54: g_uVideoMode &= ~VF_PAGE2;   break;
-		case 0x55: g_uVideoMode |=  VF_PAGE2;   break;
-		case 0x56: g_uVideoMode &= ~VF_HIRES;   break;
-		case 0x57: g_uVideoMode |=  VF_HIRES;   break;
-		case 0x5E: if (!IS_APPLE2) g_uVideoMode |=  VF_DHIRES;  break;
-		case 0x5F: if (!IS_APPLE2) g_uVideoMode &= ~VF_DHIRES;  break;
+		case 0x50: g_uVideoMode &= ~VF_TEXT;  break;
+		case 0x51: g_uVideoMode |=  VF_TEXT;  break;
+		case 0x52: g_uVideoMode &= ~VF_MIXED; break;
+		case 0x53: g_uVideoMode |=  VF_MIXED; break;
+		case 0x54: g_uVideoMode &= ~VF_PAGE2; break;
+		case 0x55: g_uVideoMode |=  VF_PAGE2; break;
+		case 0x56: g_uVideoMode &= ~VF_HIRES; break;
+		case 0x57: g_uVideoMode |=  VF_HIRES; break;
+		case 0x5E: if (!IS_APPLE2) g_uVideoMode |=  VF_DHIRES; break;
+		case 0x5F: if (!IS_APPLE2) g_uVideoMode &= ~VF_DHIRES; break;
 	}
 
 	if (vidHD && vidHD->IsSHR())
@@ -220,7 +220,24 @@ BYTE Video::VideoSetMode(WORD pc, WORD address, BYTE write, BYTE d, ULONG uExecu
 	if ((oldVideoMode ^ g_uVideoMode) & (VF_TEXT|VF_MIXED))
 		delay = true;
 
-	NTSC_SetVideoMode(g_uVideoMode, delay);
+	uint32_t ntscVideoMode = g_uVideoMode;
+	if ((!IS_APPLE2) && (GetCardMgr().QueryAux() == CT_Empty || GetCardMgr().QueryAux() == CT_80Col))	// aux empty or 80col (GH#1341)
+	{
+		g_uVideoMode &= ~VF_DHIRES;
+		if (GetCardMgr().QueryAux() == CT_Empty)
+		{
+			if ((g_uVideoMode & VF_80COL) == 0)
+				g_uVideoMode &= ~VF_80COL_AUX_EMPTY;
+			else
+				g_uVideoMode |= VF_80COL_AUX_EMPTY;
+		}
+
+		ntscVideoMode = g_uVideoMode;
+		if (!(ntscVideoMode & VF_TEXT))
+			ntscVideoMode &= ~VF_80COL;	// if (aux=empty or aux=80col) && not TEXT: then 80COL switch is ignored
+	}
+
+	NTSC_SetVideoMode(ntscVideoMode, delay);
 
 	return MemReadFloatingBus(uExecutedCycles);
 }
@@ -265,6 +282,11 @@ bool Video::VideoGetSWTEXT(void)
 bool Video::VideoGetSWAltCharSet(void)
 {
 	return g_nAltCharSetOffset != 0;
+}
+
+bool Video::VideoGet80COLAUXEMPTY(void)
+{
+	return g_uVideoMode & VF_80COL_AUX_EMPTY ? true : false;
 }
 
 //===========================================================================
@@ -656,16 +678,16 @@ void Video::Config_Load_Video()
 
 	uint32_t dwTmp;
 
-	REGLOAD_DEFAULT(TEXT(REGVALUE_VIDEO_MODE), &dwTmp, (uint32_t)VT_DEFAULT);
+	REGLOAD_DEFAULT(REGVALUE_VIDEO_MODE, &dwTmp, (uint32_t)VT_DEFAULT);
 	g_eVideoType = dwTmp;
 
-	REGLOAD_DEFAULT(TEXT(REGVALUE_VIDEO_STYLE), &dwTmp, (uint32_t)VS_HALF_SCANLINES);
+	REGLOAD_DEFAULT(REGVALUE_VIDEO_STYLE, &dwTmp, (uint32_t)VS_HALF_SCANLINES);
 	g_eVideoStyle = (VideoStyle_e)dwTmp;
 
-	REGLOAD_DEFAULT(TEXT(REGVALUE_VIDEO_MONO_COLOR), &dwTmp, (uint32_t)RGB(0xC0, 0xC0, 0xC0));
+	REGLOAD_DEFAULT(REGVALUE_VIDEO_MONO_COLOR, &dwTmp, (uint32_t)RGB(0xC0, 0xC0, 0xC0));
 	g_nMonochromeRGB = (COLORREF)dwTmp;
 
-	REGLOAD_DEFAULT(TEXT(REGVALUE_VIDEO_REFRESH_RATE), &dwTmp, (uint32_t)VR_60HZ);
+	REGLOAD_DEFAULT(REGVALUE_VIDEO_REFRESH_RATE, &dwTmp, (uint32_t)VR_60HZ);
 	SetVideoRefreshRate((VideoRefreshRate_e)dwTmp);
 
 	//
@@ -674,14 +696,14 @@ void Video::Config_Load_Video()
 	if (pOldVersion[0] == 1 && pOldVersion[1] <= 28 && pOldVersion[2] <= 1)
 	{
 		uint32_t dwHalfScanLines;
-		REGLOAD_DEFAULT(TEXT(REGVALUE_VIDEO_HALF_SCAN_LINES), &dwHalfScanLines, 0);
+		REGLOAD_DEFAULT(REGVALUE_VIDEO_HALF_SCAN_LINES, &dwHalfScanLines, 0);
 
 		if (dwHalfScanLines)
 			g_eVideoStyle = (VideoStyle_e) ((uint32_t)g_eVideoStyle | VS_HALF_SCANLINES);
 		else
 			g_eVideoStyle = (VideoStyle_e) ((uint32_t)g_eVideoStyle & ~VS_HALF_SCANLINES);
 
-		REGSAVE(TEXT(REGVALUE_VIDEO_STYLE), g_eVideoStyle);
+		REGSAVE(REGVALUE_VIDEO_STYLE, g_eVideoStyle);
 	}
 
 	//
@@ -700,7 +722,7 @@ void Video::Config_Load_Video()
 		default:						g_eVideoType = VT_DEFAULT; break;
 		}
 
-		REGSAVE(TEXT(REGVALUE_VIDEO_MODE), g_eVideoType);
+		REGSAVE(REGVALUE_VIDEO_MODE, g_eVideoType);
 	}
 
 	if (g_eVideoType >= NUM_VIDEO_MODES)
@@ -709,10 +731,10 @@ void Video::Config_Load_Video()
 
 void Video::Config_Save_Video()
 {
-	REGSAVE(TEXT(REGVALUE_VIDEO_MODE)      ,g_eVideoType);
-	REGSAVE(TEXT(REGVALUE_VIDEO_STYLE)     ,g_eVideoStyle);
-	REGSAVE(TEXT(REGVALUE_VIDEO_MONO_COLOR),g_nMonochromeRGB);
-	REGSAVE(TEXT(REGVALUE_VIDEO_REFRESH_RATE), GetVideoRefreshRate());
+	REGSAVE(REGVALUE_VIDEO_MODE      ,g_eVideoType);
+	REGSAVE(REGVALUE_VIDEO_STYLE     ,g_eVideoStyle);
+	REGSAVE(REGVALUE_VIDEO_MONO_COLOR,g_nMonochromeRGB);
+	REGSAVE(REGVALUE_VIDEO_REFRESH_RATE, GetVideoRefreshRate());
 }
 
 //===========================================================================

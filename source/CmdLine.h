@@ -60,6 +60,10 @@ struct CmdLine
 		bestFullScreenResolution = false;
 		userSpecifiedWidth = 0;
 		userSpecifiedHeight = 0;
+		auxSlotEmpty = false;
+		auxSlotInsert = CT_Empty;
+		sBootSectorFileName = "";
+		nBootSectorFileSize = 0;
 
 		for (UINT i = 0; i < NUM_SLOTS; i++)
 		{
@@ -89,6 +93,7 @@ struct CmdLine
 	bool noDisk2StepperDefer;	// debug
 	bool useHdcFirmwareV1;	// debug
 	bool useHdcFirmwareV2;
+	bool useAltCpuEmulation;	// debug
 	SS_CARDTYPE slotInsert[NUM_SLOTS];
 	SlotInfo slotInfo[NUM_SLOTS];
 	LPCSTR szImageName_drive[NUM_SLOTS][NUM_DRIVES];
@@ -115,6 +120,10 @@ struct CmdLine
 	UINT userSpecifiedHeight;
 	std::string wavFileSpeaker;
 	std::string wavFileMockingboard;
+	bool auxSlotEmpty;
+	SS_CARDTYPE auxSlotInsert;
+	std::string sBootSectorFileName;
+	size_t      nBootSectorFileSize;
 };
 
 bool ProcessCmdLine(LPSTR lpCmdLine);

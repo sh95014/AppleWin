@@ -23,7 +23,7 @@ Parsing errors are fatal, listening errors are logged to the console.
 
 ## Configuration
 
-The configuration GUI only works with ImGui: otherwise either manually edit the configuration file ``~/.applewin/applewin.conf`` or use ``qapple`` and run ``sa2 --qt-ini``.
+The configuration GUI only works with ImGui: otherwise either manually edit the configuration file ``~/.config/applewin/applewin.conf`` or use ``qapple`` and run ``sa2 --qt-ini``.
 The format of the configuration file is the same as the Windows Registry of AppleWin.
 
 *Drag & drop* works for floppy disks. With ImGui it is possible to select which drive they are dropped into (`System` -> `Settings` -> `Hardware` -> `D&D`).
@@ -48,6 +48,10 @@ Some of the configuration options are exposed in the ``Settings`` menu. This is 
 Press ``F1`` to see a list of hotkeys.
 
 The application terminates if the `SDL_CONTROLLER_BUTTON_BACK` (i.e. `SELECT`) button is pressed twice in one second.
+
+## macOS
+
+When compiled for macOS, the `delete` key (or if you use a non-Apple keyboard, then its `backspace` key) is mapped to the emulated Apple ]['s `Delete` key.
 
 ## Audio
 

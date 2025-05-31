@@ -16,6 +16,7 @@ set(HEADER_FILES
   evdevpaddle.h
   nframe.h
   asciiart.h
+  ncurses_safe.h
   )
 
 add_executable(applen
@@ -27,7 +28,9 @@ set(CURSES_NEED_NCURSES TRUE)
 set(CURSES_NEED_WIDE TRUE)  # required for Unicode in GR and HGR
 find_package(Curses REQUIRED)
 
-pkg_search_module(LIBEVDEV REQUIRED libevdev)
+if (NOT WIN32)
+  pkg_search_module(LIBEVDEV REQUIRED libevdev)
+endif()
 
 target_include_directories(applen PRIVATE
   ${NCURSES_INCLUDE_DIRS}
@@ -41,10 +44,17 @@ target_compile_options(applen PRIVATE
   )
 
 target_link_libraries(applen PRIVATE
-  ${NCURSES_LIBRARIES}
-  ${LIBEVDEV_LIBRARIES}
   appleii
   common2
+  minizip
+  yaml
+
+  ${PCAP_LIBRARIES}
+  ${SLIRP_LIBRARIES}
+  ${ZLIB_LIBRARIES}
+  
+  ${NCURSES_LIBRARIES}
+  ${LIBEVDEV_LIBRARIES}
   )
 
 target_link_directories(applen PRIVATE

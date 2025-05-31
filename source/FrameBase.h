@@ -3,6 +3,7 @@
 #include "Video.h"
 
 class NetworkBackend;
+class SoundBuffer;
 
 class FrameBase
 {
@@ -42,11 +43,14 @@ public:
 	virtual int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) = 0;
 
 	// this function merges LoadBitmap and GetBitmapBits from windows.h
-	virtual void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) = 0;
+	virtual void GetBitmap(WORD id, LONG cb, LPVOID lpvBits) = 0;
 
 	// create the network backed for Uthernet 1 and 2
 	// useful to use libslirp in Linux
 	virtual std::shared_ptr<NetworkBackend> CreateNetworkBackend(const std::string & interfaceName) = 0;
+
+	// create an object to write sound output to
+	virtual std::shared_ptr<SoundBuffer> CreateSoundBuffer(uint32_t dwBufferSize, uint32_t nSampleRate, int nChannels, const char* pszVoiceName) = 0;
 
 	// FindResource, MAKEINTRESOURCE, SizeofResource, LoadResource, LockResource
 	// Return pointer to resource if size is correct.
@@ -65,7 +69,7 @@ public:
 
 	virtual std::string Video_GetScreenShotFolder() const = 0;
 	void Video_TakeScreenShot(const Video::VideoScreenShot_e ScreenShotType);
-	void Video_SaveScreenShot(const Video::VideoScreenShot_e ScreenShotType, const TCHAR* pScreenShotFileName);
+	void Video_SaveScreenShot(const Video::VideoScreenShot_e ScreenShotType, const char* pScreenShotFileName);
 	void SetDisplayPrintScreenFileName(bool state) { g_bDisplayPrintScreenFileName = state; }
 	void Video_ResetScreenshotCounter(const std::string& pDiskImageFileName);
 
@@ -74,7 +78,7 @@ public:
 
 private:
 	std::string Util_MakeScreenShotFileName() const;
-	bool Util_TestScreenShotFileName(const TCHAR* pFileName);
+	bool Util_TestScreenShotFileName(const char* pFileName);
 
 	bool g_bShowPrintScreenWarningDialog;
 

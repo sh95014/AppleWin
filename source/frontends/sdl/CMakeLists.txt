@@ -48,8 +48,6 @@ set(HEADER_FILES
   )
 
 
-target_compile_features(sa2 PUBLIC cxx_std_17)
-
 target_include_directories(sa2 PRIVATE
   ${SDL2_INCLUDE_DIRS}
   ${SDL2_IMAGE_INCLUDE_DIRS}
@@ -57,14 +55,24 @@ target_include_directories(sa2 PRIVATE
   )
 
 target_link_libraries(sa2 PRIVATE
+  appleii
+  common2
+
+  ${PCAP_LIBRARIES}
+  ${SLIRP_LIBRARIES}
+  ${ZLIB_LIBRARIES}
+
   ${SDL2_LIBRARIES}
   ${SDL2_IMAGE_LIBRARIES}
   ${GLES2_LIBRARIES}
   OpenGL::GL
-  appleii
-  common2
-  windows
   )
+
+if (NOT WIN32)
+  target_link_libraries(sa2 PUBLIC
+    windows
+    )
+endif()
 
 target_link_directories(sa2 PRIVATE
   ${SDL2_LIBRARY_DIRS}

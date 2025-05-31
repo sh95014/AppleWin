@@ -1,38 +1,33 @@
 include(FindPkgConfig)
-include(FindZLIB)
 
-find_package(ZLIB REQUIRED)
-pkg_search_module(YAML REQUIRED yaml-0.1)
-pkg_search_module(MINIZIP REQUIRED minizip)
-pkg_search_module(SLIRP slirp)
+pkg_search_module(ZLIB REQUIRED zlib)
 
-# see https://github.com/madler/zlib/commit/7e6f0784cc0c33e8d5fcb368248168c6656f73c8
-if (MINIZIP_INCLUDE_DIRS MATCHES "minizip$")
-  # old style, include from the zlib root
-  string(APPEND MINIZIP_INCLUDE_DIRS "/..")
-endif()
+if (NOT WIN32)
+  pkg_search_module(SLIRP slirp)
 
-# if slirp is not found, we will try pcap
-# if it is not found either, a dummy pcap will be compiled
-# but network will be badly affected
+  # if slirp is not found, we will try pcap
+  # if it is not found either, a dummy pcap will be compiled
+  # but network will be badly affected
 
-if ("${SLIRP_FOUND}" STREQUAL "")
-  message(WARNING "'libslirp' not found: will try 'libpcap' instead")
+  # pcacp on Windows in managed in a different way, so we disable it
+  if ("${SLIRP_FOUND}" STREQUAL "")
+    message(WARNING "'libslirp' not found: will try 'libpcap' instead")
 
-  pkg_search_module(PCAP libpcap)
-  if ("${PCAP_FOUND}" STREQUAL "")
-    # old versions of pcap do not work with pkg-config
-    # this is necessary on Rapsberri Pi OS
-    execute_process(COMMAND pcap-config --cflags
-      OUTPUT_VARIABLE PCAP_INCLUDE_DIRS
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-      RESULT_VARIABLE STATUS)
-    if ("${STATUS}" STREQUAL "0")
-      message("Found 'libpcap' via pcap-config")
-      execute_process(COMMAND pcap-config --libs
-        OUTPUT_VARIABLE PCAP_LIBRARIES
-        OUTPUT_STRIP_TRAILING_WHITESPACE)
-      set(PCAP_FOUND "1")
+    pkg_search_module(PCAP libpcap)
+    if ("${PCAP_FOUND}" STREQUAL "")
+      # old versions of pcap do not work with pkg-config
+      # this is necessary on Rapsberri Pi OS
+      execute_process(COMMAND pcap-config --cflags
+        OUTPUT_VARIABLE PCAP_INCLUDE_DIRS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE STATUS)
+      if ("${STATUS}" STREQUAL "0")
+        message("Found 'libpcap' via pcap-config")
+        execute_process(COMMAND pcap-config --libs
+          OUTPUT_VARIABLE PCAP_LIBRARIES
+          OUTPUT_STRIP_TRAILING_WHITESPACE)
+        set(PCAP_FOUND "1")
+      endif()
     endif()
   endif()
 endif()
@@ -106,12 +101,13 @@ set(SOURCE_FILES
   Configuration/PropertySheetHelper.cpp
   Configuration/Config.cpp
 
-  linux/resources.cpp
+  linux/bitmap.cpp
   linux/benchmark.cpp
   linux/paddle.cpp
   linux/version.cpp
   linux/registryclass.cpp
   linux/linuxframe.cpp
+  linux/linuxsoundbuffer.cpp
   linux/context.cpp
   linux/cassettetape.cpp
   linux/network/slirp2.cpp
@@ -193,6 +189,7 @@ set(HEADER_FILES
   FrameBase.h
   FourPlay.h
   SNESMAX.h
+  SoundBuffer.h
 
   Common.h
   DiskDefs.h
@@ -200,7 +197,6 @@ set(HEADER_FILES
   Interface.h
 
   Debugger/Debug.h
-  Debugger/DebugDefs.h
   Debugger/Debugger_Color.h
   Debugger/Debugger_Console.h
   Debugger/Debugger_Disassembler.h
@@ -218,14 +214,14 @@ set(HEADER_FILES
   Configuration/PropertySheetHelper.h
   Configuration/Config.h
 
-  linux/resources.h
-  linux/linuxinterface.h
+  linux/bitmap.h
   linux/benchmark.h
   linux/paddle.h
   linux/version.h
   linux/registryclass.h
   linux/keyboardbuffer.h
   linux/linuxframe.h
+  linux/linuxsoundbuffer.h
   linux/cassettetape.h
   linux/network/slirp2.h
   linux/network/portfwds.h
@@ -249,45 +245,50 @@ else()
 endif()
 
 target_include_directories(appleii PRIVATE
-  ${YAML_INCLUDE_DIRS}
   ${PCAP_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${SLIRP_INCLUDE_DIRS}
+  ${ZLIB_INCLUDE_DIRS}
   Debugger
   )
 
 # this one appears in header files
 target_include_directories(appleii PUBLIC
   ${CMAKE_CURRENT_BINARY_DIR}  # for config.h
-  ${MINIZIP_INCLUDE_DIRS}
   )
 
-target_link_libraries(appleii PRIVATE
-  ${YAML_LIBRARIES}
-  ${MINIZIP_LIBRARIES}
-  ${PCAP_LIBRARIES}
-  ${SLIRP_LIBRARIES}
-  ZLIB::ZLIB
-  )
+if (WIN32)
+  target_link_libraries(appleii PUBLIC
+    wsock32
+    iphlpapi
+    winmm
+    strmiids
+    )
+else()
+  target_link_libraries(appleii PUBLIC
+    windows
+    )
+endif()
 
 target_link_libraries(appleii PUBLIC
-  windows
+  yaml
+  minizip
   )
 
-target_link_directories(appleii PRIVATE
-  ${YAML_LIBRARY_DIRS}
-  ${MINIZIP_LIBRARY_DIRS}
+target_link_directories(appleii PUBLIC
   ${PCAP_LIBRARY_DIRS}
   ${SLIRP_LIBRARY_DIRS}
+  ${ZLIB_LIBRARY_DIRS}
   )
 
 target_compile_options(appleii PUBLIC
   -Wno-multichar
   )
 
+# wildcards (*.SYM) are not supported on Windows msys2
 add_custom_command(
   TARGET appleii POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/bin/*.SYM ${CMAKE_BINARY_DIR}
+  COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/bin/APPLE2E.SYM ${CMAKE_SOURCE_DIR}/bin/A2_BASIC.SYM ${CMAKE_SOURCE_DIR}/bin/A2_DOS33.SYM2 ${CMAKE_BINARY_DIR}
   )
 
-configure_file(linux/config.h.in linux/config.h)
+configure_file(linux/linux_config.h.in linux/linux_config.h)

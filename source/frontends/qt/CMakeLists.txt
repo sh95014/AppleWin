@@ -66,28 +66,39 @@ add_executable(qapple
   )
 
 target_link_libraries(qapple PRIVATE
+  appleii
+  apple2roms
+
+  ${PCAP_LIBRARIES}
+  ${SLIRP_LIBRARIES}
+  ${ZLIB_LIBRARIES}
+
   Qt::Widgets
   Qt::Multimedia
-  appleii
   QHexView
-  windows
   )
+
+if (NOT WIN32)
+  target_link_libraries(qapple PUBLIC
+    windows
+    )
+endif()
 
 if(Qt5_FOUND)
   target_sources(qapple PRIVATE
     gamepadpaddle.cpp
     gamepadpaddle.h
-  )
+    )
 
   target_link_libraries(qapple PRIVATE
     Qt::Gamepad
-  )
+    )
 endif()
 
 if(Qt6_FOUND)
   target_link_libraries(qapple PRIVATE
     Qt::OpenGLWidgets
-  )
+    )
 endif()
 
 install(TARGETS qapple

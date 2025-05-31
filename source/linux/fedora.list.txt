@@ -1,8 +1,7 @@
 git
 cmake
 gcc-c++
-libyaml-devel
-minizip-compat-devel
+xxd
 libslirp-devel
 libpcap-devel
 boost-devel

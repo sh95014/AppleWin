@@ -13,16 +13,17 @@
 #include "Video.h"
 #include "Interface.h"
 
-QVideo::QVideo(QWidget *parent) : QVIDEO_BASECLASS(parent)
+QVideo::QVideo(QWidget *parent)
+    : QVIDEO_BASECLASS(parent)
 {
     this->setMouseTracking(true);
 
-    myLogo = QImage(":/resources/APPLEWINLOGO.BMP").mirrored(false, true);
+    myLogo = QImage(":/resources/ApplewinLogo.bmp").mirrored(false, true);
 }
 
 void QVideo::loadVideoSettings()
 {
-    Video & video = GetVideo();
+    Video &video = GetVideo();
 
     mySX = video.GetFrameBufferBorderWidth();
     mySY = video.GetFrameBufferBorderHeight();
@@ -193,7 +194,7 @@ void QVideo::keyPressEvent(QKeyEvent *event)
         const Qt::KeyboardModifiers modifiers = event->modifiers();
         if (modifiers & Qt::ControlModifier)
         {
-           ch = 0x1f;
+            ch = 0x1f;
         }
         break;
     }
@@ -205,7 +206,6 @@ void QVideo::keyPressEvent(QKeyEvent *event)
         }
     }
     }
-
 
     if (ch)
     {
@@ -219,7 +219,7 @@ void QVideo::keyPressEvent(QKeyEvent *event)
 
 void QVideo::mouseMoveEvent(QMouseEvent *event)
 {
-    CardManager & cardManager = GetCardMgr();
+    CardManager &cardManager = GetCardMgr();
 
     if (cardManager.IsMouseCardInstalled() && cardManager.GetMouseCard()->IsActiveAndEnabled())
     {
@@ -250,7 +250,7 @@ void QVideo::mouseMoveEvent(QMouseEvent *event)
 
 void QVideo::mousePressEvent(QMouseEvent *event)
 {
-    CardManager & cardManager = GetCardMgr();
+    CardManager &cardManager = GetCardMgr();
 
     if (cardManager.IsMouseCardInstalled() && cardManager.GetMouseCard()->IsActiveAndEnabled())
     {
@@ -272,7 +272,7 @@ void QVideo::mousePressEvent(QMouseEvent *event)
 
 void QVideo::mouseReleaseEvent(QMouseEvent *event)
 {
-    CardManager & cardManager = GetCardMgr();
+    CardManager &cardManager = GetCardMgr();
 
     if (cardManager.IsMouseCardInstalled() && cardManager.GetMouseCard()->IsActiveAndEnabled())
     {

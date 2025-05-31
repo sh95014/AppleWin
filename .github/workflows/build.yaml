@@ -2,35 +2,73 @@ name: build
 
 on:
   push:
+    branches: [master]
   pull_request:
-  workflow_run:
-    # Use a workflow as a trigger of scheduled builds. Forked repositories can disable scheduled builds by disabling
-    # "scheduled" workflow, while maintaining ability to perform local CI builds.
-    workflows:
-      - scheduled
-    branches:
-      - master
-      - docking
-    types:
-      - requested
+    branches: [master]
 
 jobs:
   Linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get -y install $(cat source/linux/raspbian.list.txt)
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install $(cat source/linux/raspbian.list.txt)
 
-    - name: Build
-      run: |
-        cmake --version
-        cmake -S . -B build
-        cmake --build build
-        cmake -S . -DQAPPLE_USE_QT5=ON -DBUILD_QAPPLE=ON -B build-qt5
-        cmake --build build-qt5
+      - name: cmake version
+        run: cmake --version
+
+      - name: Standard build
+        run: |
+          cmake -B build
+          cmake --build build
+
+      - name: Qt5 build
+        run: |
+          cmake -B build-qt5 -DBUILD_QAPPLE=ON -DQAPPLE_USE_QT5=ON
+          cmake --build build-qt5
+
+      - name: libretro build
+        run: |
+          cmake -DBUILD_LIBRETRO=ON -DSTATIC_LINKING=ON -B build-static
+          cmake --build build-static
+          ldd build-static/source/frontends/libretro/applewin_libretro.so
+
+  MSYS2:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          install: >-
+            git
+            vim
+          pacboy: >-
+            toolchain:p
+            cmake:p
+            ninja:p
+            pkg-config:p
+            zlib:p
+            boost:p
+
+      - name: cmake version
+        run: cmake --version
+
+      - name: MSYS2 build
+        run: |
+          cmake -DSTATIC_LINKING=ON -B build-static
+          cmake --build build-static
+          ldd build-static/applewin_libretro.dll

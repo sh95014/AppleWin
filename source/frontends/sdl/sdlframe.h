@@ -9,77 +9,80 @@
 namespace sa2
 {
 
-  class SDLFrame : public common2::GNUFrame
-  {
-  public:
-    SDLFrame(const common2::EmulatorOptions & options);
+    class SDLFrame : public common2::GNUFrame
+    {
+    public:
+        SDLFrame(const common2::EmulatorOptions &options);
 
-    void Begin() override;
-    void End() override;
+        void Begin() override;
+        void End() override;
 
-    void FrameRefreshStatus(int drawflags) override;
-    int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
-    void GetBitmap(LPCSTR lpBitmapName, LONG cb, LPVOID lpvBits) override;
-    std::shared_ptr<NetworkBackend> CreateNetworkBackend(const std::string & interfaceName) override;
+        void FrameRefreshStatus(int drawflags) override;
+        int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
+        std::shared_ptr<NetworkBackend> CreateNetworkBackend(const std::string &interfaceName) override;
 
-    virtual bool Quit() const = 0;
+        // create an object to write sound output to
+        std::shared_ptr<SoundBuffer> CreateSoundBuffer(
+            uint32_t dwBufferSize, uint32_t nSampleRate, int nChannels, const char *pszVoiceName) override;
 
-    void ProcessEvents(bool &quit);
+        virtual bool Quit() const = 0;
 
-    void FrameResetMachineState();
+        void ProcessEvents(bool &quit);
 
-    const std::shared_ptr<SDL_Window> & GetWindow() const;
+        void FrameResetMachineState();
 
-    void getDragDropSlotAndDrive(size_t & slot, size_t & drive) const;
-    void setDragDropSlotAndDrive(const size_t slot, const size_t drive);
+        const std::shared_ptr<SDL_Window> &GetWindow() const;
 
-    bool & getPreserveAspectRatio();
-    bool & getAutoBoot();
+        void getDragDropSlotAndDrive(size_t &slot, size_t &drive) const;
+        void setDragDropSlotAndDrive(const size_t slot, const size_t drive);
 
-    const common2::Speed & getSpeed() const;
+        bool &getPreserveAspectRatio();
+        bool &getAutoBoot();
 
-    void SaveSnapshot();
+        const common2::Speed &getSpeed() const;
 
-    static void setGLSwapInterval(const int interval);
+        void SaveSnapshot();
 
-  protected:
-    void SetApplicationIcon();
-    void SetGLSynchronisation(const common2::EmulatorOptions & options);
+        static void setGLSwapInterval(const int interval);
 
-    virtual void ProcessSingleEvent(const SDL_Event & event, bool & quit);
-    virtual void GetRelativeMousePosition(const SDL_MouseMotionEvent & motion, float & x, float & y) const = 0;
-    virtual void ProcessKeyDown(const SDL_KeyboardEvent & key, bool &quit);
-    virtual void ToggleMouseCursor() = 0;
+    protected:
+        void SetApplicationIcon();
+        void SetGLSynchronisation(const common2::EmulatorOptions &options);
 
-    void ProcessKeyUp(const SDL_KeyboardEvent & key);
-    void ProcessText(const SDL_TextInputEvent & text);
-    void ProcessDropEvent(const SDL_DropEvent & drop);
-    void ProcessMouseButton(const SDL_MouseButtonEvent & button);
-    void ProcessMouseMotion(const SDL_MouseMotionEvent & motion);
+        virtual void ProcessSingleEvent(const SDL_Event &event, bool &quit);
+        virtual void GetRelativeMousePosition(const SDL_MouseMotionEvent &motion, float &x, float &y) const = 0;
+        virtual void ProcessKeyDown(const SDL_KeyboardEvent &key, bool &quit);
+        virtual void ToggleMouseCursor() = 0;
 
-    void SetFullSpeed(const bool value) override;
-    bool CanDoFullSpeed() override;
+        void ProcessKeyUp(const SDL_KeyboardEvent &key);
+        void ProcessText(const SDL_TextInputEvent &text);
+        void ProcessDropEvent(const SDL_DropEvent &drop);
+        void ProcessMouseButton(const SDL_MouseButtonEvent &button);
+        void ProcessMouseMotion(const SDL_MouseMotionEvent &motion);
 
-    common2::Geometry getGeometryOrDefault(const std::optional<common2::Geometry> & geometry) const;
+        void SetFullSpeed(const bool value) override;
+        bool CanDoFullSpeed() override;
 
-    static float GetRelativePosition(const float value, const float size);
+        common2::Geometry getGeometryOrDefault(const std::optional<common2::Geometry> &geometry) const;
 
-    int myTargetGLSwap;
-    bool myPreserveAspectRatio;
-    bool myForceCapsLock;
-    int myMultiplier;
-    bool myFullscreen;
+        static float GetRelativePosition(const float value, const float size);
 
-    size_t myDragAndDropSlot;
-    size_t myDragAndDropDrive;
+        int myTargetGLSwap;
+        bool myPreserveAspectRatio;
+        bool myForceCapsLock;
+        int myMultiplier;
+        bool myFullscreen;
 
-    bool myScrollLockFullSpeed;
+        size_t myDragAndDropSlot;
+        size_t myDragAndDropDrive;
 
-    std::vector<PortFwd> myPortFwds;
+        bool myScrollLockFullSpeed;
 
-    std::shared_ptr<SDL_Window> myWindow;
+        std::vector<PortFwd> myPortFwds;
 
-    common2::ControllerDoublePress myControllerQuit;
-  };
+        std::shared_ptr<SDL_Window> myWindow;
 
-}
+        common2::ControllerDoublePress myControllerQuit;
+    };
+
+} // namespace sa2
