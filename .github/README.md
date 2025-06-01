@@ -40,6 +40,8 @@ The easiest way to build Mariani is to satisfy the dependencies using [Homebrew]
 brew install libslirp
 ```
 
+Note that the default branch for Mariani is `macos`, not `master`. This is so that the `master` branch can be kept clean for individual contributions upstream.
+
 ### Checkout
 
 Now grab the source code:
