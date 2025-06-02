@@ -9,6 +9,7 @@
 #import "Carbon/Carbon.h"
 #import "UserDefaults.h"
 
+#import "wincompat.h"
 #import "linux/keyboardbuffer.h"
 #import "linux/paddle.h"
 
