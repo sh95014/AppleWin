@@ -42,7 +42,7 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 - (void)screenRecordingDidStart;
 - (void)screenRecordingDidTick;
 - (void)screenRecordingDidTock;
-- (void)screenRecordingDidStop;
+- (void)screenRecordingDidStop:(NSURL *)url;
 
 - (void)updateStatus:(NSString *)status;
 
@@ -67,7 +67,7 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 
 - (void)toggleScreenRecording;
 @property (getter=isRecordingScreen) BOOL recordingScreen;
-- (void)saveScreenshot:(BOOL)silent;
+- (NSURL *)saveScreenshot:(BOOL)silent;
 - (int)registerAudioOutputWithChannels:(UInt32)channels sampleRate:(UInt32)sampleRate;
 - (void)submitOutput:(int)output audioData:(NSData *)data;
 
@@ -76,6 +76,9 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 - (BOOL)emulationHardwareChanged;
 
 - (void)type:(NSString *)string;
+
+- (NSString *)saveSnapshot:(nullable NSURL *)url;
+- (NSString *)loadSnapshot:(NSURL *)url;
 
 @end
 

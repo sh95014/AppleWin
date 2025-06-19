@@ -532,6 +532,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                 NSLog(@"Failed to write screen recording: %@", self.videoWriter.error);
             }
             
+            NSURL *url = self.videoWriter.outputURL;
+            
             // clean up
             self.videoWriter = nil;
             self.videoWriterInput = nil;
@@ -543,7 +545,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             NSLog(@"Ended screen recording");
             
             dispatch_async(dispatch_get_main_queue(), ^(void) {
-                [self.delegate screenRecordingDidStop];
+                [self.delegate screenRecordingDidStop:url];
             });
         }];
     }
@@ -604,16 +606,17 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     });
 }
 
-- (void)saveScreenshot:(BOOL)silent {
+- (NSURL *)saveScreenshot:(BOOL)silent {
+    NSURL *url = [self.delegate unusedURLForFilename:SCREENSHOT_FILE_NAME
+                                           extension:@"png"
+                                            inFolder:[[UserDefaults sharedInstance] screenshotsFolder]];
     [self takeScreenshotWithCompletion:^(NSData *pngData) {
-        NSURL *url = [self.delegate unusedURLForFilename:SCREENSHOT_FILE_NAME
-                                               extension:@"png"
-                                                inFolder:[[UserDefaults sharedInstance] screenshotsFolder]];
         [pngData writeToURL:url atomically:YES];
         if (!silent) {
             [[NSSound soundNamed:@"Blow"] play];
         }
     }];
+    return url;
 }
 
 - (IBAction)copy:(id)sender {
@@ -634,6 +637,19 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void)type:(NSString *)string {
     [(EmulatorView *)self.view addStringToKeyboardBuffer:string];
+}
+
+- (NSString *)saveSnapshot:(NSURL *)url {
+    if (url != nil) {
+        frame->SetSnapshotPathname(std::string(url.fileSystemRepresentation));
+    }
+    frame->SaveSnapshot();
+    return [NSString stringWithCString:frame->SnapshotPathname().c_str() encoding:NSUTF8StringEncoding];
+}
+
+- (NSString *)loadSnapshot:(NSURL *)url {
+    frame->LoadSnapshot(std::string(url.fileSystemRepresentation));
+    return [NSString stringWithCString:frame->SnapshotPathname().c_str() encoding:NSUTF8StringEncoding];
 }
 
 #pragma mark - EmulatorRendererDelegate

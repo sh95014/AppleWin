@@ -31,6 +31,11 @@ public:
 
     virtual std::shared_ptr<SoundBuffer> CreateSoundBuffer(uint32_t dwBufferSize, uint32_t nSampleRate, int nChannels, const char *pszVoiceName) override;
 
+    const std::string& SnapshotPathname();
+    void SetSnapshotPathname(std::string path);
+    void SaveSnapshot();
+    void LoadSnapshot(std::string path);
+
 protected:
     virtual std::pair<const unsigned char *, unsigned int> GetResourceData(WORD id) const override;
 

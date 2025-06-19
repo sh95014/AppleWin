@@ -85,6 +85,8 @@ using namespace DiskImgLib;
 
 @property (strong) NSOpenPanel *diskOpenPanel;
 @property (strong) NSOpenPanel *tapeOpenPanel;
+@property (strong) NSOpenPanel *stateOpenPanel;
+@property (strong) NSSavePanel *stateSavePanel;
 
 @property (strong) NSMutableDictionary *browserWindowControllers;
 
@@ -300,6 +302,9 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     else if ([sender isEqual:self.tapeOpenPanel]) {
         supportedTypes = @[ @"WAV" ];
     }
+    else if ([sender isEqual:self.stateOpenPanel]) {
+        supportedTypes = @[ @"YAML" ];
+    }
     return [supportedTypes containsObject:url.pathExtension.uppercaseString];
 }
 
@@ -317,9 +322,10 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
 }
 
-- (void)screenRecordingDidStop {
+- (void)screenRecordingDidStop:(NSURL *)url {
     self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
     self.screenRecordingButton.contentTintColor = [NSColor secondaryLabelColor];
+    self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Recording saved to ‘%s’", @""), url.fileSystemRepresentation];
 }
 
 - (void)updateStatus:(NSString *)status {
@@ -462,6 +468,44 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         ExtAudioFileDispose(inputFile);
         self.tapeOpenPanel = nil;
     }
+}
+
+- (IBAction)loadStateAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    self.stateOpenPanel = [NSOpenPanel openPanel];
+    self.stateOpenPanel.canChooseFiles = YES;
+    self.stateOpenPanel.canChooseDirectories = NO;
+    self.stateOpenPanel.allowsMultipleSelection = NO;
+    self.stateOpenPanel.canDownloadUbiquitousContents = YES;
+    self.stateOpenPanel.message = NSLocalizedString(@"Select save state file", @"");
+    self.stateOpenPanel.delegate = self;
+    
+    if ([self.stateOpenPanel runModal] == NSModalResponseOK) {
+        NSString *path = [self.emulatorVC loadSnapshot:self.stateOpenPanel.URL];
+        self.statusLabel.stringValue = [NSString stringWithFormat:@"State loaded from ‘%@’", path];
+        self.stateOpenPanel = nil;
+    }
+}
+
+- (IBAction)saveStateAsAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    self.stateSavePanel = [NSSavePanel savePanel];
+    self.stateSavePanel.canCreateDirectories = YES;
+    self.stateSavePanel.title = NSLocalizedString(@"Save state as...", @"");
+    self.stateSavePanel.delegate = self;
+    
+    if ([self.stateSavePanel runModal] == NSModalResponseOK) {
+        [self.emulatorVC saveSnapshot:self.stateSavePanel.URL];
+        NSString *path = self.statusLabel.stringValue;
+        self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"State saved to ‘%@’", @""), path];
+        self.stateSavePanel = nil;
+    }
+}
+
+- (IBAction)saveStateAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    NSString *path = [self.emulatorVC saveSnapshot:nil];
+    self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"State saved to ‘%@’", @""), path];
 }
 
 - (IBAction)controlResetAction:(id)sender {
@@ -789,7 +833,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 - (IBAction)saveScreenshotAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    [self.emulatorVC saveScreenshot:NO];
+    NSURL *url = [self.emulatorVC saveScreenshot:NO];
+    self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Screenshot saved to ‘%s’", @""), url.fileSystemRepresentation];
 }
 
 #pragma mark - Helpers because I can't figure out how to make 'frame' properly global

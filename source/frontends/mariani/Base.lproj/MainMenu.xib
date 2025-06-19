@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22154" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -104,6 +104,25 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="081-d1-Gfw"/>
+                            <menuItem title="Load State…" keyEquivalent="" id="v6G-Pn-YTg">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="loadStateAction:" target="Voe-Tx-rLC" id="4hp-53-BQF"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save State As…" id="85k-bs-Jat" userLabel="Save State As…">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="saveStateAsAction:" target="Voe-Tx-rLC" id="gkS-P2-xEw"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save State" keyEquivalent="" id="Suf-al-A5T" userLabel="Save State">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="saveStateAction:" target="Voe-Tx-rLC" id="VQt-C9-Ix7"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="idq-SV-QKA"/>
                             <menuItem title="Close Window" keyEquivalent="w" id="4wN-Ie-K1K">
                                 <connections>
                                     <action selector="performClose:" target="-1" id="6nd-jB-WEW"/>

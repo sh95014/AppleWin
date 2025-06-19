@@ -9,6 +9,7 @@
 #include "MarianiFrame.h"
 #include "resource.h"
 #include "programoptions.h"
+#include "utils.h"
 
 #include <sys/stat.h>
 
@@ -18,6 +19,7 @@
 #include "Debug.h"
 #include "NTSC.h"
 #include "ParallelPrinter.h"
+#include "SaveState.h"
 #include "Speaker.h"
 
 #include "AppDelegate.h"
@@ -115,6 +117,30 @@ void MarianiFrame::FrameRefreshStatus(int flags)
 void* MarianiFrame::FrameBufferData()
 {
     return myFramebuffer.data();
+}
+
+const std::string& MarianiFrame::SnapshotPathname()
+{
+    return Snapshot_GetPathname();
+}
+
+void MarianiFrame::SetSnapshotPathname(std::string path)
+{
+    common2::setSnapshotFilename(path);
+}
+
+void MarianiFrame::SaveSnapshot()
+{
+    SoundCore_SetFade(FADE_OUT);
+    Snapshot_SaveState();
+    SoundCore_SetFade(FADE_IN);
+    ResetSpeed();
+}
+
+void MarianiFrame::LoadSnapshot(std::string path)
+{
+    common2::setSnapshotFilename(path);
+    LinuxFrame::LoadSnapshot();
 }
 
 std::shared_ptr<SoundBuffer> MarianiFrame::CreateSoundBuffer(uint32_t dwBufferSize, uint32_t nSampleRate, int nChannels, const char *pszVoiceName)
