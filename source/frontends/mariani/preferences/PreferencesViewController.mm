@@ -369,6 +369,13 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow = !mapDeleteKeyToLeftArrow;
 }
 
+- (IBAction)toggleUseLargeStatusBar:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    BOOL useLargeStatusBar = [UserDefaults sharedInstance].useLargeStatusBar;
+    [UserDefaults sharedInstance].useLargeStatusBar = !useLargeStatusBar;
+}
+
 - (IBAction)recordingsFolderAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     

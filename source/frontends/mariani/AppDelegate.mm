@@ -1067,10 +1067,6 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     return (name != nil) ? name : NSLocalizedString(@"Unknown", @"");
 }
 
-- (NSView *)viewCopyFromTemplateView:(NSView *)templateView {
-    return [self viewCopyFromArchive:[self archiveFromTemplateView:templateView]];
-}
-
 - (NSData *)archiveFromTemplateView:(NSView *)templateView {
     NSError *error;
     NSData *archive = [NSKeyedArchiver archivedDataWithRootObject:templateView requiringSecureCoding:NO error:&error];

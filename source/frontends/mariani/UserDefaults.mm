@@ -12,6 +12,7 @@
 #define RECORDINGS_FOLDER_KEY           @"RecordingsFolder"
 #define SCREENSHOTS_FOLDER_KEY          @"ScreenshotsFolder"
 #define MAP_DELETE_KEY_TO_LEFT_ARROW    @"MapDeleteKeyToLeftArrow"
+#define USE_LARGE_STATUS_BAR            @"UseLargeStatusBar"
 #define GAME_CONTROLLER_KEY             @"GameController"
 #define JOYSTICK_MAPPING_KEY            @"JoystickMapping"
 #define JOYSTICK_BUTTON0_MAPPING_KEY    @"JoystickButton0Mapping"
@@ -67,6 +68,14 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 
 - (void)setMapDeleteKeyToLeftArrow:(BOOL)mapDeleteKeyToLeftArrow {
     [[NSUserDefaults standardUserDefaults] setBool:mapDeleteKeyToLeftArrow forKey:MAP_DELETE_KEY_TO_LEFT_ARROW];
+}
+
+- (BOOL)useLargeStatusBar {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:USE_LARGE_STATUS_BAR];
+}
+
+- (void)setUseLargeStatusBar:(BOOL)useLargeStatusBar {
+    [[NSUserDefaults standardUserDefaults] setBool:useLargeStatusBar forKey:MAP_DELETE_KEY_TO_LEFT_ARROW];
 }
 
 - (NSString *)gameController {
