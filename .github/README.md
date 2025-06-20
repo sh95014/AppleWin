@@ -20,11 +20,7 @@ But if what you want is a macOS command-line app, you can build that too with th
 - [AppleScript](/source/frontends/mariani/scripting/README.md) support
 - Numeric keypad joystick emulation
 
-### Known Issues
-
-Mariani should now be broadly useful, so please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into. The following AppleWin feature is not yet supported:
-
-- [Load/Save State](https://github.com/sh95014/AppleWin/issues/13)
+Mariani should now be broadly useful, so please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into.
 
 ### Roadmap
 
