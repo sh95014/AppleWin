@@ -295,17 +295,20 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         return YES;
     }
     
-    NSArray *supportedTypes = nil;
     if ([sender isEqual:self.diskOpenPanel]) {
-        supportedTypes = @[ @"BIN", @"DO", @"DSK", @"NIB", @"PO", @"WOZ", @"ZIP", @"GZIP", @"GZ" ];
+        return [@[ @"BIN", @"DO", @"DSK", @"NIB", @"PO", @"WOZ", @"ZIP", @"GZIP", @"GZ" ] containsObject:url.pathExtension.uppercaseString];
     }
     else if ([sender isEqual:self.tapeOpenPanel]) {
-        supportedTypes = @[ @"WAV" ];
+        return [url.pathExtension.uppercaseString isEqual:@"WAV"];
     }
     else if ([sender isEqual:self.stateOpenPanel]) {
-        supportedTypes = @[ @"YAML" ];
+        NSArray <NSString *> *components = [url.filePathURL.lastPathComponent componentsSeparatedByString:@"."];
+        NSInteger count = components.count;
+        return count > 2 &&
+            [components[count - 2].uppercaseString isEqual:@"AWS"] &&
+            [components[count - 1].uppercaseString isEqual:@"YAML"];
     }
-    return [supportedTypes containsObject:url.pathExtension.uppercaseString];
+    return NO;
 }
 
 #pragma mark - EmulatorViewControllerDelegate
@@ -495,8 +498,17 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     self.stateSavePanel.delegate = self;
     
     if ([self.stateSavePanel runModal] == NSModalResponseOK) {
-        [self.emulatorVC saveSnapshot:self.stateSavePanel.URL];
-        NSString *path = self.statusLabel.stringValue;
+        NSURL *url = self.stateSavePanel.URL.filePathURL;
+        NSString *lastPathComponent = url.lastPathComponent;
+        if (![lastPathComponent hasSuffix:@".aws.yaml"]) {
+            if ([lastPathComponent hasSuffix:@".aws"]) {
+                url = [url URLByAppendingPathExtension:@"yaml"];
+            }
+            else {
+                url = [url URLByAppendingPathExtension:@"aws.yaml"];
+            }
+        }
+        NSString *path = [self.emulatorVC saveSnapshot:url];
         self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"State saved to ‘%@’", @""), path];
         self.stateSavePanel = nil;
     }
