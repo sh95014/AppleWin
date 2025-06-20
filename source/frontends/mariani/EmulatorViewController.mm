@@ -639,17 +639,21 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     [(EmulatorView *)self.view addStringToKeyboardBuffer:string];
 }
 
+- (NSString *)snapshotPath {
+    return [NSString stringWithCString:frame->SnapshotPathname().c_str() encoding:NSUTF8StringEncoding];
+}
+
 - (NSString *)saveSnapshot:(NSURL *)url {
     if (url != nil) {
         frame->SetSnapshotPathname(std::string(url.fileSystemRepresentation));
     }
     frame->SaveSnapshot();
-    return [NSString stringWithCString:frame->SnapshotPathname().c_str() encoding:NSUTF8StringEncoding];
+    return [self snapshotPath];
 }
 
 - (NSString *)loadSnapshot:(NSURL *)url {
     frame->LoadSnapshot(std::string(url.fileSystemRepresentation));
-    return [NSString stringWithCString:frame->SnapshotPathname().c_str() encoding:NSUTF8StringEncoding];
+    return [self snapshotPath];
 }
 
 #pragma mark - EmulatorRendererDelegate

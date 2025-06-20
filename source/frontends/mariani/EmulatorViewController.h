@@ -77,6 +77,7 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 
 - (void)type:(NSString *)string;
 
+- (NSString *)snapshotPath;
 - (NSString *)saveSnapshot:(nullable NSURL *)url;
 - (NSString *)loadSnapshot:(NSURL *)url;
 

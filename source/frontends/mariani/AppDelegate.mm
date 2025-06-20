@@ -481,6 +481,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     self.stateOpenPanel.allowsMultipleSelection = NO;
     self.stateOpenPanel.canDownloadUbiquitousContents = YES;
     self.stateOpenPanel.message = NSLocalizedString(@"Select save state file", @"");
+    NSURL *snapshotURL = [NSURL fileURLWithPath:[self.emulatorVC snapshotPath]];
+    self.stateOpenPanel.directoryURL = [snapshotURL URLByDeletingLastPathComponent];
     self.stateOpenPanel.delegate = self;
     
     if ([self.stateOpenPanel runModal] == NSModalResponseOK) {
@@ -495,6 +497,9 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     self.stateSavePanel = [NSSavePanel savePanel];
     self.stateSavePanel.canCreateDirectories = YES;
     self.stateSavePanel.title = NSLocalizedString(@"Save state as...", @"");
+    NSURL *snapshotURL = [NSURL fileURLWithPath:[self.emulatorVC snapshotPath]];
+    self.stateSavePanel.nameFieldStringValue = snapshotURL.lastPathComponent;
+    self.stateSavePanel.directoryURL = [snapshotURL URLByDeletingLastPathComponent];
     self.stateSavePanel.delegate = self;
     
     if ([self.stateSavePanel runModal] == NSModalResponseOK) {
