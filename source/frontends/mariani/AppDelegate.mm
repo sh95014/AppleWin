@@ -487,7 +487,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     
     if ([self.stateOpenPanel runModal] == NSModalResponseOK) {
         NSString *path = [self.emulatorVC loadSnapshot:self.stateOpenPanel.URL];
-        self.statusLabel.stringValue = [NSString stringWithFormat:@"State loaded from ‘%@’", path];
+        self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"State loaded from ‘%@’", @""), path];
         self.stateOpenPanel = nil;
     }
 }

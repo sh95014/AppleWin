@@ -3,8 +3,14 @@
   "strings" : {
     "7ge-HN-w4m.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"(Based on AppleWin Version x.y.z.w)\"; ObjectID = \"7ge-HN-w4m\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "(Based on AppleWin Version x.y.z.w)"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15,8 +21,14 @@
     },
     "aXU-n3-OK0.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Mariani is a port of the AppleWin open source project, so most of the credit goes to its many volunteers over the years, but especially to Andrea Odetti upon whose Raspberry Pi port this is based.\\n\\nAdvanced disk image features include code from the CiderPress and HexFiend projects.\"; ObjectID = \"aXU-n3-OK0\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Mariani is a port of the AppleWin open source project, so most of the credit goes to its many volunteers over the years, but especially to Andrea Odetti upon whose Raspberry Pi port this is based.\n\nAdvanced disk image features include code from the CiderPress and HexFiend projects."
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27,8 +39,14 @@
     },
     "DpZ-XF-znh.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Version x.y (z)\"; ObjectID = \"DpZ-XF-znh\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Version x.y (z)"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -39,8 +57,14 @@
     },
     "dW8-F1-vKS.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Mariani\"; ObjectID = \"dW8-F1-vKS\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Mariani"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -51,8 +75,14 @@
     },
     "iyR-5w-e9Q.title" : {
       "comment" : "Class = \"NSWindow\"; title = \"About\"; ObjectID = \"iyR-5w-e9Q\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "About"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -63,8 +93,14 @@
     },
     "Mcw-mx-MEV.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Mariani on Github\"; ObjectID = \"Mcw-mx-MEV\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Mariani on Github"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",

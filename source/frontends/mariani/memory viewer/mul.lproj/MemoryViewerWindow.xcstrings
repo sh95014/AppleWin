@@ -3,8 +3,14 @@
   "strings" : {
     "F0z-JX-Cv5.title" : {
       "comment" : "Class = \"NSWindow\"; title = \"Memory Viewer\"; ObjectID = \"F0z-JX-Cv5\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Memory Viewer"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",

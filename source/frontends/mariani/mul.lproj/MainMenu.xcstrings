@@ -3,8 +3,14 @@
   "strings" : {
     "0la-AK-P3R.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Double Size\"; ObjectID = \"0la-AK-P3R\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Double Size"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -15,8 +21,14 @@
     },
     "1DA-XY-M6d.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Show Debugger\"; ObjectID = \"1DA-XY-M6d\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Show Debugger"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -27,8 +39,14 @@
     },
     "1Xt-HY-uBw.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Mariani\"; ObjectID = \"1Xt-HY-uBw\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Mariani"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -39,8 +57,14 @@
     },
     "4J7-dP-txa.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Enter Full Screen\"; ObjectID = \"4J7-dP-txa\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Enter Full Screen"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -51,8 +75,14 @@
     },
     "4sb-4s-VLi.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Quit Mariani\"; ObjectID = \"4sb-4s-VLi\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Quit Mariani"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -63,8 +93,14 @@
     },
     "4wN-Ie-K1K.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Close Window\"; ObjectID = \"4wN-Ie-K1K\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Close Window"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -75,8 +111,14 @@
     },
     "5kV-Vb-QxS.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"About Mariani\"; ObjectID = \"5kV-Vb-QxS\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "About Mariani"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -87,8 +129,14 @@
     },
     "9TQ-ZY-lSP.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Default Size\"; ObjectID = \"9TQ-ZY-lSP\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Default Size"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -97,10 +145,34 @@
         }
       }
     },
+    "85k-bs-Jat.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Save State As…\"; ObjectID = \"85k-bs-Jat\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Save State As…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存狀態為⋯"
+          }
+        }
+      }
+    },
     "aUF-d1-5bR.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Window\"; ObjectID = \"aUF-d1-5bR\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Window"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -111,8 +183,14 @@
     },
     "AYu-sK-qS6.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Main Menu\"; ObjectID = \"AYu-sK-qS6\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Main Menu"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -123,8 +201,14 @@
     },
     "b8E-ED-PjA.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Load Tape…\"; ObjectID = \"b8E-ED-PjA\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Load Tape…"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -135,8 +219,14 @@
     },
     "bib-Uj-vzu.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"File\"; ObjectID = \"bib-Uj-vzu\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "File"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -147,8 +237,14 @@
     },
     "BOF-NM-1cW.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Preferences…\"; ObjectID = \"BOF-NM-1cW\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Preferences…"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -159,8 +255,14 @@
     },
     "dm4-pj-VNI.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Control-Reset\"; ObjectID = \"dm4-pj-VNI\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Control-Reset"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -171,8 +273,14 @@
     },
     "dMs-cI-mzQ.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"File\"; ObjectID = \"dMs-cI-mzQ\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "File"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -183,8 +291,14 @@
     },
     "DSR-xi-Jep.ibShadowedToolTip" : {
       "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Record screen\"; ObjectID = \"DSR-xi-Jep\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Record screen"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -195,8 +309,14 @@
     },
     "F2S-fz-NVQ.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Help\"; ObjectID = \"F2S-fz-NVQ\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Help"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -207,8 +327,14 @@
     },
     "FCU-LR-rG3.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"New Blank Disk Image\"; ObjectID = \"FCU-LR-rG3\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "New Blank Disk Image"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -219,8 +345,14 @@
     },
     "FKE-Sm-Kum.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Mariani Help\"; ObjectID = \"FKE-Sm-Kum\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Mariani Help"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -231,8 +363,14 @@
     },
     "GCW-F3-7D6.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Label\"; ObjectID = \"GCW-F3-7D6\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Label"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -243,8 +381,14 @@
     },
     "h7E-ye-pU4.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Edit\"; ObjectID = \"h7E-ye-pU4\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Edit"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -255,8 +399,14 @@
     },
     "H8h-7b-M4v.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"View\"; ObjectID = \"H8h-7b-M4v\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "View"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -267,8 +417,14 @@
     },
     "HyV-fh-RgO.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"View\"; ObjectID = \"HyV-fh-RgO\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "View"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -279,8 +435,14 @@
     },
     "hz9-B4-Xy5.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Services\"; ObjectID = \"hz9-B4-Xy5\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Services"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -291,8 +453,14 @@
     },
     "ig1-4e-Udw.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Show Memory Viewer\"; ObjectID = \"ig1-4e-Udw\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Show Memory Viewer"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -303,8 +471,14 @@
     },
     "JAJ-vt-1IF.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Actual Size\"; ObjectID = \"JAJ-vt-1IF\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Actual Size"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -315,8 +489,14 @@
     },
     "Kd2-mp-pUS.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Show All\"; ObjectID = \"Kd2-mp-pUS\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Show All"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -327,8 +507,14 @@
     },
     "l7t-Fp-Pd9.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Insert Disk Image\"; ObjectID = \"l7t-Fp-Pd9\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Insert Disk Image"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -339,8 +525,14 @@
     },
     "LE2-aR-0XJ.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Bring All to Front\"; ObjectID = \"LE2-aR-0XJ\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Bring All to Front"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -351,8 +543,14 @@
     },
     "lMj-oj-jRW.ibShadowedToolTip" : {
       "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Take screenshot\"; ObjectID = \"lMj-oj-jRW\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Take screenshot"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -363,8 +561,14 @@
     },
     "NMo-om-nkz.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Services\"; ObjectID = \"NMo-om-nkz\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Services"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -375,8 +579,14 @@
     },
     "Olw-nP-bQN.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Hide Mariani\"; ObjectID = \"Olw-nP-bQN\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Hide Mariani"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -387,8 +597,14 @@
     },
     "OY7-WF-poV.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Minimize\"; ObjectID = \"OY7-WF-poV\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Minimize"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -399,8 +615,14 @@
     },
     "ptn-P3-scg.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Reboot Emulator\"; ObjectID = \"ptn-P3-scg\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reboot Emulator"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -411,8 +633,14 @@
     },
     "PWm-bp-TRi.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Edit\"; ObjectID = \"PWm-bp-TRi\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Edit"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -423,8 +651,14 @@
     },
     "Qa1-0n-abD.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Hide Status Bar\"; ObjectID = \"Qa1-0n-abD\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Hide Status Bar"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -435,8 +669,14 @@
     },
     "QG7-uV-e1N.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Decrease Size\"; ObjectID = \"QG7-uV-e1N\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Decrease Size"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -447,8 +687,14 @@
     },
     "QSQ-NY-o55.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Increase Size\"; ObjectID = \"QSQ-NY-o55\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Increase Size"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -459,8 +705,14 @@
     },
     "QvC-M9-y7g.title" : {
       "comment" : "Class = \"NSWindow\"; title = \"Mariani\"; ObjectID = \"QvC-M9-y7g\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Mariani"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -471,8 +723,14 @@
     },
     "R4o-n2-Eq4.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Zoom\"; ObjectID = \"R4o-n2-Eq4\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Zoom"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -483,8 +741,14 @@
     },
     "Sor-6b-zpM.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Paste Text\"; ObjectID = \"Sor-6b-zpM\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Paste Text"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -493,10 +757,34 @@
         }
       }
     },
+    "Suf-al-A5T.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Save State\"; ObjectID = \"Suf-al-A5T\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Save State"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存狀態"
+          }
+        }
+      }
+    },
     "Td7-aD-5lo.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Window\"; ObjectID = \"Td7-aD-5lo\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Window"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -507,8 +795,14 @@
     },
     "uQy-DD-JDr.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Mariani\"; ObjectID = \"uQy-DD-JDr\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Mariani"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -517,10 +811,34 @@
         }
       }
     },
+    "v6G-Pn-YTg.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Load State…\"; ObjectID = \"v6G-Pn-YTg\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Load State…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "載入狀態⋯"
+          }
+        }
+      }
+    },
     "Vdr-fp-XzO.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Hide Others\"; ObjectID = \"Vdr-fp-XzO\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Hide Others"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -531,8 +849,14 @@
     },
     "wcB-ZJ-Gew.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Copy Screenshot\"; ObjectID = \"wcB-ZJ-Gew\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Copy Screenshot"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -543,8 +867,14 @@
     },
     "WpN-hG-YWg.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Display Type\"; ObjectID = \"WpN-hG-YWg\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Display Type"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -555,8 +885,14 @@
     },
     "wpr-3q-Mcd.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"Help\"; ObjectID = \"wpr-3q-Mcd\";",
-      "extractionState" : "migrated",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Help"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",

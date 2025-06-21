@@ -3,14 +3,7 @@
   "strings" : {
     "-" : {
       "comment" : "no date available",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "-"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -21,14 +14,7 @@
     },
     "—" : {
       "comment" : "empty slot",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "—"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -38,14 +24,7 @@
       }
     },
     "(Based on AppleWin Version %s)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(Based on AppleWin Version %s)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -55,14 +34,7 @@
       }
     },
     "%.1f GB" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%.1f GB"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -72,14 +44,7 @@
       }
     },
     "%.1f KB" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%.1f KB"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -89,14 +54,7 @@
       }
     },
     "%.1f MB" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%.1f MB"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -106,14 +64,7 @@
       }
     },
     "%llu bytes" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%llu bytes"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -123,14 +74,7 @@
       }
     },
     "0 bytes" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "0 bytes"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -140,14 +84,7 @@
       }
     },
     "1 byte" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1 byte"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -157,14 +94,7 @@
       }
     },
     "2 bytes" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "2 bytes"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -174,14 +104,7 @@
       }
     },
     "4play (joystick)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "4play (joystick)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -191,14 +114,7 @@
       }
     },
     "80-column text card (1K)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "80-column text card (1K)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -208,14 +124,7 @@
       }
     },
     "About %@" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "About %@"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -225,14 +134,7 @@
       }
     },
     "Annunciators" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Annunciators"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -242,14 +144,7 @@
       }
     },
     "Apple ][ Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple ][ Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -259,14 +154,7 @@
       }
     },
     "Apple ][ J-Plus Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple ][ J-Plus Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -276,14 +164,7 @@
       }
     },
     "Apple ][+ Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple ][+ Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -293,14 +174,7 @@
       }
     },
     "Apple //c Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple //c Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -310,14 +184,7 @@
       }
     },
     "Apple //e Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple //e Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -327,14 +194,7 @@
       }
     },
     "Apple Disk ][" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Disk ]["
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -344,14 +204,7 @@
       }
     },
     "Apple Language Card" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Language Card"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -361,14 +214,7 @@
       }
     },
     "Apple Language Card //e" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Language Card //e"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -378,14 +224,7 @@
       }
     },
     "Apple Super Serial Card" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Super Serial Card"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -395,14 +234,7 @@
       }
     },
     "B&W TV" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "B&W TV"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -412,14 +244,7 @@
       }
     },
     "Base64A Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Base64A Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -429,14 +254,7 @@
       }
     },
     "Black & White" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Black & White"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -447,14 +265,7 @@
     },
     "Blank" : {
       "comment" : "default file name for new blank disk",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Blank"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -464,7 +275,7 @@
       }
     },
     "Bookmark" : {
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -475,14 +286,7 @@
       }
     },
     "Cancel" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancel"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -492,14 +296,7 @@
       }
     },
     "Changes to hardware configuration require the emulator to be rebooted to take effect." : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Changes to hardware configuration require the emulator to be rebooted to take effect."
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -509,14 +306,7 @@
       }
     },
     "Clear Breakpoint" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear Breakpoint"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -526,14 +316,7 @@
       }
     },
     "Color" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Color"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -544,14 +327,7 @@
     },
     "Color (Composite Idealized)" : {
       "comment" : "Color rendering from AppleWin 1.25 (GH#357)",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Color (Composite Idealized)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -562,14 +338,7 @@
     },
     "Color (Composite Monitor)" : {
       "comment" : "NTSC or PAL",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Color (Composite Monitor)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -580,14 +349,7 @@
     },
     "Color (RGB Card/Monitor)" : {
       "comment" : "Real RGB card rendering",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Color (RGB Card/Monitor)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -597,14 +359,7 @@
       }
     },
     "Color TV" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Color TV"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -614,14 +369,7 @@
       }
     },
     "Connect" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Connect"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -631,14 +379,7 @@
       }
     },
     "Copy" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -648,14 +389,7 @@
       }
     },
     "Copy Screenshot" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy Screenshot"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -665,14 +399,7 @@
       }
     },
     "Echo (speech)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Echo (speech)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -683,14 +410,7 @@
     },
     "Eject" : {
       "comment" : "eject disk image",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Eject"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -700,14 +420,7 @@
       }
     },
     "End Emulation" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "End Emulation"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -717,14 +430,7 @@
       }
     },
     "Ending Emulation" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ending Emulation"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -734,14 +440,7 @@
       }
     },
     "Enhanced Apple //e Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enhanced Apple //e Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -752,14 +451,7 @@
     },
     "Examine…" : {
       "comment" : "browse disk image",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Examine…"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -769,14 +461,7 @@
       }
     },
     "Extended 80-column text card (64K)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Extended 80-column text card (64K)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -786,14 +471,7 @@
       }
     },
     "Generic Clock" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Generic Clock"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -803,14 +481,7 @@
       }
     },
     "Generic Hard Disk Drive" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Generic Hard Disk Drive"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -820,14 +491,7 @@
       }
     },
     "Generic Printer" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Generic Printer"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -837,14 +501,7 @@
       }
     },
     "Hide Status Bar" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hide Status Bar"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -855,14 +512,7 @@
     },
     "Insert" : {
       "comment" : "..into drive",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Insert"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -873,14 +523,7 @@
     },
     "Mariani Recording" : {
       "comment" : "default name for new screen recording",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mariani Recording"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -891,14 +534,7 @@
     },
     "Mariani Screen Shot" : {
       "comment" : "default name for new screenshot",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mariani Screen Shot"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -908,14 +544,7 @@
       }
     },
     "MEGA Audio" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MEGA Audio"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -925,14 +554,7 @@
       }
     },
     "Mockingboard C (sound)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mockingboard C (sound)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -942,14 +564,7 @@
       }
     },
     "Mono" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mono"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -959,14 +574,7 @@
       }
     },
     "Monochrome (Amber)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monochrome (Amber)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -976,14 +584,7 @@
       }
     },
     "Monochrome (Custom)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monochrome (Custom)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -993,14 +594,7 @@
       }
     },
     "Monochrome (Green)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monochrome (Green)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1010,14 +604,7 @@
       }
     },
     "Monochrome (White)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Monochrome (White)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1027,14 +614,7 @@
       }
     },
     "Mouse Interface" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mouse Interface"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1045,7 +625,7 @@
     },
     "New Blank Disk" : {
       "comment" : "create new blank disk image",
-      "extractionState" : "migrated",
+      "extractionState" : "manual",
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1056,14 +636,7 @@
       }
     },
     "No" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1073,14 +646,7 @@
       }
     },
     "None" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "None"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1090,14 +656,7 @@
       }
     },
     "Numeric Keypad" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Numeric Keypad"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1107,14 +666,7 @@
       }
     },
     "OK" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1125,14 +677,7 @@
     },
     "Other Disk…" : {
       "comment" : "open another disk image",
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other Disk…"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1142,14 +687,7 @@
       }
     },
     "Pause Execution" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pause Execution"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1159,14 +697,7 @@
       }
     },
     "Phasor (sound)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Phasor (sound)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1176,14 +707,7 @@
       }
     },
     "Pravets 8A Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pravets 8A Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1193,14 +717,7 @@
       }
     },
     "Pravets 8M Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pravets 8M Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1210,14 +727,7 @@
       }
     },
     "Pravets 82 Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pravets 82 Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1227,14 +737,7 @@
       }
     },
     "RamWorks III (up to 8MB)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "RamWorks III (up to 8MB)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1244,14 +747,7 @@
       }
     },
     "Reboot" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reboot"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1261,14 +757,7 @@
       }
     },
     "Reboot Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reboot Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1278,14 +767,7 @@
       }
     },
     "Reboot?" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reboot?"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1294,15 +776,18 @@
         }
       }
     },
-    "Registers" : {
-      "extractionState" : "migrated",
+    "Recording saved to ‘%s’" : {
       "localizations" : {
-        "en" : {
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Registers"
+            "value" : "螢幕錄影存檔為「%@」"
           }
-        },
+        }
+      }
+    },
+    "Registers" : {
+      "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1312,14 +797,7 @@
       }
     },
     "Resume Execution" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resume Execution"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1329,14 +807,7 @@
       }
     },
     "Saturn 128K (memory)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saturn 128K (memory)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1345,15 +816,28 @@
         }
       }
     },
-    "SD Music (sound)" : {
-      "extractionState" : "migrated",
+    "Save state as..." : {
       "localizations" : {
-        "en" : {
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SD Music (sound)"
+            "value" : "狀態存檔為"
           }
-        },
+        }
+      }
+    },
+    "Screenshot saved to ‘%s’" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕快照存檔為「%@」"
+          }
+        }
+      }
+    },
+    "SD Music (sound)" : {
+      "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1364,11 +848,10 @@
     },
     "Select disk image for slot %d drive %d" : {
       "comment" : "slot, drive",
-      "extractionState" : "migrated",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "new",
             "value" : "Select disk image for slot %1$d drive %2$d"
           }
         },
@@ -1381,14 +864,7 @@
       }
     },
     "Select folder to save screen recordings into" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select folder to save screen recordings into"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1398,14 +874,7 @@
       }
     },
     "Select folder to save screenshots into" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select folder to save screenshots into"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1415,14 +884,7 @@
       }
     },
     "Select hard disk image" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select hard disk image"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1431,15 +893,18 @@
         }
       }
     },
-    "Select tape image" : {
-      "extractionState" : "migrated",
+    "Select save state file" : {
       "localizations" : {
-        "en" : {
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select tape image"
+            "value" : "選擇儲存狀態檔"
           }
-        },
+        }
+      }
+    },
+    "Select tape image" : {
+      "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1449,14 +914,7 @@
       }
     },
     "Show Status Bar" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Status Bar"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1466,11 +924,10 @@
       }
     },
     "Slot %d Drive %d" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "new",
             "value" : "Slot %1$d Drive %2$d"
           }
         },
@@ -1483,14 +940,7 @@
       }
     },
     "Slot %d Hard Disk" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Slot %d Hard Disk"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1500,14 +950,7 @@
       }
     },
     "SNES MAX (game controller)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "SNES MAX (game controller)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1517,14 +960,7 @@
       }
     },
     "Software Automatic Mouth (speech)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Software Automatic Mouth (speech)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1533,15 +969,28 @@
         }
       }
     },
-    "Switches C0xx" : {
-      "extractionState" : "migrated",
+    "State loaded from ‘%@’" : {
       "localizations" : {
-        "en" : {
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Switches C0xx"
+            "value" : "狀態從「%@」載入"
           }
-        },
+        }
+      }
+    },
+    "State saved to ‘%@’" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "狀態存檔為「%@」"
+          }
+        }
+      }
+    },
+    "Switches C0xx" : {
+      "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1551,14 +1000,7 @@
       }
     },
     "This will end the emulation and any unsaved changes will be lost." : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This will end the emulation and any unsaved changes will be lost."
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1568,14 +1010,7 @@
       }
     },
     "This will restart the emulation and any unsaved changes will be lost." : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This will restart the emulation and any unsaved changes will be lost."
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1585,14 +1020,7 @@
       }
     },
     "TK3000 //e Emulator" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TK3000 //e Emulator"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1602,14 +1030,7 @@
       }
     },
     "Toggle Bookmark" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toggle Bookmark"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1619,14 +1040,7 @@
       }
     },
     "Toggle Breakpoint" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toggle Breakpoint"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1636,14 +1050,7 @@
       }
     },
     "Unable to interpret the data format stored on this disk." : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to interpret the data format stored on this disk."
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1653,14 +1060,7 @@
       }
     },
     "Unknown" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unknown"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1670,14 +1070,7 @@
       }
     },
     "Unknown Disk Format" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unknown Disk Format"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1687,14 +1080,7 @@
       }
     },
     "Unnamed" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unnamed"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1704,14 +1090,7 @@
       }
     },
     "Uthernet I (network)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uthernet I (network)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1721,14 +1100,7 @@
       }
     },
     "Uthernet II (network)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uthernet II (network)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1738,11 +1110,10 @@
       }
     },
     "Version %@ (%@)" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "translated",
+            "state" : "new",
             "value" : "Version %1$@ (%2$@)"
           }
         },
@@ -1755,14 +1126,7 @@
       }
     },
     "VidHD (video)" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "VidHD (video)"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1772,14 +1136,7 @@
       }
     },
     "Yes" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Yes"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1789,14 +1146,7 @@
       }
     },
     "Z-80" : {
-      "extractionState" : "migrated",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Z-80"
-          }
-        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
