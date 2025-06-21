@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		970141F72E076AF900E2A119 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 970141F62E076AF900E2A119 /* Localizable.xcstrings */; };
+		970141F82E076AF900E2A119 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 970141F62E076AF900E2A119 /* Localizable.xcstrings */; };
 		973F68112D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */; };
 		973F68122D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */ = {isa = PBXBuildFile; fileRef = 973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */; };
 		973F681C2D21E7CC00309C45 /* NSWindow+AccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */; };
@@ -244,7 +246,6 @@
 		B00ECBD7279EEB600041E16C /* Mockingboard-D.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE712782984F006E36F9 /* Mockingboard-D.rom */; };
 		B00ECBD8279EEB600041E16C /* Base64A.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE682782984E006E36F9 /* Base64A.rom */; };
 		B00ECBD9279EEB600041E16C /* Apple2_Plus.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE5D2782984E006E36F9 /* Apple2_Plus.rom */; };
-		B00ECBDA279EEB600041E16C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B0ED3FCD2785973C006E4784 /* Localizable.strings */; };
 		B00ECBDB279EEB600041E16C /* SSC.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE6B2782984E006E36F9 /* SSC.rom */; };
 		B00ECBDC279EEB600041E16C /* Apple2.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE6F2782984E006E36F9 /* Apple2.rom */; };
 		B00ECBDD279EEB600041E16C /* Parallel.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE6D2782984E006E36F9 /* Parallel.rom */; };
@@ -494,7 +495,6 @@
 		B0E55A6A27B7849F003173F2 /* reader.c in Sources */ = {isa = PBXBuildFile; fileRef = B09AB699277A15D90002A6C3 /* reader.c */; };
 		B0E55A6B27B7849F003173F2 /* writer.c in Sources */ = {isa = PBXBuildFile; fileRef = B09AB695277A15D90002A6C3 /* writer.c */; };
 		B0E55A6C27B7849F003173F2 /* yaml_private.h in Headers */ = {isa = PBXBuildFile; fileRef = B09AB694277A15D90002A6C3 /* yaml_private.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		B0ED3FCF2785973C006E4784 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B0ED3FCD2785973C006E4784 /* Localizable.strings */; };
 		B0F0138C2785A211002936B4 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0F0138E2785A211002936B4 /* Preferences.storyboard */; };
 		B0F25BCD2789B2DB0080523F /* DiskImageBrowser.xib in Resources */ = {isa = PBXBuildFile; fileRef = B0F25BCF2789B2DB0080523F /* DiskImageBrowser.xib */; };
 		B0F43FCF295E48DA00E79AD7 /* CopyProtectionDongles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0F43FC6295E48DA00E79AD7 /* CopyProtectionDongles.cpp */; };
@@ -731,6 +731,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		970141E82E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/Debugger.xcstrings; sourceTree = "<group>"; };
+		970141F12E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/InspectorPanels.xcstrings; sourceTree = "<group>"; };
+		970141F22E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/DiskImageBrowser.xcstrings; sourceTree = "<group>"; };
+		970141F32E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/MainMenu.xcstrings; sourceTree = "<group>"; };
+		970141F42E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/About.xcstrings; sourceTree = "<group>"; };
+		970141F52E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/MemoryViewerWindow.xcstrings; sourceTree = "<group>"; };
+		970141F62E076AF900E2A119 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		970141F92E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/Preferences.xcstrings; sourceTree = "<group>"; };
 		973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSWindow+AccessoryView.h"; sourceTree = "<group>"; };
 		973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+AccessoryView.m"; sourceTree = "<group>"; };
 		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
@@ -804,7 +812,6 @@
 		B020F8A82785EA440071D3C7 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B020F8AA2785F3920071D3C7 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		B0211CFC2A3A5EF50057ECBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MemoryViewerWindow.xib; sourceTree = "<group>"; };
-		B0211CFF2A3A5F010057ECBE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/MemoryViewerWindow.strings"; sourceTree = "<group>"; };
 		B032DE21277A0C23006DC0F7 /* Mariani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mariani.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B032DE24277A0C23006DC0F7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B032DE25277A0C23006DC0F7 /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -914,7 +921,6 @@
 		B0689D152781984F0029EB7D /* UserDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaults.h; sourceTree = "<group>"; };
 		B0689D162781984F0029EB7D /* UserDefaults.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = UserDefaults.mm; sourceTree = "<group>"; };
 		B07612322789E4BE009E79BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/About.xib; sourceTree = "<group>"; };
-		B07612352789E4C2009E79BE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/About.strings"; sourceTree = "<group>"; };
 		B089EF2D27BADA5200BDC415 /* Mariani.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Mariani.help; sourceTree = "<group>"; };
 		B089EF3027BADA8100BDC415 /* Mariani-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mariani-Info.plist"; sourceTree = "<group>"; };
 		B089EF3127BB051900BDC415 /* StrFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrFormat.h; path = source/StrFormat.h; sourceTree = "<group>"; };
@@ -1271,21 +1277,14 @@
 		B0E1DC9E29887EE200F61989 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		B0E1DCA229887FA900F61989 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		B0E55A5427B7844D003173F2 /* libyaml.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libyaml.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B0ED3FCC27859566006E4784 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/MainMenu.strings"; sourceTree = "<group>"; };
-		B0ED3FCE2785973C006E4784 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		B0ED3FD027859747006E4784 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B0F0138D2785A211002936B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Preferences.storyboard; sourceTree = "<group>"; };
-		B0F013902785A218002936B4 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Preferences.strings"; sourceTree = "<group>"; };
 		B0F25BCE2789B2DB0080523F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DiskImageBrowser.xib; sourceTree = "<group>"; };
-		B0F25BD12789B2E10080523F /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/DiskImageBrowser.strings"; sourceTree = "<group>"; };
 		B0F43FC6295E48DA00E79AD7 /* CopyProtectionDongles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CopyProtectionDongles.cpp; path = source/CopyProtectionDongles.cpp; sourceTree = "<group>"; };
 		B0F43FCE295E48DA00E79AD7 /* CopyProtectionDongles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CopyProtectionDongles.h; path = source/CopyProtectionDongles.h; sourceTree = "<group>"; };
 		B0F43FD1295E49FD00E79AD7 /* joystickapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joystickapi.h; path = source/linux/libwindows/joystickapi.h; sourceTree = "<group>"; };
 		B0F43FD3295E4BAD00E79AD7 /* CHARSET8C.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET8C.bmp; path = resource/CHARSET8C.bmp; sourceTree = SOURCE_ROOT; };
 		B0F43FD4295E4BAD00E79AD7 /* CHARSET8M.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET8M.bmp; path = resource/CHARSET8M.bmp; sourceTree = SOURCE_ROOT; };
 		B0F43FD6295E4BAD00E79AD7 /* CHARSET82.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = CHARSET82.bmp; path = resource/CHARSET82.bmp; sourceTree = SOURCE_ROOT; };
-		B0F526DC2A2C0EB600288820 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Debugger.strings"; sourceTree = "<group>"; };
-		B0F526E02A2C0EC600288820 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InspectorPanels.strings"; sourceTree = "<group>"; };
 		B0F84FF427D1B3F30015F642 /* Uthernet2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Uthernet2.h; path = source/Uthernet2.h; sourceTree = "<group>"; };
 		B0F84FF527D1B3F30015F642 /* Uthernet1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Uthernet1.h; path = source/Uthernet1.h; sourceTree = "<group>"; };
 		B0F84FF627D1B3F30015F642 /* Uthernet1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Uthernet1.cpp; path = source/Uthernet1.cpp; sourceTree = "<group>"; };
@@ -1541,7 +1540,7 @@
 				B045FE5B278297F8006E36F9 /* Resources */,
 				B032DE29277A0C24006DC0F7 /* MainMenu.xib */,
 				B07612332789E4BE009E79BE /* About.xib */,
-				B0ED3FCD2785973C006E4784 /* Localizable.strings */,
+				970141F62E076AF900E2A119 /* Localizable.xcstrings */,
 				B089EF2D27BADA5200BDC415 /* Mariani.help */,
 				B032DE2C277A0C24006DC0F7 /* main.mm */,
 				B032DE2E277A0C24006DC0F7 /* mariani.entitlements */,
@@ -2804,6 +2803,7 @@
 				B00ECBD3279EEB600041E16C /* About.xib in Resources */,
 				B00ECBD4279EEB600041E16C /* Apple2_JPlus_Video.rom in Resources */,
 				B00ECBD5279EEB600041E16C /* Preferences.storyboard in Resources */,
+				970141F82E076AF900E2A119 /* Localizable.xcstrings in Resources */,
 				B00ECBD6279EEB600041E16C /* TK3000e.rom in Resources */,
 				B0F97BA82A259F1800461923 /* Debugger.xib in Resources */,
 				B00ECBD7279EEB600041E16C /* Mockingboard-D.rom in Resources */,
@@ -2811,7 +2811,6 @@
 				B0F97BC22A26758E00461923 /* APPLE2E.SYM in Resources */,
 				B00ECBD8279EEB600041E16C /* Base64A.rom in Resources */,
 				B00ECBD9279EEB600041E16C /* Apple2_Plus.rom in Resources */,
-				B00ECBDA279EEB600041E16C /* Localizable.strings in Resources */,
 				B00ECBDB279EEB600041E16C /* SSC.rom in Resources */,
 				B00ECBDC279EEB600041E16C /* Apple2.rom in Resources */,
 				B00ECBDD279EEB600041E16C /* Parallel.rom in Resources */,
@@ -2852,6 +2851,7 @@
 				B07612302789E4BE009E79BE /* About.xib in Resources */,
 				B045FE822782984F006E36F9 /* Apple2_JPlus_Video.rom in Resources */,
 				B0F0138C2785A211002936B4 /* Preferences.storyboard in Resources */,
+				970141F72E076AF900E2A119 /* Localizable.xcstrings in Resources */,
 				B045FE782782984F006E36F9 /* TK3000e.rom in Resources */,
 				B0F97BA72A259F1800461923 /* Debugger.xib in Resources */,
 				B045FE872782984F006E36F9 /* Mockingboard-D.rom in Resources */,
@@ -2859,7 +2859,6 @@
 				B0F97BC12A26758E00461923 /* APPLE2E.SYM in Resources */,
 				B045FE7E2782984F006E36F9 /* Base64A.rom in Resources */,
 				B045FE732782984F006E36F9 /* Apple2_Plus.rom in Resources */,
-				B0ED3FCF2785973C006E4784 /* Localizable.strings in Resources */,
 				B045FE812782984F006E36F9 /* SSC.rom in Resources */,
 				B045FE852782984F006E36F9 /* Apple2.rom in Resources */,
 				B045FE832782984F006E36F9 /* Parallel.rom in Resources */,
@@ -3337,7 +3336,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B00BE9EB2A291BD100F288F9 /* Base */,
-				B0F526E02A2C0EC600288820 /* zh-Hant */,
+				970141F12E076AF900E2A119 /* mul */,
 			);
 			name = InspectorPanels.xib;
 			sourceTree = "<group>";
@@ -3346,7 +3345,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B0211CFC2A3A5EF50057ECBE /* Base */,
-				B0211CFF2A3A5F010057ECBE /* zh-Hant */,
+				970141F52E076AF900E2A119 /* mul */,
 			);
 			name = MemoryViewerWindow.xib;
 			sourceTree = "<group>";
@@ -3355,7 +3354,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B032DE2A277A0C24006DC0F7 /* Base */,
-				B0ED3FCC27859566006E4784 /* zh-Hant */,
+				970141F32E076AF900E2A119 /* mul */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -3364,25 +3363,16 @@
 			isa = PBXVariantGroup;
 			children = (
 				B07612322789E4BE009E79BE /* Base */,
-				B07612352789E4C2009E79BE /* zh-Hant */,
+				970141F42E076AF900E2A119 /* mul */,
 			);
 			name = About.xib;
-			sourceTree = "<group>";
-		};
-		B0ED3FCD2785973C006E4784 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B0ED3FCE2785973C006E4784 /* Base */,
-				B0ED3FD027859747006E4784 /* zh-Hant */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		B0F0138E2785A211002936B4 /* Preferences.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B0F0138D2785A211002936B4 /* Base */,
-				B0F013902785A218002936B4 /* zh-Hant */,
+				970141F92E076AF900E2A119 /* mul */,
 			);
 			name = Preferences.storyboard;
 			sourceTree = "<group>";
@@ -3391,7 +3381,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B0F25BCE2789B2DB0080523F /* Base */,
-				B0F25BD12789B2E10080523F /* zh-Hant */,
+				970141F22E076AF900E2A119 /* mul */,
 			);
 			name = DiskImageBrowser.xib;
 			sourceTree = "<group>";
@@ -3400,7 +3390,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				B0F97BA92A259F1800461923 /* Base */,
-				B0F526DC2A2C0EB600288820 /* zh-Hant */,
+				970141E82E076AF900E2A119 /* mul */,
 			);
 			name = Debugger.xib;
 			sourceTree = "<group>";
@@ -3633,11 +3623,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
@@ -3696,11 +3688,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;

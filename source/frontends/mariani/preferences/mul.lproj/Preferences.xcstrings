@@ -1,0 +1,438 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "2wM-ew-aAs.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Button 0\"; ObjectID = \"2wM-ew-aAs\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按鈕 0"
+          }
+        }
+      }
+    },
+    "3Np-rp-7YE.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"3:\"; ObjectID = \"3Np-rp-7YE\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "3:"
+          }
+        }
+      }
+    },
+    "4g8-iN-ZRm.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Expansion\"; ObjectID = \"4g8-iN-ZRm\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "擴充"
+          }
+        }
+      }
+    },
+    "5k3-sD-Bqh.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Button\"; ObjectID = \"5k3-sD-Bqh\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Button"
+          }
+        }
+      }
+    },
+    "8J1-iv-XcH.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Enhanced speed for floppy drives\"; ObjectID = \"8J1-iv-XcH\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "磁碟超速運行"
+          }
+        }
+      }
+    },
+    "9tK-IQ-3ru.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Reboot Emulator\"; ObjectID = \"9tK-IQ-3ru\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重啟模擬器"
+          }
+        }
+      }
+    },
+    "Avh-Ly-PyJ.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Peripheral Slots\"; ObjectID = \"Avh-Ly-PyJ\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "周邊擴充槽"
+          }
+        }
+      }
+    },
+    "bzG-BW-JSW.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"4:\"; ObjectID = \"bzG-BW-JSW\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4:"
+          }
+        }
+      }
+    },
+    "cWg-fO-BCh.title" : {
+      "comment" : "Class = \"NSViewController\"; title = \"Computer\"; ObjectID = \"cWg-fO-BCh\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "電腦"
+          }
+        }
+      }
+    },
+    "CZI-N1-uId.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"5:\"; ObjectID = \"CZI-N1-uId\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "5:"
+          }
+        }
+      }
+    },
+    "DDQ-zs-4v1.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Joystick\"; ObjectID = \"DDQ-zs-4v1\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搖桿"
+          }
+        }
+      }
+    },
+    "dnB-5k-IPX.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Color for Custom Monochrome Display\"; ObjectID = \"dnB-5k-IPX\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自設單色顯示器顏色"
+          }
+        }
+      }
+    },
+    "e3Y-c0-dGl.title" : {
+      "comment" : "Class = \"NSViewController\"; title = \"Storage\"; ObjectID = \"e3Y-c0-dGl\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存"
+          }
+        }
+      }
+    },
+    "edJ-M4-tX0.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"50% Scan Lines\"; ObjectID = \"edJ-M4-tX0\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "50% 掃瞄線"
+          }
+        }
+      }
+    },
+    "eiz-fB-Rfs.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"6:\"; ObjectID = \"eiz-fB-Rfs\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "6:"
+          }
+        }
+      }
+    },
+    "FE3-Py-9oA.title" : {
+      "comment" : "Class = \"NSViewController\"; title = \"General\"; ObjectID = \"FE3-Py-9oA\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般"
+          }
+        }
+      }
+    },
+    "Gd8-iG-129.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Button 1\"; ObjectID = \"Gd8-iG-129\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按鈕 1"
+          }
+        }
+      }
+    },
+    "gNJ-0R-mXw.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Controller\"; ObjectID = \"gNJ-0R-mXw\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "控制器"
+          }
+        }
+      }
+    },
+    "gvx-dc-NU6.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"7:\"; ObjectID = \"gvx-dc-NU6\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7:"
+          }
+        }
+      }
+    },
+    "H0g-ug-jVk.title" : {
+      "comment" : "Class = \"NSViewController\"; title = \"Audio/Video\"; ObjectID = \"H0g-ug-jVk\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "影音"
+          }
+        }
+      }
+    },
+    "iT1-07-Syr.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Mockingboard Volume:\"; ObjectID = \"iT1-07-Syr\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mockingboard 音量:"
+          }
+        }
+      }
+    },
+    "IW3-Vm-1d9.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"pcap\"; ObjectID = \"IW3-Vm-1d9\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pcap"
+          }
+        }
+      }
+    },
+    "kRE-Os-hyf.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Main Board:\"; ObjectID = \"kRE-Os-hyf\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主機板:"
+          }
+        }
+      }
+    },
+    "lZG-5R-Dzg.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Create New Hard Disk\"; ObjectID = \"lZG-5R-Dzg\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建硬碟映像檔"
+          }
+        }
+      }
+    },
+    "nT1-OW-VEY.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Button\"; ObjectID = \"nT1-OW-VEY\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Button"
+          }
+        }
+      }
+    },
+    "paq-mq-NdY.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Speaker Volume:\"; ObjectID = \"paq-mq-NdY\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "內建喇叭音量:"
+          }
+        }
+      }
+    },
+    "pBX-bw-eKh.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Hard disk:\"; ObjectID = \"pBX-bw-eKh\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "硬碟:"
+          }
+        }
+      }
+    },
+    "qBl-Mr-Dwi.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"2:\"; ObjectID = \"qBl-Mr-Dwi\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2:"
+          }
+        }
+      }
+    },
+    "rzE-im-fXn.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Screenshots:\"; ObjectID = \"rzE-im-fXn\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕快照:"
+          }
+        }
+      }
+    },
+    "T3p-Y6-znB.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Enables faster but less authentic disk access\"; ObjectID = \"T3p-Y6-znB\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "啟動較快但不真實的磁碟存取速度"
+          }
+        }
+      }
+    },
+    "trP-an-ayG.title" : {
+      "comment" : "Class = \"NSWindow\"; title = \"Preferences\"; ObjectID = \"trP-an-ayG\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "偏好設定"
+          }
+        }
+      }
+    },
+    "ulv-ax-GcK.title" : {
+      "comment" : "Class = \"NSViewController\"; title = \"Game Controller\"; ObjectID = \"ulv-ax-GcK\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲控制器"
+          }
+        }
+      }
+    },
+    "WV6-AZ-bPD.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Button\"; ObjectID = \"WV6-AZ-bPD\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Button"
+          }
+        }
+      }
+    },
+    "WZG-yc-ihw.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Map Delete key to Left Arrow\"; ObjectID = \"WZG-yc-ihw\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將 delete 鍵對映至左箭頭鍵"
+          }
+        }
+      }
+    },
+    "yJi-x4-80i.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"1:\"; ObjectID = \"yJi-x4-80i\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1:"
+          }
+        }
+      }
+    },
+    "zxc-fb-W3p.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Recordings:\"; ObjectID = \"zxc-fb-W3p\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕錄影:"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

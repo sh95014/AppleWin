@@ -1,0 +1,102 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "5ez-Vc-Jzb.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"BAS $0801\"; ObjectID = \"5ez-Vc-Jzb\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BAS $0801"
+          }
+        }
+      }
+    },
+    "35H-tA-bcQ.title" : {
+      "comment" : "Class = \"NSWindow\"; title = \"Window\"; ObjectID = \"35H-tA-bcQ\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Window"
+          }
+        }
+      }
+    },
+    "Dh3-Ls-lrF.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Name\"; ObjectID = \"Dh3-Ls-lrF\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "名稱"
+          }
+        }
+      }
+    },
+    "dvt-O6-6w5.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Size\"; ObjectID = \"dvt-O6-6w5\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大小"
+          }
+        }
+      }
+    },
+    "efb-Yp-oaX.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"128.3 KB\"; ObjectID = \"efb-Yp-oaX\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "128.3 KB"
+          }
+        }
+      }
+    },
+    "HTU-dl-fXr.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Date Modified\"; ObjectID = \"HTU-dl-fXr\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "修改日期"
+          }
+        }
+      }
+    },
+    "UeD-Lu-Av3.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Kind\"; ObjectID = \"UeD-Lu-Av3\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "種類"
+          }
+        }
+      }
+    },
+    "zu3-9f-tsc.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Dec 13, 2021 at 6:03 PM\"; ObjectID = \"zu3-9f-tsc\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dec 13, 2021 at 6:03 PM"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -1,0 +1,18 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "F0z-JX-Cv5.title" : {
+      "comment" : "Class = \"NSWindow\"; title = \"Memory Viewer\"; ObjectID = \"F0z-JX-Cv5\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記憶體檢視器"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

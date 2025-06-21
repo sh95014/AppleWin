@@ -1,0 +1,318 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "7Mg-9a-l84.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 8\"; ObjectID = \"7Mg-9a-l84\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 8"
+          }
+        }
+      }
+    },
+    "84C-0j-mzK.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Opcode\"; ObjectID = \"84C-0j-mzK\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "操作碼"
+          }
+        }
+      }
+    },
+    "bBV-lB-9mI.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 5\"; ObjectID = \"bBV-lB-9mI\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 5"
+          }
+        }
+      }
+    },
+    "Cpz-O7-pHm.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Symbol\"; ObjectID = \"Cpz-O7-pHm\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "符號"
+          }
+        }
+      }
+    },
+    "dDb-9d-jUa.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Black & White\"; ObjectID = \"dDb-9d-jUa\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "黑白"
+          }
+        }
+      }
+    },
+    "ebW-iX-yF3.placeholderString" : {
+      "comment" : "Class = \"NSComboBoxCell\"; placeholderString = \"Go to Symbol\"; ObjectID = \"ebW-iX-yF3\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跳至符號"
+          }
+        }
+      }
+    },
+    "gFq-vJ-8oN.label" : {
+      "comment" : "Class = \"NSTabViewItem\"; label = \"CPU\"; ObjectID = \"gFq-vJ-8oN\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "處理器"
+          }
+        }
+      }
+    },
+    "h5M-ZI-WfA.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 0\"; ObjectID = \"h5M-ZI-WfA\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 0"
+          }
+        }
+      }
+    },
+    "Hk8-6E-r7V.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 9\"; ObjectID = \"Hk8-6E-r7V\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 9"
+          }
+        }
+      }
+    },
+    "HSM-t4-pFt.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 2\"; ObjectID = \"HSM-t4-pFt\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 2"
+          }
+        }
+      }
+    },
+    "Iqb-5c-Ikd.placeholderString" : {
+      "comment" : "Class = \"NSTextFieldCell\"; placeholderString = \"Debugger Command Line\"; ObjectID = \"Iqb-5c-Ikd\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "偵錯器命令列"
+          }
+        }
+      }
+    },
+    "iQs-I4-YdV.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \">\"; ObjectID = \"iQs-I4-YdV\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">"
+          }
+        }
+      }
+    },
+    "KnB-sd-S3M.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 4\"; ObjectID = \"KnB-sd-S3M\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 4"
+          }
+        }
+      }
+    },
+    "MWo-mi-W3y.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Single Step\"; ObjectID = \"MWo-mi-W3y\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單步執行"
+          }
+        }
+      }
+    },
+    "Njz-EA-4V6.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"􀉞\"; ObjectID = \"Njz-EA-4V6\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "􀉞"
+          }
+        }
+      }
+    },
+    "QkB-Kz-QJU.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 3\"; ObjectID = \"QkB-Kz-QJU\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 3"
+          }
+        }
+      }
+    },
+    "QR7-L0-WVK.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Go to Bookmark\"; ObjectID = \"QR7-L0-WVK\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "跳至書籤"
+          }
+        }
+      }
+    },
+    "QvC-M9-y7g.title" : {
+      "comment" : "Class = \"NSWindow\"; title = \"Debugger\"; ObjectID = \"QvC-M9-y7g\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "偵錯器"
+          }
+        }
+      }
+    },
+    "QvR-ba-zVl.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Address\"; ObjectID = \"QvR-ba-zVl\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "位址"
+          }
+        }
+      }
+    },
+    "rlO-ba-ZwH.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Color\"; ObjectID = \"rlO-ba-ZwH\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "彩色"
+          }
+        }
+      }
+    },
+    "Swt-EW-WAv.headerCell.title" : {
+      "comment" : "Class = \"NSTableColumn\"; headerCell.title = \"Disassembly\"; ObjectID = \"Swt-EW-WAv\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "反組譯碼"
+          }
+        }
+      }
+    },
+    "taH-Im-IUA.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 7\"; ObjectID = \"taH-Im-IUA\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 7"
+          }
+        }
+      }
+    },
+    "TnA-JS-h3f.label" : {
+      "comment" : "Class = \"NSTabViewItem\"; label = \"Console\"; ObjectID = \"TnA-JS-h3f\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "控制台"
+          }
+        }
+      }
+    },
+    "WrQ-QT-lr4.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 6\"; ObjectID = \"WrQ-QT-lr4\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 6"
+          }
+        }
+      }
+    },
+    "XEb-N6-t5u.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Mono\"; ObjectID = \"XEb-N6-t5u\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單色"
+          }
+        }
+      }
+    },
+    "XP4-7T-BqY.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Bookmark 1\"; ObjectID = \"XP4-7T-BqY\";",
+      "extractionState" : "migrated",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "書籤 1"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
