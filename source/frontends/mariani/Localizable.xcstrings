@@ -398,6 +398,17 @@
         }
       }
     },
+    "Cortechs Corp - CodeWriter" : {
+      "comment" : "Protection key for Dynatech Microsoftware / Cortechs Corp 'CodeWriter'",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cortechs Corp - CodeWriter"
+          }
+        }
+      }
+    },
     "Echo (speech)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -496,6 +507,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "普通印表機"
+          }
+        }
+      }
+    },
+    "Hayden - Applesoft Compiler" : {
+      "comment" : "Protection key for Hayden Book Company, Inc's Applesoft Compiler (1981)",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hayden - Applesoft Compiler"
           }
         }
       }
@@ -806,6 +828,39 @@
         }
       }
     },
+    "Robocom Ltd - Robo 500" : {
+      "comment" : "Interface Module for Robocom Ltd's Robo 500",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robocom Ltd - Robo 500"
+          }
+        }
+      }
+    },
+    "Robocom Ltd - Robo 1000" : {
+      "comment" : "Interface Module for Robocom Ltd's Robo 1000",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robocom Ltd - Robo 1000"
+          }
+        }
+      }
+    },
+    "Robocom Ltd - Robo 1500" : {
+      "comment" : "Interface Module for Robocom Ltd's Robo 1500",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robocom Ltd - Robo 1500"
+          }
+        }
+      }
+    },
     "Saturn 128K (memory)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -842,6 +897,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SD Music (音效卡)"
+          }
+        }
+      }
+    },
+    "SDS DataKey - SpeedStar" : {
+      "comment" : "Protection dongle for Southwestern Data Systems 'SpeedStar' Applesoft Compiler",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SDS DataKey - SpeedStar"
           }
         }
       }

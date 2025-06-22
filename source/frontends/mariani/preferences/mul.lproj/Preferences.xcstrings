@@ -37,6 +37,24 @@
         }
       }
     },
+    "3Ya-SV-dln.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Copy Protection\"; ObjectID = \"3Ya-SV-dln\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Copy Protection"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "防盜拷硬體鑰"
+          }
+        }
+      }
+    },
     "4g8-iN-ZRm.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Expansion\"; ObjectID = \"4g8-iN-ZRm\";",
       "extractionState" : "extracted_with_value",

@@ -68,6 +68,7 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSPopUpButton *computerSlot7Button;
 @property (strong) IBOutlet NSPopUpButton *computerExansionSlotButton;
 @property (strong) IBOutlet NSPopUpButton *computerPcapSlotButton;
+@property (strong) IBOutlet NSPopUpButton *computerCopyProtectionDongleButton;
 @property (strong) IBOutlet NSButton *computerRebootEmulatorButton;
 
 @property (strong) IBOutlet NSButton *video50PercentScanLinesButton;
@@ -248,6 +249,13 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 #else
         self.computerPcapSlotButton.enabled = false;
 #endif // U2_USE_SLIRP
+        
+        // copy protection
+        NSDictionary *dongleNames = [self.class localizedCopyProtectionDongleNameMap];
+        for (int i = DT_EMPTY; i <= DT_HAYDENCOMPILER; i++) {
+            [self.computerCopyProtectionDongleButton addItemWithTitle:[dongleNames objectForKey:@(i)]];
+        }
+        [self.computerCopyProtectionDongleButton selectItemAtIndex:GetCopyProtectionDongleType()];
     }
 }
 
@@ -503,6 +511,17 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     
     self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
 #endif // U2_USE_SLIRP
+}
+
+- (IBAction)copyProtectionDongleAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if ([sender isKindOfClass:[NSPopUpButton class]]) {
+        NSPopUpButton *dongleButton = (NSPopUpButton *)sender;
+        DONGLETYPE selectedDongleType = (DONGLETYPE)dongleButton.indexOfSelectedItem;
+        SetCopyProtectionDongleType(selectedDongleType);
+        RegSetConfigGameIOConnectorNewDongleType(GAME_IO_CONNECTOR, selectedDongleType);
+    }
 }
 
 - (IBAction)rebootEmulatorAction:(id)sender {
@@ -798,6 +817,19 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         @(CT_Uthernet2):            NSLocalizedString(@"Uthernet II (network)", @""),
         @(CT_MegaAudio):            NSLocalizedString(@"MEGA Audio", @""),
         @(CT_SDMusic):              NSLocalizedString(@"SD Music (sound)", @""),
+    };
+}
+
++ (NSDictionary *)localizedCopyProtectionDongleNameMap {
+    // helps map DONGLETYPE to a readable string
+    return @{
+        @(DT_EMPTY):                NSLocalizedString(@"—", @"empty slot"),
+        @(DT_SDSSPEEDSTAR):         NSLocalizedString(@"SDS DataKey - SpeedStar", @"Protection dongle for Southwestern Data Systems 'SpeedStar' Applesoft Compiler"),
+        @(DT_CODEWRITER):           NSLocalizedString(@"Cortechs Corp - CodeWriter", @"Protection key for Dynatech Microsoftware / Cortechs Corp 'CodeWriter'"),
+        @(DT_ROBOCOM500):           NSLocalizedString(@"Robocom Ltd - Robo 500", @"Interface Module for Robocom Ltd's Robo 500"),
+        @(DT_ROBOCOM1000):          NSLocalizedString(@"Robocom Ltd - Robo 1000", @"Interface Module for Robocom Ltd's Robo 1000"),
+        @(DT_ROBOCOM1500):          NSLocalizedString(@"Robocom Ltd - Robo 1500", @"Interface Module for Robocom Ltd's Robo 1500"),
+        @(DT_HAYDENCOMPILER):       NSLocalizedString(@"Hayden - Applesoft Compiler", @"Protection key for Hayden Book Company, Inc's Applesoft Compiler (1981)"),
     };
 }
 
