@@ -41,9 +41,9 @@ namespace common2
 #endif
     }
 
-    void setSnapshotFilename(const std::filesystem::path &fullpath)
+    void setSnapshotFilename(const std::filesystem::path &filename)
     {
-        Snapshot_SetFilename(fullpath.filename().string(), fullpath.parent_path().string());
+        Snapshot_SetFilename(filename.string());
         RegSaveString(REG_CONFIG, REGVALUE_SAVESTATE_FILENAME, 1, Snapshot_GetPathname());
     }
 
