@@ -397,24 +397,6 @@
         }
       }
     },
-    "IW3-Vm-1d9.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"pcap\"; ObjectID = \"IW3-Vm-1d9\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "pcap"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "pcap"
-          }
-        }
-      }
-    },
     "kRE-Os-hyf.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Main Board:\"; ObjectID = \"kRE-Os-hyf\";",
       "extractionState" : "extracted_with_value",
