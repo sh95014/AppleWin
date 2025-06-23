@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PreferencesViewController : NSViewController <NSOpenSavePanelDelegate>
+@interface PreferencesViewController : NSViewController <NSOpenSavePanelDelegate, NSTableViewDelegate, NSTableViewDataSource>
 
 + (NSDictionary *)localizedCardNameMap;
 

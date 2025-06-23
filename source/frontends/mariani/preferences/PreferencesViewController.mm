@@ -77,7 +77,9 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSSlider *audioMockingboardVolumeSlider;
 
 @property (strong) IBOutlet NSButton *storageEnhancedSpeedButton;
-@property (strong) IBOutlet NSButton *storageHardDiskFolderButton;
+@property (strong) IBOutlet NSTableView *storageHardDiskTableView;
+@property (strong) IBOutlet NSButton *storageHardDiskAddButton;
+@property (strong) IBOutlet NSButton *storageHardDiskDeleteButton;
 @property (strong) IBOutlet NSButton *storageCreateHardDiskButton;
 
 @property (weak) IBOutlet NSPopUpButton *gameController;
@@ -301,22 +303,27 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         // Enhanced speed for floppy drives
         self.storageEnhancedSpeedButton.state = cardManager.GetDisk2CardMgr().GetEnhanceDisk() ? NSControlStateValueOn : NSControlStateValueOff;
 
+        self.storageHardDiskTableView.delegate = self;
+        self.storageHardDiskTableView.dataSource = self;
+
         [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
     }
 }
 
 - (void)updateHardDiskPreferences {
     HarddiskInterfaceCard *hddCard = [self hddCard];
-    self.storageHardDiskFolderButton.enabled = (hddCard != nil);
+    self.storageHardDiskTableView.enabled = (hddCard != nil);
     self.storageCreateHardDiskButton.enabled = (hddCard != nil);
-    if (hddCard != nil) {
-        NSString *path = [NSString stringWithUTF8String:hddCard->HarddiskGetFullPathName(0).c_str()];
-        path = [path stringByAbbreviatingWithTildeInPath];
-        self.storageHardDiskFolderButton.title = path;
+    
+    [self.storageHardDiskTableView reloadData];
+    int count = 0;
+    for (int i = HARDDISK_1; i < NUM_HARDDISKS; i++) {
+        count += !hddCard->HarddiskGetFullPathName(i).empty();
     }
-    else {
-        self.storageHardDiskFolderButton.title = @"";
-    }
+    // with no selection, enable "+" button if an empty slot is available
+    self.storageHardDiskAddButton.enabled = (count < NUM_HARDDISKS);
+    // with no selection, nothing to delete
+    self.storageHardDiskDeleteButton.enabled = NO;
 }
 
 - (void)configureGameController {
@@ -590,9 +597,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     RegSaveValue(REG_CONFIG, REGVALUE_ENHANCE_DISK_SPEED, true, enhancedDisk);
 }
 
-- (IBAction)hardDiskFolderAction:(id)sender {
+- (IBAction)hardDiskAddAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-    
+
     NSOpenPanel *panel = [NSOpenPanel openPanel];
     panel.canChooseFiles = YES;
     panel.canChooseDirectories = NO;
@@ -601,18 +608,45 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     panel.message = NSLocalizedString(@"Select hard disk image", @"");
     panel.prompt = NSLocalizedString(@"Connect", @"");
     panel.delegate = self;
-    
+
     if ([panel runModal] == NSModalResponseOK) {
         const char *fileSystemRepresentation = panel.URL.fileSystemRepresentation;
         std::string pathname(fileSystemRepresentation);
         HarddiskInterfaceCard *hddCard = [self hddCard];
-        if (hddCard->Insert(0, pathname)) {
-            NSLog(@"Loaded '%s' as HDD 0", fileSystemRepresentation);
+        int hddIndex;
+        if (self.storageHardDiskTableView.selectedRow >= 0) {
+            hddIndex = (int)self.storageHardDiskTableView.selectedRow;
+            NSAssert(hddIndex >= HARDDISK_1 && hddIndex < NUM_HARDDISKS, @"selection was out of range");
+        }
+        else {
+            // find the first empty slot
+            for (hddIndex = 0; hddIndex < NUM_HARDDISKS; hddIndex++) {
+                if (hddCard->HarddiskGetFullPathName(hddIndex).empty()) {
+                    break;
+                }
+            }
+            NSAssert(hddIndex < NUM_HARDDISKS, @"add button should not have been enabled");
+        }
+        if (hddCard->Insert(hddIndex, pathname)) {
+            NSLog(@"Loaded '%s' as HDD %d", fileSystemRepresentation, hddIndex);
             [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
         }
         else {
             NSLog(@"Failed to '%s' as HDD", fileSystemRepresentation);
         }
+    }
+}
+
+- (IBAction)hardDiskDeleteAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (self.storageHardDiskTableView.selectedRow >= 0) {
+        int hddIndex = (int)self.storageHardDiskTableView.selectedRow;
+        HarddiskInterfaceCard *hddCard = [self hddCard];
+        NSAssert(hddIndex >= HARDDISK_1 && hddIndex < NUM_HARDDISKS, @"selection was out of range");
+        NSAssert(!hddCard->HarddiskGetFullPathName(hddIndex).empty(), @"delete sent to empty slot");
+        hddCard->Unplug(hddIndex);
+        [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
     }
 }
 
@@ -688,7 +722,14 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
             if (cardManager.QuerySlot(slot) == CT_GenericHDD) {
                 HarddiskInterfaceCard *hddCard = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
-                hddCard->Insert(0, std::string(outputFilename));
+                // insert into the first empty slot
+                for (int hddIndex = 0; hddIndex < NUM_HARDDISKS; hddIndex++) {
+                    if (hddCard->HarddiskGetFullPathName(hddIndex).empty()) {
+                        hddCard->Insert(hddIndex, std::string(outputFilename));
+                        break;
+                    }
+                }
+                break;
             }
         }
         [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
@@ -754,6 +795,34 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     }
     
     return [url.pathExtension.uppercaseString isEqualToString:@"HDV"];
+}
+
+#pragma mark - NSTableViewDataSource
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    return NUM_HARDDISKS;
+}
+
+- (id)tableView:(NSTableView *)tableView viewForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row {
+    NSTableCellView *result = [tableView makeViewWithIdentifier:@"HardDiskTableCellView" owner:self];
+    HarddiskInterfaceCard *hddCard = [self hddCard];
+    NSString *hddImagePath = [NSString stringWithUTF8String:hddCard->HarddiskGetFullPathName((int)row).c_str()];
+    if (hddImagePath.length == 0) {
+        hddImagePath = NSLocalizedString(@"—", @"empty slot");
+    }
+    result.textField.stringValue = hddImagePath;
+    return result;
+}
+
+#pragma mark - NSTableViewDelegate
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+    NSTableView *tableView = (NSTableView *)notification.object;
+    HarddiskInterfaceCard *hddCard = [self hddCard];
+    // always enable "+" button to add image to empty slot or replace image in filled slot
+    self.storageHardDiskAddButton.enabled = YES;
+    // enable "-" button if slot is filled
+    self.storageHardDiskDeleteButton.enabled = !hddCard->HarddiskGetFullPathName((int)tableView.selectedRow).empty();
 }
 
 #pragma mark - Utilities

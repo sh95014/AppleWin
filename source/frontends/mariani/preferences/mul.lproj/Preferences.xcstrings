@@ -380,37 +380,37 @@
       }
     },
     "iT1-07-Syr.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Mockingboard Volume:\"; ObjectID = \"iT1-07-Syr\";",
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Mockingboard Volume\"; ObjectID = \"iT1-07-Syr\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Mockingboard Volume:"
+            "value" : "Mockingboard Volume"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mockingboard 音量:"
+            "value" : "Mockingboard 音量"
           }
         }
       }
     },
     "kRE-Os-hyf.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Main Board:\"; ObjectID = \"kRE-Os-hyf\";",
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Main Board\"; ObjectID = \"kRE-Os-hyf\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Main Board:"
+            "value" : "Main Board"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "主機板:"
+            "value" : "主機板"
           }
         }
       }
@@ -433,56 +433,56 @@
         }
       }
     },
-    "nT1-OW-VEY.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"Button\"; ObjectID = \"nT1-OW-VEY\";",
+    "ngy-Or-HNh.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"－\"; ObjectID = \"ngy-Or-HNh\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Button"
+            "value" : "－"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Button"
+            "value" : "－"
           }
         }
       }
     },
     "paq-mq-NdY.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Speaker Volume:\"; ObjectID = \"paq-mq-NdY\";",
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Speaker Volume\"; ObjectID = \"paq-mq-NdY\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Speaker Volume:"
+            "value" : "Speaker Volume"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "內建喇叭音量:"
+            "value" : "內建喇叭音量"
           }
         }
       }
     },
     "pBX-bw-eKh.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Hard disk:\"; ObjectID = \"pBX-bw-eKh\";",
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Hard disks\"; ObjectID = \"pBX-bw-eKh\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Hard disk:"
+            "value" : "Hard disks"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "硬碟:"
+            "value" : "硬碟"
           }
         }
       }
@@ -506,19 +506,19 @@
       }
     },
     "rzE-im-fXn.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Screenshots:\"; ObjectID = \"rzE-im-fXn\";",
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Screenshots\"; ObjectID = \"rzE-im-fXn\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Screenshots:"
+            "value" : "Screenshots"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "螢幕快照:"
+            "value" : "螢幕快照"
           }
         }
       }
@@ -537,6 +537,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "啟動較快但不真實的磁碟存取速度"
+          }
+        }
+      }
+    },
+    "Tng-6I-1yN.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"＋\"; ObjectID = \"Tng-6I-1yN\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "＋"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "＋"
           }
         }
       }
@@ -632,19 +650,37 @@
       }
     },
     "zxc-fb-W3p.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Recordings:\"; ObjectID = \"zxc-fb-W3p\";",
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Recordings\"; ObjectID = \"zxc-fb-W3p\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Recordings:"
+            "value" : "Recordings"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "螢幕錄影:"
+            "value" : "螢幕錄影"
+          }
+        }
+      }
+    },
+    "zYd-bs-hv4.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Drag to reorder hard disks\"; ObjectID = \"zYd-bs-hv4\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Drag to reorder hard disks"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可拖曳硬碟排序"
           }
         }
       }
