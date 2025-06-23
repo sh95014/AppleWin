@@ -666,24 +666,6 @@
           }
         }
       }
-    },
-    "zYd-bs-hv4.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Drag to reorder hard disks\"; ObjectID = \"zYd-bs-hv4\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Drag to reorder hard disks"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "可拖曳硬碟排序"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

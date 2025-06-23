@@ -535,11 +535,11 @@
             <objects>
                 <viewController title="Storage" id="e3Y-c0-dGl" customClass="PreferencesViewController" sceneMemberID="viewController">
                     <view key="view" id="s0M-LS-SDq">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="321"/>
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="315"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <button toolTip="Enables faster but less authentic disk access" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T3p-Y6-znB">
-                                <rect key="frame" x="88" y="284" width="272" height="18"/>
+                                <rect key="frame" x="88" y="278" width="272" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Enhanced speed for floppy drives" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="8J1-iv-XcH">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -550,11 +550,11 @@
                                 </connections>
                             </button>
                             <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="MfP-cO-8w4">
-                                <rect key="frame" x="20" y="274" width="410" height="5"/>
+                                <rect key="frame" x="20" y="268" width="410" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </box>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ur4-hX-Ps9">
-                                <rect key="frame" x="18" y="252" width="120" height="16"/>
+                                <rect key="frame" x="18" y="246" width="120" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Hard disks" id="pBX-bw-eKh">
                                     <font key="font" metaFont="system"/>
@@ -562,19 +562,8 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2sb-00-62f">
-                                <rect key="frame" x="229" y="13" width="208" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Create New Hard Disk" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lZG-5R-Dzg">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="createHardDiskAction:" target="e3Y-c0-dGl" id="c4l-x6-vP0"/>
-                                </connections>
-                            </button>
                             <scrollView fixedFrame="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="2y1-wH-SEu">
-                                <rect key="frame" x="90" y="72" width="340" height="172"/>
+                                <rect key="frame" x="90" y="66" width="340" height="172"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" drawsBackground="NO" id="zcN-tf-gsf">
                                     <rect key="frame" x="1" y="1" width="338" height="170"/>
@@ -620,6 +609,9 @@
                                                     </prototypeCellViews>
                                                 </tableColumn>
                                             </tableColumns>
+                                            <connections>
+                                                <action trigger="doubleAction" selector="hardDiskAddAction:" target="e3Y-c0-dGl" id="2A6-D6-iz8"/>
+                                            </connections>
                                         </tableView>
                                     </subviews>
                                     <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
@@ -634,35 +626,37 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YIQ-HG-lFg">
-                                <rect key="frame" x="88" y="48" width="344" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" enabled="NO" refusesFirstResponder="YES" alignment="center" title="Drag to reorder hard disks" id="zYd-bs-hv4">
-                                    <font key="font" metaFont="smallSystem"/>
-                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sxs-gP-gjm">
-                                <rect key="frame" x="90" y="43" width="30" height="30"/>
+                                <rect key="frame" x="90" y="43" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="＋" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Tng-6I-1yN">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" textStyle="largeTitle" name=".SFNS-Regular"/>
+                                    <font key="font" textStyle="title1" name=".SFNS-Regular"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="hardDiskAddAction:" target="e3Y-c0-dGl" id="1Kh-UU-VX0"/>
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s0K-H2-7Fu">
-                                <rect key="frame" x="120" y="42" width="30" height="30"/>
+                                <rect key="frame" x="111" y="43" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="－" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="ngy-Or-HNh">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" textStyle="largeTitle" name=".SFNS-Regular"/>
+                                    <font key="font" textStyle="title1" name=".SFNS-Regular"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="hardDiskDeleteAction:" target="e3Y-c0-dGl" id="GjQ-L7-M6Q"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2sb-00-62f">
+                                <rect key="frame" x="229" y="13" width="208" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Create New Hard Disk" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lZG-5R-Dzg">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="createHardDiskAction:" target="e3Y-c0-dGl" id="c4l-x6-vP0"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -680,7 +674,7 @@
                 </viewController>
                 <customObject id="9EP-jI-MpJ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="229" y="987.5"/>
+            <point key="canvasLocation" x="229" y="984.5"/>
         </scene>
         <!--Game Controller-->
         <scene sceneID="npl-cd-dTs">
