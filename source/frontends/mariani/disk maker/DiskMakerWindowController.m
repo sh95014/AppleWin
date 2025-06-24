@@ -14,7 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DiskMakerWindowController()
 
 @property (strong) IBOutlet NSPopUpButton *capacityButton;
+enum { CAPACITY_140KB, CAPACITY_160KB, CAPACITY_800KB, CAPACITY_32MB };
+
 @property (strong) IBOutlet NSPopUpButton *formatButton;
+enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
+
 @property (strong) IBOutlet NSButton *customBootSectorButton;
 @property (strong) IBOutlet NSButton *onFormatCopyProDOSButton;
 @property (strong) IBOutlet NSButton *onFormatCopyBitsyBootButton;
@@ -30,6 +34,32 @@ NS_ASSUME_NONNULL_BEGIN
     if ((self = [super initWithWindowNibName:@"DiskMakerWindow"]) != nil) {
     }
     return self;
+}
+
+- (IBAction)capacityChanged:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    // DOS 3.3 can only be on 5.25" disks
+    switch (self.capacityButton.indexOfSelectedItem) {
+        case CAPACITY_800KB:
+        case CAPACITY_32MB:
+            if (self.formatButton.indexOfSelectedItem == FORMAT_DOS33) {
+                [self.formatButton selectItemAtIndex:FORMAT_BLANK];
+            }
+    }
+}
+
+- (IBAction)formatChanged:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    // DOS 3.3 can only be on 5.25" disks
+    if (self.formatButton.indexOfSelectedItem == FORMAT_DOS33) {
+        switch (self.capacityButton.indexOfSelectedItem) {
+            case CAPACITY_800KB:
+            case CAPACITY_32MB:
+                [self.capacityButton selectItemAtIndex:CAPACITY_140KB];
+        }
+    }
 }
 
 - (IBAction)createDiskImageAction:(id)sender {

@@ -54,6 +54,9 @@
                                 </items>
                             </menu>
                         </popUpButtonCell>
+                        <connections>
+                            <action selector="capacityChanged:" target="-2" id="bRN-jJ-cpd"/>
+                        </connections>
                     </popUpButton>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sxt-59-jnw">
                         <rect key="frame" x="18" y="192" width="166" height="16"/>
@@ -78,6 +81,9 @@
                                 </items>
                             </menu>
                         </popUpButtonCell>
+                        <connections>
+                            <action selector="formatChanged:" target="-2" id="otP-07-1j1"/>
+                        </connections>
                     </popUpButton>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qDB-KB-e83">
                         <rect key="frame" x="18" y="164" width="166" height="16"/>
