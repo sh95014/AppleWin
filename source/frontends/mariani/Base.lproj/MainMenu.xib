@@ -88,9 +88,9 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="File" id="bib-Uj-vzu">
                         <items>
-                            <menuItem title="New Blank Disk Image" id="FCU-LR-rG3">
+                            <menuItem title="New Disk Image" id="FCU-LR-rG3">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" id="RjL-S4-oG8"/>
+                                <menu key="submenu" title="New Disk Image" id="RjL-S4-oG8"/>
                             </menuItem>
                             <menuItem title="Insert Disk Image" id="l7t-Fp-Pd9">
                                 <modifierMask key="keyEquivalentModifierMask"/>

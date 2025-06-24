@@ -326,19 +326,19 @@
       }
     },
     "FCU-LR-rG3.title" : {
-      "comment" : "Class = \"NSMenuItem\"; title = \"New Blank Disk Image\"; ObjectID = \"FCU-LR-rG3\";",
+      "comment" : "Class = \"NSMenuItem\"; title = \"New Disk Image\"; ObjectID = \"FCU-LR-rG3\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "New Blank Disk Image"
+            "value" : "New Disk Image"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建空白磁碟映像檔"
+            "value" : "新建磁碟映像檔"
           }
         }
       }
@@ -735,6 +735,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "縮放"
+          }
+        }
+      }
+    },
+    "RjL-S4-oG8.title" : {
+      "comment" : "Class = \"NSMenu\"; title = \"New Disk Image\"; ObjectID = \"RjL-S4-oG8\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "New Disk Image"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建磁碟映像檔"
           }
         }
       }

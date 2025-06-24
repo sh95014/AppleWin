@@ -56,6 +56,13 @@
 		97F4E7D22E09FB5F00541725 /* MarianiDriveButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E7D02E09FB5F00541725 /* MarianiDriveButton.mm */; };
 		97F4E7D32E09FB5F00541725 /* MarianiDriveButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E7CF2E09FB5F00541725 /* MarianiDriveButton.h */; };
 		97F4E7D42E09FB5F00541725 /* MarianiDriveButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E7D02E09FB5F00541725 /* MarianiDriveButton.mm */; };
+		97F4E7FB2E0B1AC800541725 /* DiskMakerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E7F92E0B1AC800541725 /* DiskMakerWindowController.m */; };
+		97F4E7FC2E0B1AC800541725 /* DiskMakerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E7F72E0B1AC800541725 /* DiskMakerWindow.xib */; };
+		97F4E7FD2E0B1AC800541725 /* DiskMakerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E7F82E0B1AC800541725 /* DiskMakerWindowController.h */; };
+		97F4E7FE2E0B1AC800541725 /* DiskMakerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E7F82E0B1AC800541725 /* DiskMakerWindowController.h */; };
+		97F4E7FF2E0B1AC800541725 /* DiskMakerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E7F72E0B1AC800541725 /* DiskMakerWindow.xib */; };
+		97F4E8002E0B1AC800541725 /* DiskMakerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E7F92E0B1AC800541725 /* DiskMakerWindowController.m */; };
+		97F4E8022E0B1FDB00541725 /* ProDOS_FileSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E8012E0B1FDB00541725 /* ProDOS_FileSystem.h */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -792,6 +799,11 @@
 		97D1D54C2D2085D80088C2A2 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = minizip/unzip.h; sourceTree = "<group>"; };
 		97F4E7CF2E09FB5F00541725 /* MarianiDriveButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = MarianiDriveButton.h; sourceTree = "<group>"; };
 		97F4E7D02E09FB5F00541725 /* MarianiDriveButton.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MarianiDriveButton.mm; sourceTree = "<group>"; };
+		97F4E7F52E0B1AC800541725 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/DiskMakerWindow.xib; sourceTree = "<group>"; };
+		97F4E7F62E0B1AC800541725 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/DiskMakerWindow.xcstrings; sourceTree = "<group>"; };
+		97F4E7F82E0B1AC800541725 /* DiskMakerWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiskMakerWindowController.h; sourceTree = "<group>"; };
+		97F4E7F92E0B1AC800541725 /* DiskMakerWindowController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = DiskMakerWindowController.m; sourceTree = "<group>"; };
+		97F4E8012E0B1FDB00541725 /* ProDOS_FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProDOS_FileSystem.h; path = source/ProDOS_FileSystem.h; sourceTree = "<group>"; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1467,6 +1479,16 @@
 			name = minizip;
 			sourceTree = "<group>";
 		};
+		97F4E7FA2E0B1AC800541725 /* disk maker */ = {
+			isa = PBXGroup;
+			children = (
+				97F4E7F82E0B1AC800541725 /* DiskMakerWindowController.h */,
+				97F4E7F92E0B1AC800541725 /* DiskMakerWindowController.m */,
+				97F4E7F72E0B1AC800541725 /* DiskMakerWindow.xib */,
+			);
+			path = "disk maker";
+			sourceTree = "<group>";
+		};
 		97FF91B32A9965CA006A62A3 /* scripting */ = {
 			isa = PBXGroup;
 			children = (
@@ -1542,6 +1564,7 @@
 				B0DB46E22A36E42600B4E670 /* preferences */,
 				B0F526F42A2C1E0200288820 /* browser */,
 				B0F526EC2A2C1D3100288820 /* debugger */,
+				97F4E7FA2E0B1AC800541725 /* disk maker */,
 				B0DB46E32A36E52100B4E670 /* memory viewer */,
 				97FF91B32A9965CA006A62A3 /* scripting */,
 				B032DE27277A0C24006DC0F7 /* Assets.xcassets */,
@@ -1777,6 +1800,7 @@
 				B09AB64A277A14DB0002A6C3 /* Pravets.h */,
 				B09AB5EA277A14DA0002A6C3 /* Registry.cpp */,
 				B09AB5EF277A14DA0002A6C3 /* Registry.h */,
+				97F4E8012E0B1FDB00541725 /* ProDOS_FileSystem.h */,
 				B09AB763277A1E380002A6C3 /* resource.h */,
 				B09AB5ED277A14DA0002A6C3 /* RGBMonitor.cpp */,
 				B09AB630277A14DB0002A6C3 /* RGBMonitor.h */,
@@ -2299,6 +2323,7 @@
 				9768930B2DEB8F7B0040CB83 /* bitmap.h in Headers */,
 				B0098CB7277E171100F38E0C /* SSI263Phonemes.h in Headers */,
 				B0098CE9277E171200F38E0C /* Disk.h in Headers */,
+				97F4E8022E0B1FDB00541725 /* ProDOS_FileSystem.h in Headers */,
 				B0098CEE277E171200F38E0C /* NoSlotClock.h in Headers */,
 				B0098CD7277E171100F38E0C /* daa.h in Headers */,
 				B0098CF0277E171200F38E0C /* AY8910.h in Headers */,
@@ -2340,6 +2365,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97F4E7FD2E0B1AC800541725 /* DiskMakerWindowController.h in Headers */,
 				976892FB2DEB62D80040CB83 /* argparser.h in Headers */,
 				97F4E7D12E09FB5F00541725 /* MarianiDriveButton.h in Headers */,
 				976893012DEB72F10040CB83 /* cadirectsound.h in Headers */,
@@ -2414,6 +2440,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97F4E7FE2E0B1AC800541725 /* DiskMakerWindowController.h in Headers */,
 				976892F92DEB62D80040CB83 /* argparser.h in Headers */,
 				97F4E7D32E09FB5F00541725 /* MarianiDriveButton.h in Headers */,
 				976893002DEB72F10040CB83 /* cadirectsound.h in Headers */,
@@ -2822,6 +2849,7 @@
 				B00ECBD8279EEB600041E16C /* Base64A.rom in Resources */,
 				B00ECBD9279EEB600041E16C /* Apple2_Plus.rom in Resources */,
 				B00ECBDB279EEB600041E16C /* SSC.rom in Resources */,
+				97F4E7FC2E0B1AC800541725 /* DiskMakerWindow.xib in Resources */,
 				B00ECBDC279EEB600041E16C /* Apple2.rom in Resources */,
 				B00ECBDD279EEB600041E16C /* Parallel.rom in Resources */,
 				B0211CFB2A3A5EF50057ECBE /* MemoryViewerWindow.xib in Resources */,
@@ -2870,6 +2898,7 @@
 				B045FE7E2782984F006E36F9 /* Base64A.rom in Resources */,
 				B045FE732782984F006E36F9 /* Apple2_Plus.rom in Resources */,
 				B045FE812782984F006E36F9 /* SSC.rom in Resources */,
+				97F4E7FF2E0B1AC800541725 /* DiskMakerWindow.xib in Resources */,
 				B045FE852782984F006E36F9 /* Apple2.rom in Resources */,
 				B045FE832782984F006E36F9 /* Parallel.rom in Resources */,
 				B0211CFA2A3A5EF50057ECBE /* MemoryViewerWindow.xib in Resources */,
@@ -3023,6 +3052,7 @@
 				B00ECB9A279EEB600041E16C /* AppDelegate.mm in Sources */,
 				B00ECB9C279EEB600041E16C /* Debug.cpp in Sources */,
 				B00ECB9D279EEB600041E16C /* ptreeregistry.cpp in Sources */,
+				97F4E7FB2E0B1AC800541725 /* DiskMakerWindowController.m in Sources */,
 				97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */,
 				B00ECB9E279EEB600041E16C /* PreferencesWindowController.m in Sources */,
 				B00ECB9F279EEB600041E16C /* Debugger_Help.cpp in Sources */,
@@ -3100,6 +3130,7 @@
 				B032DE26277A0C23006DC0F7 /* AppDelegate.mm in Sources */,
 				B09AB736277A1BA40002A6C3 /* Debug.cpp in Sources */,
 				B049E855277B702100FC14A3 /* ptreeregistry.cpp in Sources */,
+				97F4E8002E0B1AC800541725 /* DiskMakerWindowController.m in Sources */,
 				97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */,
 				B092741B277D9403003FFB79 /* PreferencesWindowController.m in Sources */,
 				B09AB738277A1BA40002A6C3 /* Debugger_Help.cpp in Sources */,
@@ -3344,6 +3375,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		97F4E7F72E0B1AC800541725 /* DiskMakerWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				97F4E7F52E0B1AC800541725 /* Base */,
+				97F4E7F62E0B1AC800541725 /* mul */,
+			);
+			name = DiskMakerWindow.xib;
+			sourceTree = "<group>";
+		};
 		B00BE9EC2A291BD100F288F9 /* InspectorPanels.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

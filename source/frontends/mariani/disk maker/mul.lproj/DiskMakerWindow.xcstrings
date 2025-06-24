@@ -1,0 +1,312 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "ahd-hh-dCl.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"On format copy Bitsy Bye\"; ObjectID = \"ahd-hh-dCl\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "On format copy Bitsy Bye"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式化後載入 Bitsy Bye"
+          }
+        }
+      }
+    },
+    "Ao4-wl-vIP.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"140 KB 5.25\\\" (Standard 35-Track)\"; ObjectID = \"Ao4-wl-vIP\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "140 KB 5.25\" (Standard 35-Track)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "140 KB 5.25” （標準 35 軌）"
+          }
+        }
+      }
+    },
+    "aPF-Xy-Y11.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"32 MB Hard Disk\"; ObjectID = \"aPF-Xy-Y11\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "32 MB Hard Disk"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "32 MB 硬碟"
+          }
+        }
+      }
+    },
+    "cSF-nU-QC5.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Custom Boot Sector\"; ObjectID = \"cSF-nU-QC5\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Custom Boot Sector"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定啟動磁區"
+          }
+        }
+      }
+    },
+    "EeS-xa-Cb8.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Create Disk Image\"; ObjectID = \"EeS-xa-Cb8\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Create Disk Image"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建磁碟映像檔"
+          }
+        }
+      }
+    },
+    "eFC-dz-o0C.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"On format copy Bitsy Boot\"; ObjectID = \"eFC-dz-o0C\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "On format copy Bitsy Boot"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式化後載入 Bitsy Boot"
+          }
+        }
+      }
+    },
+    "Fje-Wc-S4H.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"800 KB 3.5\\\"\"; ObjectID = \"Fje-Wc-S4H\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "800 KB 3.5\""
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "800 KB 3.5\""
+          }
+        }
+      }
+    },
+    "Htf-jk-WzL.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Format\"; ObjectID = \"Htf-jk-WzL\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Format"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式"
+          }
+        }
+      }
+    },
+    "hVg-oZ-z9H.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Capacity\"; ObjectID = \"hVg-oZ-z9H\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Capacity"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "容量"
+          }
+        }
+      }
+    },
+    "LCP-Vb-YDd.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"On format copy ProDOS\"; ObjectID = \"LCP-Vb-YDd\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "On format copy ProDOS"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式化後載入 ProDOS"
+          }
+        }
+      }
+    },
+    "lZr-Xz-3CJ.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"On format copy BASIC.SYSTEM\"; ObjectID = \"lZr-Xz-3CJ\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "On format copy BASIC.SYSTEM"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "格式化後載入 BASIC.SYSTEM"
+          }
+        }
+      }
+    },
+    "QvC-M9-y7g.title" : {
+      "comment" : "Class = \"NSWindow\"; title = \"Create Disk Image\"; ObjectID = \"QvC-M9-y7g\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Create Disk Image"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建磁碟映像檔"
+          }
+        }
+      }
+    },
+    "Swd-kf-FpC.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"DOS 3.3\"; ObjectID = \"Swd-kf-FpC\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "DOS 3.3"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DOS 3.3"
+          }
+        }
+      }
+    },
+    "Tzm-no-zCb.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Blank\"; ObjectID = \"Tzm-no-zCb\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Blank"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空白"
+          }
+        }
+      }
+    },
+    "UfJ-R8-jQe.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Cancel\"; ObjectID = \"UfJ-R8-jQe\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Cancel"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
+        }
+      }
+    },
+    "vhy-yf-kvW.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"ProDOS\"; ObjectID = \"vhy-yf-kvW\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "ProDOS"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ProDOS"
+          }
+        }
+      }
+    },
+    "Z7r-tz-FTt.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"160 KB 5.25\\\" (Extended 40-Track)\"; ObjectID = \"Z7r-tz-FTt\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "160 KB 5.25\" (Extended 40-Track)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "160 KB 5.25” （標準 40 軌）"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

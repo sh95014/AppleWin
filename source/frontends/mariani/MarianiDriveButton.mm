@@ -9,6 +9,7 @@
 
 #import "MarianiDriveButton.h"
 #import "AppDelegate.h"
+#import "DiskMakerWindowController.h"
 
 // AppleWin
 #include <string>
@@ -31,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong) NSMutableDictionary *browserWindowControllers;
 @property (strong, nullable) NSOpenPanel *diskOpenPanel;
 @property (strong) DiskImageWrapper *wrapper;
+@property (strong) DiskMakerWindowController *diskMakerWC;
 @end
 
 @implementation MarianiDriveButton
@@ -268,38 +270,41 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     }
 }
 
-- (void)createBlankDiskImage:(id)sender {
+- (void)createDiskImage:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    if ([sender isKindOfClass:[NSMenuItem class]]) {
-        const int slot = (int)self.slot;
-        const int drive = (int)self.drive;
-        
-        NSString *lastPath = [[NSUserDefaults standardUserDefaults] objectForKey:@"NSNavLastRootDirectory"];
-        lastPath = [lastPath stringByStandardizingPath];
-        NSURL *folder = [NSURL fileURLWithPath:lastPath];
-        if (folder == nil) {
-            // fall back to ~/Desktop
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
-            folder = [NSURL fileURLWithPath:[paths objectAtIndex:0]];
-        }
-        
-        NSURL *url = [theAppDelegate unusedURLForFilename:BLANK_FILE_NAME extension:@"dsk" inFolder:folder];
-        std::string filename(url.fileSystemRepresentation);
-        CardManager &cardManager = GetCardMgr();
-        Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
-        const ImageError_e error = card->InsertDisk(drive, filename, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_CREATE);
-        if (error == eIMAGE_ERROR_NONE) {
-            NSLog(@"Loaded '%s' into slot %d drive %d",
-                  url.fileSystemRepresentation, slot, drive);
-            [theAppDelegate updateDriveLights];
-        }
-        else {
-            NSLog(@"Failed to load '%s' into slot %d drive %d due to error %d",
-                  url.fileSystemRepresentation, slot, drive, error);
-            card->NotifyInvalidImage(drive, url.fileSystemRepresentation, error);
-        }
+    self.diskMakerWC = [[DiskMakerWindowController alloc] init];
+    [self.diskMakerWC showWindow:self];
+    
+#if 0
+    const int slot = (int)self.slot;
+    const int drive = (int)self.drive;
+    
+    NSString *lastPath = [[NSUserDefaults standardUserDefaults] objectForKey:@"NSNavLastRootDirectory"];
+    lastPath = [lastPath stringByStandardizingPath];
+    NSURL *folder = [NSURL fileURLWithPath:lastPath];
+    if (folder == nil) {
+        // fall back to ~/Desktop
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
+        folder = [NSURL fileURLWithPath:[paths objectAtIndex:0]];
     }
+    
+    NSURL *url = [theAppDelegate unusedURLForFilename:BLANK_FILE_NAME extension:@"dsk" inFolder:folder];
+    std::string filename(url.fileSystemRepresentation);
+    CardManager &cardManager = GetCardMgr();
+    Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
+    const ImageError_e error = card->InsertDisk(drive, filename, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_CREATE);
+    if (error == eIMAGE_ERROR_NONE) {
+        NSLog(@"Loaded '%s' into slot %d drive %d",
+              url.fileSystemRepresentation, slot, drive);
+        [theAppDelegate updateDriveLights];
+    }
+    else {
+        NSLog(@"Failed to load '%s' into slot %d drive %d due to error %d",
+              url.fileSystemRepresentation, slot, drive, error);
+        card->NotifyInvalidImage(drive, url.fileSystemRepresentation, error);
+    }
+#endif
 }
 
 #pragma mark - NSOpenSavePanelDelegate

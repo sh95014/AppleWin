@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateDriveLight;
 
 - (void)openDiskImage:(id)sender;
-- (void)createBlankDiskImage:(id)sender;
+- (void)createDiskImage:(id)sender;
 
 @end
 

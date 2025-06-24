@@ -682,7 +682,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                 NSString *driveName = [NSString stringWithFormat:NSLocalizedString(@"Slot %d Drive %d", @""), slot, drive + 1];
                 NSMenuItem *item;
                 item = [[NSMenuItem alloc] initWithTitle:driveName
-                                                  action:@selector(createBlankDiskImage:)
+                                                  action:@selector(createDiskImage:)
                                            keyEquivalent:@""];
                 item.target = driveButton;
                 [self.createDiskImageMenu addItem:item];
