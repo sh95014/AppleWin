@@ -10,7 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol DiskImageBrowserDelegate <NSObject>
+
+- (void)browserWindowWillClose:(id)sender;
+
+@end
+
 @interface DiskImageBrowserWindowController : NSWindowController <NSWindowDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource>
+
+@property (nonatomic, weak, nullable) id<DiskImageBrowserDelegate> delegate;
 
 - (instancetype)initWithDiskImageWrapper:(DiskImageWrapper *)wrapper;
 

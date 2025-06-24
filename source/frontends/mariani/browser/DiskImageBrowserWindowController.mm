@@ -160,7 +160,9 @@ NSArray *fileTypeStrings = @[
 
 - (void)windowWillClose:(NSNotification *)notification {
     [self.filePreviewPanel orderOut:self];
-    [theAppDelegate browserWindowWillClose:self.wrapper.path];
+    if (self.delegate != nil) {
+        [self.delegate browserWindowWillClose:self.wrapper.path];
+    }
 }
 
 #pragma mark - NSOutlineViewDataSource

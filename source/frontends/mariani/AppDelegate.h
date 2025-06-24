@@ -13,9 +13,10 @@
 @interface AppDelegate : NSObject <NSApplicationDelegate, NSWindowDelegate, NSOpenSavePanelDelegate, EmulatorViewControllerDelegate>
 
 @property (strong) IBOutlet EmulatorViewController *emulatorVC;
+@property (strong) NSProcessInfo *processInfo;
+@property (atomic) NSInteger driveSwapCount;
 
 - (void)applyVideoModeChange;
-- (void)browserWindowWillClose:(NSString *)path;
 - (BOOL)emulationHardwareChanged;
 - (IBAction)rebootEmulatorAction:(id)sender;
 - (void)reconfigureDrives;

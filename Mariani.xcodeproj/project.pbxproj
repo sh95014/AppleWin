@@ -52,6 +52,10 @@
 		97D1D5582D20873D0088C2A2 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 97D1D5462D2085D80088C2A2 /* unzip.c */; };
 		97D1D5592D2087400088C2A2 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 97D1D5422D2085D80088C2A2 /* zip.c */; };
 		97D1D55A2D20875B0088C2A2 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 97D1D5482D2085D80088C2A2 /* ioapi.c */; };
+		97F4E7D12E09FB5F00541725 /* MarianiDriveButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E7CF2E09FB5F00541725 /* MarianiDriveButton.h */; };
+		97F4E7D22E09FB5F00541725 /* MarianiDriveButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E7D02E09FB5F00541725 /* MarianiDriveButton.mm */; };
+		97F4E7D32E09FB5F00541725 /* MarianiDriveButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E7CF2E09FB5F00541725 /* MarianiDriveButton.h */; };
+		97F4E7D42E09FB5F00541725 /* MarianiDriveButton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E7D02E09FB5F00541725 /* MarianiDriveButton.mm */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -786,6 +790,8 @@
 		97D1D54A2D2085D80088C2A2 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mztools.h; path = minizip/mztools.h; sourceTree = "<group>"; };
 		97D1D54B2D2085D80088C2A2 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ioapi.h; path = minizip/ioapi.h; sourceTree = "<group>"; };
 		97D1D54C2D2085D80088C2A2 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unzip.h; path = minizip/unzip.h; sourceTree = "<group>"; };
+		97F4E7CF2E09FB5F00541725 /* MarianiDriveButton.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = MarianiDriveButton.h; sourceTree = "<group>"; };
+		97F4E7D02E09FB5F00541725 /* MarianiDriveButton.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MarianiDriveButton.mm; sourceTree = "<group>"; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1522,6 +1528,8 @@
 				B049E8AB277C880800FC14A3 /* EmulatorView.mm */,
 				B049E89C277C43BF00FC14A3 /* EmulatorViewController.h */,
 				B049E89D277C43BF00FC14A3 /* EmulatorViewController.mm */,
+				97F4E7CF2E09FB5F00541725 /* MarianiDriveButton.h */,
+				97F4E7D02E09FB5F00541725 /* MarianiDriveButton.mm */,
 				B0689D092780B9B60029EB7D /* MarianiFrame.h */,
 				B0689D082780B9B60029EB7D /* MarianiFrame.cpp */,
 				B090CF2127B5A2A900C6C23D /* MarianiJoystick.h */,
@@ -2333,6 +2341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				976892FB2DEB62D80040CB83 /* argparser.h in Headers */,
+				97F4E7D12E09FB5F00541725 /* MarianiDriveButton.h in Headers */,
 				976893012DEB72F10040CB83 /* cadirectsound.h in Headers */,
 				973F68122D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
@@ -2406,6 +2415,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				976892F92DEB62D80040CB83 /* argparser.h in Headers */,
+				97F4E7D32E09FB5F00541725 /* MarianiDriveButton.h in Headers */,
 				976893002DEB72F10040CB83 /* cadirectsound.h in Headers */,
 				973F68112D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AB2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
@@ -3028,6 +3038,7 @@
 				B00ECBA7279EEB600041E16C /* timeapi.cpp in Sources */,
 				B00ECBA8279EEB600041E16C /* Debugger_DisassemblerData.cpp in Sources */,
 				B0F5270F2A2C1F2200288820 /* InspectorOutlineViewController.mm in Sources */,
+				97F4E7D22E09FB5F00541725 /* MarianiDriveButton.mm in Sources */,
 				B00ECBA9279EEB600041E16C /* Debugger_Parser.cpp in Sources */,
 				B00ECBAA279EEB600041E16C /* winstrings.cpp in Sources */,
 				B00ECBAB279EEB600041E16C /* PropertySheetHelper.cpp in Sources */,
@@ -3104,6 +3115,7 @@
 				B09AB804277A21410002A6C3 /* timeapi.cpp in Sources */,
 				B09AB728277A1BA40002A6C3 /* Debugger_DisassemblerData.cpp in Sources */,
 				B0F527002A2C1F2100288820 /* InspectorOutlineViewController.mm in Sources */,
+				97F4E7D42E09FB5F00541725 /* MarianiDriveButton.mm in Sources */,
 				B09AB727277A1BA40002A6C3 /* Debugger_Parser.cpp in Sources */,
 				B09AB809277A21410002A6C3 /* winstrings.cpp in Sources */,
 				B049E800277A36CE00FC14A3 /* PropertySheetHelper.cpp in Sources */,

@@ -23,7 +23,6 @@
 // AppleWin
 #import "Card.h"
 #import "CardManager.h"
-#import "CPU.h"
 #import "Interface.h"
 #import "NTSC.h"
 #import "Pravets.h"
@@ -33,26 +32,20 @@
 #import "CommonTypes.h"
 #import "EmulatorViewController.h"
 #import "PreferencesWindowController.h"
+#import "MarianiDriveButton.h"
 #import "MemoryViewerWindowController.h"
 #import "DebuggerWindowController.h"
 #import "UserDefaults.h"
 
 #import "DiskImg.h"
-#import "DiskImageBrowserWindowController.h"
-#import "DiskImageWrapper.h"
 using namespace DiskImgLib;
 
-#define STATUS_BAR_HEIGHT   32
-#define BLANK_FILE_NAME     NSLocalizedString(@"Blank", @"default file name for new blank disk")
+#define STATUS_BAR_HEIGHT           32
+#define STATUS_BAR_LEFT_MARGIN      5
+#define STATUS_BAR_BOTTOM_MARGIN    2
 
 // needs to match tag of Edit menu item in MainMenu.xib
 #define EDIT_TAG            3917
-
-// encode the slot-drive tuple into a single number (suitable for use as a
-// NSView tag, or decode from it
-#define ENCODE_SLOT_DRIVE(s, d) ((char)((s) * 10 + (d)))
-#define DECODE_SLOT(t)          ((char)((t) / 10))
-#define DECODE_DRIVE(t)         ((char)((t) % 10))
 
 @interface AppDelegate ()
 
@@ -63,7 +56,6 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSMenuItem *showHideStatusBarMenuItem;
 @property (strong) IBOutlet NSMenu *displayTypeMenu;
 @property (strong) IBOutlet NSView *statusBarView;
-@property (strong) IBOutlet NSButton *driveLightButtonTemplate;
 @property (strong) IBOutlet NSTextField *statusLabel;
 @property (strong) IBOutlet NSButton *screenRecordingButton;
 
@@ -78,24 +70,16 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSButton *aboutLinkButton;
 
 @property (strong) PreferencesWindowController *preferencesWC;
-@property NSArray *driveLightButtons;
-@property NSData *driveLightButtonTemplateArchive;
+@property NSArray *driveButtons;
 @property BOOL hasStatusBar;
 @property (readonly) double statusBarHeight;
 
-@property (strong) NSOpenPanel *diskOpenPanel;
 @property (strong) NSOpenPanel *tapeOpenPanel;
 @property (strong) NSOpenPanel *stateOpenPanel;
 @property (strong) NSSavePanel *stateSavePanel;
 
-@property (strong) NSMutableDictionary *browserWindowControllers;
-
-@property (strong) NSProcessInfo *processInfo;
-
 @property (strong) MemoryViewerWindowController *memoryWC;
 @property (strong) DebuggerWindowController *debuggerWC;
-
-@property (atomic) NSInteger driveSwapCount;
 
 @end
 
@@ -104,7 +88,6 @@ static void DiskImgMsgHandler(const char *file, int line, const char *msg);
 @implementation AppDelegate
 
 Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
-const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     self.processInfo = [[NSProcessInfo alloc] init];
@@ -113,9 +96,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     Global::AppInit();
     
     _hasStatusBar = YES;
-    self.driveLightButtonTemplate.hidden = YES;
     self.statusLabel.stringValue = @"";
-    self.browserWindowControllers = [NSMutableDictionary dictionary];
     
     NSString *appName = [NSRunningApplication currentApplication].localizedName;
     self.aboutMarianiMenuItem.title = [NSString stringWithFormat:NSLocalizedString(@"About %@", @""), appName];
@@ -150,7 +131,6 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         [self.displayTypeMenu addItem:item];
     }
     
-    self.driveLightButtonTemplateArchive = [self archiveFromTemplateView:self.driveLightButtonTemplate];
     [self reconfigureDrives];
     
     [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent * _Nullable(NSEvent * _Nonnull event) {
@@ -295,10 +275,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         return YES;
     }
     
-    if ([sender isEqual:self.diskOpenPanel]) {
-        return [@[ @"BIN", @"DO", @"DSK", @"NIB", @"PO", @"WOZ", @"ZIP", @"GZIP", @"GZ" ] containsObject:url.pathExtension.uppercaseString];
-    }
-    else if ([sender isEqual:self.tapeOpenPanel]) {
+    if ([sender isEqual:self.tapeOpenPanel]) {
         return [url.pathExtension.uppercaseString isEqual:@"WAV"];
     }
     else if ([sender isEqual:self.stateOpenPanel]) {
@@ -651,196 +628,6 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 #pragma mark - Main window actions
 
-- (IBAction)driveLightAction:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    NSView *view = (NSView *)sender;
-    const int slot = DECODE_SLOT(view.tag);
-    const int drive = DECODE_DRIVE(view.tag);
-    // menu doesn't have a tag, so we stash the slot/drive in the title
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:[NSString stringWithFormat:@"%ld", view.tag]];
-    menu.minimumWidth = 200;
-    
-    // if there's a disk in the drive, show it
-    CardManager &cardManager = GetCardMgr();
-    if (cardManager.QuerySlot(slot) == CT_Disk2) {
-        Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
-        NSString *diskName = [NSString stringWithUTF8String:card->GetFullDiskFilename(drive).c_str()];
-        if ([diskName length] > 0) {
-            [menu addItemWithTitle:diskName action:nil keyEquivalent:@""];
-            
-            // see if this disk is browseable
-            DiskImg *diskImg = new DiskImg;
-            std::string diskPathname = card->DiskGetFullPathName(drive);
-            if (diskImg->OpenImage(diskPathname.c_str(), '/', true) == kDIErrNone &&
-                diskImg->AnalyzeImage() == kDIErrNone) {
-                NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Examine…", @"browse disk image")
-                                                                  action:@selector(browseDisk:)
-                                                           keyEquivalent:@""];
-                NSString *pathString = [NSString stringWithUTF8String:diskPathname.c_str()];
-                menuItem.representedObject = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
-                [menu addItem:menuItem];
-            }
-            
-            NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Eject", @"eject disk image")
-                                                              action:@selector(ejectDisk:)
-                                                       keyEquivalent:@""];
-            menuItem.representedObject = @[ @(slot), @(drive) ];
-            [menu addItem:menuItem];
-            [menu addItem:[NSMenuItem separatorItem]];
-        }
-        
-        NSMenuItem *item;
-         
-        item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Other Disk…", @"open another disk image")
-                                          action:@selector(openDiskImage:)
-                                   keyEquivalent:@""];
-        item.representedObject = @[ @(slot), @(drive) ];
-        [menu addItem:item];
-    }
-    else if (cardManager.QuerySlot(slot) == CT_GenericHDD) {
-        HarddiskInterfaceCard *card = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
-        const char *path = card->HarddiskGetFullPathName(0).c_str();
-        NSString *pathString = [NSString stringWithUTF8String:path];
-        NSString *diskName = [pathString lastPathComponent];
-        if ([diskName length] > 0) {
-            [menu addItemWithTitle:diskName action:nil keyEquivalent:@""];
-        
-            // see if this disk is browseable
-            DiskImg *diskImg = new DiskImg;
-            if (diskImg->OpenImage(pathString.UTF8String, '/', true) == kDIErrNone &&
-                diskImg->AnalyzeImage() == kDIErrNone) {
-                NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Examine…", @"browse disk image")
-                                                                  action:@selector(browseDisk:)
-                                                           keyEquivalent:@""];
-                menuItem.representedObject = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
-                [menu addItem:menuItem];
-            }
-        }
-    }
-
-    [menu popUpMenuPositioningItem:nil atLocation:CGPointZero inView:view];
-    if ([view isKindOfClass:[NSButton class]]) {
-        NSButton *button = (NSButton *)view;
-        [button setState:NSControlStateValueOff];
-    }
-}
-
-- (void)browseDisk:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    if ([sender isKindOfClass:[NSMenuItem class]]) {
-        NSMenuItem *menuItem = (NSMenuItem *)sender;
-        if ([menuItem.representedObject isKindOfClass:[DiskImageWrapper class]]) {
-            DiskImageWrapper *wrapper = (DiskImageWrapper *)menuItem.representedObject;
-            DiskImageBrowserWindowController *browserWC = [self.browserWindowControllers objectForKey:wrapper.path];
-            if (browserWC == nil) {
-                browserWC = [[DiskImageBrowserWindowController alloc] initWithDiskImageWrapper:wrapper];
-                if (browserWC != nil) {
-                    [self.browserWindowControllers setObject:browserWC forKey:wrapper.path];
-                    [browserWC showWindow:self];
-                }
-                else {
-                    [self showModalAlertofType:MB_ICONWARNING | MB_OK
-                                   withMessage:NSLocalizedString(@"Unknown Disk Format", @"")
-                                   information:NSLocalizedString(@"Unable to interpret the data format stored on this disk.", @"")];
-                }
-            }
-            else {
-                [browserWC.window orderFront:self];
-            }
-        }
-    }
-}
-
-- (void)ejectDisk:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    if ([sender isKindOfClass:[NSMenuItem class]]) {
-        NSMenuItem *menuItem = (NSMenuItem *)sender;
-        const int slot = [menuItem.representedObject[0] intValue];
-        const int drive = [menuItem.representedObject[1] intValue];
-        
-        CardManager &cardManager = GetCardMgr();
-        Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
-        card->EjectDisk(drive);
-        [self updateDriveLights];
-    }
-}
-
-- (void)openDiskImage:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    if ([sender isKindOfClass:[NSMenuItem class]]) {
-        NSMenuItem *menuItem = (NSMenuItem *)sender;
-        const int slot = [menuItem.representedObject[0] intValue];
-        const int drive = [menuItem.representedObject[1] intValue];
-        
-        self.diskOpenPanel = [NSOpenPanel openPanel];
-        self.diskOpenPanel.canChooseFiles = YES;
-        self.diskOpenPanel.canChooseDirectories = NO;
-        self.diskOpenPanel.allowsMultipleSelection = NO;
-        self.diskOpenPanel.canDownloadUbiquitousContents = YES;
-        self.diskOpenPanel.message = [NSString stringWithFormat:NSLocalizedString(@"Select disk image for slot %d drive %d", @"slot, drive"), slot, drive + 1];
-        self.diskOpenPanel.prompt = NSLocalizedString(@"Insert", @"..into drive");
-        self.diskOpenPanel.delegate = self;
-        
-        if ([self.diskOpenPanel runModal] == NSModalResponseOK) {
-            const char *fileSystemRepresentation = self.diskOpenPanel.URL.fileSystemRepresentation;
-            std::string filename(fileSystemRepresentation);
-            CardManager &cardManager = GetCardMgr();
-            Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
-            const ImageError_e error = card->InsertDisk(drive, filename, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_DONT_CREATE);
-            if (error == eIMAGE_ERROR_NONE) {
-                NSLog(@"Loaded '%s' into slot %d drive %d",
-                      fileSystemRepresentation, slot, drive);
-                [self updateDriveLights];
-            }
-            else {
-                NSLog(@"Failed to load '%s' into slot %d drive %d due to error %d",
-                      fileSystemRepresentation, slot, drive, error);
-                card->NotifyInvalidImage(drive, fileSystemRepresentation, error);
-            }
-            self.diskOpenPanel = nil;
-        }
-    }
-}
-
-- (void)createBlankDiskImage:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    
-    if ([sender isKindOfClass:[NSMenuItem class]]) {
-        NSMenuItem *menuItem = (NSMenuItem *)sender;
-        const int slot = [menuItem.representedObject[0] intValue];
-        const int drive = [menuItem.representedObject[1] intValue];
-
-        NSString *lastPath = [[NSUserDefaults standardUserDefaults] objectForKey:@"NSNavLastRootDirectory"];
-        lastPath = [lastPath stringByStandardizingPath];
-        NSURL *folder = [NSURL fileURLWithPath:lastPath];
-        if (folder == nil) {
-            // fall back to ~/Desktop
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
-            folder = [NSURL fileURLWithPath:[paths objectAtIndex:0]];
-        }
-
-        NSURL *url = [self unusedURLForFilename:BLANK_FILE_NAME extension:@"dsk" inFolder:folder];
-        std::string filename(url.fileSystemRepresentation);
-        CardManager &cardManager = GetCardMgr();
-        Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
-        const ImageError_e error = card->InsertDisk(drive, filename, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_CREATE);
-        if (error == eIMAGE_ERROR_NONE) {
-            NSLog(@"Loaded '%s' into slot %d drive %d",
-                  url.fileSystemRepresentation, slot, drive);
-            [self updateDriveLights];
-        }
-        else {
-            NSLog(@"Failed to load '%s' into slot %d drive %d due to error %d",
-                  url.fileSystemRepresentation, slot, drive, error);
-            card->NotifyInvalidImage(drive, url.fileSystemRepresentation, error);
-        }
-    }
-}
-
 - (IBAction)recordScreenAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -860,61 +647,50 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     [self.emulatorVC videoModeDidChange];
 }
 
-- (void)browserWindowWillClose:(NSString *)path {
-    [self.browserWindowControllers removeObjectForKey:path];
-}
-
 - (BOOL)emulationHardwareChanged {
     return [self.emulatorVC emulationHardwareChanged];
 }
 
 - (void)reconfigureDrives {
-    NSInteger driveLightsRightEdge = self.driveLightButtonTemplate.frame.origin.x;
+    const NSInteger oldDriveLightButtonsCount = self.driveButtons.count;
     
-    // only using as template, never actually show this button
-    self.driveLightButtonTemplate.hidden = YES;
-    
-    const NSInteger oldDriveLightButtonsCount = self.driveLightButtons.count;
-    
-    // remove the old light buttons, if any
-    for (NSView *button in self.driveLightButtons) {
+    // clean up old drives
+    for (NSView *button in self.driveButtons) {
         [button removeFromSuperview];
     }
     [self.createDiskImageMenu removeAllItems];
     [self.openDiskImageMenu removeAllItems];
     
-    NSMutableArray *driveLightButtons = [NSMutableArray array];
+    NSInteger drivesRightEdge = STATUS_BAR_LEFT_MARGIN;
+    NSMutableArray *driveButtons = [NSMutableArray array];
     NSInteger position = 0;
     CardManager &cardManager = GetCardMgr();
     for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
         if (cardManager.QuerySlot(slot) == CT_Disk2) {
             for (int drive = DRIVE_1; drive < NUM_DRIVES; drive++) {
-                NSButton *driveLightButton = (NSButton *)[self viewCopyFromArchive:self.driveLightButtonTemplateArchive];
-
-                [driveLightButtons addObject:driveLightButton];
-                [[self.driveLightButtonTemplate superview] addSubview:driveLightButton];
+                MarianiDriveButton *driveButton = [MarianiDriveButton buttonForFloppyDrive:drive inSlot:slot];
+                [driveButtons addObject:driveButton];
+                [self.statusBarView addSubview:driveButton];
                 
                 // offset each drive light button from the left
-                CGRect driveLightButtonFrame = driveLightButton.frame;
-                driveLightButtonFrame.origin.x = self.driveLightButtonTemplate.frame.origin.x + position * self.driveLightButtonTemplate.frame.size.width;
-                driveLightButton.frame = driveLightButtonFrame;
-                driveLightsRightEdge = CGRectGetMaxX(driveLightButtonFrame);
+                CGRect driveButtonFrame = driveButton.frame;
+                driveButtonFrame.origin.x = STATUS_BAR_LEFT_MARGIN + position * [MarianiDriveButton buttonWidth];
+                driveButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
+                driveButton.frame = driveButtonFrame;
+                drivesRightEdge = CGRectGetMaxX(driveButtonFrame);
                 
-                driveLightButton.tag = ENCODE_SLOT_DRIVE(slot, drive);
-                driveLightButton.hidden = NO;
-
                 NSString *driveName = [NSString stringWithFormat:NSLocalizedString(@"Slot %d Drive %d", @""), slot, drive + 1];
                 NSMenuItem *item;
                 item = [[NSMenuItem alloc] initWithTitle:driveName
                                                   action:@selector(createBlankDiskImage:)
                                            keyEquivalent:@""];
-                item.representedObject = @[ @(slot), @(drive) ];
+                item.target = driveButton;
                 [self.createDiskImageMenu addItem:item];
                 
                 item = [[NSMenuItem alloc] initWithTitle:driveName
                                                   action:@selector(openDiskImage:)
                                            keyEquivalent:@""];
-                item.representedObject = @[ @(slot), @(drive) ];
+                item.target = driveButton;
                 if (slot == SLOT6) {
                     unichar character = (drive == DRIVE_1) ? NSF3FunctionKey : NSF4FunctionKey;
                     NSString *key = [NSString stringWithCharacters:&character length:1];
@@ -922,8 +698,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                     item.keyEquivalentModifierMask = 0;
                 }
                 [self.openDiskImageMenu addItem:item];
-                driveLightButton.toolTip = driveName;
-
+                driveButton.toolTip = driveName;
+                
                 position++;
             }
         }
@@ -931,36 +707,37 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     
     for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
         if (cardManager.QuerySlot(slot) == CT_GenericHDD) {
-            NSButton *driveLightButton = (NSButton *)[self viewCopyFromArchive:self.driveLightButtonTemplateArchive];
-            
-            [driveLightButtons addObject:driveLightButton];
-            [[self.driveLightButtonTemplate superview] addSubview:driveLightButton];
-            
-            // offset each drive light button from the left
-            CGRect driveLightButtonFrame = driveLightButton.frame;
-            driveLightButtonFrame.origin.x = self.driveLightButtonTemplate.frame.origin.x + position * self.driveLightButtonTemplate.frame.size.width;
-            driveLightButton.frame = driveLightButtonFrame;
-            driveLightsRightEdge = CGRectGetMaxX(driveLightButtonFrame);
-            
-            driveLightButton.tag = ENCODE_SLOT_DRIVE(slot, 0);
-            driveLightButton.hidden = NO;
-            
-            NSString *driveName = [NSString stringWithFormat:NSLocalizedString(@"Slot %d Hard Disk", @""), slot];
-            driveLightButton.toolTip = driveName;
-            
-            position++;
-
+            for (int drive = HARDDISK_1; drive < NUM_HARDDISKS; drive++) {
+                HarddiskInterfaceCard *hddCard = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
+                if (!hddCard->HarddiskGetFullPathName(drive).empty()) {
+                    MarianiDriveButton *driveButton = [MarianiDriveButton buttonForHardDrive:drive inSlot:slot];
+                    [driveButtons addObject:driveButton];
+                    [self.statusBarView addSubview:driveButton];
+                    
+                    // offset each drive light button from the left
+                    CGRect driveButtonFrame = driveButton.frame;
+                    driveButtonFrame.origin.x = STATUS_BAR_LEFT_MARGIN + position * [MarianiDriveButton buttonWidth];
+                    driveButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
+                    driveButton.frame = driveButtonFrame;
+                    drivesRightEdge = CGRectGetMaxX(driveButtonFrame);
+                    
+                    NSString *driveName = [NSString stringWithFormat:NSLocalizedString(@"Slot %d Hard Disk %d", @""), slot, drive + 1];
+                    driveButton.toolTip = driveName;
+                    
+                    position++;
+                }
+            }
         }
     }
     
-    self.driveLightButtons = driveLightButtons;
+    self.driveButtons = driveButtons;
     
     CGRect statusLabelFrame = self.statusLabel.frame;
-    statusLabelFrame.origin.x = driveLightsRightEdge + 5;
+    statusLabelFrame.origin.x = drivesRightEdge + 5;
     statusLabelFrame.size.width = self.screenRecordingButton.frame.origin.x - statusLabelFrame.origin.x - 5;
     self.statusLabel.frame = statusLabelFrame;
     
-    if (self.driveLightButtons.count != oldDriveLightButtonsCount) {
+    if (self.driveButtons.count != oldDriveLightButtonsCount) {
         // constrain our window to not allow it to be resized so small that our
         // status bar buttons overlap
         [self.window setContentMinSize:[self minimumContentSizeAtScale:1]];
@@ -1048,60 +825,9 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 }
 
 - (void)updateDriveLights {
-    NSColor *driveSwappingColor = [NSColor controlAccentColor];
-    
     if (self.hasStatusBar) {
-        for (NSButton *driveLightButton in self.driveLightButtons) {
-            CardManager &cardManager = GetCardMgr();
-            const UINT slot = DECODE_SLOT(driveLightButton.tag);
-            const int drive = DECODE_DRIVE(driveLightButton.tag);
-            if (cardManager.QuerySlot(slot) == CT_Disk2) {
-                Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard *>(cardManager.GetObj(slot));
-                if (card->IsDriveEmpty(drive)) {
-                    if ([self.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
-                        driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.dotted" accessibilityDescription:@""];
-                    }
-                    else {
-                        driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.dashed" accessibilityDescription:@""];
-                    }
-                    driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
-                }
-                else {
-                    Disk_Status_e status[NUM_DRIVES];
-                    card->GetLightStatus(&status[0], &status[1]);
-                    if (status[drive] != DISK_STATUS_OFF) {
-                        if (card->GetProtect(drive)) {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"lock.circle.fill" accessibilityDescription:@""];
-                        }
-                        else {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
-                        }
-                        driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
-                    }
-                    else {
-                        if (card->GetProtect(drive)) {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"lock.circle" accessibilityDescription:@""];
-                        }
-                        else {
-                            driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
-                        }
-                        driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
-                    }
-                }
-            }
-            else if (cardManager.QuerySlot(slot) == CT_GenericHDD) {
-                HarddiskInterfaceCard *card = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
-                Disk_Status_e status;
-                card->GetLightStatus(&status);
-                if (status != DISK_STATUS_OFF) {
-                    driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
-                    driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
-                }
-                else {
-                    driveLightButton.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
-                    driveLightButton.contentTintColor = self.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
-                }
-            }
+        for (MarianiDriveButton *driveButton in self.driveButtons) {
+            [driveButton updateDriveLight];
         }
     }
 }
@@ -1129,39 +855,14 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     return (name != nil) ? name : NSLocalizedString(@"Unknown", @"");
 }
 
-- (NSView *)viewCopyFromTemplateView:(NSView *)templateView {
-    return [self viewCopyFromArchive:[self archiveFromTemplateView:templateView]];
-}
-
-- (NSData *)archiveFromTemplateView:(NSView *)templateView {
-    NSError *error;
-    NSData *archive = [NSKeyedArchiver archivedDataWithRootObject:templateView requiringSecureCoding:NO error:&error];
-    if (error != nil) {
-        NSLog(@"%s: %@", __PRETTY_FUNCTION__, error.localizedDescription);
-        return nil;
-    }
-    return archive;
-}
-
-- (NSView *)viewCopyFromArchive:(NSData *)templateArchive {
-    NSError *error;
-    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:templateArchive error:&error];
-    unarchiver.requiresSecureCoding = NO;
-    NSView *view = [unarchiver decodeObjectForKey:NSKeyedArchiveRootObjectKey];
-    if (error != nil) {
-        NSLog(@"%s: %@", __PRETTY_FUNCTION__, error.localizedDescription);
-    }
-    return view;
-}
-
 - (CGSize)minimumContentSizeAtScale:(double)scale {
     NSSize minimumSize;
     // width of all the things in the status bar...
     minimumSize.width =
-        self.driveLightButtonTemplate.frame.origin.x +                                      // left margin
-        self.driveLightButtonTemplate.frame.size.width * self.driveLightButtons.count +     // drive light buttons
-        40 +                                                                                // a healthy margin
-        (self.window.frame.size.width - self.screenRecordingButton.frame.origin.x);            // buttons on the right
+        STATUS_BAR_LEFT_MARGIN +
+        [MarianiDriveButton buttonWidth] * self.driveButtons.count +           // drive light buttons
+        40 +                                                                        // a healthy margin
+        (self.window.frame.size.width - self.screenRecordingButton.frame.origin.x); // buttons on the right
     // ...but no less than 2 pt per Apple ][ pixel
     Video &video = GetVideo();
     if (minimumSize.width < video.GetFrameBufferBorderlessWidth() * scale) {

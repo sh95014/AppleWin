@@ -803,7 +803,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "螢幕錄影存檔為「%@」"
+            "value" : "螢幕錄影存檔為「%s」"
           }
         }
       }
@@ -886,7 +886,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "螢幕快照存檔為「%@」"
+            "value" : "螢幕快照存檔為「%s」"
           }
         }
       }
@@ -1005,12 +1005,18 @@
         }
       }
     },
-    "Slot %d Hard Disk" : {
+    "Slot %d Hard Disk %d" : {
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Slot %1$d Hard Disk %2$d"
+          }
+        },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "插槽 %d 硬碟"
+            "value" : "插槽 %1$d 硬碟 %2$d"
           }
         }
       }

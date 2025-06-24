@@ -312,18 +312,27 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 
 - (void)updateHardDiskPreferences {
     HarddiskInterfaceCard *hddCard = [self hddCard];
-    self.storageHardDiskTableView.enabled = (hddCard != nil);
-    self.storageCreateHardDiskButton.enabled = (hddCard != nil);
-    
-    [self.storageHardDiskTableView reloadData];
-    int count = 0;
-    for (int i = HARDDISK_1; i < NUM_HARDDISKS; i++) {
-        count += !hddCard->HarddiskGetFullPathName(i).empty();
+    if (hddCard != nil) {
+        self.storageHardDiskTableView.enabled = YES;
+        self.storageCreateHardDiskButton.enabled = YES;
+        
+        [self.storageHardDiskTableView reloadData];
+        int count = 0;
+        for (int i = HARDDISK_1; i < NUM_HARDDISKS; i++) {
+            count += !hddCard->HarddiskGetFullPathName(i).empty();
+        }
+        // with no selection, enable "+" button if an empty slot is available
+        self.storageHardDiskAddButton.enabled = (count < NUM_HARDDISKS);
+        // with no selection, nothing to delete
+        self.storageHardDiskDeleteButton.enabled = NO;
     }
-    // with no selection, enable "+" button if an empty slot is available
-    self.storageHardDiskAddButton.enabled = (count < NUM_HARDDISKS);
-    // with no selection, nothing to delete
-    self.storageHardDiskDeleteButton.enabled = NO;
+    else {
+        self.storageHardDiskTableView.enabled = NO;
+        self.storageCreateHardDiskButton.enabled = NO;
+        self.storageHardDiskAddButton.enabled = NO;
+        self.storageHardDiskDeleteButton.enabled = NO;
+    }
+    [self.storageHardDiskTableView reloadData];
 }
 
 - (void)configureGameController {
@@ -630,6 +639,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         if (hddCard->Insert(hddIndex, pathname)) {
             NSLog(@"Loaded '%s' as HDD %d", fileSystemRepresentation, hddIndex);
             [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
+            [theAppDelegate reconfigureDrives];
         }
         else {
             NSLog(@"Failed to '%s' as HDD", fileSystemRepresentation);
@@ -647,6 +657,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         NSAssert(!hddCard->HarddiskGetFullPathName(hddIndex).empty(), @"delete sent to empty slot");
         hddCard->Unplug(hddIndex);
         [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
+        [theAppDelegate reconfigureDrives];
     }
 }
 
@@ -806,11 +817,16 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 - (id)tableView:(NSTableView *)tableView viewForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row {
     NSTableCellView *result = [tableView makeViewWithIdentifier:@"HardDiskTableCellView" owner:self];
     HarddiskInterfaceCard *hddCard = [self hddCard];
-    NSString *hddImagePath = [NSString stringWithUTF8String:hddCard->HarddiskGetFullPathName((int)row).c_str()];
-    if (hddImagePath.length == 0) {
-        hddImagePath = NSLocalizedString(@"—", @"empty slot");
+    if (hddCard != nil) {
+        NSString *hddImagePath = [NSString stringWithUTF8String:hddCard->HarddiskGetFullPathName((int)row).c_str()];
+        if (hddImagePath.length == 0) {
+            hddImagePath = NSLocalizedString(@"—", @"empty slot");
+        }
+        result.textField.stringValue = hddImagePath;
     }
-    result.textField.stringValue = hddImagePath;
+    else {
+        result.textField.stringValue = NSLocalizedString(@"—", @"empty slot");
+    }
     return result;
 }
 
