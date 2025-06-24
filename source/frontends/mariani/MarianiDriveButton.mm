@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MarianiDriveButton ()
 @property (strong) NSMutableDictionary *browserWindowControllers;
 @property (strong, nullable) NSOpenPanel *diskOpenPanel;
+@property (strong) DiskImageWrapper *wrapper;
 @end
 
 @implementation MarianiDriveButton
@@ -143,7 +144,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                                                            keyEquivalent:@""];
                 menuItem.target = self;
                 NSString *pathString = [NSString stringWithUTF8String:diskPathname.c_str()];
-                menuItem.representedObject = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
+                self.wrapper = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
                 [menu addItem:menuItem];
             }
             
@@ -179,7 +180,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                                                                   action:@selector(browseDisk:)
                                                            keyEquivalent:@""];
                 menuItem.target = self;
-                menuItem.representedObject = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
+                self.wrapper = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
                 [menu addItem:menuItem];
             }
         }
@@ -197,26 +198,22 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([sender isKindOfClass:[NSMenuItem class]]) {
-        NSMenuItem *menuItem = (NSMenuItem *)sender;
-        if ([menuItem.representedObject isKindOfClass:[DiskImageWrapper class]]) {
-            DiskImageWrapper *wrapper = (DiskImageWrapper *)menuItem.representedObject;
-            DiskImageBrowserWindowController *browserWC = [self.browserWindowControllers objectForKey:wrapper.path];
-            if (browserWC == nil) {
-                browserWC = [[DiskImageBrowserWindowController alloc] initWithDiskImageWrapper:wrapper];
-                if (browserWC != nil) {
-                    [self.browserWindowControllers setObject:browserWC forKey:wrapper.path];
-                    browserWC.delegate = self;
-                    [browserWC showWindow:self];
-                }
-                else {
-                    [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
-                                             withMessage:NSLocalizedString(@"Unknown Disk Format", @"")
-                                             information:NSLocalizedString(@"Unable to interpret the data format stored on this disk.", @"")];
-                }
+        DiskImageBrowserWindowController *browserWC = [self.browserWindowControllers objectForKey:self.wrapper.path];
+        if (browserWC == nil) {
+            browserWC = [[DiskImageBrowserWindowController alloc] initWithDiskImageWrapper:self.wrapper];
+            if (browserWC != nil) {
+                [self.browserWindowControllers setObject:browserWC forKey:self.wrapper.path];
+                browserWC.delegate = self;
+                [browserWC showWindow:self];
             }
             else {
-                [browserWC.window orderFront:self];
+                [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
+                                         withMessage:NSLocalizedString(@"Unknown Disk Format", @"")
+                                         information:NSLocalizedString(@"Unable to interpret the data format stored on this disk.", @"")];
             }
+        }
+        else {
+            [browserWC.window orderFront:self];
         }
     }
 }

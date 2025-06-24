@@ -9,14 +9,19 @@
 
 using namespace DiskImgLib;
 
+@interface DiskImageWrapper()
+
+@property (assign) NSString *path;
+
+@end
+
 @implementation DiskImageWrapper {
-    NSString *_path;
     DiskImg *_diskImg;
 }
 
 - (instancetype)initWithPath:(NSString *)path diskImg:(DiskImgLib::DiskImg *)diskImg {
     if ((self = [super init]) != nil) {
-        _path = path;
+        self.path = path;
         _diskImg = diskImg;
     }
     return self;
