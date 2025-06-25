@@ -81,6 +81,10 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 - (NSString *)saveSnapshot:(nullable NSURL *)url;
 - (NSString *)loadSnapshot:(NSURL *)url;
 
+// returns a C++ object mariani::MarianiFrame, but typed as void * to avoid
+// breaking ObjC #importers.
+- (void *)frame;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -95,6 +95,8 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 
 @property AppMode_e savedAppMode;
 
+- (void)refreshTexture;
+
 @end
 
 // Don't want to pollute ObjC headers with C++ or create a new one just for this,
@@ -105,9 +107,12 @@ extern common2::EmulatorOptions gEmulatorOptions;
     EmulatorView *_view;
     FrameBuffer frameBuffer;
     std::shared_ptr<mariani::Gamepad> gamepad;
+    std::shared_ptr<mariani::MarianiFrame> frame;
 }
 
-std::shared_ptr<mariani::MarianiFrame> frame;
+- (void *)frame {
+    return frame.get();
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -208,8 +213,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
     dispatch_async(dispatch_get_main_queue(), ^{
         EmulatorViewController *emulatorVC = (__bridge EmulatorViewController *)displayLinkContext;
-        emulatorVC->frameBuffer.data = frame->FrameBufferData();
-        [[emulatorVC renderer] updateTextureWithData:emulatorVC->frameBuffer.data];
+        [emulatorVC refreshTexture];
     });
     return kCVReturnSuccess;
 }
@@ -654,6 +658,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (NSString *)loadSnapshot:(NSURL *)url {
     frame->LoadSnapshot(std::string(url.fileSystemRepresentation));
     return [self snapshotPath];
+}
+
+- (void)refreshTexture {
+    self->frameBuffer.data = frame->FrameBufferData();
+    [self.renderer updateTextureWithData:self->frameBuffer.data];
 }
 
 #pragma mark - EmulatorRendererDelegate

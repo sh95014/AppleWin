@@ -63,6 +63,22 @@
 		97F4E7FF2E0B1AC800541725 /* DiskMakerWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E7F72E0B1AC800541725 /* DiskMakerWindow.xib */; };
 		97F4E8002E0B1AC800541725 /* DiskMakerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E7F92E0B1AC800541725 /* DiskMakerWindowController.m */; };
 		97F4E8022E0B1FDB00541725 /* ProDOS_FileSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E8012E0B1FDB00541725 /* ProDOS_FileSystem.h */; };
+		97F4E8052E0B641200541725 /* ProDOS_Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97F4E8042E0B641200541725 /* ProDOS_Utils.cpp */; };
+		97F4E8062E0B641200541725 /* ProDOS_Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 97F4E8032E0B641200541725 /* ProDOS_Utils.h */; };
+		97F4E8082E0B701C00541725 /* bootsector.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E8072E0B701C00541725 /* bootsector.bin */; };
+		97F4E8092E0B701C00541725 /* bootsector.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E8072E0B701C00541725 /* bootsector.bin */; };
+		97F4E8102E0B703900541725 /* basic17.system.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80A2E0B703900541725 /* basic17.system.bin */; };
+		97F4E8112E0B703900541725 /* bootsector_prodos243.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80C2E0B703900541725 /* bootsector_prodos243.bin */; };
+		97F4E8122E0B703900541725 /* bitsy.boot.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80B2E0B703900541725 /* bitsy.boot.bin */; };
+		97F4E8132E0B703900541725 /* dos33c.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80D2E0B703900541725 /* dos33c.bin */; };
+		97F4E8142E0B703900541725 /* prodos243.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80E2E0B703900541725 /* prodos243.bin */; };
+		97F4E8152E0B703900541725 /* quit.system.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80F2E0B703900541725 /* quit.system.bin */; };
+		97F4E8162E0B703900541725 /* basic17.system.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80A2E0B703900541725 /* basic17.system.bin */; };
+		97F4E8172E0B703900541725 /* bootsector_prodos243.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80C2E0B703900541725 /* bootsector_prodos243.bin */; };
+		97F4E8182E0B703900541725 /* bitsy.boot.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80B2E0B703900541725 /* bitsy.boot.bin */; };
+		97F4E8192E0B703900541725 /* dos33c.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80D2E0B703900541725 /* dos33c.bin */; };
+		97F4E81A2E0B703900541725 /* prodos243.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80E2E0B703900541725 /* prodos243.bin */; };
+		97F4E81B2E0B703900541725 /* quit.system.bin in Resources */ = {isa = PBXBuildFile; fileRef = 97F4E80F2E0B703900541725 /* quit.system.bin */; };
 		97FF91C02A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C12A9965EC006A62A3 /* ScriptCommands.mm in Sources */ = {isa = PBXBuildFile; fileRef = 97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */; };
 		97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 97FF91BD2A9965EC006A62A3 /* Mariani.sdef */; };
@@ -804,6 +820,15 @@
 		97F4E7F82E0B1AC800541725 /* DiskMakerWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiskMakerWindowController.h; sourceTree = "<group>"; };
 		97F4E7F92E0B1AC800541725 /* DiskMakerWindowController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = DiskMakerWindowController.m; sourceTree = "<group>"; };
 		97F4E8012E0B1FDB00541725 /* ProDOS_FileSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProDOS_FileSystem.h; path = source/ProDOS_FileSystem.h; sourceTree = "<group>"; };
+		97F4E8032E0B641200541725 /* ProDOS_Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProDOS_Utils.h; path = source/ProDOS_Utils.h; sourceTree = "<group>"; };
+		97F4E8042E0B641200541725 /* ProDOS_Utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ProDOS_Utils.cpp; path = source/ProDOS_Utils.cpp; sourceTree = "<group>"; };
+		97F4E8072E0B701C00541725 /* bootsector.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = bootsector.bin; path = firmware/BootSector/bootsector.bin; sourceTree = SOURCE_ROOT; };
+		97F4E80A2E0B703900541725 /* basic17.system.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = basic17.system.bin; path = firmware/OS/basic17.system.bin; sourceTree = SOURCE_ROOT; };
+		97F4E80B2E0B703900541725 /* bitsy.boot.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = bitsy.boot.bin; path = firmware/OS/bitsy.boot.bin; sourceTree = SOURCE_ROOT; };
+		97F4E80C2E0B703900541725 /* bootsector_prodos243.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = bootsector_prodos243.bin; path = firmware/OS/bootsector_prodos243.bin; sourceTree = SOURCE_ROOT; };
+		97F4E80D2E0B703900541725 /* dos33c.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = dos33c.bin; path = firmware/OS/dos33c.bin; sourceTree = SOURCE_ROOT; };
+		97F4E80E2E0B703900541725 /* prodos243.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = prodos243.bin; path = firmware/OS/prodos243.bin; sourceTree = SOURCE_ROOT; };
+		97F4E80F2E0B703900541725 /* quit.system.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = quit.system.bin; path = firmware/OS/quit.system.bin; sourceTree = SOURCE_ROOT; };
 		97FF91BC2A9965EC006A62A3 /* ScriptCommands.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = ScriptCommands.mm; sourceTree = "<group>"; };
 		97FF91BD2A9965EC006A62A3 /* Mariani.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Mariani.sdef; sourceTree = "<group>"; };
 		B0098BFA277E0F6800F38E0C /* libAppleWin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAppleWin.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1635,6 +1660,13 @@
 				B0F97BBD2A26758E00461923 /* A2_BASIC.SYM */,
 				B0F97BBE2A26758E00461923 /* APPLE2E.SYM */,
 				97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */,
+				97F4E8072E0B701C00541725 /* bootsector.bin */,
+				97F4E80A2E0B703900541725 /* basic17.system.bin */,
+				97F4E80B2E0B703900541725 /* bitsy.boot.bin */,
+				97F4E80C2E0B703900541725 /* bootsector_prodos243.bin */,
+				97F4E80D2E0B703900541725 /* dos33c.bin */,
+				97F4E80E2E0B703900541725 /* prodos243.bin */,
+				97F4E80F2E0B703900541725 /* quit.system.bin */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1801,6 +1833,8 @@
 				B09AB5EA277A14DA0002A6C3 /* Registry.cpp */,
 				B09AB5EF277A14DA0002A6C3 /* Registry.h */,
 				97F4E8012E0B1FDB00541725 /* ProDOS_FileSystem.h */,
+				97F4E8042E0B641200541725 /* ProDOS_Utils.cpp */,
+				97F4E8032E0B641200541725 /* ProDOS_Utils.h */,
 				B09AB763277A1E380002A6C3 /* resource.h */,
 				B09AB5ED277A14DA0002A6C3 /* RGBMonitor.cpp */,
 				B09AB630277A14DB0002A6C3 /* RGBMonitor.h */,
@@ -2300,6 +2334,7 @@
 				B0098CE7277E171100F38E0C /* z80emu.h in Headers */,
 				B0F8500427D1B44F0015F642 /* NetworkBackend.h in Headers */,
 				B0098CDD277E171100F38E0C /* Memory.h in Headers */,
+				97F4E8062E0B641200541725 /* ProDOS_Utils.h in Headers */,
 				B0098CD0277E171100F38E0C /* DiskImageHelper.h in Headers */,
 				B0098CCC277E171100F38E0C /* version.h in Headers */,
 				B0098CDE277E171100F38E0C /* benchmark.h in Headers */,
@@ -2828,6 +2863,12 @@
 				B00ECBCC279EEB600041E16C /* Assets.xcassets in Resources */,
 				97FF91C32A9965EC006A62A3 /* Mariani.sdef in Resources */,
 				97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */,
+				97F4E8102E0B703900541725 /* basic17.system.bin in Resources */,
+				97F4E8112E0B703900541725 /* bootsector_prodos243.bin in Resources */,
+				97F4E8122E0B703900541725 /* bitsy.boot.bin in Resources */,
+				97F4E8132E0B703900541725 /* dos33c.bin in Resources */,
+				97F4E8142E0B703900541725 /* prodos243.bin in Resources */,
+				97F4E8152E0B703900541725 /* quit.system.bin in Resources */,
 				B00ECBCD279EEB600041E16C /* Base64A_German_Video.rom in Resources */,
 				B00ECBCE279EEB600041E16C /* Hddrvr.bin in Resources */,
 				B0F97BC02A26758E00461923 /* A2_BASIC.SYM in Resources */,
@@ -2847,6 +2888,7 @@
 				97ACC9CC2C3B2EBE0028821E /* Apple2_Video.rom in Resources */,
 				B0F97BC22A26758E00461923 /* APPLE2E.SYM in Resources */,
 				B00ECBD8279EEB600041E16C /* Base64A.rom in Resources */,
+				97F4E8082E0B701C00541725 /* bootsector.bin in Resources */,
 				B00ECBD9279EEB600041E16C /* Apple2_Plus.rom in Resources */,
 				B00ECBDB279EEB600041E16C /* SSC.rom in Resources */,
 				97F4E7FC2E0B1AC800541725 /* DiskMakerWindow.xib in Resources */,
@@ -2877,6 +2919,12 @@
 				B032DE28277A0C24006DC0F7 /* Assets.xcassets in Resources */,
 				97FF91C22A9965EC006A62A3 /* Mariani.sdef in Resources */,
 				97419F302AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */,
+				97F4E8162E0B703900541725 /* basic17.system.bin in Resources */,
+				97F4E8172E0B703900541725 /* bootsector_prodos243.bin in Resources */,
+				97F4E8182E0B703900541725 /* bitsy.boot.bin in Resources */,
+				97F4E8192E0B703900541725 /* dos33c.bin in Resources */,
+				97F4E81A2E0B703900541725 /* prodos243.bin in Resources */,
+				97F4E81B2E0B703900541725 /* quit.system.bin in Resources */,
 				B045FE7A2782984F006E36F9 /* Base64A_German_Video.rom in Resources */,
 				B045FE762782984F006E36F9 /* Hddrvr.bin in Resources */,
 				B0F97BBF2A26758E00461923 /* A2_BASIC.SYM in Resources */,
@@ -2896,6 +2944,7 @@
 				97ACC9CB2C3B2EBE0028821E /* Apple2_Video.rom in Resources */,
 				B0F97BC12A26758E00461923 /* APPLE2E.SYM in Resources */,
 				B045FE7E2782984F006E36F9 /* Base64A.rom in Resources */,
+				97F4E8092E0B701C00541725 /* bootsector.bin in Resources */,
 				B045FE732782984F006E36F9 /* Apple2_Plus.rom in Resources */,
 				B045FE812782984F006E36F9 /* SSC.rom in Resources */,
 				97F4E7FF2E0B1AC800541725 /* DiskMakerWindow.xib in Resources */,
@@ -2929,6 +2978,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97F4E8052E0B641200541725 /* ProDOS_Utils.cpp in Sources */,
 				B0F8500227D1B44F0015F642 /* NetworkBackend.cpp in Sources */,
 				B0BAB4AA29B42CAA008F54D7 /* MockingboardCardManager.cpp in Sources */,
 				B0098C88277E140100F38E0C /* RGBMonitor.cpp in Sources */,

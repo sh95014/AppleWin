@@ -930,9 +930,9 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 // itself.
 
 int ShowModalAlertOfType(int type, const char *message, const char *information) {
-    return [theAppDelegate showModalAlertofType:type
-                                    withMessage:[NSString stringWithUTF8String:message]
-                                    information:[NSString stringWithUTF8String:information]];
+    NSString *msg = (message != NULL) ? [NSString stringWithUTF8String:message] : @"";
+    NSString *info = (information != NULL) ? [NSString stringWithUTF8String:information] : @"";
+    return [theAppDelegate showModalAlertofType:type withMessage:msg information:info];
 }
 
 void UpdateDriveLights() {
