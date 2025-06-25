@@ -805,7 +805,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         return YES;
     }
     
-    return [url.pathExtension.uppercaseString isEqualToString:@"HDV"];
+    return [@[ @"PO", @"HDV" ] containsObject:url.pathExtension.uppercaseString];
 }
 
 #pragma mark - NSTableViewDataSource
