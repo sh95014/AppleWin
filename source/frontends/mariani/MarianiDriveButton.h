@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MarianiDriveButton : NSButton <DiskImageBrowserDelegate, NSOpenSavePanelDelegate>
 
-@property (nonatomic) NSInteger slot;
-@property (nonatomic) NSInteger drive;
+@property (nonatomic) int slot;
+@property (nonatomic) int drive;
 
 + (instancetype)buttonForFloppyDrive:(int)drive inSlot:(int)slot;
 + (instancetype)buttonForHardDrive:(int)drive inSlot:(int)slot;

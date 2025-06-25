@@ -12,6 +12,8 @@
 
 #import "windows.h"
 #import <vector>
+#import "CardManager.h"
+#import "Disk.h"
 #import "DiskImageHelper.h"
 #import "ProDOS_FileSystem.h"
 #import "ProDOS_Utils.h"
@@ -51,7 +53,11 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
 @implementation DiskMakerWindowController
 
 - (id)init {
-    return [super initWithWindowNibName:@"DiskMakerWindow"];
+    if ((self = [super initWithWindowNibName:@"DiskMakerWindow"]) != nil) {
+        self.slot = -1;
+        self.drive = -1;
+    }
+    return self;
 }
 
 - (void)selectHardDisk {
@@ -76,6 +82,10 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     self.onFormatCopyBitsyBootButton.state = onFormatCopyBitsyBoot ? NSControlStateValueOn : NSControlStateValueOff;
     self.onFormatCopyBitsyByeButton.state = onFormatCopyBitsyBye ? NSControlStateValueOn : NSControlStateValueOff;
     self.onFormatCopyBASICSYSTEMButton.state = onFormatCopyBASICSYSTEM ? NSControlStateValueOn : NSControlStateValueOff;
+    
+    if (self.slot >= 0 && self.drive >= 0) {
+        self.window.subtitle = [NSString stringWithFormat:NSLocalizedString(@"Slot %d Drive %d", @""), self.slot, self.drive + 1];
+    }
     
     [super windowDidLoad];
 }
@@ -133,8 +143,8 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
 
     const NSInteger capacity = self.capacityButton.indexOfSelectedItem;
     const NSInteger format = self.formatButton.indexOfSelectedItem;
-    const BOOL isDOS33     = (format == FORMAT_DOS33 && (capacity == CAPACITY_140KB || capacity == CAPACITY_160KB));
-    const BOOL isFloppy    = !(format == FORMAT_PRODOS && (capacity == CAPACITY_800KB || capacity == CAPACITY_32MB));
+    const BOOL isDisk2     = (capacity == CAPACITY_140KB || capacity == CAPACITY_160KB);
+    const BOOL isDOS33     = (format == FORMAT_DOS33 && isDisk2);
     const BOOL is40Track   = ((format == FORMAT_DOS33 || format == FORMAT_PRODOS) && capacity == CAPACITY_160KB);
     const BOOL isUnidisk35 = (format == FORMAT_PRODOS && capacity == CAPACITY_800KB);
     const BOOL isHardDisk  = (format == FORMAT_PRODOS && capacity == CAPACITY_32MB);
@@ -156,16 +166,18 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
             : @"po"
             ;
     NSString *filename = [NSString stringWithFormat:@"%@_%@.%@",
-        isFloppy ? NSLocalizedString(@"Blank_Floppy", @"blank floppy disk") : NSLocalizedString(@"Blank_Hard", @"blank hard disk"),
+                          isDisk2 ? NSLocalizedString(@"Blank_Floppy", @"blank floppy disk") :
+                                    NSLocalizedString(@"Blank_Hard", @"blank hard disk"),
         [dateFormatter stringFromDate:[NSDate date]],
         extension
     ];
+    
+    [self.window close];
     
     self.diskImageSavePanel = [NSSavePanel savePanel];
     self.diskImageSavePanel.canCreateDirectories = YES;
     self.diskImageSavePanel.title = NSLocalizedString(@"Save disk image as...", @"");
     self.diskImageSavePanel.nameFieldStringValue = filename;
-    
     if ([self.diskImageSavePanel runModal] == NSModalResponseOK) {
         NSURL *url = self.diskImageSavePanel.URL;
         mariani::MarianiFrame *frame = (mariani::MarianiFrame *)theAppDelegate.emulatorVC.frame;
@@ -179,9 +191,26 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
                            newDiskCopyProDOS,
                            frame);
         self.diskImageSavePanel = nil;
+        
+        if (self.slot >= 0 && self.drive >= 0 && isDisk2) {
+            std::string urlFilename(url.fileSystemRepresentation);
+            CardManager &cardManager = GetCardMgr();
+            Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(self.slot));
+            const ImageError_e error = card->InsertDisk(self.drive, urlFilename, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_CREATE);
+            if (error == eIMAGE_ERROR_NONE) {
+                NSString *status = [NSString stringWithFormat:NSLocalizedString(@"Inserted ‘%@’ into slot %d drive %d", @""),
+                                    url.lastPathComponent,
+                                    self.slot,
+                                    self.drive + 1
+                ];
+                [theAppDelegate setStatus:status];
+                [theAppDelegate updateDriveLights];
+            }
+            else {
+                card->NotifyInvalidImage(self.drive, url.fileSystemRepresentation, error);
+            }
+        }
     }
-    
-    [self.window close];
 }
 
 - (IBAction)cancelAction:(id)sender {

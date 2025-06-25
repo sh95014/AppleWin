@@ -24,6 +24,7 @@
 - (int)showModalAlertofType:(int)type withMessage:(NSString *)message information:(NSString *)information;
 - (void)terminateWithReason:(NSString *)reason;
 - (void)updateDriveLights;
+- (void)setStatus:(NSString *)status;
 
 @end
 

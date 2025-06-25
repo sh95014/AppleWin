@@ -917,6 +917,10 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     [self.window setFrame:frame display:YES animate:NO];
 }
 
+- (void)setStatus:(NSString *)status {
+    self.statusLabel.stringValue = status;
+}
+
 - (double)statusBarHeight {
     return self.hasStatusBar ? STATUS_BAR_HEIGHT : 0;
 }

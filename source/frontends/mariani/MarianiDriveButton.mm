@@ -67,8 +67,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSColor *driveSwappingColor = [NSColor controlAccentColor];
     
     CardManager &cardManager = GetCardMgr();
-    const int slot = (int)self.slot;
-    const int drive = (int)self.drive;
+    const int slot = self.slot;
+    const int drive = self.drive;
     if (cardManager.QuerySlot(slot) == CT_Disk2) {
         Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard *>(cardManager.GetObj(slot));
         if (card->IsDriveEmpty(drive)) {
@@ -128,8 +128,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     
     // if there's a disk in the drive, show it
     CardManager &cardManager = GetCardMgr();
-    const int slot = (int)self.slot;
-    const int drive = (int)self.drive;
+    const int slot = self.slot;
+    const int drive = self.drive;
     if (cardManager.QuerySlot(slot) == CT_Disk2) {
         Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
         NSString *diskName = [NSString stringWithUTF8String:card->GetFullDiskFilename(drive).c_str()];
@@ -158,8 +158,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
             [menu addItem:[NSMenuItem separatorItem]];
         }
         
-        NSMenuItem *item;
-         
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"New Disk Image…", @"create new disk image")
+                                                      action:@selector(createDiskImage:)
+                                               keyEquivalent:@""];
+        item.target = self;
+        [menu addItem:item];
+        
         item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Other Disk…", @"open another disk image")
                                           action:@selector(openDiskImage:)
                                    keyEquivalent:@""];
@@ -224,8 +228,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([sender isKindOfClass:[NSMenuItem class]]) {
-        const int slot = (int)self.slot;
-        const int drive = (int)self.drive;
+        const int slot = self.slot;
+        const int drive = self.drive;
         CardManager &cardManager = GetCardMgr();
         Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
         card->EjectDisk(drive);
@@ -237,8 +241,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([sender isKindOfClass:[NSMenuItem class]]) {
-        const int slot = (int)self.slot;
-        const int drive = (int)self.drive;
+        const int slot = self.slot;
+        const int drive = self.drive;
         
         self.diskOpenPanel = [NSOpenPanel openPanel];
         self.diskOpenPanel.canChooseFiles = YES;
@@ -274,37 +278,9 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     self.diskMakerWC = [[DiskMakerWindowController alloc] init];
+    self.diskMakerWC.slot = self.slot;
+    self.diskMakerWC.drive = self.drive;
     [self.diskMakerWC showWindow:self];
-    
-#if 0
-    const int slot = (int)self.slot;
-    const int drive = (int)self.drive;
-    
-    NSString *lastPath = [[NSUserDefaults standardUserDefaults] objectForKey:@"NSNavLastRootDirectory"];
-    lastPath = [lastPath stringByStandardizingPath];
-    NSURL *folder = [NSURL fileURLWithPath:lastPath];
-    if (folder == nil) {
-        // fall back to ~/Desktop
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
-        folder = [NSURL fileURLWithPath:[paths objectAtIndex:0]];
-    }
-    
-    NSURL *url = [theAppDelegate unusedURLForFilename:BLANK_FILE_NAME extension:@"dsk" inFolder:folder];
-    std::string filename(url.fileSystemRepresentation);
-    CardManager &cardManager = GetCardMgr();
-    Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
-    const ImageError_e error = card->InsertDisk(drive, filename, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_CREATE);
-    if (error == eIMAGE_ERROR_NONE) {
-        NSLog(@"Loaded '%s' into slot %d drive %d",
-              url.fileSystemRepresentation, slot, drive);
-        [theAppDelegate updateDriveLights];
-    }
-    else {
-        NSLog(@"Failed to load '%s' into slot %d drive %d due to error %d",
-              url.fileSystemRepresentation, slot, drive, error);
-        card->NotifyInvalidImage(drive, url.fileSystemRepresentation, error);
-    }
-#endif
 }
 
 #pragma mark - NSOpenSavePanelDelegate

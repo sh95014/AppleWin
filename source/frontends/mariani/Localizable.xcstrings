@@ -565,6 +565,22 @@
         }
       }
     },
+    "Inserted ‘%@’ into slot %d drive %d" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Inserted ‘%1$@’ into slot %2$d drive %3$d"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已將「%1$@」插入插槽 %2$d 磁碟機 %3$d"
+          }
+        }
+      }
+    },
     "Mariani Recording" : {
       "comment" : "default name for new screen recording",
       "localizations" : {
@@ -675,6 +691,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新增空白磁碟"
+          }
+        }
+      }
+    },
+    "New Disk Image…" : {
+      "comment" : "create new disk image",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建磁碟映像檔⋯"
           }
         }
       }
