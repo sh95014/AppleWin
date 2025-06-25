@@ -9,7 +9,7 @@
 
 @implementation NSWindow (NSWindow_AccessoryView)
 
--(void)addViewToTitleBar:(NSView*)viewToAdd atXPosition:(CGFloat)x
+- (void)addViewToTitleBar:(NSView*)viewToAdd atXPosition:(CGFloat)x
 {
     viewToAdd.frame = NSMakeRect(x, [[self contentView] frame].size.height, viewToAdd.frame.size.width, [self heightOfTitleBar]);
 
@@ -26,7 +26,7 @@
     [[[self contentView] superview] addSubview:viewToAdd];
 }
 
--(CGFloat)heightOfTitleBar
+- (CGFloat)heightOfTitleBar
 {
     NSRect outerFrame = [[[self contentView] superview] frame];
     NSRect innerFrame = [[self contentView] frame];

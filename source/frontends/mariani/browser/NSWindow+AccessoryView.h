@@ -10,10 +10,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSWindow (NSWindow_AccessoryView)
- 
--(void)addViewToTitleBar:(NSView*)viewToAdd atXPosition:(CGFloat)x;
--(CGFloat)heightOfTitleBar;
- 
+
+- (void)addViewToTitleBar:(NSView*)viewToAdd atXPosition:(CGFloat)x;
+- (CGFloat)heightOfTitleBar;
+
 @end
 
 NS_ASSUME_NONNULL_END
