@@ -18,6 +18,14 @@
 #import "StrFormat.h"
 #import "MarianiFrame.h"
 
+// Objective-C typedefs BOOL to be bool, but wincompat.h typedefs it to be
+// int32_t, which causes function signature mismatches (such as with the
+// RegLoadValue() calls below.) This hack allows the function to be seen
+// with the correct signature and avoids the link error.
+#define BOOL int32_t
+#import "Registry.h"
+#undef BOOL
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DiskMakerWindowController()
@@ -33,16 +41,42 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
 @property (strong) IBOutlet NSButton *onFormatCopyBitsyBootButton;
 @property (strong) IBOutlet NSButton *onFormatCopyBitsyByeButton;
 @property (strong) IBOutlet NSButton *onFormatCopyBASICSYSTEMButton;
-@property (strong) IBOutlet NSButton *createDiskImageButton;
+@property (strong) IBOutlet NSButton *saveDiskImageButton;
+
+@property (assign) BOOL defaultToHardDisk;
 
 @end
 
 @implementation DiskMakerWindowController
 
 - (id)init {
-    if ((self = [super initWithWindowNibName:@"DiskMakerWindow"]) != nil) {
+    return [super initWithWindowNibName:@"DiskMakerWindow"];
+}
+
+- (void)selectHardDisk {
+    self.defaultToHardDisk = YES;
+}
+
+- (void)windowDidLoad {
+    if (self.defaultToHardDisk) {
+        [self.capacityButton selectItemAtIndex:CAPACITY_32MB];
+        [self.formatButton selectItemAtIndex:FORMAT_PRODOS];
     }
-    return self;
+    
+    uint32_t onFormatCopyProDOS = TRUE;
+    uint32_t onFormatCopyBitsyBoot = TRUE;
+    uint32_t onFormatCopyBitsyBye = TRUE;
+    uint32_t onFormatCopyBASICSYSTEM = TRUE;
+    RegLoadValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_PRODOS_SYS, TRUE, &onFormatCopyProDOS);
+    RegLoadValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_BITSY_BOOT, TRUE, &onFormatCopyBitsyBoot);
+    RegLoadValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_BITSY_BYE, TRUE, &onFormatCopyBitsyBye);
+    RegLoadValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_BASIC, TRUE, &onFormatCopyBASICSYSTEM);
+    self.onFormatCopyProDOSButton.state = onFormatCopyProDOS ? NSControlStateValueOn : NSControlStateValueOff;
+    self.onFormatCopyBitsyBootButton.state = onFormatCopyBitsyBoot ? NSControlStateValueOn : NSControlStateValueOff;
+    self.onFormatCopyBitsyByeButton.state = onFormatCopyBitsyBye ? NSControlStateValueOn : NSControlStateValueOff;
+    self.onFormatCopyBASICSYSTEMButton.state = onFormatCopyBASICSYSTEM ? NSControlStateValueOn : NSControlStateValueOff;
+    
+    [super windowDidLoad];
 }
 
 - (IBAction)capacityChanged:(id)sender {
@@ -71,7 +105,24 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     }
 }
 
-- (IBAction)createDiskImageAction:(id)sender {
+- (IBAction)onFormatCopyToggled:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if ([sender isEqual:self.onFormatCopyProDOSButton]) {
+        
+    }
+    else if ([sender isEqual:self.onFormatCopyBitsyBootButton]) {
+        
+    }
+    else if ([sender isEqual:self.onFormatCopyBitsyByeButton]) {
+        
+    }
+    else if ([sender isEqual:self.onFormatCopyBASICSYSTEMButton]) {
+        
+    }
+}
+
+- (IBAction)saveDiskImageAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     const BOOL newDiskCopyProDOS    = (self.onFormatCopyProDOSButton.state == NSControlStateValueOn);
@@ -83,7 +134,6 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     const NSInteger format = self.formatButton.indexOfSelectedItem;
     const BOOL isDOS33     = (format == FORMAT_DOS33 && (capacity == CAPACITY_140KB || capacity == CAPACITY_160KB));
     const BOOL isFloppy    = !(format == FORMAT_PRODOS && (capacity == CAPACITY_800KB || capacity == CAPACITY_32MB));
-    const BOOL isFloppy525 = ((format == FORMAT_DOS33 && (capacity == CAPACITY_140KB || capacity == CAPACITY_160KB)) || isDOS33);
     const BOOL is40Track   = ((format == FORMAT_DOS33 || format == FORMAT_PRODOS) && capacity == CAPACITY_160KB);
     const BOOL isUnidisk35 = (format == FORMAT_PRODOS && capacity == CAPACITY_800KB);
     const BOOL isHardDisk  = (format == FORMAT_PRODOS && capacity == CAPACITY_32MB);
@@ -123,6 +173,8 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     
     mariani::MarianiFrame *frame = (mariani::MarianiFrame *)theAppDelegate.emulatorVC.frame;
     New_DOSProDOS_Disk("New Disk Image", pathname, diskSize, isDOS33, newDiskCopyBitsyBoot, newDiskCopyBitsyBye, newDiskCopyBASIC, newDiskCopyProDOS, frame);
+    
+    [self.window close];
 }
 
 - (IBAction)cancelAction:(id)sender {

@@ -12,6 +12,7 @@
 #import <GameController/GameController.h>
 #import "PreferencesViewController.h"
 #import "AppDelegate.h"
+#import "DiskMakerWindowController.h"
 #import "UserDefaults.h"
 
 // AppleWin
@@ -89,6 +90,7 @@ using namespace DiskImgLib;
 
 @property NSMutableDictionary *keyValueStore;
 @property BOOL configured;
+@property (strong) DiskMakerWindowController *diskMakerWC;
 
 @end
 
@@ -664,87 +666,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 - (IBAction)createHardDiskAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
-    NSSavePanel *savePanel = [[NSSavePanel alloc] init];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    // don't really want to declare UTTypes for all the disk images yet
-    savePanel.allowedFileTypes = @[ @"hdv" ];
-#pragma clang diagnostic pop
-    
-    if ([savePanel runModal] == NSModalResponseOK) {
-        const char *outputFilename = savePanel.URL.fileSystemRepresentation;
-        
-        // create and format the hard disk
-        
-        DIError error;
-        DiskImg *diskImg = new DiskImg;
-        error = diskImg->CreateImage(outputFilename,
-                                     nil,                            // storageName
-                                     DiskImg::kOuterFormatNone,
-                                     DiskImg::kFileFormatUnadorned,
-                                     DiskImg::kPhysicalFormatSectors,
-                                     nil,                            // pNibbleDescr
-                                     DiskImg::kSectorOrderProDOS,
-                                     DiskImg::kFormatGenericProDOSOrd,
-                                     65536,
-                                     true);                          // no need to format the image
-        if (error != kDIErrNone) {
-            [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
-                                     withMessage:@"Unable to Create Image"
-                                     information:[NSString stringWithUTF8String:DIStrError(error)]];
-        }
-        
-        error = diskImg->FormatImage(DiskImg::kFormatProDOS, "MARIANI");
-        if (error != kDIErrNone) {
-            [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
-                                     withMessage:@"Unable to Format Disk"
-                                     information:[NSString stringWithUTF8String:DIStrError(error)]];
-            delete diskImg;
-            return;
-        }
-        
-        DiskFS *diskFS = diskImg->OpenAppropriateDiskFS(false);
-        if (error != kDIErrNone) {
-            [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
-                                     withMessage:@"Unable to Open File System"
-                                     information:nil];
-            delete diskImg;
-            return;
-        }
-
-        error = diskFS->Initialize(diskImg, DiskFS::kInitFull);
-        if (error != kDIErrNone) {
-            [theAppDelegate showModalAlertofType:MB_ICONWARNING | MB_OK
-                                     withMessage:@"Unable to Format Disk"
-                                     information:[NSString stringWithUTF8String:DIStrError(error)]];
-            delete diskImg;
-            delete diskFS;
-            return;
-        }
-        
-        delete diskFS;
-        diskImg->CloseImage();
-        delete diskImg;
-        
-        // insert the hard disk
-        
-        CardManager &cardManager = GetCardMgr();
-
-        for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
-            if (cardManager.QuerySlot(slot) == CT_GenericHDD) {
-                HarddiskInterfaceCard *hddCard = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
-                // insert into the first empty slot
-                for (int hddIndex = 0; hddIndex < NUM_HARDDISKS; hddIndex++) {
-                    if (hddCard->HarddiskGetFullPathName(hddIndex).empty()) {
-                        hddCard->Insert(hddIndex, std::string(outputFilename));
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
-    }
+    self.diskMakerWC = [[DiskMakerWindowController alloc] init];
+    [self.diskMakerWC selectHardDisk];
+    [self.diskMakerWC showWindow:self];
 }
 
 - (IBAction)gameControllerAction:(id)sender {

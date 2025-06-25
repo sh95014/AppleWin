@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DiskMakerWindowController : NSWindowController
 
+- (void)selectHardDisk;
+
 @end
 
 NS_ASSUME_NONNULL_END

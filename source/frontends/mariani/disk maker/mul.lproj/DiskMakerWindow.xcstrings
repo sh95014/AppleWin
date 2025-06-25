@@ -74,19 +74,19 @@
       }
     },
     "EeS-xa-Cb8.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"Create Disk Image\"; ObjectID = \"EeS-xa-Cb8\";",
+      "comment" : "Class = \"NSButtonCell\"; title = \"Save As…\"; ObjectID = \"EeS-xa-Cb8\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Create Disk Image"
+            "value" : "Save As…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "新建磁碟映像檔"
+            "value" : "儲存為⋯"
           }
         }
       }

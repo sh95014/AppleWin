@@ -9,13 +9,13 @@
         <customObject id="-2" userLabel="File's Owner" customClass="DiskMakerWindowController">
             <connections>
                 <outlet property="capacityButton" destination="K7Z-RY-GWI" id="JLZ-As-Xeq"/>
-                <outlet property="createDiskImageButton" destination="z7P-T7-HUF" id="i8P-uj-KHH"/>
                 <outlet property="customBootSectorButton" destination="RVV-jE-iNc" id="EeQ-eP-JBa"/>
                 <outlet property="formatButton" destination="nDq-Er-Qcy" id="QUA-Kf-U1f"/>
                 <outlet property="onFormatCopyBASICSYSTEMButton" destination="daI-hm-ONE" id="Lsp-Vh-tol"/>
                 <outlet property="onFormatCopyBitsyBootButton" destination="3rw-ZC-dPJ" id="5hp-qt-dQt"/>
                 <outlet property="onFormatCopyBitsyByeButton" destination="7Jb-H4-Efh" id="azZ-nw-eph"/>
                 <outlet property="onFormatCopyProDOSButton" destination="B1b-BH-PV5" id="XiZ-jf-jdj"/>
+                <outlet property="saveDiskImageButton" destination="z7P-T7-HUF" id="i8P-uj-KHH"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="Og4-H2-SPj"/>
             </connections>
         </customObject>
@@ -109,6 +109,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="onFormatCopyToggled:" target="-2" id="MvJ-VV-5ii"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3rw-ZC-dPJ">
                         <rect key="frame" x="87" y="103" width="373" height="18"/>
@@ -117,6 +120,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="onFormatCopyToggled:" target="-2" id="69S-q1-JMT"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Jb-H4-Efh">
                         <rect key="frame" x="87" y="81" width="373" height="18"/>
@@ -125,6 +131,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="onFormatCopyToggled:" target="-2" id="jnw-Ee-4lR"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="daI-hm-ONE">
                         <rect key="frame" x="87" y="59" width="373" height="18"/>
@@ -133,9 +142,23 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="onFormatCopyToggled:" target="-2" id="Bqq-yN-WFs"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z7P-T7-HUF">
+                        <rect key="frame" x="317" y="13" width="150" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Save As…" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EeS-xa-Cb8">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="saveDiskImageAction:" target="-2" id="9Zu-QF-6cQ"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="St1-dw-Xdy">
-                        <rect key="frame" x="248" y="13" width="76" height="32"/>
+                        <rect key="frame" x="169" y="13" width="150" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UfJ-R8-jQe">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -146,17 +169,6 @@ Gw
                         </buttonCell>
                         <connections>
                             <action selector="cancelAction:" target="-2" id="nCi-2h-sYT"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z7P-T7-HUF">
-                        <rect key="frame" x="322" y="13" width="145" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Create Disk Image" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EeS-xa-Cb8">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="createDiskImageAction:" target="-2" id="9Zu-QF-6cQ"/>
                         </connections>
                     </button>
                 </subviews>
