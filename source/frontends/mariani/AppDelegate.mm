@@ -97,7 +97,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     Global::AppInit();
     
     _hasStatusBar = YES;
-    self.statusLabel.stringValue = @"";
+    [self setStatus:nil];
     
     NSString *appName = [NSRunningApplication currentApplication].localizedName;
     self.aboutMarianiMenuItem.title = [NSString stringWithFormat:NSLocalizedString(@"About %@", @""), appName];
@@ -306,11 +306,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 - (void)screenRecordingDidStop:(NSURL *)url {
     self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
     self.screenRecordingButton.contentTintColor = [NSColor secondaryLabelColor];
-    self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Recording saved to ‘%s’", @""), url.fileSystemRepresentation];
-}
-
-- (void)updateStatus:(NSString *)status {
-    self.statusLabel.stringValue = status;
+    [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Recording saved to ‘%s’", @""), url.fileSystemRepresentation]];
 }
 
 - (NSURL *)unusedURLForFilename:(NSString *)desiredFilename extension:(NSString *)extension inFolder:(NSURL *)folder {
@@ -472,7 +468,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     
     if ([self.stateOpenPanel runModal] == NSModalResponseOK) {
         NSString *path = [self.emulatorVC loadSnapshot:self.stateOpenPanel.URL];
-        self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"State loaded from ‘%@’", @""), path];
+        [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"State loaded from ‘%@’", @""), path]];
         self.stateOpenPanel = nil;
     }
 }
@@ -499,7 +495,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
             }
         }
         NSString *path = [self.emulatorVC saveSnapshot:url];
-        self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"State saved to ‘%@’", @""), path];
+        [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"State saved to ‘%@’", @""), path]];
         self.stateSavePanel = nil;
     }
 }
@@ -507,7 +503,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 - (IBAction)saveStateAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     NSString *path = [self.emulatorVC saveSnapshot:nil];
-    self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"State saved to ‘%@’", @""), path];
+    [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"State saved to ‘%@’", @""), path]];
 }
 
 - (IBAction)controlResetAction:(id)sender {
@@ -517,6 +513,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (IBAction)rebootEmulatorAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
+    [self setStatus:nil];
     [self.emulatorVC reboot];
 }
 
@@ -646,7 +643,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSURL *url = [self.emulatorVC saveScreenshot:NO];
-    self.statusLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Screenshot saved to ‘%s’", @""), url.fileSystemRepresentation];
+    [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Screenshot saved to ‘%s’", @""), url.fileSystemRepresentation]];
 }
 
 #pragma mark - Helpers because I can't figure out how to make 'frame' properly global
@@ -917,8 +914,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     [self.window setFrame:frame display:YES animate:NO];
 }
 
-- (void)setStatus:(NSString *)status {
-    self.statusLabel.stringValue = status;
+- (void)setStatus:(nullable NSString *)status {
+    self.statusLabel.stringValue = (status != nil) ? status : @"";
 }
 
 - (double)statusBarHeight {

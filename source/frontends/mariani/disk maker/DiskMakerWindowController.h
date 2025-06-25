@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DiskMakerWindowController : NSWindowController
+@interface DiskMakerWindowController : NSWindowController <NSOpenSavePanelDelegate>
 
 @property (assign) int slot;
 @property (assign) int drive;

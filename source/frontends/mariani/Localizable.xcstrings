@@ -431,6 +431,16 @@
         }
       }
     },
+    "Default AppleWin Boot Sector" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AppleWin 預設啟動磁區"
+          }
+        }
+      }
+    },
     "Echo (speech)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -967,6 +977,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SDS DataKey - SpeedStar"
+          }
+        }
+      }
+    },
+    "Select custom boot sector" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇自定啟動磁區"
           }
         }
       }

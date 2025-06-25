@@ -194,7 +194,7 @@ extern common2::EmulatorOptions gEmulatorOptions;
     [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
         uint64_t duration = clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - displayLinkCallbackStartTime;
         double fps = displayLinkCallbackCount / (duration / 1000000000.0);
-        [self.delegate updateStatus:[NSString stringWithFormat:@"%.3f fps", fps]];
+        [self.delegate setStatus:[NSString stringWithFormat:@"%.3f fps", fps]];
         
         displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
         displayLinkCallbackCount = 0;
@@ -250,7 +250,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         double clockSpeed =
             (double)(g_nCumulativeCycles - self.samplePeriodBeginCumulativeCycles) /
             -[self.samplePeriodBeginClockTime timeIntervalSinceNow];
-        [self.delegate updateStatus:[NSString stringWithFormat:@"%@@%.3f MHz", cpus[GetActiveCpu()], clockSpeed / 1000000]];
+        [self.delegate setStatus:[NSString stringWithFormat:@"%@@%.3f MHz", cpus[GetActiveCpu()], clockSpeed / 1000000]];
 
         self.samplePeriodBeginClockTime = [NSDate now];
         self.samplePeriodBeginCumulativeCycles = g_nCumulativeCycles;

@@ -13,6 +13,7 @@
 #import "windows.h"
 #import <vector>
 #import "CardManager.h"
+#import "CmdLine.h"
 #import "Disk.h"
 #import "DiskImageHelper.h"
 #import "ProDOS_FileSystem.h"
@@ -39,14 +40,18 @@ enum { CAPACITY_140KB, CAPACITY_160KB, CAPACITY_800KB, CAPACITY_32MB };
 enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
 
 @property (strong) IBOutlet NSButton *customBootSectorButton;
+@property (strong) IBOutlet NSButton *clearCustomBootSectorButton;
+@property (strong, nullable) NSOpenPanel *customBootSectorOpenPanel;
+
 @property (strong) IBOutlet NSButton *onFormatCopyProDOSButton;
 @property (strong) IBOutlet NSButton *onFormatCopyBitsyBootButton;
 @property (strong) IBOutlet NSButton *onFormatCopyBitsyByeButton;
 @property (strong) IBOutlet NSButton *onFormatCopyBASICSYSTEMButton;
+
 @property (strong) IBOutlet NSButton *saveDiskImageButton;
+@property (strong, nullable) NSSavePanel *diskImageSavePanel;
 
 @property (assign) BOOL defaultToHardDisk;
-@property (strong, nullable) NSSavePanel *diskImageSavePanel;
 
 @end
 
@@ -70,6 +75,8 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
         [self.formatButton selectItemAtIndex:FORMAT_PRODOS];
     }
     
+    [self updateCustomBootSector];
+    
     uint32_t onFormatCopyProDOS = TRUE;
     uint32_t onFormatCopyBitsyBoot = TRUE;
     uint32_t onFormatCopyBitsyBye = TRUE;
@@ -87,6 +94,8 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
         self.window.subtitle = [NSString stringWithFormat:NSLocalizedString(@"Slot %d Drive %d", @""), self.slot, self.drive + 1];
     }
     
+    [self enforceConflicts];
+    
     [super windowDidLoad];
 }
 
@@ -101,6 +110,7 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
                 [self.formatButton selectItemAtIndex:FORMAT_BLANK];
             }
     }
+    [self enforceConflicts];
 }
 
 - (IBAction)formatChanged:(id)sender {
@@ -114,6 +124,42 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
                 [self.capacityButton selectItemAtIndex:CAPACITY_140KB];
         }
     }
+    [self enforceConflicts];
+}
+
+- (IBAction)openCustomBootSector:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    self.customBootSectorOpenPanel = [NSOpenPanel openPanel];
+    self.customBootSectorOpenPanel.canChooseFiles = YES;
+    self.customBootSectorOpenPanel.canChooseDirectories = NO;
+    self.customBootSectorOpenPanel.allowsMultipleSelection = NO;
+    self.customBootSectorOpenPanel.message = NSLocalizedString(@"Select custom boot sector", @"");
+    self.customBootSectorOpenPanel.delegate = self;
+    if ([self.customBootSectorOpenPanel runModal] == NSModalResponseOK) {
+        NSURL *url = self.customBootSectorOpenPanel.URL;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error = nil;
+        NSString *path = url.filePathURL.path;
+        NSDictionary *attrs = [fileManager attributesOfItemAtPath:path error:&error];
+        if (error == nil) {
+            NSNumber *fileSize = attrs[NSFileSize];
+            if (fileSize.integerValue > 0) {
+                g_cmdLine.nBootSectorFileSize = fileSize.unsignedIntValue;
+                g_cmdLine.sBootSectorFileName = std::string(path.UTF8String);
+            }
+            [self updateCustomBootSector];
+        }
+        self.customBootSectorOpenPanel = nil;
+    }
+}
+
+- (IBAction)clearCustomBootSector:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    g_cmdLine.nBootSectorFileSize = 0;
+    g_cmdLine.sBootSectorFileName = "";
+    [self updateCustomBootSector];
 }
 
 - (IBAction)onFormatCopyToggled:(id)sender {
@@ -181,15 +227,24 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     if ([self.diskImageSavePanel runModal] == NSModalResponseOK) {
         NSURL *url = self.diskImageSavePanel.URL;
         mariani::MarianiFrame *frame = (mariani::MarianiFrame *)theAppDelegate.emulatorVC.frame;
-        New_DOSProDOS_Disk("New Disk Image",
-                           [url.path cStringUsingEncoding:NSUTF8StringEncoding],
+        if (self.formatButton.indexOfSelectedItem == FORMAT_BLANK) {
+            New_Blank_Disk("New Disk Image",
+                           [url.filePathURL.path cStringUsingEncoding:NSUTF8StringEncoding],
                            diskSize,
-                           isDOS33,
-                           newDiskCopyBitsyBoot,
-                           newDiskCopyBitsyBye,
-                           newDiskCopyBASIC,
-                           newDiskCopyProDOS,
+                           isHardDisk,
                            frame);
+        }
+        else {
+            New_DOSProDOS_Disk("New Disk Image",
+                               [url.filePathURL.path cStringUsingEncoding:NSUTF8StringEncoding],
+                               diskSize,
+                               isDOS33,
+                               newDiskCopyBitsyBoot,
+                               newDiskCopyBitsyBye,
+                               newDiskCopyBASIC,
+                               newDiskCopyProDOS,
+                               frame);
+        }
         self.diskImageSavePanel = nil;
         
         if (self.slot >= 0 && self.drive >= 0 && isDisk2) {
@@ -217,6 +272,54 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     [self.window close];
+}
+
+- (void)enforceConflicts {
+    // The "copy" checkboxes are only for ProDOS formats, and the custom boot sector
+    // is only for blank disk images.
+    const BOOL isProDOS = (self.formatButton.indexOfSelectedItem == FORMAT_PRODOS);
+    const BOOL isBlank = (self.formatButton.indexOfSelectedItem == FORMAT_BLANK);
+    self.onFormatCopyProDOSButton.enabled = isProDOS;
+    self.onFormatCopyBitsyBootButton.enabled = isProDOS;
+    self.onFormatCopyBitsyByeButton.enabled = isProDOS;
+    self.onFormatCopyBASICSYSTEMButton.enabled = isProDOS;
+    self.customBootSectorButton.enabled = isBlank;
+    self.clearCustomBootSectorButton.enabled = isBlank && g_cmdLine.nBootSectorFileSize > 0;
+}
+
+- (void)updateCustomBootSector {
+    if (g_cmdLine.nBootSectorFileSize > 0) {
+        NSURL *url = [NSURL fileURLWithPath:[NSString stringWithUTF8String:g_cmdLine.sBootSectorFileName.c_str()]];
+        self.customBootSectorButton.title = url.lastPathComponent;
+        self.clearCustomBootSectorButton.enabled = YES;
+    }
+    else {
+        self.customBootSectorButton.title = NSLocalizedString(@"Default AppleWin Boot Sector", @"");
+        self.clearCustomBootSectorButton.enabled = NO;
+    }
+}
+
+#pragma mark - NSOpenSavePanelDelegate
+
+- (BOOL)panel:(id)sender shouldEnableURL:(NSURL *)url {
+    // never allow navigation into packages
+    NSNumber *isPackage;
+    if ([url getResourceValue:&isPackage forKey:NSURLIsPackageKey error:nil] &&
+        [isPackage boolValue]) {
+        return NO;
+    }
+    
+    // always allow navigation into directories
+    NSNumber *isDirectory;
+    if ([url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil] &&
+        [isDirectory boolValue]) {
+        return YES;
+    }
+    
+    if ([sender isEqual:self.customBootSectorOpenPanel]) {
+        return [url.pathExtension.uppercaseString isEqual:@"BIN"];
+    }
+    return NO;
 }
 
 @end

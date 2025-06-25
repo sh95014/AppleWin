@@ -44,7 +44,7 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 - (void)screenRecordingDidTock;
 - (void)screenRecordingDidStop:(NSURL *)url;
 
-- (void)updateStatus:(NSString *)status;
+- (void)setStatus:(nullable NSString *)status;
 
 - (NSURL *)unusedURLForFilename:(NSString *)desiredFilename extension:(NSString *)extension inFolder:(NSURL *)folder;
 
