@@ -44,6 +44,7 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
 @property (strong) IBOutlet NSButton *saveDiskImageButton;
 
 @property (assign) BOOL defaultToHardDisk;
+@property (strong, nullable) NSSavePanel *diskImageSavePanel;
 
 @end
 
@@ -109,16 +110,16 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     if ([sender isEqual:self.onFormatCopyProDOSButton]) {
-        
+        RegSaveValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_PRODOS_SYS, TRUE, self.onFormatCopyProDOSButton.state == NSControlStateValueOn);
     }
     else if ([sender isEqual:self.onFormatCopyBitsyBootButton]) {
-        
+        RegSaveValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_BITSY_BOOT, TRUE, self.onFormatCopyBitsyBootButton.state == NSControlStateValueOn);
     }
     else if ([sender isEqual:self.onFormatCopyBitsyByeButton]) {
-        
+        RegSaveValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_BITSY_BYE, TRUE, self.onFormatCopyBitsyByeButton.state == NSControlStateValueOn);
     }
     else if ([sender isEqual:self.onFormatCopyBASICSYSTEMButton]) {
-        
+        RegSaveValue(REG_PREFS, REGVALUE_PREF_NEW_DISK_COPY_BASIC, TRUE, self.onFormatCopyBASICSYSTEMButton.state == NSControlStateValueOn);
     }
 }
 
@@ -145,34 +146,40 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
                                     ? TRACK_DENIBBLIZED_SIZE * TRACKS_MAX
                                     : TRACK_DENIBBLIZED_SIZE * TRACKS_STANDARD
                                     ;
-    time_t timestamp = time( NULL );
-    tm datetime = *localtime(&timestamp);
     
-    const size_t MAX_MONTH_LEN = 32;
-    int   year               = datetime.tm_year + 1900;
-    char  mon[MAX_MONTH_LEN] = {0};
-    int   day                = datetime.tm_mday;
-    int   hour               = datetime.tm_hour;
-    int   min                = datetime.tm_min;
-    int   sec                = datetime.tm_sec;
-    strftime( mon, MAX_MONTH_LEN-1, "%b", &datetime );
-    
-    std::string sExtension = isHardDisk
-        ? ".hdv"
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyy-MMM-dd_HH'h'-MM'm'-ss's'";
+    NSString *extension = isHardDisk
+        ? @"hdv"
         : isDOS33
-          ? ".do"
-          : ".po"
+            ? @"do"
+            : @"po"
             ;
+    NSString *filename = [NSString stringWithFormat:@"%@_%@.%@",
+        isFloppy ? NSLocalizedString(@"Blank_Floppy", @"blank floppy disk") : NSLocalizedString(@"Blank_Hard", @"blank hard disk"),
+        [dateFormatter stringFromDate:[NSDate date]],
+        extension
+    ];
     
-    std::string pathname(StrFormat(
-          "/Users/sh95014/Desktop/blank_%s_%04d_%3s_%02d_%02dh_%02dm_%02ds%s"
-        , isFloppy ? "floppy" : "hard"
-        , year, mon, day, hour, min, sec
-        , sExtension.c_str()
-    ));
+    self.diskImageSavePanel = [NSSavePanel savePanel];
+    self.diskImageSavePanel.canCreateDirectories = YES;
+    self.diskImageSavePanel.title = NSLocalizedString(@"Save disk image as...", @"");
+    self.diskImageSavePanel.nameFieldStringValue = filename;
     
-    mariani::MarianiFrame *frame = (mariani::MarianiFrame *)theAppDelegate.emulatorVC.frame;
-    New_DOSProDOS_Disk("New Disk Image", pathname, diskSize, isDOS33, newDiskCopyBitsyBoot, newDiskCopyBitsyBye, newDiskCopyBASIC, newDiskCopyProDOS, frame);
+    if ([self.diskImageSavePanel runModal] == NSModalResponseOK) {
+        NSURL *url = self.diskImageSavePanel.URL;
+        mariani::MarianiFrame *frame = (mariani::MarianiFrame *)theAppDelegate.emulatorVC.frame;
+        New_DOSProDOS_Disk("New Disk Image",
+                           [url.path cStringUsingEncoding:NSUTF8StringEncoding],
+                           diskSize,
+                           isDOS33,
+                           newDiskCopyBitsyBoot,
+                           newDiskCopyBitsyBye,
+                           newDiskCopyBASIC,
+                           newDiskCopyProDOS,
+                           frame);
+        self.diskImageSavePanel = nil;
+    }
     
     [self.window close];
 }

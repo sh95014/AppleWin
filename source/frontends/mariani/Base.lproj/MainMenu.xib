@@ -16,7 +16,6 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
                 <outlet property="aboutMarianiMenuItem" destination="5kV-Vb-QxS" id="BXC-wO-Gq7"/>
-                <outlet property="createDiskImageMenu" destination="RjL-S4-oG8" id="8PI-CL-Q4I"/>
                 <outlet property="displayTypeMenu" destination="eeY-Un-lEj" id="N54-FR-NAN"/>
                 <outlet property="editCopyMenu" destination="wcB-ZJ-Gew" id="XXg-bZ-pNS"/>
                 <outlet property="emulatorVC" destination="S0z-N3-T9h" id="XAc-8o-NgU"/>
@@ -88,9 +87,11 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="File" id="bib-Uj-vzu">
                         <items>
-                            <menuItem title="New Disk Image" id="FCU-LR-rG3">
+                            <menuItem title="New Disk Image…" id="FCU-LR-rG3">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="New Disk Image" id="RjL-S4-oG8"/>
+                                <connections>
+                                    <action selector="createDiskImageAction:" target="Voe-Tx-rLC" id="aKa-hc-qPR"/>
+                                </connections>
                             </menuItem>
                             <menuItem title="Insert Disk Image" id="l7t-Fp-Pd9">
                                 <modifierMask key="keyEquivalentModifierMask"/>

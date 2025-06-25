@@ -30,6 +30,7 @@
 #import "Video.h"
 
 #import "CommonTypes.h"
+#import "DiskMakerWindowController.h"
 #import "EmulatorViewController.h"
 #import "PreferencesWindowController.h"
 #import "MarianiDriveButton.h"
@@ -50,7 +51,6 @@ using namespace DiskImgLib;
 @interface AppDelegate ()
 
 @property (strong) IBOutlet NSWindow *window;
-@property (strong) IBOutlet NSMenu *createDiskImageMenu;
 @property (strong) IBOutlet NSMenu *openDiskImageMenu;
 @property (strong) IBOutlet NSMenuItem *editCopyMenu;
 @property (strong) IBOutlet NSMenuItem *showHideStatusBarMenuItem;
@@ -80,6 +80,7 @@ using namespace DiskImgLib;
 
 @property (strong) MemoryViewerWindowController *memoryWC;
 @property (strong) DebuggerWindowController *debuggerWC;
+@property (strong) DiskMakerWindowController *diskMakerWC;
 
 @end
 
@@ -388,7 +389,14 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 #pragma mark - File menu actions
 
+- (IBAction)createDiskImageAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    self.diskMakerWC = [[DiskMakerWindowController alloc] init];
+    [self.diskMakerWC showWindow:self];
+}
+
 - (IBAction)loadTapeAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
     self.tapeOpenPanel = [NSOpenPanel openPanel];
     self.tapeOpenPanel.canChooseFiles = YES;
     self.tapeOpenPanel.canChooseDirectories = NO;
@@ -658,7 +666,6 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     for (NSView *button in self.driveButtons) {
         [button removeFromSuperview];
     }
-    [self.createDiskImageMenu removeAllItems];
     [self.openDiskImageMenu removeAllItems];
     
     NSInteger drivesRightEdge = STATUS_BAR_LEFT_MARGIN;
@@ -680,16 +687,9 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                 drivesRightEdge = CGRectGetMaxX(driveButtonFrame);
                 
                 NSString *driveName = [NSString stringWithFormat:NSLocalizedString(@"Slot %d Drive %d", @""), slot, drive + 1];
-                NSMenuItem *item;
-                item = [[NSMenuItem alloc] initWithTitle:driveName
-                                                  action:@selector(createDiskImage:)
-                                           keyEquivalent:@""];
-                item.target = driveButton;
-                [self.createDiskImageMenu addItem:item];
-                
-                item = [[NSMenuItem alloc] initWithTitle:driveName
-                                                  action:@selector(openDiskImage:)
-                                           keyEquivalent:@""];
+                NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:driveName
+                                                              action:@selector(openDiskImage:)
+                                                       keyEquivalent:@""];
                 item.target = driveButton;
                 if (slot == SLOT6) {
                     unichar character = (drive == DRIVE_1) ? NSF3FunctionKey : NSF4FunctionKey;

@@ -274,6 +274,28 @@
         }
       }
     },
+    "Blank_Floppy" : {
+      "comment" : "blank floppy disk",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空白磁碟"
+          }
+        }
+      }
+    },
+    "Blank_Hard" : {
+      "comment" : "blank hard disk",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空白硬碟"
+          }
+        }
+      }
+    },
     "Bookmark" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -871,12 +893,22 @@
         }
       }
     },
+    "Save disk image as..." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "磁碟映像存檔為⋯"
+          }
+        }
+      }
+    },
     "Save state as..." : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "狀態存檔為"
+            "value" : "狀態存檔為⋯"
           }
         }
       }
