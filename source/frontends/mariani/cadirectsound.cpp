@@ -7,6 +7,7 @@
 //
 
 #include <AudioToolbox/AudioToolbox.h>
+#include <unordered_map>
 #include "windows.h"
 #include "Core.h"
 #include "AppDelegate.h"
