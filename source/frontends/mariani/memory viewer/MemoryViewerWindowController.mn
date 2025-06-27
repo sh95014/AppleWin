@@ -65,6 +65,7 @@ static const unsigned int _6502_IO_BEGIN        = 0xC000;
         // Let the BASIC view be a sibling of the hex view, with the same size.
         NSView *basicScrollView = self.basicListingView.enclosingScrollView;
         basicScrollView.frame = self.hexViewContainerView.frame;
+        basicScrollView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         [self.hexViewContainerView.superview addSubview:basicScrollView];
         basicScrollView.hidden = YES;
         
