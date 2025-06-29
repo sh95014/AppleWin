@@ -72,6 +72,7 @@ using namespace DiskImgLib;
 
 @property (strong) IBOutlet NSOutlineView *filesOutlineView;
 @property (strong) IBOutlet NSPanel *filePreviewPanel;
+@property (strong) NSButton *toggleHexViewButton;
 
 @property (strong) FSItem *rootDirectory;
 @property CGFloat rowHeight;
@@ -350,12 +351,14 @@ NSArray *fileTypeStrings = @[
     self.showingHexView = YES;
     
     // window title bar button to toggle hex view
-    NSImage *image = [NSImage imageWithSystemSymbolName:@"sidebar.right" accessibilityDescription:@""];
-    NSButton *toggleHexViewButton = [NSButton buttonWithImage:image target:self action:@selector(toggleHexView:)];
-    toggleHexViewButton.bezelStyle = NSBezelStyleAccessoryBar;
-    toggleHexViewButton.bordered = NO;
-    CGFloat x = self.filePreviewPanel.frame.size.width - 45;
-    [self.filePreviewPanel addViewToTitleBar:toggleHexViewButton atXPosition:x];
+    if (self.toggleHexViewButton == nil) {
+        NSImage *image = [NSImage imageWithSystemSymbolName:@"sidebar.right" accessibilityDescription:@""];
+        self.toggleHexViewButton = [NSButton buttonWithImage:image target:self action:@selector(toggleHexView:)];
+        self.toggleHexViewButton.bezelStyle = NSBezelStyleAccessoryBar;
+        self.toggleHexViewButton.bordered = NO;
+        CGFloat x = self.filePreviewPanel.frame.size.width - 45;
+        [self.filePreviewPanel addViewToTitleBar:self.toggleHexViewButton atXPosition:x];
+    }
     
     NSView *layoutView;
     
@@ -375,6 +378,8 @@ NSArray *fileTypeStrings = @[
         textView.editable = NO;
         textView.richText = YES;
         layoutView = scrollView;
+        
+        self.toggleHexViewButton.enabled = NO;
     }
     
     if (layoutView == nil) {
@@ -403,6 +408,8 @@ NSArray *fileTypeStrings = @[
         [self.layoutRep addRepresenter:statusRep];
         
         layoutView = [self layoutHFView];
+        
+        self.toggleHexViewButton.enabled = YES;
     }
     
     [layoutView setFrame:self.filePreviewPanel.contentView.bounds];
