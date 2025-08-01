@@ -74,6 +74,7 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 
 @property (strong) EmulatorRenderer *renderer;
 
+@property LoggerContext *loggerContext;
 @property RegistryContext *registryContext;
 @property Initialisation *initialisation;
 
@@ -119,6 +120,7 @@ extern common2::EmulatorOptions gEmulatorOptions;
     
     self.audioOutputs = [NSMutableArray array];
     
+    self.loggerContext = new LoggerContext(gEmulatorOptions.log);
     self.registryContext = new RegistryContext(CreateFileRegistry(gEmulatorOptions));
     frame.reset(new mariani::MarianiFrame(gEmulatorOptions));
     gamepad.reset(new mariani::Gamepad());
