@@ -31,6 +31,10 @@
 		976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */ = {isa = PBXBuildFile; fileRef = 976D11A92B379D9000EEA1D6 /* CharacterMappings.h */; };
 		976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
 		976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
+		9795A3512E48ED1600504B55 /* HexFiend.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9795A3412E48E98700504B55 /* HexFiend.framework */; };
+		9795A3542E48ED7E00504B55 /* HexFiend.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9795A3412E48E98700504B55 /* HexFiend.framework */; };
+		9795A3552E48EE0C00504B55 /* HexFiend.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9795A3412E48E98700504B55 /* HexFiend.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9795A3562E48EE1900504B55 /* HexFiend.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9795A3412E48E98700504B55 /* HexFiend.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		979E45D62CF56C2700D6A957 /* HDC-SmartPort.bin in Resources */ = {isa = PBXBuildFile; fileRef = 979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */; };
 		979E45D72CF56C2700D6A957 /* HDC-SmartPort.bin in Resources */ = {isa = PBXBuildFile; fileRef = 979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */; };
 		97ACC9C22C3B2C3E0028821E /* PageConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 97ACC9BC2C3B2C3E0028821E /* PageConfig.cpp */; };
@@ -301,10 +305,6 @@
 		B043659827B8769E00329469 /* NSMutableString+RTF.m in Sources */ = {isa = PBXBuildFile; fileRef = B043659427B8769E00329469 /* NSMutableString+RTF.m */; };
 		B04365A127B887CB00329469 /* DataFormatBASIC.m in Sources */ = {isa = PBXBuildFile; fileRef = B04365A027B887CB00329469 /* DataFormatBASIC.m */; };
 		B04365A227B887CB00329469 /* DataFormatBASIC.m in Sources */ = {isa = PBXBuildFile; fileRef = B04365A027B887CB00329469 /* DataFormatBASIC.m */; };
-		B04365D427BAD27A00329469 /* HexFiend.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B06184A627B7303100B6D04C /* HexFiend.framework */; };
-		B04365D527BAD27A00329469 /* HexFiend.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B06184A627B7303100B6D04C /* HexFiend.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B04365D727BAD29500329469 /* HexFiend.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B06184A627B7303100B6D04C /* HexFiend.framework */; };
-		B04365D827BAD29500329469 /* HexFiend.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B06184A627B7303100B6D04C /* HexFiend.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B045FE722782984F006E36F9 /* Apple2e.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE5C2782984E006E36F9 /* Apple2e.rom */; };
 		B045FE732782984F006E36F9 /* Apple2_Plus.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE5D2782984E006E36F9 /* Apple2_Plus.rom */; };
 		B045FE742782984F006E36F9 /* DISK2-13sector.rom in Resources */ = {isa = PBXBuildFile; fileRef = B045FE5E2782984E006E36F9 /* DISK2-13sector.rom */; };
@@ -569,12 +569,75 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		97E011F82B36481F00A64C87 /* PBXContainerItemProxy */ = {
+		9795A33E2E48E98700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D1107320486CEB800E47090;
+			remoteInfo = HexFiend_2;
+		};
+		9795A3402E48E98700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D01E7BB80CDC530C00943F9E;
+			remoteInfo = HexFiend_Framework;
+		};
+		9795A3422E48E98700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A5EF294A20F187B700CA7B39;
+			remoteInfo = HexFiend_Framework_iOS;
+		};
+		9795A3442E48E98700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D047E3151022CEFE00EF307B;
+			remoteInfo = "FortunateSon (PrivilegedHelper)";
+		};
+		9795A3462E48E98700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D00C15E50FF091FF006D021F;
+			remoteInfo = HexFiendling;
+		};
+		9795A3482E48E98700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9408FBFA19DD72DE004F800E;
+			remoteInfo = "HexFiend_Framework Tests";
+		};
+		9795A34A2E48E98700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A550A7161F7877F8001C79C7;
+			remoteInfo = hexf;
+		};
+		9795A34C2E48E98700504B55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = A50859A72B204C8100325B36;
 			remoteInfo = "Hex Fiend Tests";
+		};
+		9795A34E2E48EBEF00504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D01E7BB70CDC530C00943F9E;
+			remoteInfo = HexFiend_Framework;
+		};
+		9795A3522E48ED7700504B55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D01E7BB70CDC530C00943F9E;
+			remoteInfo = HexFiend_Framework;
 		};
 		B017D6932A3A4C8900FE6D1E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -597,68 +660,12 @@
 			remoteGlobalIDString = B032DE20277A0C23006DC0F7;
 			remoteInfo = mariani;
 		};
-		B06184A327B7303100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D1107320486CEB800E47090;
-			remoteInfo = HexFiend_2;
-		};
-		B06184A527B7303100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D01E7BB80CDC530C00943F9E;
-			remoteInfo = HexFiend_Framework;
-		};
-		B06184A727B7303100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A5EF294A20F187B700CA7B39;
-			remoteInfo = HexFiend_Framework_iOS;
-		};
-		B06184A927B7303100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D047E3151022CEFE00EF307B;
-			remoteInfo = "FortunateSon (PrivilegedHelper)";
-		};
-		B06184AB27B7303100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D00C15E50FF091FF006D021F;
-			remoteInfo = HexFiendling;
-		};
-		B06184AD27B7303100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9408FBFA19DD72DE004F800E;
-			remoteInfo = "HexFiend_Framework Tests";
-		};
-		B06184AF27B7303100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A550A7161F7877F8001C79C7;
-			remoteInfo = hexf;
-		};
 		B06184E927B7590D00B6D04C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B032DE19277A0C23006DC0F7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B06184B627B7575E00B6D04C;
 			remoteInfo = diskimg;
-		};
-		B06184EC27B759B800B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D01E7BB70CDC530C00943F9E;
-			remoteInfo = HexFiend_Framework;
 		};
 		B06184EE27B759CA00B6D04C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -680,13 +687,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = B06184B627B7575E00B6D04C;
 			remoteInfo = diskimg;
-		};
-		B06184F827B759E100B6D04C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D01E7BB70CDC530C00943F9E;
-			remoteInfo = HexFiend_Framework;
 		};
 		B061851D27B75B2000B6D04C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -739,7 +739,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B04365D827BAD29500329469 /* HexFiend.framework in Embed Frameworks */,
+				9795A3562E48EE1900504B55 /* HexFiend.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -750,7 +750,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B04365D527BAD27A00329469 /* HexFiend.framework in Embed Frameworks */,
+				9795A3552E48EE0C00504B55 /* HexFiend.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -952,7 +952,7 @@
 		B05778E5285D7F5B00614907 /* DNS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNS.h; path = source/Tfe/DNS.h; sourceTree = "<group>"; };
 		B05779062886047E00614907 /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../../../../opt/homebrew/Cellar/libslirp/4.6.1/lib/libslirp.a; sourceTree = "<group>"; };
 		B05779192887D51D00614907 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HexFiend_2.xcodeproj; path = source/frontends/mariani/HexFiend/HexFiend_2.xcodeproj; sourceTree = "<group>"; };
+		B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HexFiend_2.xcodeproj; path = source/frontends/mariani/HexFiend/app/HexFiend_2.xcodeproj; sourceTree = "<group>"; };
 		B06184B727B7575E00B6D04C /* libdiskimg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdiskimg.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B06184FE27B75AE900B6D04C /* libhfs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libhfs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B061852427B75E3600B6D04C /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = source/frontends/mariani/libhfs/config.h; sourceTree = "<group>"; };
@@ -1363,8 +1363,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9795A3542E48ED7E00504B55 /* HexFiend.framework in Frameworks */,
 				B090CF1F27B5A05A00C6C23D /* GameController.framework in Frameworks */,
-				B04365D727BAD29500329469 /* HexFiend.framework in Frameworks */,
 				B057792528888BC600614907 /* AudioToolbox.framework in Frameworks */,
 				B00ECBBA279EEB600041E16C /* AVFoundation.framework in Frameworks */,
 				B00ECBB9279EEB600041E16C /* CoreMedia.framework in Frameworks */,
@@ -1394,8 +1394,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9795A3512E48ED1600504B55 /* HexFiend.framework in Frameworks */,
 				B090CF1D27B5A04F00C6C23D /* GameController.framework in Frameworks */,
-				B04365D427BAD27A00329469 /* HexFiend.framework in Frameworks */,
 				B057791A2887D51D00614907 /* AudioToolbox.framework in Frameworks */,
 				B020F8A92785EA440071D3C7 /* AVFoundation.framework in Frameworks */,
 				B020F8AB2785F3920071D3C7 /* CoreMedia.framework in Frameworks */,
@@ -1466,6 +1466,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9795A3332E48E98700504B55 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9795A33F2E48E98700504B55 /* Hex Fiend.app */,
+				9795A3412E48E98700504B55 /* HexFiend.framework */,
+				9795A3432E48E98700504B55 /* HexFiend_Framework_iOS.framework */,
+				9795A3452E48E98700504B55 /* com.ridiculousfish.HexFiend.PrivilegedHelper */,
+				9795A3472E48E98700504B55 /* HexFiendling.app */,
+				9795A3492E48E98700504B55 /* HexFiend_Framework Tests.xctest */,
+				9795A34B2E48E98700504B55 /* hexf */,
+				9795A34D2E48E98700504B55 /* Hex Fiend Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		97B92FC02B13AF71000D8B98 /* sa2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1736,21 +1751,6 @@
 				B049E83C277B61AC00FC14A3 /* utils.h */,
 			);
 			name = common2;
-			sourceTree = "<group>";
-		};
-		B061849927B7303100B6D04C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B06184A427B7303100B6D04C /* Hex Fiend.app */,
-				B06184A627B7303100B6D04C /* HexFiend.framework */,
-				B06184A827B7303100B6D04C /* HexFiend_Framework_iOS.framework */,
-				B06184AA27B7303100B6D04C /* com.ridiculousfish.HexFiend.PrivilegedHelper */,
-				B06184AC27B7303100B6D04C /* HexFiendling.app */,
-				B06184AE27B7303100B6D04C /* HexFiend_Framework Tests.xctest */,
-				B06184B027B7303100B6D04C /* hexf */,
-				97E011F92B36481F00A64C87 /* Hex Fiend Tests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		B09AB5E4277A14850002A6C3 /* AppleWin */ = {
@@ -2535,12 +2535,12 @@
 			buildRules = (
 			);
 			dependencies = (
+				9795A3532E48ED7700504B55 /* PBXTargetDependency */,
 				B017D6942A3A4C8900FE6D1E /* PBXTargetDependency */,
 				B06184F127B759E100B6D04C /* PBXTargetDependency */,
 				B061853427B7796A00B6D04C /* PBXTargetDependency */,
 				B06184F327B759E100B6D04C /* PBXTargetDependency */,
 				B061852027B75B2900B6D04C /* PBXTargetDependency */,
-				B06184F927B759E100B6D04C /* PBXTargetDependency */,
 			);
 			name = "Mariani Universal";
 			productName = mariani;
@@ -2577,12 +2577,12 @@
 			buildRules = (
 			);
 			dependencies = (
+				9795A34F2E48EBEF00504B55 /* PBXTargetDependency */,
 				B0E1DC912988758700F61989 /* PBXTargetDependency */,
 				B06184EF27B759CA00B6D04C /* PBXTargetDependency */,
 				B061853127B7795100B6D04C /* PBXTargetDependency */,
 				B06184EA27B7590D00B6D04C /* PBXTargetDependency */,
 				B061851E27B75B2000B6D04C /* PBXTargetDependency */,
-				B06184ED27B759B800B6D04C /* PBXTargetDependency */,
 			);
 			name = Mariani;
 			productName = mariani;
@@ -2764,7 +2764,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = B061849927B7303100B6D04C /* Products */;
+					ProductGroup = 9795A3332E48E98700504B55 /* Products */;
 					ProjectRef = B061849827B7303100B6D04C /* HexFiend_2.xcodeproj */;
 				},
 			);
@@ -2786,60 +2786,60 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		97E011F92B36481F00A64C87 /* Hex Fiend Tests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Hex Fiend Tests.xctest";
-			remoteRef = 97E011F82B36481F00A64C87 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B06184A427B7303100B6D04C /* Hex Fiend.app */ = {
+		9795A33F2E48E98700504B55 /* Hex Fiend.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = "Hex Fiend.app";
-			remoteRef = B06184A327B7303100B6D04C /* PBXContainerItemProxy */;
+			remoteRef = 9795A33E2E48E98700504B55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B06184A627B7303100B6D04C /* HexFiend.framework */ = {
+		9795A3412E48E98700504B55 /* HexFiend.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = HexFiend.framework;
-			remoteRef = B06184A527B7303100B6D04C /* PBXContainerItemProxy */;
+			remoteRef = 9795A3402E48E98700504B55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B06184A827B7303100B6D04C /* HexFiend_Framework_iOS.framework */ = {
+		9795A3432E48E98700504B55 /* HexFiend_Framework_iOS.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = HexFiend_Framework_iOS.framework;
-			remoteRef = B06184A727B7303100B6D04C /* PBXContainerItemProxy */;
+			remoteRef = 9795A3422E48E98700504B55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B06184AA27B7303100B6D04C /* com.ridiculousfish.HexFiend.PrivilegedHelper */ = {
+		9795A3452E48E98700504B55 /* com.ridiculousfish.HexFiend.PrivilegedHelper */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
 			path = com.ridiculousfish.HexFiend.PrivilegedHelper;
-			remoteRef = B06184A927B7303100B6D04C /* PBXContainerItemProxy */;
+			remoteRef = 9795A3442E48E98700504B55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B06184AC27B7303100B6D04C /* HexFiendling.app */ = {
+		9795A3472E48E98700504B55 /* HexFiendling.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = HexFiendling.app;
-			remoteRef = B06184AB27B7303100B6D04C /* PBXContainerItemProxy */;
+			remoteRef = 9795A3462E48E98700504B55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B06184AE27B7303100B6D04C /* HexFiend_Framework Tests.xctest */ = {
+		9795A3492E48E98700504B55 /* HexFiend_Framework Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "HexFiend_Framework Tests.xctest";
-			remoteRef = B06184AD27B7303100B6D04C /* PBXContainerItemProxy */;
+			remoteRef = 9795A3482E48E98700504B55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B06184B027B7303100B6D04C /* hexf */ = {
+		9795A34B2E48E98700504B55 /* hexf */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
 			path = hexf;
-			remoteRef = B06184AF27B7303100B6D04C /* PBXContainerItemProxy */;
+			remoteRef = 9795A34A2E48E98700504B55 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9795A34D2E48E98700504B55 /* Hex Fiend Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "Hex Fiend Tests.xctest";
+			remoteRef = 9795A34C2E48E98700504B55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -3347,6 +3347,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9795A34F2E48EBEF00504B55 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = HexFiend_Framework;
+			targetProxy = 9795A34E2E48EBEF00504B55 /* PBXContainerItemProxy */;
+		};
+		9795A3532E48ED7700504B55 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = HexFiend_Framework;
+			targetProxy = 9795A3522E48ED7700504B55 /* PBXContainerItemProxy */;
+		};
 		B017D6942A3A4C8900FE6D1E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B017D6742A3A4C1200FE6D1E /* StaticWrapper Universal */;
@@ -3367,11 +3377,6 @@
 			target = B06184B627B7575E00B6D04C /* diskimg */;
 			targetProxy = B06184E927B7590D00B6D04C /* PBXContainerItemProxy */;
 		};
-		B06184ED27B759B800B6D04C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = HexFiend_Framework;
-			targetProxy = B06184EC27B759B800B6D04C /* PBXContainerItemProxy */;
-		};
 		B06184EF27B759CA00B6D04C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B0098BF9277E0F6800F38E0C /* AppleWin */;
@@ -3386,11 +3391,6 @@
 			isa = PBXTargetDependency;
 			target = B06184B627B7575E00B6D04C /* diskimg */;
 			targetProxy = B06184F227B759E100B6D04C /* PBXContainerItemProxy */;
-		};
-		B06184F927B759E100B6D04C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = HexFiend_Framework;
-			targetProxy = B06184F827B759E100B6D04C /* PBXContainerItemProxy */;
 		};
 		B061851E27B75B2000B6D04C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3564,7 +3564,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3586,7 +3586,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3601,7 +3601,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3623,7 +3623,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3809,7 +3809,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -3834,7 +3834,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3850,7 +3850,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -3875,7 +3875,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.4;
+				MARKETING_VERSION = 1.5;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
