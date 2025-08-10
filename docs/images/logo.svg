@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="113.39424mm"
+   height="34.394508mm"
+   viewBox="0 0 113.39424 34.394508"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <filter
+       style="color-interpolation-filters:sRGB"
+       id="filter17"
+       x="-0.074231203"
+       y="-0.40012215"
+       width="1.1690822"
+       height="1.9113893">
+      <feFlood
+         result="flood"
+         in="SourceGraphic"
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         id="feFlood16" />
+      <feGaussianBlur
+         result="blur"
+         in="SourceGraphic"
+         stdDeviation="3.000000"
+         id="feGaussianBlur16" />
+      <feOffset
+         result="offset"
+         in="blur"
+         dx="2.000000"
+         dy="2.000000"
+         id="feOffset16" />
+      <feComposite
+         result="comp1"
+         operator="in"
+         in="flood"
+         in2="offset"
+         id="feComposite16" />
+      <feComposite
+         result="comp2"
+         operator="over"
+         in="SourceGraphic"
+         in2="comp1"
+         id="feComposite17" />
+    </filter>
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-25.089358,-75.306521)">
+    <path
+       d="m 32.289358,82.506515 v 17.994505 h 4.921961 V 86.570519 h 4.425249 c 1.219201,0 2.212624,1.490135 2.212624,2.686759 v 11.243742 h 4.921961 V 86.570519 h 4.222049 c 1.286934,0 2.415824,1.490135 2.415824,2.77707 v 11.153431 h 4.921961 V 88.150965 c 0,-3.431825 -3.18347,-5.64445 -6.36694,-5.64445 h -5.486406 v 3.273781 C 47.235862,83.79345 45.294172,82.506515 43.171858,82.506515 Z m 35.627772,4.064004 c -3.838226,0 -6.750762,3.364093 -6.750762,6.88623 0,3.58987 3.18347,7.044271 6.795918,7.044271 h 2.912536 v -4.064002 h -1.490134 c -1.715913,0 -3.025426,-1.33209 -3.025426,-2.935114 0,-1.715913 1.286935,-2.867381 2.98027,-2.867381 h 2.619025 v 9.866497 h 4.741338 V 86.570519 Z m 18.649274,0 H 82.5024 c -2.619025,0 -4.741338,2.325514 -4.741338,5.215472 v 8.715029 H 82.5024 v -7.563561 c 0,-1.264357 0.970845,-2.302936 2.167469,-2.302936 h 1.896535 z m 0.745073,-4.064004 v 3.115737 h 4.741338 v -3.115737 z m 0,4.064004 v 13.930501 h 4.741338 V 86.570519 Z m 12.327478,0 c -3.838226,0 -6.750762,3.364093 -6.750762,6.88623 0,3.58987 3.18347,7.044271 6.795918,7.044271 h 2.912539 v -4.064002 h -1.49014 c -1.715911,0 -3.025423,-1.33209 -3.025423,-2.935114 0,-1.715913 1.286935,-2.867381 2.980273,-2.867381 h 2.61902 v 9.866497 h 4.74134 V 86.570519 Z m 9.843935,13.930501 h 4.74133 v -9.866497 h 3.13832 c 0.67733,0 1.4224,0.745068 1.4224,1.399824 v 8.466673 h 4.74134 v -9.076274 c 0,-2.393246 -2.37067,-4.854227 -4.74134,-4.854227 h -9.30205 z m 15.05938,-17.994505 v 3.115737 h 4.74134 v -3.115737 z m 0,4.064004 v 13.930501 h 4.74134 V 86.570519 Z"
+       id="text1"
+       style="font-size:22.5778px;font-family:'Motter Tektura Retro';-inkscape-font-specification:'Motter Tektura Retro, Normal';fill:#ffffff;stroke-width:0.264583;filter:url(#filter17)"
+       aria-label="Mariani" />
+  </g>
+</svg>

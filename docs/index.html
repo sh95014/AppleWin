@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Mariani</title>
+    <style>
+      body {
+        background-color: #c8c8c0;
+        font-family: sans-serif;
+        margin: 0;
+      }
+      div.header {
+        background-image: url('images/sixcolors.png');
+        background-repeat: repeat-x;
+        background-size: contain;
+        height: 120px;
+        width: cover;
+      }
+      @media screen and (min-width: 600px) {
+        div.header {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+      @media screen and (max-width: 599px) {
+        object.logo {
+          margin-top: -10px;
+        }
+        div.subtitle {
+          font-family: "Avenir Next Condensed", sans-serif;
+        }
+      }
+      div.subtitle {
+        color: white;
+        font-size: large;
+        margin: -38px 27px;
+        text-shadow: 1px 1px 5px black;
+      }
+      @media screen and (min-width: 600px) {
+        div.subtitle {
+          font-weight: bold;
+          margin: 20px;
+          text-align: right;
+          width: 20%;
+        }
+      }
+      @media screen and (min-width: 600px) {
+        div.iie {
+          display: grid;
+          grid-template-columns: 40px 1fr 40px;
+          padding-top: 20px;
+        }
+      }
+      div.hole {
+        background-color: #585850;
+        box-shadow: inset 0 3px 5px #202020;
+        height: 18px;
+        margin-top: 20px;
+        width: 100%;
+      }
+      @media screen and (max-width: 599px) {
+        div.holes {
+          display: none;
+        }
+      }
+      div.left {
+        border-radius: 0 8px 8px 0;
+      }
+      div.right {
+        border-radius: 8px 0 0 8px;
+      }
+      div.box {
+        padding: 10px 2%;
+      }
+      @media screen and (min-width: 600px) {
+        div.content {
+          border-color: black;
+          border-radius: 10px;
+          border-width: 5px;
+          border-style: inset;
+          margin: 25px;
+          padding: 20px;
+        }
+        div.box {
+          float: left;
+          width: 45%;
+        }
+      }
+      img.box {
+        max-width: 100%;
+        filter: drop-shadow(2px 2px 5px #7f7f7f);
+      }
+      div.widebox {
+        clear: both;
+        padding: 10px 2%;
+      }
+      span.callout {
+        color: #383830;
+        display: inline-block;
+        font-family: Palatino, serif;
+        font-size: x-large;
+        padding-bottom: 10px;
+        text-shadow: 1px 1px 3px gray;
+      }
+      span.details {
+        color: #383830;
+        display: inline-block;
+        margin-top: 3px;
+      }
+      ul.details {
+        color: #383830;
+        font-size: small;
+      }
+      ul.details li {
+        margin-bottom: 5px;
+      }
+      ul.bigdetails {
+        color: #383830;
+      }
+      ul.bigdetails li {
+        margin-bottom: 10px;
+      }
+      div.download {
+        clear: both;
+        text-align: center;
+      }
+      @media screen and (max-width: 599px) {
+        div.download {
+          margin-bottom: 20px;
+        }
+      }
+      a.download {
+        text-decoration: none;
+      }
+      span.download {
+        background-color: #e8e8e0;
+        border-radius: 10px;
+        box-shadow: 2px 2px 3px black;
+        color: black;
+        display: inline-block;
+        font-size: x-large;
+        font-weight: bold;
+        margin: 20px 0;
+        padding: 20px 40px;
+      }
+      span.fineprint {
+        color: #383830;
+        display: inline-block;
+        font-size: small;
+        font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <object class="logo" data="images/logo.svg" type="image/svg+xml"></object>
+      <div class="subtitle">
+        Apple //e emulator for macOS based on AppleWin
+      </div>
+    </div>
+    <div class="iie">
+      <div class="holes">
+        <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div>
+        <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div>
+        <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div>
+        <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div>
+      </div>
+      <div class="content">
+        <div class="box">
+          <span class="callout">Play hundreds of old games</span>
+          <video width="100%" autoplay loop muted>
+            <source src="images/games.mov" />
+          </video>
+        </div>
+        <div class="box">
+          <span class="callout">Flex those command line skills</span>
+          <img class="box" src="images/dos33.png" /><br />
+          <span class="details">Easily switch to a monochrome display when things get a little serious</span>
+        </div>
+        <div class="box">
+          <span class="callout">Run modern Apple ][ software</span>
+          <img class="box" src="images/desktop.png" /><br />
+          <span class="details">AppleWin's long history of continuous support ensures broad adoption by new software and maximum compatibility</span>
+        </div>
+        <div class="box">
+          <span class="callout">Configure your Apple ][ to taste</span>
+          <img class="box" src="images/config.png" /><br />
+          <span class="details">Supports all the standard peripherals, plus:</span>
+          <ul class="details">
+            <li>4-Play Joystick</li>
+            <li>Echo Speech Card</li>
+            <li>MEGA Audio</li>
+            <li>Phasor Sound Card</li>
+            <li>RamWorks III (up to 8MB)</li>
+            <li>Saturn 128KB Memory Card</li>
+            <li>SD Music Sound Card</li>
+            <li>Software Automatic Mouth Speed Card</li>
+            <li>SNES Max Game Controller</li>
+            <li>Super Serial Card</li>
+            <li>Uthernet I Network Card</li>
+            <li>Uthernet II Network Card</li>
+            <li>VidHD Video Card</li>
+          </ul>
+        </div>
+        <div class="box">
+          <span class="callout">Create new disk images</span>
+          <img class="box" src="images/diskmaker.png" /><br />
+          <ul class="details">
+            <li>140 KB 5.25" as blank, DOS 3.3-formatted, or ProDOS-formatted</li>
+            <li>160 KB 5.25" as blank, DOS 3.3-formatted, or ProDOS-formatted</li>
+            <li>800 KB 3.5" as blank or ProDOS-formatted</li>
+            <li>32 MB hard disk as blank or ProDOS-formatted</li>
+          </ul>
+        </div>
+        <div class="box">
+          <span class="callout">Explore Apple-format disks</span>
+          <img class="box" src="images/explore.png" /><br />
+        </div>
+        <div class="box">
+          <span class="callout">Peek under the covers</span>
+          <img class="box" src="images/memory.png" /><br />
+        </div>
+        <div class="box">
+          <span class="callout">View BASIC program listings in memory or on disk</span>
+          <img class="box" src="images/basic.png" /><br />
+        </div>
+        <div class="box">
+          <span class="callout">Develop and debug new Apple ][ software</span>
+          <img class="box" src="images/debug.png" /><br />
+          <span class="details">AppleWin's full-featured debugger in a separate window and a macOS UI</span>
+        </div>
+        <div class="widebox">
+          <span class="callout">Other features:</span>
+          <ul class="bigdetails">
+            <li>Native, universal macOS UI supporting Intel and Apple Silicon Macs running macOS 11 or later</li>
+            <li>Take screenshots and screen recordings with one click</li>
+            <li>Save and resume emulator state at any time</li>
+            <li>Full-screen support</li>
+            <li><a href="https://github.com/sh95014/AppleWin/blob/macos/source/frontends/mariani/scripting/README.md">AppleScript support</a> for automation</li>
+            <li>Numeric keypad joystick emulation</li>
+            <li>Careful code branching practices ensure ease of keeping up to date with AppleWin improvements</li>
+          </ul>
+        </div>
+        <div class="download">
+          <a class="download" href="https://github.com/sh95014/AppleWin/releases/latest">
+            <span class="download">
+              Download the latest release<br />
+            <span class="fineprint">for Intel or Apple Silicon Mac running macOS 11 or later</span></span>
+          </a>
+          <br />
+          <a href="https://github.com/sh95014/AppleWin">Build it yourself from source code</span></span>
+          </a>
+        </div>
+      </div>
+      <div class="holes">
+        <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div>
+        <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div>
+        <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div>
+        <div class="right hole"></div> <div class="right hole"></div> <div class="right hole"></div>
+      </div>
+    </div>
+  </body>
+</html>
