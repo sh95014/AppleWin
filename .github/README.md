@@ -1,42 +1,37 @@
 # Mariani
 
-## Introduction
-
-Mariani is a native macOS UI for [AppleWin](https://github.com/AppleWin/AppleWin), by way of [Andrea](https://github.com/audetto)'s [Raspberry Pi port](https://github.com/audetto/AppleWin).
-
-<img width="2560" alt="Mariani Screenshot" src="https://github.com/sh95014/AppleWin/assets/95387068/b9ce556f-d3eb-4d0a-9617-b5fb27211b84">
+Mariani is an emulator of the Apple ][ and //e computers for macOS. Click [here](https://sh95014.github.io/AppleWin/) for details if you just want to use it, the rest of this document is mainly for developers who wish to build their own version of the app.
 
 But if what you want is a macOS command-line app, you can build that too with the [instructions below](https://github.com/sh95014/AppleWin#build-sa2).
 
-### Features
+## Introduction
+
+Mariani is an unofficial native macOS UI for [AppleWin](https://github.com/AppleWin/AppleWin), by way of [Andrea](https://github.com/audetto)'s [Raspberry Pi port](https://github.com/audetto/AppleWin). Key goals of this project include a modern native macOS UI for the emulator, and broad compatibility with upstream code so we can easily pick up any future revisions.
+
+## Features
+
+Mariani supports most user-facing features of AppleWin, but additionally supports:
 
 - Native, universal macOS UI
 - Screen recording
 - Copy screenshot to pasteboard
 - Disk image browser, including syntax-highlighted listings for Applesoft and Integer BASIC, as well as hex viewer for other file types
-- Floppy and hard disk image creation
-- Full-screen support
-- [Debugger](/source/frontends/mariani/debugger/README.md) and memory viewer (including a live viewer for the current BASIC program!) in separate windows
-- [AppleScript](/source/frontends/mariani/scripting/README.md) support
-- Numeric keypad joystick emulation
+- Separate windows for the [Debugger](/source/frontends/mariani/debugger/README.md) and a memory viewer (including a live viewer for the current BASIC program!)
+- [AppleScript](/source/frontends/mariani/scripting/README.md) support for automation
 
-Mariani should now be broadly useful, so please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into.
-
-### Roadmap
-
-Experimental support for printers is available in a [branch](https://github.com/sh95014/AppleWin/tree/printer-support). It needs considerable [upstream support](https://github.com/AppleWin/AppleWin/issues/1026) and is unmaintained.
+Please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into.
 
 ## Build Mariani
 
+Note that the default git branch for Mariani is `macos`, not `master`. The latter is kept clean for upstream contributions.
+
 ### Dependencies
 
-The easiest way to build Mariani is to satisfy the dependencies using [Homebrew](https://brew.sh). After you install Homebrew, pick up the required packages below:
+The only external library that Mariani requires is libslirp, most easily satisfied using [Homebrew](https://brew.sh). After you install Homebrew, pick it up below:
 
 ```
 brew install libslirp
 ```
-
-Note that the default branch for Mariani is `macos`, not `master`. This is so that the `master` branch can be kept clean for individual contributions upstream.
 
 ### Checkout
 
@@ -48,19 +43,9 @@ git clone https://github.com/sh95014/AppleWin.git --recursive
 
 Load up the Xcode project, make sure you select the "Mariani" scheme, and then target for "My Mac".
 
-"Mariani Universal" is the target used to build a universal (x86 and ARM) app, and will *not* build out of the box. Homebrew does not support universal libraries, so you'll have to follow [these instructions](https://medium.com/mkdir-awesome/how-to-install-x86-64-homebrew-packages-on-apple-m1-macbook-54ba295230f) on an Apple Silicon Mac to install the x86 versions of the relevant libraries. Here's a handy script to combine them into universal shared libraries:
-
-```
-#!/bin/sh
-
-lipo -create -arch arm64 /opt/homebrew/lib/$1 -arch x86_64 /usr/local/homebrew/lib/$1 -output $1
-```
-
-You'll need to run that script for everything that the "StaticWrapper Universal" target needs to link against, which are currently `libintl.a`, `libglib-2.0.a`, and `libslirp.a`. The Xcode project expects them to be placed in `../universal/` relative to itself but you can change that to your liking.
-
 ## Build sa2
 
-sa2 is the binary produced by Andrea's port. It's not the focus of this repository but it's a more "faithful" AppleWin and very useful to compare behaviors and bugs.
+sa2 is a command-line tool, basically identical to Andrea's Linux port. It's useful to compare behaviors and bugs.
 
 ### Dependencies
 
@@ -97,3 +82,69 @@ make
 ```
 
 Note that some of the settings (most of the ones stored in `~/.applewin/applewin.conf`) will affect both Mariani and sa2.
+
+## Build a Universal (x86 and Apple Silicon) Mariani
+
+"Mariani Universal" is the target used to build a universal (x86 and Apple Silicon) app, and will *not* build out of the box because Homebrew does not support universal libraries.
+
+### If You Have Both Machines
+
+On the x86 Mac, `brew install libslirp` and copy `libslirp.a`, `libintl.a`, and `libglib-2.0.a` from `/usr/local/lib` to your Apple Silicon Mac, perhaps in a folder named `x86_libs`.
+
+On the Apple Silicon Mac, `brew install libslirp`, then combine the libraries:
+
+```
+lipo -create -arch arm64 /opt/homebrew/lib/libslirp.a -arch x86_64 ~/Develop/x86_libs/libslirp.a -output ~/Develop/universal/libslirp.a
+lipo -create -arch arm64 /opt/homebrew/lib/libintl.a -arch x86_64 ~/Develop/x86_libs/libintl.a -output ~/Develop/universal/libintl.a
+lipo -create -arch arm64 /opt/homebrew/lib/libglib-2.0.a -arch x86_64 ~/Develop/x86_libs/libglib-2.0.a -output ~/Develop/universal/libglib-2.0.a
+```
+
+You can verify success using the `file` command:
+
+```
+$ file *
+libglib-2.0.a:              Mach-O universal binary with 2 architectures: [x86_64:current ar archive random library] [arm64]
+libglib-2.0.a (for architecture x86_64):	current ar archive random library
+libglib-2.0.a (for architecture arm64):	current ar archive random library
+libintl.a:                  Mach-O universal binary with 2 architectures: [x86_64:current ar archive random library] [arm64:current ar archive random library]
+libintl.a (for architecture x86_64):	current ar archive random library
+libintl.a (for architecture arm64):	current ar archive random library
+libslirp.a:                 Mach-O universal binary with 2 architectures: [x86_64:current ar archive random library] [arm64:current ar archive random library]
+libslirp.a (for architecture x86_64):	current ar archive random library
+libslirp.a (for architecture arm64):	current ar archive random library
+```
+
+The Xcode project expects them to be placed in `../universal/` relative to itself but you can change that to your liking.
+
+### If You Only Have an Apple Silicon Mac
+
+You'll have to follow [these instructions](https://gist.github.com/sh95014/36ca609c722d3998d57a44c1c5c90ab3) to install the x86 versions of the relevant libraries under Rosetta 2, which will likely stop working on macOS versions beyond 27.
+
+Once you've installed both versions of the required libraries, combine them:
+```
+lipo -create -arch arm64 /opt/homebrew/lib/libslirp.a -arch x86_64 /usr/local/homebrew/lib/libslirp.a -output ~/Develop/universal/libslirp.a
+lipo -create -arch arm64 /opt/homebrew/lib/libintl.a -arch x86_64 /usr/local/homebrew/lib/libintl.a -output ~/Develop/universal/libintl.a
+lipo -create -arch arm64 /opt/homebrew/lib/libglib-2.0.a -arch x86_64 /usr/local/homebrew/lib/libglib-2.0.a -output ~/Develop/universal/libglib-2.0.a
+```
+
+## FAQs
+
+### macOS says Mariani may be malicious software?!
+
+Recent versions of macOS ship with a security feature called Gatekeeper, which requires apps to be "notarized" or the scary warning will appear. Given the not-completely-clear legal status of emulating even decades-old hardware, I'm not going to risk my developer account to get Mariani notarized.
+
+You can disable the warning just for Mariani in Settings > Security & Privacy, or build Mariani yourself in Xcode.
+
+### Can I launch Mariani from the command line?
+
+If you installed Mariani in one of the usual places, you can launch it from the command line:
+
+```
+open -a Mariani --args -1 "/Users/sh95014/Karateka.dsk"
+```
+
+The command-line parameters after `--args` are passed to the AppleWin engine, in this case inserting a diskette into drive 1. Note that the full path of the diskette must be specified.
+
+### Do you support printers?
+
+Experimental support for printers is available in a [branch](https://github.com/sh95014/AppleWin/tree/printer-support). The full feature needs considerable [upstream support](https://github.com/AppleWin/AppleWin/issues/1026) and the branch is currently unmaintained.
