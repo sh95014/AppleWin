@@ -2,8 +2,6 @@
 
 Mariani is an emulator of the Apple ][ and //e computers for macOS. Click [here](https://sh95014.github.io/AppleWin/) for details if you just want to use it, the rest of this document is mainly for developers who wish to build their own version of the app.
 
-But if what you want is a macOS command-line app, you can build that too with the [instructions below](https://github.com/sh95014/AppleWin#build-sa2).
-
 ## Introduction
 
 Mariani is an unofficial native macOS UI for [AppleWin](https://github.com/AppleWin/AppleWin), by way of [Andrea](https://github.com/audetto)'s [Raspberry Pi port](https://github.com/audetto/AppleWin). Key goals of this project include a modern native macOS UI for the emulator, and broad compatibility with upstream code so we can easily pick up any future revisions.
@@ -15,8 +13,8 @@ Mariani supports most user-facing features of AppleWin, but additionally support
 - Native, universal macOS UI
 - Screen recording
 - Copy screenshot to pasteboard
-- Disk image browser, including syntax-highlighted listings for Applesoft and Integer BASIC, as well as hex viewer for other file types
-- Separate windows for the [Debugger](/source/frontends/mariani/debugger/README.md) and a memory viewer (including a live viewer for the current BASIC program!)
+- Disk image browser, including [syntax-highlighted listings](https://sh95014.github.io/AppleWin/images/basic.png) for Applesoft and Integer BASIC, as well as hex viewer for other file types
+- Separate windows for the [Debugger](/source/frontends/mariani/debugger/README.md) and a [memory viewer](https://sh95014.github.io/AppleWin/images/memory.png) (including a live viewer for the current BASIC program!)
 - [AppleScript](/source/frontends/mariani/scripting/README.md) support for automation
 
 Please [report any issues](https://github.com/sh95014/AppleWin/issues) you run into.
@@ -27,7 +25,7 @@ Note that the default git branch for Mariani is `macos`, not `master`. The latte
 
 ### Dependencies
 
-The only external library that Mariani requires is libslirp, most easily satisfied using [Homebrew](https://brew.sh). After you install Homebrew, pick it up below:
+The only external library that Mariani requires is `libslirp`, most easily satisfied using [Homebrew](https://brew.sh). After you install Homebrew, pick it up below:
 
 ```
 brew install libslirp
@@ -133,7 +131,7 @@ lipo -create -arch arm64 /opt/homebrew/lib/libglib-2.0.a -arch x86_64 /usr/local
 
 Recent versions of macOS ship with a security feature called Gatekeeper, which requires apps to be "notarized" or the scary warning will appear. Given the not-completely-clear legal status of emulating even decades-old hardware, I'm not going to risk my developer account to get Mariani notarized.
 
-You can disable the warning just for Mariani in Settings > Security & Privacy, or build Mariani yourself in Xcode.
+You can bypass the warning just for Mariani in Settings > Security & Privacy, or build Mariani yourself in Xcode.
 
 ### Can I launch Mariani from the command line?
 
@@ -147,4 +145,4 @@ The command-line parameters after `--args` are passed to the AppleWin engine, in
 
 ### Do you support printers?
 
-Experimental support for printers is available in a [branch](https://github.com/sh95014/AppleWin/tree/printer-support). The full feature needs considerable [upstream support](https://github.com/AppleWin/AppleWin/issues/1026) and the branch is currently unmaintained.
+Experimental support for printers is available in an [unmaintained branch](https://github.com/sh95014/AppleWin/tree/printer-support). The full feature needs considerable [upstream support](https://github.com/AppleWin/AppleWin/issues/1026).
