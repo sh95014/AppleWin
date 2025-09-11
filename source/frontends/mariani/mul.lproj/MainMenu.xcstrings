@@ -325,6 +325,18 @@
         }
       }
     },
+    "F3i-G1-HHY.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Reboot Emulator\"; ObjectID = \"F3i-G1-HHY\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Reboot Emulator"
+          }
+        }
+      }
+    },
     "FCU-LR-rG3.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"New Disk Image…\"; ObjectID = \"FCU-LR-rG3\";",
       "extractionState" : "extracted_with_value",
@@ -555,6 +567,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "螢幕快照"
+          }
+        }
+      }
+    },
+    "MB0-IJ-zRW.ibShadowedToolTip" : {
+      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Control-Reset\"; ObjectID = \"MB0-IJ-zRW\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Control-Reset"
           }
         }
       }

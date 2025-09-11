@@ -42,7 +42,7 @@
 using namespace DiskImgLib;
 
 #define STATUS_BAR_HEIGHT           32
-#define STATUS_BAR_LEFT_MARGIN      5
+#define STATUS_BAR_DIVIDER_MARGIN   3
 #define STATUS_BAR_BOTTOM_MARGIN    2
 
 // needs to match tag of Edit menu item in MainMenu.xib
@@ -56,6 +56,7 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSMenuItem *showHideStatusBarMenuItem;
 @property (strong) IBOutlet NSMenu *displayTypeMenu;
 @property (strong) IBOutlet NSView *statusBarView;
+@property (strong) IBOutlet NSBox *statusBarDivider;
 @property (strong) IBOutlet NSTextField *statusLabel;
 @property (strong) IBOutlet NSButton *screenRecordingButton;
 
@@ -651,6 +652,24 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Screenshot saved to ‘%s’", @""), url.fileSystemRepresentation]];
 }
 
+#pragma mark - Status bar actions
+
+- (IBAction)rebootEmulatorIfConfirmed:(id)sender {
+    NSAlert *alert = [[NSAlert alloc] init];
+    
+    alert.messageText = NSLocalizedString(@"Reboot Emulator", @"");
+    alert.informativeText = NSLocalizedString(@"This will restart the emulation and any unsaved changes will be lost.", @"");
+    alert.alertStyle = NSAlertStyleWarning;
+    alert.icon = [NSImage imageWithSystemSymbolName:@"hand.raised" accessibilityDescription:@""];
+    [alert addButtonWithTitle:NSLocalizedString(@"Reboot Emulator", @"")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertFirstButtonReturn) {
+            [self rebootEmulatorAction:self];
+        }
+    }];
+}
+
 #pragma mark - Helpers because I can't figure out how to make 'frame' properly global
 
 - (void)applyVideoModeChange {
@@ -670,7 +689,9 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     [self.openDiskImageMenu removeAllItems];
     
-    NSInteger drivesRightEdge = STATUS_BAR_LEFT_MARGIN;
+    const NSInteger statusBarLeftMargin = CGRectGetMaxX(self.statusBarDivider.frame) + STATUS_BAR_DIVIDER_MARGIN;
+    
+    NSInteger drivesRightEdge = statusBarLeftMargin;
     NSMutableArray *driveButtons = [NSMutableArray array];
     NSInteger position = 0;
     CardManager &cardManager = GetCardMgr();
@@ -683,7 +704,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                 
                 // offset each drive light button from the left
                 CGRect driveButtonFrame = driveButton.frame;
-                driveButtonFrame.origin.x = STATUS_BAR_LEFT_MARGIN + position * [MarianiDriveButton buttonWidth];
+                driveButtonFrame.origin.x = statusBarLeftMargin + position * [MarianiDriveButton buttonWidth];
                 driveButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
                 driveButton.frame = driveButtonFrame;
                 drivesRightEdge = CGRectGetMaxX(driveButtonFrame);
@@ -718,7 +739,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                     
                     // offset each drive light button from the left
                     CGRect driveButtonFrame = driveButton.frame;
-                    driveButtonFrame.origin.x = STATUS_BAR_LEFT_MARGIN + position * [MarianiDriveButton buttonWidth];
+                    driveButtonFrame.origin.x = statusBarLeftMargin + position * [MarianiDriveButton buttonWidth];
                     driveButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
                     driveButton.frame = driveButtonFrame;
                     drivesRightEdge = CGRectGetMaxX(driveButtonFrame);
@@ -860,8 +881,9 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 - (CGSize)minimumContentSizeAtScale:(double)scale {
     NSSize minimumSize;
     // width of all the things in the status bar...
+    const NSInteger statusBarLeftMargin = CGRectGetMaxX(self.statusBarDivider.frame) + STATUS_BAR_DIVIDER_MARGIN;
     minimumSize.width =
-        STATUS_BAR_LEFT_MARGIN +
+        statusBarLeftMargin +
         [MarianiDriveButton buttonWidth] * self.driveButtons.count +           // drive light buttons
         40 +                                                                        // a healthy margin
         (self.window.frame.size.width - self.screenRecordingButton.frame.origin.x); // buttons on the right
