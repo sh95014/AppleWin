@@ -383,6 +383,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     [NSApp terminate:self];
 }
 
+- (IBAction)terminateIfConfirmed:(id)sender {
+    NSLog(@"Terminating due to ⌘Q...");
+    [self windowShouldClose:self.window];
+}
+
 #pragma mark - File menu actions
 
 - (IBAction)createDiskImageAction:(id)sender {

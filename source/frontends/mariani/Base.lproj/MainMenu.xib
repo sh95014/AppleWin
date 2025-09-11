@@ -77,7 +77,7 @@
                             <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
                             <menuItem title="Quit Mariani" keyEquivalent="q" id="4sb-4s-VLi">
                                 <connections>
-                                    <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
+                                    <action selector="terminateIfConfirmed:" target="Voe-Tx-rLC" id="Wsc-U2-5hz"/>
                                 </connections>
                             </menuItem>
                         </items>
