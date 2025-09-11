@@ -152,19 +152,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         Video &video = GetVideo();
         switch (event.keyCode) {
             case kVK_F2: {
-                NSAlert *alert = [[NSAlert alloc] init];
-                
-                alert.messageText = NSLocalizedString(@"Reboot?", @"");
-                alert.informativeText = NSLocalizedString(@"This will restart the emulation and any unsaved changes will be lost.", @"");
-                alert.alertStyle = NSAlertStyleWarning;
-                alert.icon = [NSImage imageWithSystemSymbolName:@"hand.raised" accessibilityDescription:@""];
-                [alert addButtonWithTitle:NSLocalizedString(@"Reboot", @"")];
-                [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
-                [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
-                    if (returnCode == NSAlertFirstButtonReturn) {
-                        [self rebootEmulatorAction:self];
-                    }
-                }];
+                [self rebootEmulatorIfConfirmed:self];
                 break;
             }
             case kVK_F5: {
@@ -666,7 +654,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 - (IBAction)rebootEmulatorIfConfirmed:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
     
-    alert.messageText = NSLocalizedString(@"Reboot Emulator", @"");
+    alert.messageText = NSLocalizedString(@"Reboot?", @"");
     alert.informativeText = NSLocalizedString(@"This will restart the emulation and any unsaved changes will be lost.", @"");
     alert.alertStyle = NSAlertStyleWarning;
     alert.icon = [NSImage imageWithSystemSymbolName:@"hand.raised" accessibilityDescription:@""];

@@ -334,6 +334,12 @@
             "state" : "new",
             "value" : "Reboot Emulator"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重啟模擬器"
+          }
         }
       }
     },
@@ -578,6 +584,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "Control-Reset"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "Control-Reset"
           }
         }
