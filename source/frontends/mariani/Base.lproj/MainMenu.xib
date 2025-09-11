@@ -24,6 +24,8 @@
                 <outlet property="screenRecordingButton" destination="DSR-xi-Jep" id="NmW-pv-4Ab"/>
                 <outlet property="showHideStatusBarMenuItem" destination="Qa1-0n-abD" id="jQF-tx-pGh"/>
                 <outlet property="statusBarDivider" destination="de4-O4-xS2" id="q2X-Un-qaH"/>
+                <outlet property="statusBarPowerButton" destination="F3i-G1-HHY" id="XGV-Ml-3iE"/>
+                <outlet property="statusBarResetButton" destination="MB0-IJ-zRW" id="n6P-cB-NoA"/>
                 <outlet property="statusBarView" destination="Mnw-rf-Y9b" id="vHG-8g-HKh"/>
                 <outlet property="statusLabel" destination="v5N-tl-es5" id="dzw-S4-KXI"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>

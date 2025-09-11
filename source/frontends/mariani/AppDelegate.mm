@@ -56,6 +56,8 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSMenuItem *showHideStatusBarMenuItem;
 @property (strong) IBOutlet NSMenu *displayTypeMenu;
 @property (strong) IBOutlet NSView *statusBarView;
+@property (strong) IBOutlet NSButton *statusBarPowerButton;
+@property (strong) IBOutlet NSButton *statusBarResetButton;
 @property (strong) IBOutlet NSBox *statusBarDivider;
 @property (strong) IBOutlet NSTextField *statusLabel;
 @property (strong) IBOutlet NSButton *screenRecordingButton;
@@ -86,6 +88,7 @@ using namespace DiskImgLib;
 @end
 
 static void DiskImgMsgHandler(const char *file, int line, const char *msg);
+const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 @implementation AppDelegate
 
@@ -134,6 +137,12 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     
     [self reconfigureDrives];
+    
+    // macOS 11 doesn't have the SF Symbols we want, so fall back to available ones
+    if (![theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
+        self.statusBarPowerButton.image = [NSImage imageWithSystemSymbolName:@"power" accessibilityDescription:@""];
+        self.statusBarResetButton.image = [NSImage imageWithSystemSymbolName:@"arrow.clockwise" accessibilityDescription:@""];
+    }
     
     [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent * _Nullable(NSEvent * _Nonnull event) {
         const BOOL shift = (event.modifierFlags & NSEventModifierFlagShift) != 0;
