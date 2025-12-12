@@ -1,7 +1,5 @@
 include(FindPkgConfig)
 
-pkg_search_module(ZLIB REQUIRED zlib)
-
 if (NOT WIN32)
   pkg_search_module(SLIRP slirp)
 
@@ -41,6 +39,7 @@ set(SOURCE_FILES
   Tfe/IPRaw.cpp
   Tfe/DNS.cpp
 
+  Debugger/BreakpointCard.cpp
   Debugger/Debug.cpp
   Debugger/Debugger_Help.cpp
   Debugger/Debugger_Color.cpp
@@ -199,6 +198,7 @@ set(HEADER_FILES
   DiskLog.h
   Interface.h
 
+  Debugger/BreakpointCard.h
   Debugger/Debug.h
   Debugger/Debugger_Color.h
   Debugger/Debugger_Console.h
@@ -251,7 +251,6 @@ target_include_directories(appleii PRIVATE
   ${PCAP_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${SLIRP_INCLUDE_DIRS}
-  ${ZLIB_INCLUDE_DIRS}
   Debugger
   )
 
@@ -281,7 +280,6 @@ target_link_libraries(appleii PUBLIC
 target_link_directories(appleii PUBLIC
   ${PCAP_LIBRARY_DIRS}
   ${SLIRP_LIBRARY_DIRS}
-  ${ZLIB_LIBRARY_DIRS}
   )
 
 target_compile_options(appleii PUBLIC

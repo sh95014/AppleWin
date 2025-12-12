@@ -358,7 +358,7 @@ void Win32Frame::DrawButton (HDC passdc, int number) {
 
     ExtTextOut(dc,x+offset+22,rect.top,ETO_CLIPPED,&rect,
                pszBaseName,
-               MIN(8,strlen(pszBaseName)),
+               MIN(8,(UINT)strlen(pszBaseName)),
                NULL);
   }
   if (!passdc)
@@ -743,14 +743,14 @@ void Win32Frame::DrawTrackSector(HDC dc, UINT slot, int drive1Track, int drive1S
 
 	std::string text;
 	text = "T" + strTrackDrive1;
-	TextOut(dc, x + 6, y + yOffsetSlotNTrackInfo, text.c_str(), text.length());
+	TextOut(dc, x + 6, y + yOffsetSlotNTrackInfo, text.c_str(), (int)text.length());
 	text = "S" + strSectorDrive1;
-	TextOut(dc, x + 6, y + yOffsetSlotNSectorInfo, text.c_str(), text.length());
+	TextOut(dc, x + 6, y + yOffsetSlotNSectorInfo, text.c_str(), (int)text.length());
 
 	text = "T" + strTrackDrive2;
-	TextOut(dc, x + 26, y + yOffsetSlotNTrackInfo, text.c_str(), text.length());
+	TextOut(dc, x + 26, y + yOffsetSlotNTrackInfo, text.c_str(), (int)text.length());
 	text = "S" + strSectorDrive2;
-	TextOut(dc, x + 26, y + yOffsetSlotNSectorInfo, text.c_str(), text.length());
+	TextOut(dc, x + 26, y + yOffsetSlotNSectorInfo, text.c_str(), (int)text.length());
 }
 
 // Feature Request #201 Show track status
@@ -797,7 +797,7 @@ void Win32Frame::FrameDrawDiskStatus( HDC passdc )
 			: StrFormat( "%s/%s    ", strTrackDrive2.c_str(), strSectorDrive2.c_str() );
 
 		SetTextColor(dc, g_aDiskFullScreenColorsLED[ DISK_STATUS_READ ] );
-		TextOut(dc, x, y, text.c_str(), text.length());
+		TextOut(dc, x, y, text.c_str(), (int)text.length());
 
 		SetTextColor(dc, g_aDiskFullScreenColorsLED[g_eStatusDrive1]);
 		TextOut(dc, x + 3, y + smallfontHeight, "1", 1);
@@ -892,14 +892,14 @@ void Win32Frame::DrawStatusArea(HDC passdc, int drawflags)
 			if (pCurrentAppModeText && pNewAppModeText != pCurrentAppModeText)
 			{
 				SetTextColor(dc, RGB(0,0,0));
-				TextOut(dc, x+BUTTONCX/2, y+13, pCurrentAppModeText, strlen(pCurrentAppModeText));
+				TextOut(dc, x+BUTTONCX/2, y+13, pCurrentAppModeText, (int)strlen(pCurrentAppModeText));
 				pCurrentAppModeText = NULL;
 			}
 
 			if (pNewAppModeText)
 			{
 				SetTextColor(dc, RGB(255,255,255));
-				TextOut(dc, x+BUTTONCX/2, y+13, pNewAppModeText, strlen(pNewAppModeText));
+				TextOut(dc, x+BUTTONCX/2, y+13, pNewAppModeText, (int)strlen(pNewAppModeText));
 				pCurrentAppModeText = pNewAppModeText;
 			}
 		}
@@ -940,7 +940,7 @@ void Win32Frame::DrawStatusArea(HDC passdc, int drawflags)
 				if (GetCardMgr().QuerySlot(SLOT5) == CT_Disk2)
 				{
 					std::string slot5 = "Slot 5:";
-					TextOut(dc, x + 15, y + yOffsetSlot5Label, slot5.c_str(), slot5.length());
+					TextOut(dc, x + 15, y + yOffsetSlot5Label, slot5.c_str(), (int)slot5.length());
 					TextOut(dc, x + 7, y + yOffsetSlot5LEDNumbers, "1", 1);
 					TextOut(dc, x + 27, y + yOffsetSlot5LEDNumbers, "2", 1);
 				}
@@ -1235,7 +1235,7 @@ LRESULT Win32Frame::WndProc(
 		if ((wparam >= VK_F1) && (wparam <= VK_F8) && (buttondown == -1))
 		{
 			SetUsingCursor(FALSE);
-			buttondown = wparam-VK_F1;
+			buttondown = (int)(wparam-VK_F1);
 			if (g_bIsFullScreen && (buttonover != -1)) {
 				if (buttonover != buttondown)
 				EraseButton(buttonover);
@@ -1385,7 +1385,7 @@ LRESULT Win32Frame::WndProc(
 		}
 		else if (g_nAppMode == MODE_DEBUG)
 		{		
-			DebuggerProcessKey(wparam); // Debugger already active, re-direct key to debugger
+			DebuggerProcessKey((int)wparam); // Debugger already active, re-direct key to debugger
 		}
 		break;
 
@@ -1414,18 +1414,18 @@ LRESULT Win32Frame::WndProc(
 		{
 			buttondown = -1;
 			if (g_bIsFullScreen)
-				EraseButton(wparam-VK_F1);
+				EraseButton((int)(wparam-VK_F1));
 			else
-				DrawButton((HDC)0,wparam-VK_F1);
+				DrawButton((HDC)0, (int)(wparam-VK_F1));
 
-			const int iButton = wparam-VK_F1;
+			const int iButton = (int)(wparam-VK_F1);
 			if (KeybGetCtrlStatus() && (wparam == VK_F3 || wparam == VK_F4))	// Ctrl+F3/F4 for drive pop-up menu (GH#817)
 			{
 				KeybUpdateCtrlShiftStatus(); // #1364
 				POINT pt;		// location of mouse click
 				pt.x = buttonx + BUTTONCX/2;
 				pt.y = buttony + BUTTONCY/2 + iButton * BUTTONCY;
-				const int iDrive = wparam - VK_F3;
+				const int iDrive = (int)(wparam - VK_F3);
 				ProcessDiskPopupMenu( window, pt, iDrive );
 
 				FrameRefreshStatus(DRAW_LEDS | DRAW_BUTTON_DRIVES | DRAW_DISK_STATUS);
@@ -1670,8 +1670,8 @@ LRESULT Win32Frame::WndProc(
 				if (GetCardMgr().QuerySlot(SLOT6) == CT_Disk2)
 					pDisk2Slot6 = dynamic_cast<Disk2InterfaceCard*>(GetCardMgr().GetObj(SLOT6));
 
-				std::string slot5 = pDisk2Slot5 ? pDisk2Slot5->GetFullDiskFilename(pInfo->hdr.idFrom) : "";
-				std::string slot6 = pDisk2Slot6 ? pDisk2Slot6->GetFullDiskFilename(pInfo->hdr.idFrom) : "";
+				std::string slot5 = pDisk2Slot5 ? pDisk2Slot5->GetFullDiskFilename((int)(pInfo->hdr.idFrom)) : "";
+				std::string slot6 = pDisk2Slot6 ? pDisk2Slot6->GetFullDiskFilename((int)(pInfo->hdr.idFrom)) : "";
 
 				if (pDisk2Slot5)
 				{
@@ -1717,25 +1717,35 @@ LRESULT Win32Frame::WndProc(
 				driveTooltip += "\n";
 				// hex sector
 				driveTooltip += "S$";
-				char sector[3] = "??";
-				if (g_nSector[slot][0] >= 0) sprintf_s(sector, "%02X", g_nSector[slot][0]);
-				driveTooltip += sector;
+
+				const char* unknown = "??";
+
+				if (g_nSector[slot][0] >= 0)
+					driveTooltip += StrFormat("%02X", g_nSector[slot][0]);
+				else
+					driveTooltip += unknown;
+
 				// dec sector
 				driveTooltip += " (S";
-				strcpy(sector, "??");
-				if (g_nSector[slot][0] >= 0) sprintf_s(sector, "%02d", g_nSector[slot][0]);
-				driveTooltip += sector;
+				if (g_nSector[slot][0] >= 0)
+					driveTooltip += StrFormat("%02d", g_nSector[slot][0]);
+				else
+					driveTooltip += unknown;
 				driveTooltip += ")";
+
 				// hex sector
 				driveTooltip += "\tS$";
-				strcpy(sector, "??");
-				if (g_nSector[slot][1] >= 0) sprintf_s(sector, "%02X", g_nSector[slot][1]);
-				driveTooltip += sector;
+				if (g_nSector[slot][1] >= 0)
+					driveTooltip += StrFormat("%02X", g_nSector[slot][1]);
+				else
+					driveTooltip += unknown;
+
 				// dec sector
 				driveTooltip += " (S";
-				strcpy(sector, "??");
-				if (g_nSector[slot][1] >= 0) sprintf_s(sector, "%02d", g_nSector[slot][1]);
-				driveTooltip += sector;
+				if (g_nSector[slot][1] >= 0)
+					driveTooltip += StrFormat("%02d", g_nSector[slot][1]);
+				else
+					driveTooltip += unknown;
 				driveTooltip += ")";
 
 				pInfo->lpszText = (LPTSTR)driveTooltip.c_str();
@@ -2042,7 +2052,18 @@ void Win32Frame::ProcessButtonClick(int button, bool bFromButtonUI /*=false*/)
 				dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(SLOT6)).Boot();
 
 			LogFileTimeUntilFirstKeyReadReset();
-			g_nAppMode = MODE_RUNNING;
+
+			if (!DebugQueryAnyBreakpointsSet())
+			{
+				g_nAppMode = MODE_RUNNING;
+			}
+			else
+			{
+				// EG. When using -debugger-auto-run <file.txt> (to set breakpoints), then we want to be MODE_STEPPING when leaving MODE_LOGO
+				DebugBegin();
+				DebugExitDebugger();		// Exit debugger, switch to MODE_STEPPING
+				g_bDebuggerEatKey = false;	// Don't "eat" the next keypress when leaving the debugger
+			}
 		}
 		else if ((g_nAppMode == MODE_RUNNING) || (g_nAppMode == MODE_DEBUG) || (g_nAppMode == MODE_STEPPING) || (g_nAppMode == MODE_PAUSED))
 		{
@@ -2925,9 +2946,11 @@ void Win32Frame::SetupTooltipControls(void)
 // NB. GetSystemMetrics(SM_CXPADDEDBORDER) returns 0 for Win7, when built with VS2008 (see GH#571)
 void Win32Frame::GetWidthHeight(int& nWidth, int& nHeight)
 {
+	const int kWidthFix = 1;	// Fix for Win32 Subsystem Version 6.00 (GH#1438)
+
 	nWidth  = g_nViewportCX + VIEWPORTX*2
 						    + BUTTONCX
-						    + (GetSystemMetrics(SM_CXFIXEDFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER)) * 2;
+						    + (GetSystemMetrics(SM_CXFIXEDFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER) + kWidthFix) * 2;
 	nHeight = g_nViewportCY + VIEWPORTY*2
 						    + (GetSystemMetrics(SM_CYFIXEDFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER)) * 2	// NB. No SM_CYPADDEDBORDER
 						    + GetSystemMetrics(SM_CYCAPTION);

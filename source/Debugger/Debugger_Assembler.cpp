@@ -1053,7 +1053,7 @@ bool AssemblerPokeOpcodeAddress( const WORD nBaseAddress )
 	int nTargetValue = m_nAsmTargetValue;
 
 	int iOpcode;
-	int nOpcodes = m_vAsmOpcodes.size();
+	const size_t nOpcodes = m_vAsmOpcodes.size();
 
 	for ( iOpcode = 0; iOpcode < nOpcodes; iOpcode++ )
 	{
@@ -1067,7 +1067,7 @@ bool AssemblerPokeOpcodeAddress( const WORD nBaseAddress )
 
 			if (m_bDelayedTargetsDirty)
 			{			
-				int nDelayedTargets = m_vDelayedTargets.size();
+				size_t nDelayedTargets = m_vDelayedTargets.size();
 				DelayedTarget_t *pTarget = & m_vDelayedTargets.at( nDelayedTargets - 1 );
 
 				pTarget->m_nOpcode = nOpcode;
@@ -1215,7 +1215,7 @@ bool AssemblerGetArgs( int iArg, int nArgs, WORD nBaseAddress )
 		{
 		}
 		else
-		if (iToken == TOKEN_SEMI) // comment
+		if (iToken == TOKEN_COMMENT_EOL) // comment
 		{
 			break;
 		}
@@ -1419,7 +1419,7 @@ bool AssemblerUpdateAddressingMode()
 //===========================================================================
 int AssemblerDelayedTargetsSize()
 {
-	int nSize = m_vDelayedTargets.size();
+	int nSize = (int) m_vDelayedTargets.size();
 	return nSize;
 }
 
@@ -1528,7 +1528,7 @@ bool Assemble( int iArg, int nArgs, WORD nAddress )
 		}
 	}
 
-	int nOpcodes = m_vAsmOpcodes.size();
+	const size_t nOpcodes = m_vAsmOpcodes.size();
 	if (! nOpcodes)
 	{
 		// Check for assembler directive
