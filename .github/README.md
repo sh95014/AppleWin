@@ -25,10 +25,10 @@ Note that the default git branch for Mariani is `macos`, not `master`. The latte
 
 ### Dependencies
 
-The only external library that Mariani requires are `boost` and `libslirp`, most easily satisfied using [Homebrew](https://brew.sh). After you install Homebrew, pick it up below:
+The only external library that Mariani requires is `libslirp`, most easily satisfied using [Homebrew](https://brew.sh). After you install Homebrew, pick it up below:
 
 ```
-brew install boost libslirp
+brew install libslirp
 ```
 
 ### Checkout
@@ -50,7 +50,7 @@ sa2 is a command-line tool, basically identical to Andrea's Linux port. It's use
 sa2 needs more external libraries than Mariani, which you can grab for macOS using [Homebrew](https://brew.sh). After you install Homebrew, pick up the required packages below:
 
 ```
-brew install boost cmake pkgconfig libyaml minizip libslirp libpcap sdl2 sdl2_image
+brew install cmake pkgconfig libyaml minizip libslirp libpcap sdl2 sdl2_image
 ```
 
 ### Checkout

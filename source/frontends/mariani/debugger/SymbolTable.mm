@@ -9,7 +9,6 @@
 #import "StdAfx.h"
 #import "Debugger_Types.h"
 #import "Debugger_Symbols.h"
-#import <boost/algorithm/string/predicate.hpp>
 
 #define SORT_SYMBOL_TABLE
 
