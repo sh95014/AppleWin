@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		970141F72E076AF900E2A119 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 970141F62E076AF900E2A119 /* Localizable.xcstrings */; };
 		970141F82E076AF900E2A119 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 970141F62E076AF900E2A119 /* Localizable.xcstrings */; };
+		9704AC572EFEA7810012E32D /* yamlmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9704AC562EFEA7810012E32D /* yamlmap.cpp */; };
+		9704AC5A2EFEA7810012E32D /* yamlmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9704AC562EFEA7810012E32D /* yamlmap.cpp */; };
 		97270E782EECC1F3005D3DD7 /* BreakpointCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 97270E752EECC1F3005D3DD7 /* BreakpointCard.h */; };
 		97270E832EECC283005D3DD7 /* Debugger_Commands.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB714277A1BA40002A6C3 /* Debugger_Commands.cpp */; };
 		97270E842EECC283005D3DD7 /* Debugger_Parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B09AB709277A1BA30002A6C3 /* Debugger_Parser.cpp */; };
@@ -756,6 +758,8 @@
 		970141F52E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/MemoryViewerWindow.xcstrings; sourceTree = "<group>"; };
 		970141F62E076AF900E2A119 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		970141F92E076AF900E2A119 /* mul */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = mul; path = mul.lproj/Preferences.xcstrings; sourceTree = "<group>"; };
+		9704AC552EFEA7810012E32D /* yamlmap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = yamlmap.h; path = source/frontends/common2/yamlmap.h; sourceTree = "<group>"; };
+		9704AC562EFEA7810012E32D /* yamlmap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = yamlmap.cpp; path = source/frontends/common2/yamlmap.cpp; sourceTree = "<group>"; };
 		97270E752EECC1F3005D3DD7 /* BreakpointCard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BreakpointCard.h; path = source/Debugger/BreakpointCard.h; sourceTree = "<group>"; };
 		97270E762EECC1F3005D3DD7 /* BreakpointCard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BreakpointCard.cpp; path = source/Debugger/BreakpointCard.cpp; sourceTree = "<group>"; };
 		973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSWindow+AccessoryView.h"; sourceTree = "<group>"; };
@@ -1741,6 +1745,8 @@
 				B049E840277B61CB00FC14A3 /* speed.h */,
 				B049E83D277B61AC00FC14A3 /* utils.cpp */,
 				B049E83C277B61AC00FC14A3 /* utils.h */,
+				9704AC562EFEA7810012E32D /* yamlmap.cpp */,
+				9704AC552EFEA7810012E32D /* yamlmap.h */,
 			);
 			name = common2;
 			sourceTree = "<group>";
@@ -3102,6 +3108,7 @@
 				B0F5270B2A2C1F2200288820 /* SymbolTable.mm in Sources */,
 				B0F5270A2A2C1F2200288820 /* HexDigitFormatter.m in Sources */,
 				B00ECB98279EEB600041E16C /* speed.cpp in Sources */,
+				9704AC5A2EFEA7810012E32D /* yamlmap.cpp in Sources */,
 				B00ECB9A279EEB600041E16C /* AppDelegate.mm in Sources */,
 				B00ECB9D279EEB600041E16C /* ptreeregistry.cpp in Sources */,
 				97F4E7FB2E0B1AC800541725 /* DiskMakerWindowController.mm in Sources */,
@@ -3168,6 +3175,7 @@
 				B0F526FC2A2C1F2100288820 /* SymbolTable.mm in Sources */,
 				B0F526FB2A2C1F2100288820 /* HexDigitFormatter.m in Sources */,
 				B049E843277B61CB00FC14A3 /* speed.cpp in Sources */,
+				9704AC572EFEA7810012E32D /* yamlmap.cpp in Sources */,
 				B032DE26277A0C23006DC0F7 /* AppDelegate.mm in Sources */,
 				B049E855277B702100FC14A3 /* ptreeregistry.cpp in Sources */,
 				97F4E8002E0B1AC800541725 /* DiskMakerWindowController.mm in Sources */,
