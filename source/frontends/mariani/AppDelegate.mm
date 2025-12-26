@@ -76,6 +76,7 @@ using namespace DiskImgLib;
 @property NSArray *driveButtons;
 @property BOOL hasStatusBar;
 @property (readonly) double statusBarHeight;
+@property CGFloat fullScreenScale;
 
 @property (strong) NSOpenPanel *tapeOpenPanel;
 @property (strong) NSOpenPanel *stateOpenPanel;
@@ -207,6 +208,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         [self.window setFrame:frame display:YES animate:NO];
     }];
     
+    if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
+        // force dark mode because a light mode status bar looks odd in full screen
+        NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    }
+    
     [self.emulatorVC start];
 }
 
@@ -260,6 +266,31 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (void)windowDidResignKey:(NSNotification *)notification {
     self.editCopyMenu.title = NSLocalizedString(@"Copy", @"");
+}
+
+- (void)windowWillEnterFullScreen:(NSNotification *)notification {
+    // force dark mode because a light mode status bar looks odd in full screen
+    NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
+    
+    self.fullScreenScale = -1;
+}
+
+- (void)windowDidExitFullScreen:(NSNotification *)notification {
+    // restore user-selected light/dark mode
+    NSApp.appearance = nil;
+    
+    // make EmulatorView conform to the window we've just sized to
+    CGRect emulatorFrame = self.window.contentView.bounds;
+    if (self.hasStatusBar) {
+        emulatorFrame.origin.y += STATUS_BAR_HEIGHT;
+        emulatorFrame.size.height -= STATUS_BAR_HEIGHT;
+    }
+    [self.emulatorVC.view setFrame:emulatorFrame];
+    
+    // adopt whatever new scale the user chose while full-screen
+    if (self.fullScreenScale > 0) {
+        [self.window setFrame:[self windowRectAtScale:self.fullScreenScale] display:YES animate:YES];
+    }
 }
 
 #pragma mark - NSOpenSavePanelDelegate
@@ -548,13 +579,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         // windowed
         const double statusBarHeight = STATUS_BAR_HEIGHT;
         if (self.hasStatusBar) {
-            self.showHideStatusBarMenuItem.title = NSLocalizedString(@"Hide Status Bar", @"");
             emulatorFrame.origin.y = statusBarHeight;
             windowFrame.size.height += statusBarHeight;
             windowFrame.origin.y -= statusBarHeight;
         }
         else {
-            self.showHideStatusBarMenuItem.title = NSLocalizedString(@"Show Status Bar", @"");
             emulatorFrame.origin.y = 0;
             windowFrame.size.height -= statusBarHeight;
             windowFrame.origin.y += statusBarHeight;
@@ -564,6 +593,9 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         // tries to resize its children when it's being resized.
         [self.window setFrame:windowFrame display:YES animate:NO];
     }
+    self.showHideStatusBarMenuItem.title = self.hasStatusBar ?
+        NSLocalizedString(@"Hide Status Bar", @"") :
+        NSLocalizedString(@"Show Status Bar", @"");
     [self.emulatorVC.view setFrame:emulatorFrame];
 }
 
@@ -591,35 +623,44 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (IBAction)defaultSizeAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-
-    CGRect frame = [self windowRectAtScale:1.5];
-    [self.window setFrame:frame display:YES animate:NO];
+    [self setWindowScale:1.5];
 }
 
 - (IBAction)actualSizeAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-
-    CGRect frame = [self windowRectAtScale:1];
-    [self.window setFrame:frame display:YES animate:NO];
+    [self setWindowScale:1];
 }
 
 - (IBAction)doubleSizeAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-
-    CGRect frame = [self windowRectAtScale:2];
-    [self.window setFrame:frame display:YES animate:NO];
+    [self setWindowScale:2];
 }
 
 - (IBAction)increaseSizeAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    [self scaleWindowByFactor:1.2];
+    if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
+        double scale = self.emulatorVC.view.frame.size.width / GetVideo().GetFrameBufferBorderlessWidth();
+        [self setWindowScale:scale * 1.2];
+    }
+    else {
+        [self scaleWindowByFactor:1.2];
+    }
 }
 
 - (IBAction)decreaseSizeAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
 
-    [self scaleWindowByFactor:0.8];
+    if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
+        double scale = 0.8 * (self.emulatorVC.view.frame.size.width / GetVideo().GetFrameBufferBorderlessWidth());
+        if (scale < 1) {
+            scale = 1;
+        }
+        [self setWindowScale:scale];
+    }
+    else {
+        [self scaleWindowByFactor:0.8];
+    }
 }
 
 #pragma mark - Window menu actions
@@ -766,7 +807,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     if (self.driveButtons.count != oldDriveLightButtonsCount) {
         // constrain our window to not allow it to be resized so small that our
         // status bar buttons overlap
-        [self.window setContentMinSize:[self minimumContentSizeAtScale:1]];
+        [self.window setContentMinSize:[self minimumWindowSizeAtScale:1]];
     }
     
     [self updateDriveLights];
@@ -881,7 +922,36 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     return (name != nil) ? name : NSLocalizedString(@"Unknown", @"");
 }
 
-- (CGSize)minimumContentSizeAtScale:(double)scale {
+- (void)setWindowScale:(double)scale {
+    if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
+        CGSize availSize = self.window.frame.size;
+        availSize.height -= self.statusBarHeight;
+        
+        Video &video = GetVideo();
+        CGFloat width = video.GetFrameBufferBorderlessWidth() * scale;
+        CGFloat height = video.GetFrameBufferBorderlessHeight() * scale;
+        
+        self.fullScreenScale = scale;
+        if (width > availSize.width || height > availSize.height) {
+            // clamp to availRect, preserving aspect ratio
+            CGFloat aspectRatio = MIN(availSize.width / width, availSize.height / height);
+            width *= aspectRatio;
+            height *= aspectRatio;
+            self.fullScreenScale = width / video.GetFrameBufferBorderlessWidth();
+        }
+        CGRect frame = CGRectMake(floorf((availSize.width - width) / 2),
+                                  self.statusBarHeight + floorf((availSize.height - height) / 2),
+                                  width,
+                                  height);
+        [self.emulatorVC.view setFrame:frame];
+    }
+    else {
+        CGRect frame = [self windowRectAtScale:scale];
+        [self.window setFrame:frame display:YES animate:NO];
+    }
+}
+
+- (CGSize)minimumWindowSizeAtScale:(double)scale {
     NSSize minimumSize;
     // width of all the things in the status bar...
     const NSInteger statusBarLeftMargin = CGRectGetMaxX(self.statusBarDivider.frame) + STATUS_BAR_DIVIDER_MARGIN;
@@ -904,7 +974,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     CGRect contentFrame = self.window.contentLayoutRect;
 
     CGRect frame;
-    frame.size = [self minimumContentSizeAtScale:scale];
+    frame.size = [self minimumWindowSizeAtScale:scale];
     frame.size.height += windowFrame.size.height - contentFrame.size.height;  // window chrome?
 
     // center the new window at the center of the old one
@@ -930,7 +1000,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     frame.size.height += [self statusBarHeight];
 
     // but no smaller than minimum
-    CGSize minimumSize = [self minimumContentSizeAtScale:1];
+    CGSize minimumSize = [self minimumWindowSizeAtScale:1];
     if (frame.size.width < minimumSize.width || frame.size.height < minimumSize.height) {
         frame.size = minimumSize;
     }
