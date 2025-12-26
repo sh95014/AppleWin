@@ -51,6 +51,7 @@ using namespace DiskImgLib;
 @interface AppDelegate ()
 
 @property (strong) IBOutlet NSWindow *window;
+@property (strong) IBOutlet NSView *contentBackgroundView;
 @property (strong) IBOutlet NSMenu *openDiskImageMenu;
 @property (strong) IBOutlet NSMenuItem *editCopyMenu;
 @property (strong) IBOutlet NSMenuItem *showHideStatusBarMenuItem;
@@ -213,6 +214,13 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
     }
     
+    self.contentBackgroundView.wantsLayer = YES;
+#ifdef DEBUG_BLUE_BACKGROUND
+    self.contentBackgroundView.layer.backgroundColor = [NSColor systemBlueColor].CGColor;
+#else
+    self.contentBackgroundView.layer.backgroundColor = [NSColor blackColor].CGColor;
+#endif
+    
     [self.emulatorVC start];
 }
 
@@ -279,13 +287,14 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     // restore user-selected light/dark mode
     NSApp.appearance = nil;
     
-    // make EmulatorView conform to the window we've just sized to
-    CGRect emulatorFrame = self.window.contentView.bounds;
+    // make contentBackgroundView conform to the window we've just sized to
+    CGRect contentBackgroundFrame = self.window.contentView.bounds;
     if (self.hasStatusBar) {
-        emulatorFrame.origin.y += STATUS_BAR_HEIGHT;
-        emulatorFrame.size.height -= STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.origin.y += STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.size.height -= STATUS_BAR_HEIGHT;
     }
-    [self.emulatorVC.view setFrame:emulatorFrame];
+    [self.contentBackgroundView setFrame:contentBackgroundFrame];
+    [self.emulatorVC.view setFrame:self.contentBackgroundView.bounds];
     
     // adopt whatever new scale the user chose while full-screen
     if (self.fullScreenScale > 0) {
@@ -566,25 +575,25 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     self.statusBarView.hidden = !_hasStatusBar;
     [self updateDriveLights];
     
-    CGRect emulatorFrame = self.emulatorVC.view.frame;
+    CGRect contentBackgroundFrame = self.contentBackgroundView.frame;
     CGRect windowFrame = self.window.frame;
     if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
-        emulatorFrame = windowFrame;
+        contentBackgroundFrame = windowFrame;
         if (self.hasStatusBar) {
-            emulatorFrame.size.height -= STATUS_BAR_HEIGHT;
-            emulatorFrame.origin.y += STATUS_BAR_HEIGHT;
+            contentBackgroundFrame.size.height -= STATUS_BAR_HEIGHT;
+            contentBackgroundFrame.origin.y += STATUS_BAR_HEIGHT;
         }
     }
     else {
         // windowed
         const double statusBarHeight = STATUS_BAR_HEIGHT;
         if (self.hasStatusBar) {
-            emulatorFrame.origin.y = statusBarHeight;
+            contentBackgroundFrame.origin.y = statusBarHeight;
             windowFrame.size.height += statusBarHeight;
             windowFrame.origin.y -= statusBarHeight;
         }
         else {
-            emulatorFrame.origin.y = 0;
+            contentBackgroundFrame.origin.y = 0;
             windowFrame.size.height -= statusBarHeight;
             windowFrame.origin.y += statusBarHeight;
         }
@@ -596,7 +605,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     self.showHideStatusBarMenuItem.title = self.hasStatusBar ?
         NSLocalizedString(@"Hide Status Bar", @"") :
         NSLocalizedString(@"Show Status Bar", @"");
-    [self.emulatorVC.view setFrame:emulatorFrame];
+    [self.contentBackgroundView setFrame:contentBackgroundFrame];
 }
 
 - (IBAction)displayTypeAction:(id)sender {
@@ -924,8 +933,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (void)setWindowScale:(double)scale {
     if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
-        CGSize availSize = self.window.frame.size;
-        availSize.height -= self.statusBarHeight;
+        // center the EmulatorView inside contentBackgroundView at the specified size
+        CGSize availSize = self.contentBackgroundView.bounds.size;
         
         Video &video = GetVideo();
         CGFloat width = video.GetFrameBufferBorderlessWidth() * scale;
@@ -940,7 +949,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
             self.fullScreenScale = width / video.GetFrameBufferBorderlessWidth();
         }
         CGRect frame = CGRectMake(floorf((availSize.width - width) / 2),
-                                  self.statusBarHeight + floorf((availSize.height - height) / 2),
+                                  floorf((availSize.height - height) / 2),
                                   width,
                                   height);
         [self.emulatorVC.view setFrame:frame];

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,6 +17,7 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
                 <outlet property="aboutMarianiMenuItem" destination="5kV-Vb-QxS" id="BXC-wO-Gq7"/>
+                <outlet property="contentBackgroundView" destination="Cow-bF-B9k" id="DKE-j5-muG"/>
                 <outlet property="displayTypeMenu" destination="eeY-Un-lEj" id="N54-FR-NAN"/>
                 <outlet property="editCopyMenu" destination="wcB-ZJ-Gew" id="XXg-bZ-pNS"/>
                 <outlet property="emulatorVC" destination="S0z-N3-T9h" id="XAc-8o-NgU"/>
@@ -273,14 +274,20 @@
         <window title="Mariani" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="MainWindow" animationBehavior="default" tabbingMode="disallowed" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="196" y="204" width="840" height="608"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="944"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1512" height="949"/>
             <view key="contentView" id="EiT-Mj-1SZ">
                 <rect key="frame" x="0.0" y="0.0" width="840" height="608"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <customView id="56G-Jx-bov" customClass="EmulatorView">
+                    <customView id="Cow-bF-B9k">
                         <rect key="frame" x="0.0" y="32" width="840" height="576"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <customView id="56G-Jx-bov" customClass="EmulatorView">
+                                <rect key="frame" x="0.0" y="0.0" width="840" height="576"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </customView>
+                        </subviews>
                     </customView>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mnw-rf-Y9b">
                         <rect key="frame" x="0.0" y="0.0" width="840" height="32"/>
