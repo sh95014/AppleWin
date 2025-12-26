@@ -838,12 +838,10 @@
 		B00BE9ED2A291C0000F288F9 /* InspectorOutlineViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InspectorOutlineViewController.h; sourceTree = "<group>"; };
 		B00BE9EE2A291C0000F288F9 /* InspectorOutlineViewController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = InspectorOutlineViewController.mm; sourceTree = "<group>"; };
 		B00ECBE4279EEB600041E16C /* Mariani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mariani.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../boost_1_78_0/universal/libboost_program_options.a; sourceTree = "<group>"; };
 		B00ECBE7279EEBD30041E16C /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../SDL2.framework; sourceTree = "<group>"; };
 		B017D6802A3A4C1200FE6D1E /* libStaticWrapper Universal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libStaticWrapper Universal.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B017D6882A3A4C2700FE6D1E /* libintl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libintl.a; path = ../universal/libintl.a; sourceTree = "<group>"; };
 		B017D6892A3A4C2700FE6D1E /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../universal/libslirp.a; sourceTree = "<group>"; };
-		B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../universal/libboost_program_options.a; sourceTree = "<group>"; };
 		B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "../universal/libglib-2.0.a"; sourceTree = "<group>"; };
 		B020F8A32785D30E0071D3C7 /* stdafx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stdafx.cpp; path = test/TestCPU6502/stdafx.cpp; sourceTree = SOURCE_ROOT; };
 		B020F8A42785D30E0071D3C7 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = test/TestCPU6502/stdafx.h; sourceTree = SOURCE_ROOT; };
@@ -928,7 +926,6 @@
 		B049E841277B61CB00FC14A3 /* speed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = speed.cpp; path = source/frontends/common2/speed.cpp; sourceTree = "<group>"; };
 		B049E848277B68E900FC14A3 /* programoptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = programoptions.h; path = source/frontends/common2/programoptions.h; sourceTree = "<group>"; };
 		B049E84B277B6DE300FC14A3 /* programoptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = programoptions.cpp; path = source/frontends/common2/programoptions.cpp; sourceTree = "<group>"; };
-		B049E84D277B6F4A00FC14A3 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = /opt/homebrew/Cellar/boost/1.76.0/lib/libboost_program_options.a; sourceTree = "<absolute>"; };
 		B049E84F277B6FFE00FC14A3 /* fileregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fileregistry.h; path = source/frontends/common2/fileregistry.h; sourceTree = "<group>"; };
 		B049E850277B6FFE00FC14A3 /* fileregistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fileregistry.cpp; path = source/frontends/common2/fileregistry.cpp; sourceTree = "<group>"; };
 		B049E853277B702000FC14A3 /* ptreeregistry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ptreeregistry.cpp; path = source/frontends/common2/ptreeregistry.cpp; sourceTree = "<group>"; };
@@ -1305,7 +1302,6 @@
 		B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MemoryViewerWindowController.h; sourceTree = "<group>"; };
 		B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MemoryViewerWindowController.mn; sourceTree = "<group>"; };
 		B0E1DC80298874A800F61989 /* libStaticWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStaticWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B0E1DC8B298874EF00F61989 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_program_options.a; path = ../../../../usr/local/Cellar/boost/1.76.0/lib/libboost_program_options.a; sourceTree = "<group>"; };
 		B0E1DC8D2988751000F61989 /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../../../../usr/local/Cellar/libslirp/4.7.0/lib/libslirp.a; sourceTree = "<group>"; };
 		B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = StaticLibraryWrapper.c; sourceTree = "<group>"; };
 		B0E1DC9529887A5C00F61989 /* libglib-2.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libglib-2.0.a"; path = "../../../../usr/local/Cellar/glib/2.74.5/lib/libglib-2.0.a"; sourceTree = "<group>"; };
@@ -2068,7 +2064,6 @@
 		B09AB844277A282A0002A6C3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B017D68A2A3A4C2700FE6D1E /* libboost_program_options.a */,
 				B017D68B2A3A4C2700FE6D1E /* libglib-2.0.a */,
 				B017D6882A3A4C2700FE6D1E /* libintl.a */,
 				B017D6892A3A4C2700FE6D1E /* libslirp.a */,
@@ -2080,7 +2075,6 @@
 				B0E1DC9729887A7C00F61989 /* libintl.a */,
 				B0E1DC9529887A5C00F61989 /* libglib-2.0.a */,
 				B0E1DC8D2988751000F61989 /* libslirp.a */,
-				B0E1DC8B298874EF00F61989 /* libboost_program_options.a */,
 				B05779192887D51D00614907 /* AudioToolbox.framework */,
 				B05779062886047E00614907 /* libslirp.a */,
 				B090CF1C27B5A04F00C6C23D /* GameController.framework */,
@@ -2088,8 +2082,6 @@
 				B020F8AA2785F3920071D3C7 /* CoreMedia.framework */,
 				B020F8A82785EA440071D3C7 /* AVFoundation.framework */,
 				B049E8AE277C9A8000FC14A3 /* MetalKit.framework */,
-				B049E84D277B6F4A00FC14A3 /* libboost_program_options.a */,
-				B00ECBE5279EEBAB0041E16C /* libboost_program_options.a */,
 				B049E822277B517700FC14A3 /* libSDL2.a */,
 				B0A6BB76277A31F7008813DE /* libpcap.tbd */,
 			);
@@ -3510,7 +3502,6 @@
 					source/linux/libwindows,
 					libyaml/include,
 					libyaml/win32,
-					/opt/homebrew/include/boost,
 					/opt/homebrew/include/slirp,
 					/usr/local/include/slirp,
 					source/frontends/mariani,
@@ -3538,7 +3529,6 @@
 					source/linux/libwindows,
 					libyaml/include,
 					libyaml/win32,
-					/opt/homebrew/include/boost,
 					/opt/homebrew/include/slirp,
 					/usr/local/include/slirp,
 					source/frontends/mariani,
@@ -3566,7 +3556,6 @@
 				HEADER_SEARCH_PATHS = (
 					source,
 					/opt/homebrew/include,
-					/opt/homebrew/include/SDL2,
 				);
 				INFOPLIST_FILE = "Mariani-Universal-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
@@ -3577,7 +3566,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
+				LIBRARY_SEARCH_PATHS = "";
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
@@ -3603,7 +3592,6 @@
 				HEADER_SEARCH_PATHS = (
 					source,
 					/opt/homebrew/include,
-					/opt/homebrew/include/SDL2,
 				);
 				INFOPLIST_FILE = "Mariani-Universal-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
@@ -3614,7 +3602,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				LIBRARY_SEARCH_PATHS = ../boost_1_78_0/universal;
+				LIBRARY_SEARCH_PATHS = "";
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
@@ -3805,7 +3793,10 @@
 				DEAD_CODE_STRIPPING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG_BLUE_BACKGROUND=1",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					source,

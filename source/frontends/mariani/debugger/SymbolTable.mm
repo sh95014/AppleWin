@@ -10,14 +10,11 @@
 #import "Debugger_Types.h"
 #import "Debugger_Symbols.h"
 
-#define SORT_SYMBOL_TABLE
-
 const NSNotificationName SymbolTableDidChangeNotification = @"SymbolTableDidChangeNotification";
 
 @implementation SymbolTableItem
 @end
 
-#ifdef SORT_SYMBOL_TABLE
 @interface SymbolTable ()
 
 @property (strong) NSMutableArray<SymbolTableItem *> *sortedTable;
@@ -33,7 +30,6 @@ const NSNotificationName SymbolTableDidChangeNotification = @"SymbolTableDidChan
 }
 
 @end
-#endif // SORT_SYMBOL_TABLE
 
 @implementation SymbolTable
 
@@ -46,7 +42,6 @@ const NSNotificationName SymbolTableDidChangeNotification = @"SymbolTableDidChan
     return singleton;
 }
 
-#ifdef SORT_SYMBOL_TABLE
 - (id)init {
     if ((self = [super init]) != nil) {
         [self copySymbolTable];
@@ -105,61 +100,5 @@ const NSNotificationName SymbolTableDidChangeNotification = @"SymbolTableDidChan
         return found;
     }];
 }
-
-#else // SORT_SYMBOL_TABLE
-
-- (NSUInteger)totalNumberOfSymbols {
-    NSUInteger total = 0;
-    for (NSInteger table = 0; table < NUM_SYMBOL_TABLES; table++) {
-        total += g_aSymbols[table].size();
-    }
-    return total;
-}
-
-- (SymbolTableItem *)firstItemWithPrefix:(NSString *)prefix {
-    std::string cppPrefix(prefix.UTF8String);
-    for (NSInteger table = 0; table < NUM_SYMBOL_TABLES; table++) {
-        for (auto iter = g_aSymbols[table].begin(); iter != g_aSymbols[table].end(); iter++) {
-            if (iter->second.length() > cppPrefix.length() && boost::istarts_with(iter->second, cppPrefix)) {
-                SymbolTableItem *item = [[SymbolTableItem alloc] init];
-                item.address = iter->first;
-                item.symbol = [NSString stringWithUTF8String:iter->second.c_str()];
-                return item;
-            }
-        }
-    }
-    return nil;
-}
-
-- (SymbolTableItem *)itemAtIndex:(NSInteger)index {
-    for (NSInteger table = 0; table < NUM_SYMBOL_TABLES; table++) {
-        const NSInteger tableSize = g_aSymbols[table].size();
-        if (index < tableSize) {
-            auto iter = g_aSymbols[table].begin();
-            std::advance(iter, index);
-            SymbolTableItem *item = [[SymbolTableItem alloc] init];
-            item.address = iter->first;
-            item.symbol = [NSString stringWithUTF8String:iter->second.c_str()];
-            return item;
-        }
-        index -= tableSize;
-    }
-    return nil;
-}
-
-- (NSInteger)indexOfSymbol:(NSString *)symbol {
-    NSUInteger index = 0;
-    std::string cppSymbol(symbol.UTF8String);
-    for (NSInteger table = 0; table < NUM_SYMBOL_TABLES; table++) {
-        for (auto iter = g_aSymbols[table].begin(); iter != g_aSymbols[table].end(); iter++) {
-            if (iter->second == cppSymbol) {
-                return index;
-            }
-            index++;
-        }
-    }
-    return NSNotFound;
-}
-#endif // SORT_SYMBOL_TABLE
 
 @end
