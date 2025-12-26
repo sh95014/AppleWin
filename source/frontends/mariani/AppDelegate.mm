@@ -340,7 +340,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 - (void)screenRecordingDidStop:(NSURL *)url {
     self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
     self.screenRecordingButton.contentTintColor = [NSColor secondaryLabelColor];
-    [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Recording saved to ‘%s’", @""), url.fileSystemRepresentation]];
+    [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Recording saved to ‘%@’", @""), url.path]];
 }
 
 - (NSURL *)unusedURLForFilename:(NSString *)desiredFilename extension:(NSString *)extension inFolder:(NSURL *)folder {
@@ -693,7 +693,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     NSURL *url = [self.emulatorVC saveScreenshot:NO];
-    [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Screenshot saved to ‘%s’", @""), url.fileSystemRepresentation]];
+    [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Screenshot saved to ‘%@’", @""), url.path]];
 }
 
 #pragma mark - Status bar actions

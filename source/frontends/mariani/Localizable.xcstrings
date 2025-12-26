@@ -857,12 +857,12 @@
         }
       }
     },
-    "Recording saved to ‘%s’" : {
+    "Recording saved to ‘%@’" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "螢幕錄影存檔為「%s」"
+            "value" : "螢幕錄影存檔為「%@」"
           }
         }
       }
@@ -950,12 +950,12 @@
         }
       }
     },
-    "Screenshot saved to ‘%s’" : {
+    "Screenshot saved to ‘%@’" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "螢幕快照存檔為「%s」"
+            "value" : "螢幕快照存檔為「%@」"
           }
         }
       }
