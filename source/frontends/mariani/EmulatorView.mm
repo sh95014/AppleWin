@@ -159,7 +159,12 @@ enum {
                 }
             }
             else if (raw >= ASCII_SP && raw < ASCII_DEL) {
-                ch = self.forceCapsLock ? toupper(raw) : raw;
+                if (self.forceCapsLock || (event.modifierFlags & NSEventModifierFlagCapsLock)) {
+                    ch = toupper(raw);
+                }
+                else {
+                    ch = raw;
+                }
             }
             break;
         }
