@@ -101,6 +101,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     Global::AppInit();
     
     _hasStatusBar = YES;
+    if (![[UserDefaults sharedInstance] showStatusBar]) {
+        // the storyboard assumes that status bar is visible, so force a
+        // toggle if it's supposed to be hidden
+        [self toggleStatusBarAction:self];
+    }
     [self setStatus:nil];
     
     NSString *appName = [NSRunningApplication currentApplication].localizedName;
@@ -526,6 +531,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     self.hasStatusBar = !self.hasStatusBar;
+    [[UserDefaults sharedInstance] setShowStatusBar:_hasStatusBar];
     self.statusBarView.hidden = !_hasStatusBar;
     [self updateDriveLights];
     

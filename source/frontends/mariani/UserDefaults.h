@@ -28,6 +28,8 @@ extern NSString *GameControllerNumericKeypad;
 @property (nonatomic) NSInteger joystickButton0Mapping;
 @property (nonatomic) NSInteger joystickButton1Mapping;
 
+@property (nonatomic) BOOL showStatusBar;
+
 @end
 
 @interface GCController (Mariani)

@@ -16,6 +16,7 @@
 #define JOYSTICK_MAPPING_KEY            @"JoystickMapping"
 #define JOYSTICK_BUTTON0_MAPPING_KEY    @"JoystickButton0Mapping"
 #define JOYSTICK_BUTTON1_MAPPING_KEY    @"JoystickButton1Mapping"
+#define SHOW_STATUS_BAR                 @"ShowStatusBar"
 
 NSString *GameControllerNone = @"GameControllerNone";
 NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
@@ -166,6 +167,15 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setInteger:joystickButton0Mapping forKey:JOYSTICK_BUTTON1_MAPPING_KEY];
     dynamic_cast<mariani::Gamepad&>(*Paddle::instance).updateController();
+}
+
+- (BOOL)showStatusBar {
+    NSNumber *value = [[NSUserDefaults standardUserDefaults] valueForKey:SHOW_STATUS_BAR];
+    return (value == nil) ? YES : [value boolValue];
+}
+
+- (void)setShowStatusBar:(BOOL)showStatusBar {
+    [[NSUserDefaults standardUserDefaults] setBool:showStatusBar forKey:SHOW_STATUS_BAR];
 }
 
 @end
