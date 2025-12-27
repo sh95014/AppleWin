@@ -221,7 +221,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)startRunLoopTimer {
-    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
     [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
@@ -268,6 +268,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         NSLog(@"Frame time exceeded: %f ms", duration * 1000);
     }
 #endif // DEBUG
+    
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
+    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)recordingTimerFired {
@@ -398,7 +401,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)pause {
-    [self.runLoopTimer invalidate];
     CVDisplayLinkStop(self.displayLink);
     CVDisplayLinkRelease(self.displayLink);
     self.displayLink = NULL;
@@ -409,8 +411,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)reboot {
-    // don't try to run the emulator during a restart
-    [self.runLoopTimer invalidate];
     frame->Restart();
     [self startRunLoopTimer];
     [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidRebootNotification object:self];
