@@ -55,6 +55,9 @@
 // display emulated CPU speed in the status bar
 #undef SHOW_EMULATED_CPU_SPEED
 
+// nanoseconds to floating point seconds
+#define NS_TO_S(x) ((x)/1000000000.0)
+
 const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
 const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
 const NSNotificationName EmulatorDidRebootNotification = @"EmulatorDidRebootNotification";
@@ -70,7 +73,9 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @implementation AudioOutput
 @end
 
-@interface EmulatorViewController ()
+@interface EmulatorViewController () {
+    BOOL _isRecordingScreen;
+}
 
 @property (strong) EmulatorRenderer *renderer;
 
@@ -89,8 +94,8 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property AVAssetWriter *videoWriter;
 @property AVAssetWriterInput *videoWriterInput;
 @property AVAssetWriterInputPixelBufferAdaptor *videoWriterAdaptor;
-@property int64_t videoWriterFrameNumber;
 @property NSTimer *recordingTimer;
+@property uint64_t clockAtRecordingStart;
 
 @property NSMutableArray<AudioOutput *> *audioOutputs;
 
@@ -204,6 +209,31 @@ extern common2::EmulatorOptions gEmulatorOptions;
 #endif // SHOW_FPS
 }
 
+- (void)setRecordingScreen:(BOOL)recordingScreen {
+    if (_isRecordingScreen != recordingScreen) {
+        _isRecordingScreen = recordingScreen;
+        [self tick];
+    }
+}
+
+- (BOOL)isRecordingScreen {
+    return _isRecordingScreen;
+}
+
+- (void)tick {
+    if (self.isRecordingScreen) {
+        [self.delegate screenRecordingDidTick];
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(tock) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)tock {
+    if (self.isRecordingScreen) {
+        [self.delegate screenRecordingDidTock];
+        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(tick) userInfo:nil repeats:NO];
+    }
+}
+
 #ifdef SHOW_FPS
 static uint64_t displayLinkCallbackStartTime;
 static NSUInteger displayLinkCallbackCount;
@@ -221,8 +251,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)startRunLoopTimer {
-    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
 }
 
 - (void)runLoopTimerFired {
@@ -271,6 +300,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)recordingTimerFired {
+    const uint64_t clockNow = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+    if (self.clockAtRecordingStart == 0) {
+        // first frame of recording
+        self.clockAtRecordingStart = clockNow;
+    }
+    const double secondsSinceRecordingStart = NS_TO_S(clockNow - self.clockAtRecordingStart);
+    
     frameBuffer.data = frame->FrameBufferData();
     
     if (self.videoWriterInput.readyForMoreMediaData) {
@@ -293,13 +329,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         if (status == kCVReturnSuccess && pixelBuffer != NULL) {
             // append the CVPixelBuffer into the output stream
             [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
-                                  withPresentationTime:CMTimeMake(self.videoWriterFrameNumber * (CMTIME_BASE / TARGET_FPS), CMTIME_BASE)];
+                                  withPresentationTime:CMTimeMake(floor(secondsSinceRecordingStart * CMTIME_BASE), CMTIME_BASE)];
             CVPixelBufferRelease(pixelBuffer);
-            
-            // if we realize that we've skipped a frame (i.e., videoWriter is
-            // not nil but readyForMoreMediaData is false) should we also
-            // increment videoWriterFrameNumber?
-            self.videoWriterFrameNumber++;
         }
     }
     
@@ -386,15 +417,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         }
     }
     
-    if (self.isRecordingScreen) {
-        // blink the screen recording button
-        if (self.videoWriterFrameNumber % TARGET_FPS == 0) {
-            [self.delegate screenRecordingDidTick];
-        }
-        else if (self.videoWriterFrameNumber % TARGET_FPS == TARGET_FPS / 2) {
-            [self.delegate screenRecordingDidTock];
-        }
-    }
+    // set next alarm to maintain TARGET_FPS
+    self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
 }
 
 - (void)pause {
@@ -516,9 +540,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         
         [self.videoWriter startWriting];
         [self.videoWriter startSessionAtSourceTime:kCMTimeZero];
-        self.videoWriterFrameNumber = 0;
         
-        self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:YES];
+        self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
+        self.clockAtRecordingStart = 0;
     }
     else {
         // stop recording
@@ -544,7 +568,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             self.videoWriter = nil;
             self.videoWriterInput = nil;
             self.videoWriterAdaptor = nil;
-            self.videoWriterFrameNumber = 0;
             
             self.recordingScreen = NO;
             
