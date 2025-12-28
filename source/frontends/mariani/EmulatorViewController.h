@@ -48,6 +48,8 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 
 - (NSURL *)unusedURLForFilename:(NSString *)desiredFilename extension:(NSString *)extension inFolder:(NSURL *)folder;
 
+- (double)windowRectScale;
+
 @end
 
 @interface EmulatorViewController : NSViewController <EmulatorRendererDelegate, EmulatorViewDelegate>

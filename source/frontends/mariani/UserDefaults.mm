@@ -9,14 +9,15 @@
 #import <GameController/GameController.h>
 #import "MarianiJoystick.h"
 
-#define RECORDINGS_FOLDER_KEY           @"RecordingsFolder"
-#define SCREENSHOTS_FOLDER_KEY          @"ScreenshotsFolder"
-#define MAP_DELETE_KEY_TO_LEFT_ARROW    @"MapDeleteKeyToLeftArrow"
-#define GAME_CONTROLLER_KEY             @"GameController"
-#define JOYSTICK_MAPPING_KEY            @"JoystickMapping"
-#define JOYSTICK_BUTTON0_MAPPING_KEY    @"JoystickButton0Mapping"
-#define JOYSTICK_BUTTON1_MAPPING_KEY    @"JoystickButton1Mapping"
-#define SHOW_STATUS_BAR                 @"ShowStatusBar"
+#define RECORDINGS_FOLDER_KEY                   @"RecordingsFolder"
+#define SCREENSHOTS_FOLDER_KEY                  @"ScreenshotsFolder"
+#define MAP_DELETE_KEY_TO_LEFT_ARROW            @"MapDeleteKeyToLeftArrow"
+#define TAKE_SCREENSHOTS_BASED_ON_WINDOW_SIZE   @"TakeScreenshotsBasedOnWindowSize"
+#define GAME_CONTROLLER_KEY                     @"GameController"
+#define JOYSTICK_MAPPING_KEY                    @"JoystickMapping"
+#define JOYSTICK_BUTTON0_MAPPING_KEY            @"JoystickButton0Mapping"
+#define JOYSTICK_BUTTON1_MAPPING_KEY            @"JoystickButton1Mapping"
+#define SHOW_STATUS_BAR                         @"ShowStatusBar"
 
 NSString *GameControllerNone = @"GameControllerNone";
 NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
@@ -68,6 +69,14 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 
 - (void)setMapDeleteKeyToLeftArrow:(BOOL)mapDeleteKeyToLeftArrow {
     [[NSUserDefaults standardUserDefaults] setBool:mapDeleteKeyToLeftArrow forKey:MAP_DELETE_KEY_TO_LEFT_ARROW];
+}
+
+- (BOOL)takeScreenshotsBasedOnWindowSize {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:TAKE_SCREENSHOTS_BASED_ON_WINDOW_SIZE];
+}
+
+- (void)setTakeScreenshotsBasedOnWindowSize:(BOOL)takeScreenshotsBasedOnWindowSize {
+    [[NSUserDefaults standardUserDefaults] setBool:takeScreenshotsBasedOnWindowSize forKey:TAKE_SCREENSHOTS_BASED_ON_WINDOW_SIZE];
 }
 
 - (NSString *)gameController {
