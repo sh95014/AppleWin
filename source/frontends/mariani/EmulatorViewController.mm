@@ -94,7 +94,6 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property AVAssetWriter *videoWriter;
 @property AVAssetWriterInput *videoWriterInput;
 @property AVAssetWriterInputPixelBufferAdaptor *videoWriterAdaptor;
-@property NSTimer *recordingTimer;
 @property uint64_t clockAtRecordingStart;
 
 @property NSMutableArray<AudioOutput *> *audioOutputs;
@@ -300,125 +299,129 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)recordingTimerFired {
-    const uint64_t clockNow = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    if (self.clockAtRecordingStart == 0) {
-        // first frame of recording
-        self.clockAtRecordingStart = clockNow;
-    }
-    const double secondsSinceRecordingStart = NS_TO_S(clockNow - self.clockAtRecordingStart);
-    
-    frameBuffer.data = frame->FrameBufferData();
-    
-    if (self.videoWriterInput.readyForMoreMediaData) {
-        if (!self.isRecordingScreen) {
-            self.recordingScreen = YES;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        const uint64_t clockNow = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+        if (self.clockAtRecordingStart == 0) {
+            // first frame of recording
+            self.clockAtRecordingStart = clockNow;
+        }
+        const double secondsSinceRecordingStart = NS_TO_S(clockNow - self.clockAtRecordingStart);
+        
+        self->frameBuffer.data = self->frame->FrameBufferData();
+        
+        if (self.videoWriterInput.readyForMoreMediaData) {
+            if (!self.isRecordingScreen) {
+                self.recordingScreen = YES;
+            }
+            
+            // make a CVPixelBuffer and point the frame buffer to it
+            CVPixelBufferRef pixelBuffer = NULL;
+            CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault,
+                                                           self->frameBuffer.bufferWidth,
+                                                           self->frameBuffer.bufferHeight,
+                                                           kCVPixelFormatType_32BGRA,
+                                                           self->frameBuffer.data,
+                                                           self->frameBuffer.bufferWidth * 4,
+                                                           NULL,
+                                                           NULL,
+                                                           NULL,
+                                                           &pixelBuffer);
+            if (status == kCVReturnSuccess && pixelBuffer != NULL) {
+                // append the CVPixelBuffer into the output stream
+                [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
+                                      withPresentationTime:CMTimeMake(floor(secondsSinceRecordingStart * CMTIME_BASE), CMTIME_BASE)];
+                CVPixelBufferRelease(pixelBuffer);
+            }
         }
         
-        // make a CVPixelBuffer and point the frame buffer to it
-        CVPixelBufferRef pixelBuffer = NULL;
-        CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault,
-                                                       frameBuffer.bufferWidth,
-                                                       frameBuffer.bufferHeight,
-                                                       kCVPixelFormatType_32BGRA,
-                                                       frameBuffer.data,
-                                                       frameBuffer.bufferWidth * 4,
-                                                       NULL,
-                                                       NULL,
-                                                       NULL,
-                                                       &pixelBuffer);
-        if (status == kCVReturnSuccess && pixelBuffer != NULL) {
-            // append the CVPixelBuffer into the output stream
-            [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
-                                  withPresentationTime:CMTimeMake(floor(secondsSinceRecordingStart * CMTIME_BASE), CMTIME_BASE)];
-            CVPixelBufferRelease(pixelBuffer);
-        }
-    }
-    
-    for (AudioOutput *audioOutput in self.audioOutputs) {
-        if (audioOutput.writerInput.readyForMoreMediaData && audioOutput.data.length > 0) {
-            const UInt32 bytesPerFrame = audioOutput.channels * sizeof(UInt16);
-            const UInt32 frames = (UInt32)audioOutput.data.length / bytesPerFrame;
-            const UInt32 blockSize = frames * bytesPerFrame;
-            
-            CMBlockBufferRef blockBuffer = NULL;
-            OSStatus status = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault,
-                                                                 NULL,
-                                                                 blockSize,
-                                                                 NULL,
-                                                                 NULL,
-                                                                 0,
-                                                                 blockSize,
-                                                                 0,
-                                                                 &blockBuffer);
-            if (status != kCMBlockBufferNoErr) {
-                NSLog(@"failed CMBlockBufferCreateWithMemoryBlock");
-                continue;
-            }
-            
-            status = CMBlockBufferReplaceDataBytes(audioOutput.data.bytes,
+        for (AudioOutput *audioOutput in self.audioOutputs) {
+            if (audioOutput.writerInput.readyForMoreMediaData && audioOutput.data.length > 0) {
+                const UInt32 bytesPerFrame = audioOutput.channels * sizeof(UInt16);
+                const UInt32 frames = (UInt32)audioOutput.data.length / bytesPerFrame;
+                const UInt32 blockSize = frames * bytesPerFrame;
+                
+                CMBlockBufferRef blockBuffer = NULL;
+                OSStatus status = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault,
+                                                                     NULL,
+                                                                     blockSize,
+                                                                     NULL,
+                                                                     NULL,
+                                                                     0,
+                                                                     blockSize,
+                                                                     0,
+                                                                     &blockBuffer);
+                if (status != kCMBlockBufferNoErr) {
+                    NSLog(@"failed CMBlockBufferCreateWithMemoryBlock");
+                    continue;
+                }
+                
+                status = CMBlockBufferReplaceDataBytes(audioOutput.data.bytes,
+                                                       blockBuffer,
+                                                       0,
+                                                       blockSize);
+                if (status != kCMBlockBufferNoErr) {
+                    NSLog(@"failed CMBlockBufferReplaceDataBytes");
+                    if (blockBuffer) { CFRelease(blockBuffer); }
+                    continue;
+                }
+                
+                AudioStreamBasicDescription asbd = { 0 };
+                asbd.mFormatID         = kAudioFormatLinearPCM;
+                asbd.mFormatFlags      = kLinearPCMFormatFlagIsSignedInteger;
+                asbd.mSampleRate       = audioOutput.sampleRate;
+                asbd.mChannelsPerFrame = audioOutput.channels;
+                asbd.mBitsPerChannel   = sizeof(SInt16) * CHAR_BIT;
+                asbd.mFramesPerPacket  = 1;  // uncompressed audio
+                asbd.mBytesPerFrame    = bytesPerFrame;
+                asbd.mBytesPerPacket   = bytesPerFrame;
+                
+                CMFormatDescriptionRef format = NULL;
+                status = CMAudioFormatDescriptionCreate(kCFAllocatorDefault,
+                                                        &asbd,
+                                                        0,
+                                                        NULL,
+                                                        0,
+                                                        NULL,
+                                                        NULL,
+                                                        &format);
+                if (status != noErr) {
+                    NSLog(@"failed CMAudioFormatDescriptionCreate");
+                    if (blockBuffer) { CFRelease(blockBuffer); }
+                    continue;
+                }
+                
+                CMSampleBufferRef sampleBuffer = NULL;
+                status = CMSampleBufferCreateReady(kCFAllocatorDefault,
                                                    blockBuffer,
+                                                   format,
+                                                   frames,
                                                    0,
-                                                   blockSize);
-            if (status != kCMBlockBufferNoErr) {
-                NSLog(@"failed CMBlockBufferReplaceDataBytes");
-                if (blockBuffer) { CFRelease(blockBuffer); }
-                continue;
-            }
-            
-            AudioStreamBasicDescription asbd = { 0 };
-            asbd.mFormatID         = kAudioFormatLinearPCM;
-            asbd.mFormatFlags      = kLinearPCMFormatFlagIsSignedInteger;
-            asbd.mSampleRate       = audioOutput.sampleRate;
-            asbd.mChannelsPerFrame = audioOutput.channels;
-            asbd.mBitsPerChannel   = sizeof(SInt16) * CHAR_BIT;
-            asbd.mFramesPerPacket  = 1;  // uncompressed audio
-            asbd.mBytesPerFrame    = bytesPerFrame;
-            asbd.mBytesPerPacket   = bytesPerFrame;
-            
-            CMFormatDescriptionRef format = NULL;
-            status = CMAudioFormatDescriptionCreate(kCFAllocatorDefault,
-                                                    &asbd,
-                                                    0,
-                                                    NULL,
-                                                    0,
-                                                    NULL,
-                                                    NULL,
-                                                    &format);
-            if (status != noErr) {
-                NSLog(@"failed CMAudioFormatDescriptionCreate");
-                if (blockBuffer) { CFRelease(blockBuffer); }
-                continue;
-            }
-            
-            CMSampleBufferRef sampleBuffer = NULL;
-            status = CMSampleBufferCreateReady(kCFAllocatorDefault,
-                                               blockBuffer,
-                                               format,
-                                               frames,
-                                               0,
-                                               NULL,
-                                               0,
-                                               NULL,
-                                               &sampleBuffer);
-            if (status != noErr) {
-                NSLog(@"failed CMSampleBufferCreateReady");
+                                                   NULL,
+                                                   0,
+                                                   NULL,
+                                                   &sampleBuffer);
+                if (status != noErr) {
+                    NSLog(@"failed CMSampleBufferCreateReady");
+                    if (format) { CFRelease(format); }
+                    if (blockBuffer) { CFRelease(blockBuffer); }
+                    continue;
+                }
+                
+                [audioOutput.writerInput appendSampleBuffer:sampleBuffer];
+                
+                // clean up
+                if (sampleBuffer) { CFRelease(sampleBuffer); }
                 if (format) { CFRelease(format); }
                 if (blockBuffer) { CFRelease(blockBuffer); }
-                continue;
+                audioOutput.data.length = 0;
             }
-            
-            [audioOutput.writerInput appendSampleBuffer:sampleBuffer];
-            
-            // clean up
-            if (sampleBuffer) { CFRelease(sampleBuffer); }
-            if (format) { CFRelease(format); }
-            if (blockBuffer) { CFRelease(blockBuffer); }
-            audioOutput.data.length = 0;
         }
-    }
-    
-    // set next alarm to maintain TARGET_FPS
-    self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // set next alarm to maintain TARGET_FPS
+            [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
+        });
+    });
 }
 
 - (void)pause {
@@ -541,13 +544,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         [self.videoWriter startWriting];
         [self.videoWriter startSessionAtSourceTime:kCMTimeZero];
         
-        self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
         self.clockAtRecordingStart = 0;
+        [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
     }
     else {
         // stop recording
         NSLog(@"Ending screen recording");
-        [self.recordingTimer invalidate];
         self.recordingScreen = NO;
         
         // mark the writer inputs as finished
@@ -569,13 +571,9 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             self.videoWriterInput = nil;
             self.videoWriterAdaptor = nil;
             
-            self.recordingScreen = NO;
-            
             NSLog(@"Ended screen recording");
             
-            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                [self.delegate screenRecordingDidStop:url];
-            });
+            [self.delegate screenRecordingDidStop:url];
         }];
     }
 }
