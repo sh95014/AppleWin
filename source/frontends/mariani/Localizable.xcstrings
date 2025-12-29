@@ -123,6 +123,16 @@
         }
       }
     },
+    "A newer version of this software is available." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已有比本軟體較新的版本"
+          }
+        }
+      }
+    },
     "About %@" : {
       "localizations" : {
         "zh-Hant" : {
@@ -441,6 +451,16 @@
         }
       }
     },
+    "Download…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前往下載⋯"
+          }
+        }
+      }
+    },
     "Echo (speech)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -488,6 +508,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "加強版蘋果 //e 模擬器"
+          }
+        }
+      }
+    },
+    "Error" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "錯誤"
           }
         }
       }
@@ -722,6 +752,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "否"
+          }
+        }
+      }
+    },
+    "No newer version of this software is available." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本軟體仍是最新版本"
           }
         }
       }
@@ -1210,6 +1250,16 @@
         }
       }
     },
+    "Unexpected server response" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未預期的伺服器回應"
+          }
+        }
+      }
+    },
     "Unknown" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1236,6 +1286,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未命名"
+          }
+        }
+      }
+    },
+    "Up-to-Date" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仍是最新"
+          }
+        }
+      }
+    },
+    "Update Available" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已有更新"
           }
         }
       }

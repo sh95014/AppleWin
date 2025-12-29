@@ -13,11 +13,13 @@
 #define SCREENSHOTS_FOLDER_KEY                  @"ScreenshotsFolder"
 #define MAP_DELETE_KEY_TO_LEFT_ARROW            @"MapDeleteKeyToLeftArrow"
 #define TAKE_SCREENSHOTS_BASED_ON_WINDOW_SIZE   @"TakeScreenshotsBasedOnWindowSize"
+#define AUTOMATICALLY_CHECK_FOR_UPDATES         @"AutomaticallyCheckForUpdates"
 #define GAME_CONTROLLER_KEY                     @"GameController"
 #define JOYSTICK_MAPPING_KEY                    @"JoystickMapping"
 #define JOYSTICK_BUTTON0_MAPPING_KEY            @"JoystickButton0Mapping"
 #define JOYSTICK_BUTTON1_MAPPING_KEY            @"JoystickButton1Mapping"
 #define SHOW_STATUS_BAR                         @"ShowStatusBar"
+#define LAST_UPDATE_CHECK_DATE                  @"LastUpdateCheckDate"
 
 NSString *GameControllerNone = @"GameControllerNone";
 NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
@@ -77,6 +79,15 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 
 - (void)setTakeScreenshotsBasedOnWindowSize:(BOOL)takeScreenshotsBasedOnWindowSize {
     [[NSUserDefaults standardUserDefaults] setBool:takeScreenshotsBasedOnWindowSize forKey:TAKE_SCREENSHOTS_BASED_ON_WINDOW_SIZE];
+}
+
+- (BOOL)automaticallyCheckForUpdates {
+    NSNumber *value = [[NSUserDefaults standardUserDefaults] valueForKey:AUTOMATICALLY_CHECK_FOR_UPDATES];
+    return (value == nil) ? YES : [value boolValue];
+}
+
+- (void)setAutomaticallyCheckForUpdates:(BOOL)automaticallyCheckForUpdates {
+    [[NSUserDefaults standardUserDefaults] setBool:automaticallyCheckForUpdates forKey:AUTOMATICALLY_CHECK_FOR_UPDATES];
 }
 
 - (NSString *)gameController {
@@ -185,6 +196,14 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 
 - (void)setShowStatusBar:(BOOL)showStatusBar {
     [[NSUserDefaults standardUserDefaults] setBool:showStatusBar forKey:SHOW_STATUS_BAR];
+}
+
+- (NSDate *)lastUpdateCheckDate {
+    return [[NSUserDefaults standardUserDefaults] valueForKey:LAST_UPDATE_CHECK_DATE];
+}
+
+- (void)setLastUpdateCheckDate:(NSDate *)date {
+    [[NSUserDefaults standardUserDefaults] setValue:date forKey:LAST_UPDATE_CHECK_DATE];
 }
 
 @end

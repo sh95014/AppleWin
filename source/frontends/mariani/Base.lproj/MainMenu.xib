@@ -56,6 +56,12 @@
                                     <action selector="preferencesAction:" target="Voe-Tx-rLC" id="1Hw-i2-VAj"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Check for Updates…" id="aV1-6h-w7i">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="checkForUpdates:" target="Voe-Tx-rLC" id="mJt-Z9-0nX"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
                             <menuItem title="Services" id="NMo-om-nkz">
                                 <modifierMask key="keyEquivalentModifierMask"/>

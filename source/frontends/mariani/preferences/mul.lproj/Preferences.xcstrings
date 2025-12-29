@@ -397,6 +397,24 @@
         }
       }
     },
+    "iDE-ks-BPL.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Automatically check for updates\"; ObjectID = \"iDE-ks-BPL\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Automatically check for updates"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動查詢更新版本"
+          }
+        }
+      }
+    },
     "iT1-07-Syr.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Mockingboard Volume\"; ObjectID = \"iT1-07-Syr\";",
       "extractionState" : "extracted_with_value",

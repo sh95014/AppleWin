@@ -222,6 +222,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 #endif
     
     [self.emulatorVC start];
+    
+    if ([[UserDefaults sharedInstance] automaticallyCheckForUpdates]) {
+        // parameter must be nil for a silent check
+        [self checkForUpdates:nil];
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
@@ -407,6 +412,127 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/sh95014/AppleWin"]];
+}
+
+- (IBAction)checkForUpdates:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (sender == nil) {
+        // not user-initiated
+        NSDate *lastUpdateCheckDate = [[UserDefaults sharedInstance] lastUpdateCheckDate];
+        if (lastUpdateCheckDate != nil &&                                       // never checked
+            [lastUpdateCheckDate timeIntervalSinceNow] > -30 * 24 * 60 * 60) {  // checked over 30 days ago
+            NSLog(@"Skip, last check only %f seconds ago", -[lastUpdateCheckDate timeIntervalSinceNow]);
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        enum {
+            UP_TO_DATE, UPDATE_AVAILABLE, UNEXPECTED_RESPONSE, FETCH_ERROR,
+        } updateAction = UNEXPECTED_RESPONSE;
+        NSString *updateURLString = nil;
+        NSURL *url = [NSURL URLWithString:@"https://api.github.com/repos/sh95014/AppleWin/releases/latest"];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        NSError *error = nil;
+        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        if (error == nil) {
+            if ([object isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *results = object;
+                if (![[results objectForKey:@"prerelease"] boolValue]) {
+                    // "prerelease": false
+                    if ((updateURLString = [[results objectForKey:@"html_url"] stringValue]) != nil) {
+                        // "html_url": "https://...",
+                        NSString *latestReleaseString = [[results objectForKey:@"name"] stringValue];
+                        // e.g., "name": "Mariani 1.5 (2)" => ["Mariani", "1.5", "(2)"]
+                        NSArray *latestReleaseParts = [latestReleaseString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                        if (latestReleaseParts.count == 3) {
+                            // e.g., "1.5" => ["1", "5"]
+                            NSArray<NSString *> *latestVersionParts = [latestReleaseParts[1] componentsSeparatedByString:@"."];
+                            // e.g., "(2)" => "2"
+                            NSCharacterSet *parentheses = [NSCharacterSet characterSetWithCharactersInString:@"()"];
+                            NSString *latestBuildString = [latestReleaseParts[2] stringByTrimmingCharactersInSet:parentheses];
+                            
+                            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+                            NSString *myVersionString = infoDictionary[@"CFBundleShortVersionString"];
+                            NSArray<NSString *> *myVersionParts = [myVersionString componentsSeparatedByString:@"."];
+                            NSString *myBuildString = infoDictionary[@"CFBundleVersion"];
+                            
+                            NSInteger latestVersion =
+                                latestVersionParts[0].integerValue * 1000000 +
+                                latestVersionParts[1].integerValue * 1000 +
+                                latestBuildString.integerValue;
+                            NSInteger myVersion =
+                                myVersionParts[0].integerValue * 1000000 +
+                                myVersionParts[1].integerValue * 1000 +
+                                myBuildString.integerValue;
+                            
+                            NSLog(@"Latest version: %ld.%ld (%ld)",
+                                  latestVersionParts[0].integerValue,
+                                  latestVersionParts[1].integerValue,
+                                  latestBuildString.integerValue);
+                            updateAction = (latestVersion > myVersion) ? UPDATE_AVAILABLE : UP_TO_DATE;
+                            [[UserDefaults sharedInstance] setLastUpdateCheckDate:[NSDate now]];
+                        }
+                        else {
+                            NSLog(@"Unexpected version '%@'", latestReleaseString);
+                        }
+                    }
+                    else {
+                        NSLog(@"Unexpected html_url");
+                    }
+                }
+            }
+            else {
+                NSLog(@"Unexpected data format");
+            }
+        }
+        else {
+            updateAction = FETCH_ERROR;
+            NSLog(@"Error: %@", error.localizedDescription);
+        }
+        if (updateAction == UPDATE_AVAILABLE || sender != nil) {
+            // pop a dialog if updates are available, or if this was initiated
+            // by the user from the menu.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSAlert *alert = [[NSAlert alloc] init];
+                
+                switch (updateAction) {
+                    case UP_TO_DATE:
+                        alert.messageText = NSLocalizedString(@"Up-to-Date", @"");
+                        alert.informativeText = NSLocalizedString(@"No newer version of this software is available.", @"");
+                        alert.alertStyle = NSAlertStyleInformational;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"hand.thumbsup" accessibilityDescription:@""];
+                        break;
+                    case UPDATE_AVAILABLE:
+                        alert.messageText = NSLocalizedString(@"Update Available", @"");
+                        alert.informativeText = NSLocalizedString(@"A newer version of this software is available.", @"");
+                        alert.alertStyle = NSAlertStyleInformational;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"square.and.arrow.down" accessibilityDescription:@""];
+                        [alert addButtonWithTitle:NSLocalizedString(@"Download…", @"")];
+                        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+                        break;
+                    case UNEXPECTED_RESPONSE:
+                        alert.messageText = NSLocalizedString(@"Error", @"");
+                        alert.informativeText = NSLocalizedString(@"Unexpected server response", @"");
+                        alert.alertStyle = NSAlertStyleWarning;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle" accessibilityDescription:@""];
+                        break;
+                    case FETCH_ERROR:
+                        alert.messageText = NSLocalizedString(@"Error", @"");
+                        alert.informativeText = error.localizedDescription;
+                        alert.alertStyle = NSAlertStyleWarning;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle" accessibilityDescription:@""];
+                        break;
+                }
+                [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
+                    if (returnCode == NSAlertFirstButtonReturn) {
+                        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:updateURLString]];
+                    }
+                }];
+            });
+        }
+    });
 }
 
 #pragma mark - App menu actions
