@@ -55,6 +55,9 @@
 // display emulated CPU speed in the status bar
 #undef SHOW_EMULATED_CPU_SPEED
 
+// nanoseconds to floating point seconds
+#define NS_TO_S(x) ((x)/1000000000.0)
+
 const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
 const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
 const NSNotificationName EmulatorDidRebootNotification = @"EmulatorDidRebootNotification";
@@ -221,11 +224,16 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)startRunLoopTimer {
-    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
     [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)runLoopTimerFired {
+#ifdef SHOW_EMULATED_CPU_SPEED
+    static uint64_t timeOfLastUpdate = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+#endif
+    const uint64_t runLoopStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+    
     // g_nAppMode can change through a debugger CLI command, so we notice it and notify others
     if (self.savedAppMode != g_nAppMode) {
         if ((self.savedAppMode == MODE_RUNNING || self.savedAppMode == MODE_STEPPING) && g_nAppMode == MODE_DEBUG) {
@@ -237,39 +245,37 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         self.savedAppMode = g_nAppMode;
     }
     
-#ifdef DEBUG
-    NSDate *start = [NSDate now];
-#endif
+    frame->ExecuteOneFrame(g_fCurrentCLK6502 / TARGET_FPS);
     
-    frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
-
 #ifdef SHOW_EMULATED_CPU_SPEED
     self.frameCount++;
-    static uint64_t timeOfLastUpdate = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    uint64_t currentTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    if (currentTime - timeOfLastUpdate > 1000000000.0 / TARGET_FPS) {
+    if (runLoopStartTime - timeOfLastUpdate > 1000000000) {
         NSArray *cpus = @[ @"", @"6502", @"65C02", @"Z80" ];
         double clockSpeed =
             (double)(g_nCumulativeCycles - self.samplePeriodBeginCumulativeCycles) /
             -[self.samplePeriodBeginClockTime timeIntervalSinceNow];
         [self.delegate setStatus:[NSString stringWithFormat:@"%@@%.3f MHz", cpus[GetActiveCpu()], clockSpeed / 1000000]];
-
+        
         self.samplePeriodBeginClockTime = [NSDate now];
         self.samplePeriodBeginCumulativeCycles = g_nCumulativeCycles;
         self.frameCount = 0;
-        timeOfLastUpdate = currentTime;
+        timeOfLastUpdate = runLoopStartTime;
     }
 #endif // SHOW_EMULATED_CPU_SPEED
     
-#ifdef DEBUG
-    NSTimeInterval duration = -[start timeIntervalSinceNow];
-    if (duration > 1.0 / TARGET_FPS) {
-        // oops, took too long
-        NSLog(@"Frame time exceeded: %f ms", duration * 1000);
+    // allow the host CPU to rest until the next frame
+    const double timeSpent = NS_TO_S(clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - runLoopStartTime);
+    NSTimeInterval idleTime;
+    if (!frame->CanDoFullSpeed() && timeSpent < 1.0 / TARGET_FPS) {
+        idleTime = 0;// (1.0 / TARGET_FPS) - timeSpent;
     }
+    else {
+        idleTime = 0;
+#ifdef DEBUG
+        NSLog(@"Frame time exceeded: %f ms", timeSpent * 1000);
 #endif // DEBUG
-    
-    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
+    }
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:idleTime target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
     [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
