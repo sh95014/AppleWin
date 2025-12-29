@@ -87,6 +87,8 @@ using namespace DiskImgLib;
 @property (strong) DebuggerWindowController *debuggerWC;
 @property (strong) DiskMakerWindowController *diskMakerWC;
 
+@property (strong) NSTimer *liveResizeUpdateTimer;
+
 @end
 
 static void DiskImgMsgHandler(const char *file, int line, const char *msg);
@@ -305,6 +307,18 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     if (self.fullScreenScale > 0) {
         [self.window setFrame:[self windowRectAtScale:self.fullScreenScale] display:YES animate:YES];
     }
+}
+
+- (void)windowWillStartLiveResize:(NSNotification *)notification {
+    self.liveResizeUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [self updateStatusLabelWidthWithOriginX:NAN];
+    }];
+    [[NSRunLoop currentRunLoop] addTimer:self.liveResizeUpdateTimer forMode:NSRunLoopCommonModes];
+}
+
+- (void)windowDidEndLiveResize:(NSNotification *)notification {
+    [self.liveResizeUpdateTimer invalidate];
+    self.liveResizeUpdateTimer = nil;
 }
 
 #pragma mark - NSOpenSavePanelDelegate
@@ -934,10 +948,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     
     self.driveButtons = driveButtons;
     
-    CGRect statusLabelFrame = self.statusLabel.frame;
-    statusLabelFrame.origin.x = drivesRightEdge + 5;
-    statusLabelFrame.size.width = self.screenRecordingButton.frame.origin.x - statusLabelFrame.origin.x - 5;
-    self.statusLabel.frame = statusLabelFrame;
+    [self updateStatusLabelWidthWithOriginX:drivesRightEdge + 5];
     
     if (self.driveButtons.count != oldDriveLightButtonsCount) {
         // constrain our window to not allow it to be resized so small that our
@@ -946,6 +957,15 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     
     [self updateDriveLights];
+}
+
+- (void)updateStatusLabelWidthWithOriginX:(CGFloat)x {
+    CGRect statusLabelFrame = self.statusLabel.frame;
+    if (!isnan(x)) {
+        statusLabelFrame.origin.x = x;
+    }
+    statusLabelFrame.size.width = self.screenRecordingButton.frame.origin.x - statusLabelFrame.origin.x - 5;
+    self.statusLabel.frame = statusLabelFrame;
 }
 
 - (void)reinitializeFrame {
@@ -1083,6 +1103,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     else {
         CGRect frame = [self windowRectAtScale:scale];
         [self.window setFrame:frame display:YES animate:NO];
+        [self updateStatusLabelWidthWithOriginX:NAN];
     }
 }
 
@@ -1137,7 +1158,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     // keep status bar out of the scaling because it's fixed height
     frame.size.height = (contentFrame.size.height - [self statusBarHeight]) * factor;
     frame.size.height += [self statusBarHeight];
-
+    
     // but no smaller than minimum
     CGSize minimumSize = [self minimumWindowSizeAtScale:1];
     if (frame.size.width < minimumSize.width || frame.size.height < minimumSize.height) {
@@ -1151,6 +1172,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     frame.origin.y = windowFrame.origin.y + (windowFrame.size.height - frame.size.height) / 2;
     
     [self.window setFrame:frame display:YES animate:NO];
+    [self updateStatusLabelWidthWithOriginX:NAN];
 }
 
 - (void)setStatus:(nullable NSString *)status {
