@@ -597,9 +597,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
         // ...and then convert it to PNG for saving
         NSImage *image = [[NSImage alloc] initWithData:[NSData dataWithBytes:buffer length:bufferSize]];
+        if ([[UserDefaults sharedInstance] takeScreenshotsBasedOnWindowSize]) {
+            const double scale = [self.delegate windowRectScale];
+            // i.e., SCREENSHOT_560x384
+            image = [self resize:image to:CGSizeMake(floor(560 * scale), floor(384 * scale))];
+        }
         CGImageRef cgRef = [image CGImageForProposedRect:NULL context:nil hints:nil];
         NSBitmapImageRep *newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgRef];
-        [newRep setSize:[image size]];
         NSData *pngData = [newRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
         free(buffer);
 #ifdef DEBUG
@@ -610,6 +614,29 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             completion(pngData);
         }
     });
+}
+
+- (NSImage *)resize:(NSImage*)sourceImage to:(NSSize)newSize {
+    // NSImage initWithSize takes screen coordinates, which on 2x screens
+    // has two pixels per point. Code below should divide newSize by 2 on
+    // 2x screens and do nothing on 1x screens...
+    CGRect r = { CGPointZero, newSize };
+    r = [self.view.window convertRectFromBacking:r];
+    newSize = r.size;
+    
+    // Report an error if the source isn't a valid image
+    if (![sourceImage isValid]){
+        NSLog(@"Invalid Image");
+    } else {
+        NSImage *resizedImage = [[NSImage alloc] initWithSize:newSize];
+        [resizedImage lockFocus];
+        [sourceImage setSize:newSize];
+        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositingOperationCopy fraction:1.0];
+        [resizedImage unlockFocus];
+        return resizedImage;
+    }
+    return nil;
 }
 
 - (NSURL *)saveScreenshot:(BOOL)silent {

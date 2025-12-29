@@ -20,6 +20,7 @@ extern NSString *GameControllerNumericKeypad;
 @property (nonatomic) NSURL *recordingsFolder;
 @property (nonatomic) NSURL *screenshotsFolder;
 @property (nonatomic) BOOL mapDeleteKeyToLeftArrow;
+@property (nonatomic) BOOL takeScreenshotsBasedOnWindowSize;
 
 @property (nonatomic) NSString *gameController;
 @property (readonly) NSArray<NSString *> *joystickOptions;

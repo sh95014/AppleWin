@@ -995,7 +995,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (double)windowRectScale {
     Video &video = GetVideo();
-    return self.window.frame.size.width / video.GetFrameBufferBorderlessWidth();
+    double horizontalRatio = self.contentBackgroundView.frame.size.width / video.GetFrameBufferBorderlessWidth();
+    double verticalRatio = self.contentBackgroundView.frame.size.height / video.GetFrameBufferBorderlessHeight();
+    // because we scale the emulated screen to fit the window,
+    // the effective scale is the smaller of the two.
+    return MIN(horizontalRatio, verticalRatio);
 }
 
 - (void)scaleWindowByFactor:(double)factor {
