@@ -267,7 +267,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
     const double timeSpent = NS_TO_S(clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - runLoopStartTime);
     NSTimeInterval idleTime;
     if (!frame->CanDoFullSpeed() && timeSpent < 1.0 / TARGET_FPS) {
-        idleTime = 0;// (1.0 / TARGET_FPS) - timeSpent;
+        idleTime = (1.0 / TARGET_FPS) - timeSpent;
     }
     else {
         idleTime = 0;
