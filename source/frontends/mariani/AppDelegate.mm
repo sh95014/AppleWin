@@ -361,7 +361,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     
     if ([sender isEqual:self.tapeOpenPanel]) {
-        return [url.pathExtension.uppercaseString isEqual:@"WAV"];
+        NSArray *allowedExtensions = @[ @"WAV", @"WAVE", @"AIFF", @"AIF" ];
+        return [allowedExtensions containsObject:url.pathExtension.uppercaseString];
     }
     else if ([sender isEqual:self.stateOpenPanel]) {
         NSArray <NSString *> *components = [url.filePathURL.lastPathComponent componentsSeparatedByString:@"."];
@@ -653,6 +654,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
             }
             audioData.insert(audioData.end(), data, data + frameCount * outputFormat.mBytesPerFrame);
         }
+        NSLog(@"loaded %lu bytes", (unsigned long)audioData.size());
         
         std::string filename(self.tapeOpenPanel.URL.lastPathComponent.UTF8String);
         CassetteTape::instance().setData(filename,
@@ -661,6 +663,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         
         ExtAudioFileDispose(inputFile);
         self.tapeOpenPanel = nil;
+        [self reconfigureDrives];
     }
 }
 
@@ -966,6 +969,23 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                 }
             }
         }
+    }
+    
+    // add an icon for a loaded cassette tape with filename as tooltip
+    CassetteTape::TapeInfo tapeInfo;
+    CassetteTape::instance().getTapeInfo(tapeInfo);
+    if (tapeInfo.filename.length() > 0) {
+        MarianiDriveButton *tapeButton = [MarianiDriveButton buttonForTape];
+        [driveButtons addObject:tapeButton];
+        [self.statusBarView addSubview:tapeButton];
+        
+        CGRect tapeButtonFrame = tapeButton.frame;
+        tapeButtonFrame.origin.x = statusBarLeftMargin + position * [MarianiDriveButton buttonWidth];
+        tapeButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
+        tapeButton.frame = tapeButtonFrame;
+        drivesRightEdge = CGRectGetMaxX(tapeButtonFrame);
+        
+        tapeButton.toolTip = [NSString stringWithCString:tapeInfo.filename.c_str() encoding:NSUTF8StringEncoding];
     }
     
     self.driveButtons = driveButtons;

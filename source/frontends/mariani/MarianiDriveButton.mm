@@ -63,7 +63,27 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     return [self buttonForFloppyDrive:drive inSlot:slot];
 }
 
++ (instancetype)buttonForTape {
+    // not a drive, but easier to share the status bar like this
+    MarianiDriveButton *button = [[MarianiDriveButton alloc] init];
+    button.slot = -1;
+    button.drive = -1;
+    [button setButtonType:NSButtonTypeMomentaryPushIn];
+    button.bezelStyle = NSBezelStyleShadowlessSquare;
+    button.bordered = NO;
+    button.enabled = NO;
+    button.image = [NSImage imageWithSystemSymbolName:@"recordingtape" accessibilityDescription:@""];
+    button.frame = CGRectMake(0, 0, self.buttonWidth, 29);
+    
+    return button;
+}
+
 - (void)updateDriveLight {
+    if (self.slot < 0 || self.drive < 0) {
+        // cassette tape, do nothing for now
+        return;
+    }
+    
     NSColor *driveSwappingColor = [NSColor controlAccentColor];
     
     CardManager &cardManager = GetCardMgr();
