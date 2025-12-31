@@ -253,6 +253,16 @@
         }
       }
     },
+    "Bank %u" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存體 %u"
+          }
+        }
+      }
+    },
     "Base64A Emulator" : {
       "localizations" : {
         "zh-Hant" : {
@@ -262,6 +272,17 @@
           }
         }
       }
+    },
+    "BASIC" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BASIC"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "Black & White" : {
       "localizations" : {
@@ -437,6 +458,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cortechs Corp - CodeWriter"
+          }
+        }
+      }
+    },
+    "Cx ROM" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cx 唯讀記憶體"
           }
         }
       }
@@ -649,6 +680,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "MEGA Audio (音效卡)"
+          }
+        }
+      }
+    },
+    "Memory" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記憶體"
           }
         }
       }
