@@ -371,7 +371,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 - (void)setSymbolName:(NSString *)symbolName fallbackSystemSymbolName:(NSString *)fallbackSymbolName {
     [self createImageViewIfNecessary];
     if (@available(macOS 13.0, *)) {
-        self.imageView.image = [NSImage imageWithSymbolName:@"custom.dot.radiowaves.left.and.right.circle.fill" variableValue:0];
+        self.imageView.image = [NSImage imageWithSymbolName:symbolName variableValue:0];
     }
     else {
         self.imageView.image = [NSImage imageWithSystemSymbolName:fallbackSymbolName accessibilityDescription:@""];
