@@ -1241,6 +1241,10 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 // MarianiFrame can't be compile as Objective-C++ to call these methods
 // itself.
 
+void VideoRefresh(void) {
+    [theAppDelegate.emulatorVC refreshTexture];
+}
+
 int ShowModalAlertOfType(int type, const char *message, const char *information) {
     NSString *msg = (message != NULL) ? [NSString stringWithUTF8String:message] : @"";
     NSString *info = (information != NULL) ? [NSString stringWithUTF8String:information] : @"";

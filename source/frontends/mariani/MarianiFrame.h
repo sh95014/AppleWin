@@ -17,7 +17,7 @@ class MarianiFrame : public common2::CommonFrame {
 public:
     MarianiFrame(const common2::EmulatorOptions& options);
 
-    void VideoPresentScreen() override {}
+    void VideoPresentScreen() override;
 
     int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType) override;
     virtual void GetBitmap(WORD id, LONG cb, LPVOID lpvBits) override;
