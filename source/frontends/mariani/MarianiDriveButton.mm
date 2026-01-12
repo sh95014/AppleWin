@@ -10,6 +10,7 @@
 #import "MarianiDriveButton.h"
 #import "AppDelegate.h"
 #import "DiskMakerWindowController.h"
+#import "NSImage+SFSymbols.h"
 
 // AppleWin
 #include <string>
@@ -343,12 +344,6 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 #pragma mark - SF Symbol subview
 
-+ (NSImageSymbolConfiguration *)symbolConfiguration {
-    static NSImageSymbolConfiguration *symbolConfiguration =
-        [NSImageSymbolConfiguration configurationWithScale:NSImageSymbolScaleLarge];
-    return symbolConfiguration;
-}
-
 - (void)setImage:(nullable NSImage *)image {
     NSAssert(NO, @"call setSystemSymbolName or setSymbolName instead");
 }
@@ -364,19 +359,17 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 - (void)setSystemSymbolName:(NSString *)symbolName {
     [self createImageViewIfNecessary];
-    self.imageView.image = [NSImage imageWithSystemSymbolName:symbolName accessibilityDescription:@""];
-    self.imageView.image = [self.imageView.image imageWithSymbolConfiguration:[[self class] symbolConfiguration]];
+    self.imageView.image = [NSImage largeImageWithSystemSymbolName:symbolName];
 }
 
 - (void)setSymbolName:(NSString *)symbolName fallbackSystemSymbolName:(NSString *)fallbackSymbolName {
     [self createImageViewIfNecessary];
     if (@available(macOS 13.0, *)) {
-        self.imageView.image = [NSImage imageWithSymbolName:symbolName variableValue:0];
+        self.imageView.image = [NSImage largeImageWithSymbolName:symbolName];
     }
     else {
-        self.imageView.image = [NSImage imageWithSystemSymbolName:fallbackSymbolName accessibilityDescription:@""];
+        self.imageView.image = [NSImage largeImageWithSystemSymbolName:fallbackSymbolName];
     }
-    self.imageView.image = [self.imageView.image imageWithSymbolConfiguration:[[self class] symbolConfiguration]];
 }
 
 @end
