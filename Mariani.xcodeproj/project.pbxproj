@@ -493,8 +493,8 @@
 		B0BAB4AA29B42CAA008F54D7 /* MockingboardCardManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B0BAB4A029B42CAA008F54D7 /* MockingboardCardManager.cpp */; };
 		B0BAB4AB29B42CAA008F54D7 /* MockingboardDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A829B42CAA008F54D7 /* MockingboardDefs.h */; };
 		B0BAB4AC29B42CAA008F54D7 /* MockingboardCardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B0BAB4A929B42CAA008F54D7 /* MockingboardCardManager.h */; };
-		B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
-		B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */; };
+		B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mm */; };
+		B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mm */; };
 		B0E1DC8E2988751000F61989 /* libslirp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC8D2988751000F61989 /* libslirp.a */; };
 		B0E1DC8F2988753900F61989 /* libStaticWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0E1DC80298874A800F61989 /* libStaticWrapper.a */; };
 		B0E1DC94298878B000F61989 /* StaticLibraryWrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */; };
@@ -1300,7 +1300,7 @@
 		B0D1C3C727B45E5600C0BF71 /* block.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = block.c; path = source/frontends/mariani/CiderPress/diskimg/libhfs/block.c; sourceTree = "<group>"; };
 		B0D1C3C827B45E5600C0BF71 /* data.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = data.c; path = source/frontends/mariani/CiderPress/diskimg/libhfs/data.c; sourceTree = "<group>"; };
 		B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MemoryViewerWindowController.h; sourceTree = "<group>"; };
-		B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MemoryViewerWindowController.mn; sourceTree = "<group>"; };
+		B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = MemoryViewerWindowController.mm; sourceTree = "<group>"; };
 		B0E1DC80298874A800F61989 /* libStaticWrapper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libStaticWrapper.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0E1DC8D2988751000F61989 /* libslirp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libslirp.a; path = ../../../../usr/local/Cellar/libslirp/4.7.0/lib/libslirp.a; sourceTree = "<group>"; };
 		B0E1DC922988785F00F61989 /* StaticLibraryWrapper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = StaticLibraryWrapper.c; sourceTree = "<group>"; };
@@ -2245,7 +2245,7 @@
 			isa = PBXGroup;
 			children = (
 				B0DB46E42A36E5A600B4E670 /* MemoryViewerWindowController.h */,
-				B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mn */,
+				B0DB46E52A36E5A600B4E670 /* MemoryViewerWindowController.mm */,
 				B0211CFD2A3A5EF50057ECBE /* MemoryViewerWindow.xib */,
 			);
 			path = "memory viewer";
@@ -3081,7 +3081,7 @@
 				B00ECB7B279EEB600041E16C /* UserDefaults.mm in Sources */,
 				B00ECB7E279EEB600041E16C /* MarianiFrame.cpp in Sources */,
 				B00ECB80279EEB600041E16C /* fileregistry.cpp in Sources */,
-				B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
+				B0DB46EA2A36E5A600B4E670 /* MemoryViewerWindowController.mm in Sources */,
 				B00ECB81279EEB600041E16C /* main.mm in Sources */,
 				B00ECB82279EEB600041E16C /* programoptions.cpp in Sources */,
 				976892FA2DEB62D80040CB83 /* argparser.cpp in Sources */,
@@ -3148,7 +3148,7 @@
 				B0689D182781984F0029EB7D /* UserDefaults.mm in Sources */,
 				B0689D0A2780B9B60029EB7D /* MarianiFrame.cpp in Sources */,
 				B049E852277B6FFE00FC14A3 /* fileregistry.cpp in Sources */,
-				B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mn in Sources */,
+				B0DB46E92A36E5A600B4E670 /* MemoryViewerWindowController.mm in Sources */,
 				B032DE2D277A0C24006DC0F7 /* main.mm in Sources */,
 				B0689D0D2780C85F0029EB7D /* programoptions.cpp in Sources */,
 				976892F82DEB62D80040CB83 /* argparser.cpp in Sources */,

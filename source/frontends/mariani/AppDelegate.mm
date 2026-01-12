@@ -78,6 +78,7 @@ using namespace DiskImgLib;
 @property BOOL hasStatusBar;
 @property (readonly) double statusBarHeight;
 @property CGFloat fullScreenScale;
+@property BOOL hadStatusBarWhileWindowed;
 
 @property (strong) NSOpenPanel *tapeOpenPanel;
 @property (strong) NSOpenPanel *stateOpenPanel;
@@ -104,11 +105,16 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     Global::SetDebugMsgHandler(DiskImgMsgHandler);
     Global::AppInit();
     
-    _hasStatusBar = YES;
-    if (![[UserDefaults sharedInstance] showStatusBar]) {
-        // the storyboard assumes that status bar is visible, so force a
-        // toggle if it's supposed to be hidden
-        [self toggleStatusBarAction:self];
+    _hasStatusBar = [[UserDefaults sharedInstance] showStatusBar];
+    if (!self.hasStatusBar) {
+        self.statusBarView.hidden = YES;
+        [self updateDriveLights];
+        self.showHideStatusBarMenuItem.title = NSLocalizedString(@"Show Status Bar", @"");
+        
+        CGRect contentBackgroundFrame = self.contentBackgroundView.frame;
+        contentBackgroundFrame.size.height += STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.origin.y -= STATUS_BAR_HEIGHT;
+        [self.contentBackgroundView setFrame:contentBackgroundFrame];
     }
     [self setStatus:nil];
     
@@ -229,9 +235,19 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         // parameter must be nil for a silent check
         [self checkForUpdates:nil];
     }
+    
+    // in case user launches straight to full-screen
+    self.fullScreenScale = -1;
+    self.hadStatusBarWhileWindowed = self.hasStatusBar;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self LogWindowFrame:__PRETTY_FUNCTION__];
+    });
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
+    [self LogWindowFrame:__PRETTY_FUNCTION__];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.emulatorVC stop];
 
@@ -288,6 +304,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
     
     self.fullScreenScale = -1;
+    self.hadStatusBarWhileWindowed = self.hasStatusBar;
 }
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification {
@@ -306,6 +323,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     // adopt whatever new scale the user chose while full-screen
     if (self.fullScreenScale > 0) {
         [self.window setFrame:[self windowRectAtScale:self.fullScreenScale] display:YES animate:YES];
+    }
+    else if (self.hadStatusBarWhileWindowed != self.hasStatusBar) {
+        CGRect windowFrame = self.window.frame;
+        windowFrame.size.height += self.hadStatusBarWhileWindowed ? -STATUS_BAR_HEIGHT : STATUS_BAR_HEIGHT;
+        [self.window setFrame:windowFrame display:YES animate:YES];
     }
 }
 
@@ -339,7 +361,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     
     if ([sender isEqual:self.tapeOpenPanel]) {
-        return [url.pathExtension.uppercaseString isEqual:@"WAV"];
+        NSArray *allowedExtensions = @[ @"WAV", @"WAVE", @"AIFF", @"AIF" ];
+        return [allowedExtensions containsObject:url.pathExtension.uppercaseString];
     }
     else if ([sender isEqual:self.stateOpenPanel]) {
         NSArray <NSString *> *components = [url.filePathURL.lastPathComponent componentsSeparatedByString:@"."];
@@ -631,6 +654,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
             }
             audioData.insert(audioData.end(), data, data + frameCount * outputFormat.mBytesPerFrame);
         }
+        NSLog(@"loaded %lu bytes", (unsigned long)audioData.size());
         
         std::string filename(self.tapeOpenPanel.URL.lastPathComponent.UTF8String);
         CassetteTape::instance().setData(filename,
@@ -639,6 +663,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         
         ExtAudioFileDispose(inputFile);
         self.tapeOpenPanel = nil;
+        [self reconfigureDrives];
     }
 }
 
@@ -946,6 +971,23 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         }
     }
     
+    // add an icon for a loaded cassette tape with filename as tooltip
+    CassetteTape::TapeInfo tapeInfo;
+    CassetteTape::instance().getTapeInfo(tapeInfo);
+    if (tapeInfo.filename.length() > 0) {
+        MarianiDriveButton *tapeButton = [MarianiDriveButton buttonForTape];
+        [driveButtons addObject:tapeButton];
+        [self.statusBarView addSubview:tapeButton];
+        
+        CGRect tapeButtonFrame = tapeButton.frame;
+        tapeButtonFrame.origin.x = statusBarLeftMargin + position * [MarianiDriveButton buttonWidth];
+        tapeButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
+        tapeButton.frame = tapeButtonFrame;
+        drivesRightEdge = CGRectGetMaxX(tapeButtonFrame);
+        
+        tapeButton.toolTip = [NSString stringWithCString:tapeInfo.filename.data() encoding:NSUTF8StringEncoding];
+    }
+    
     self.driveButtons = driveButtons;
     
     [self updateStatusLabelWidthWithOriginX:drivesRightEdge + 5];
@@ -1181,6 +1223,14 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (double)statusBarHeight {
     return self.hasStatusBar ? STATUS_BAR_HEIGHT : 0;
+}
+
+- (void)LogWindowFrame:(const char *)context {
+    const CGRect windowFrame = self.window.frame;
+    NSLog(@"%s: window.frame = { %.1f, %.1f, %.1f, %.1f }",
+          context,
+          windowFrame.origin.x, windowFrame.origin.y,
+          windowFrame.size.width, windowFrame.size.height);
 }
 
 @end
