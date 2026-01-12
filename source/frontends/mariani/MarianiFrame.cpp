@@ -37,6 +37,11 @@ MarianiFrame::MarianiFrame(const common2::EmulatorOptions& options)
     g_sBuiltinSymbolsDir = GetBuiltinSymbolsDirectory();
 }
 
+void MarianiFrame::VideoPresentScreen()
+{
+    VideoRefresh();
+}
+
 int MarianiFrame::FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType)
 {
     int returnValue = ShowModalAlertOfType(uType, lpCaption, lpText);

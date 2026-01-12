@@ -58,6 +58,8 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSButton *generalScreenshotsFolderButton;
 @property (strong) IBOutlet NSButton *generalRecordingsFolderButton;
 @property (strong) IBOutlet NSButton *generalMapDeleteKeyToLeftArrowButton;
+@property (strong) IBOutlet NSButton *generalTakeScreenshotsBasedOnWindowSize;
+@property (strong) IBOutlet NSButton *generalAutomaticallyCheckForUpdates;
 
 @property (strong) IBOutlet NSPopUpButton *computerMainBoardButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot1Button;
@@ -164,6 +166,8 @@ BOOL configured;
     self.generalRecordingsFolderButton.title = [folder.path stringByAbbreviatingWithTildeInPath];
 
     self.generalMapDeleteKeyToLeftArrowButton.state = [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow ? NSControlStateValueOn : NSControlStateValueOff;
+    self.generalTakeScreenshotsBasedOnWindowSize.state = [UserDefaults sharedInstance].takeScreenshotsBasedOnWindowSize ? NSControlStateValueOn : NSControlStateValueOff;
+    self.generalAutomaticallyCheckForUpdates.state = [UserDefaults sharedInstance].automaticallyCheckForUpdates ? NSControlStateValueOn : NSControlStateValueOff;
 }
 
 // types of main boards, ordered as we want them to appear in UI
@@ -393,6 +397,20 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 
     BOOL mapDeleteKeyToLeftArrow = [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow;
     [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow = !mapDeleteKeyToLeftArrow;
+}
+
+- (IBAction)toggleTakeScreenshotsBasedOnWindowSize:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    BOOL takeScreenshotsBasedOnWindowSize = [UserDefaults sharedInstance].takeScreenshotsBasedOnWindowSize;
+    [UserDefaults sharedInstance].takeScreenshotsBasedOnWindowSize = !takeScreenshotsBasedOnWindowSize;
+}
+
+- (IBAction)toggleAutomaticallyCheckForUpdates:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    BOOL automaticallyCheckForUpdates = [UserDefaults sharedInstance].automaticallyCheckForUpdates;
+    [UserDefaults sharedInstance].automaticallyCheckForUpdates = !automaticallyCheckForUpdates;
 }
 
 - (IBAction)recordingsFolderAction:(id)sender {

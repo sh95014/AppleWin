@@ -20,6 +20,8 @@ extern NSString *GameControllerNumericKeypad;
 @property (nonatomic) NSURL *recordingsFolder;
 @property (nonatomic) NSURL *screenshotsFolder;
 @property (nonatomic) BOOL mapDeleteKeyToLeftArrow;
+@property (nonatomic) BOOL takeScreenshotsBasedOnWindowSize;
+@property (nonatomic) BOOL automaticallyCheckForUpdates;
 
 @property (nonatomic) NSString *gameController;
 @property (readonly) NSArray<NSString *> *joystickOptions;
@@ -29,6 +31,8 @@ extern NSString *GameControllerNumericKeypad;
 @property (nonatomic) NSInteger joystickButton1Mapping;
 
 @property (nonatomic) BOOL showStatusBar;
+
+@property (nonatomic) NSDate *lastUpdateCheckDate;
 
 @end
 

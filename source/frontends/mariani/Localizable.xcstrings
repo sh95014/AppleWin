@@ -123,6 +123,16 @@
         }
       }
     },
+    "A newer version of this software is available." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已有比本軟體較新的版本"
+          }
+        }
+      }
+    },
     "About %@" : {
       "localizations" : {
         "zh-Hant" : {
@@ -243,6 +253,16 @@
         }
       }
     },
+    "Bank %u" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存體 %u"
+          }
+        }
+      }
+    },
     "Base64A Emulator" : {
       "localizations" : {
         "zh-Hant" : {
@@ -252,6 +272,17 @@
           }
         }
       }
+    },
+    "BASIC" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BASIC"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "Black & White" : {
       "localizations" : {
@@ -431,12 +462,32 @@
         }
       }
     },
+    "Cx ROM" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cx 唯讀記憶體"
+          }
+        }
+      }
+    },
     "Default AppleWin Boot Sector" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "AppleWin 預設啟動磁區"
+          }
+        }
+      }
+    },
+    "Download…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前往下載⋯"
           }
         }
       }
@@ -488,6 +539,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "加強版蘋果 //e 模擬器"
+          }
+        }
+      }
+    },
+    "Error" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "錯誤"
           }
         }
       }
@@ -623,6 +684,16 @@
         }
       }
     },
+    "Memory" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記憶體"
+          }
+        }
+      }
+    },
     "Mockingboard C (sound)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -722,6 +793,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "否"
+          }
+        }
+      }
+    },
+    "No newer version of this software is available." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本軟體仍是最新版本"
           }
         }
       }
@@ -1210,6 +1291,16 @@
         }
       }
     },
+    "Unexpected server response" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未預期的伺服器回應"
+          }
+        }
+      }
+    },
     "Unknown" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1236,6 +1327,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未命名"
+          }
+        }
+      }
+    },
+    "Up-to-Date" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仍是最新"
+          }
+        }
+      }
+    },
+    "Update Available" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已有更新"
           }
         }
       }

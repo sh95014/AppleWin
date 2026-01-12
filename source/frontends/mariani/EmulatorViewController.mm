@@ -183,77 +183,20 @@ extern common2::EmulatorOptions gEmulatorOptions;
     self.frameCount = 0;
 #endif // SHOW_EMULATED_CPU_SPEED
     
-    CVDisplayLinkCreateWithActiveCGDisplays(&_displayLink);
-    CVDisplayLinkSetOutputCallback(self.displayLink, &MyDisplayLinkCallback, (__bridge void *)self);
-    CGDirectDisplayID viewDisplayID =
-        (CGDirectDisplayID) [self.view.window.screen.deviceDescription[@"NSScreenNumber"] unsignedIntegerValue];
-    CVDisplayLinkSetCurrentCGDisplay(_displayLink, viewDisplayID);
-    CVDisplayLinkStart(self.displayLink);
-#ifdef SHOW_FPS
-    displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    displayLinkCallbackCount = 0;
-#endif // SHOW_FPS
-    
     [self startRunLoopTimer];
-    
-#ifdef SHOW_FPS
-    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        uint64_t duration = clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - displayLinkCallbackStartTime;
-        double fps = displayLinkCallbackCount / (duration / 1000000000.0);
-        [self.delegate setStatus:[NSString stringWithFormat:@"%.3f fps", fps]];
-        
-        displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-        displayLinkCallbackCount = 0;
-    }];
-#endif // SHOW_FPS
-}
-
-- (void)setRecordingScreen:(BOOL)recordingScreen {
-    if (_isRecordingScreen != recordingScreen) {
-        _isRecordingScreen = recordingScreen;
-        [self tick];
-    }
-}
-
-- (BOOL)isRecordingScreen {
-    return _isRecordingScreen;
-}
-
-- (void)tick {
-    if (self.isRecordingScreen) {
-        [self.delegate screenRecordingDidTick];
-        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(tock) userInfo:nil repeats:NO];
-    }
-}
-
-- (void)tock {
-    if (self.isRecordingScreen) {
-        [self.delegate screenRecordingDidTock];
-        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(tick) userInfo:nil repeats:NO];
-    }
-}
-
-#ifdef SHOW_FPS
-static uint64_t displayLinkCallbackStartTime;
-static NSUInteger displayLinkCallbackCount;
-#endif // SHOW_FPS
-static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *now, const CVTimeStamp *outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void *displayLinkContext)
-{
-#ifdef SHOW_FPS
-    displayLinkCallbackCount++;
-#endif
-    dispatch_async(dispatch_get_main_queue(), ^{
-        EmulatorViewController *emulatorVC = (__bridge EmulatorViewController *)displayLinkContext;
-        [emulatorVC refreshTexture];
-    });
-    return kCVReturnSuccess;
 }
 
 - (void)startRunLoopTimer {
-    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
+    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)runLoopTimerFired {
+#ifdef SHOW_EMULATED_CPU_SPEED
+    static uint64_t timeOfLastUpdate = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+#endif
+    const uint64_t runLoopStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+    
     // g_nAppMode can change through a debugger CLI command, so we notice it and notify others
     if (self.savedAppMode != g_nAppMode) {
         if ((self.savedAppMode == MODE_RUNNING || self.savedAppMode == MODE_STEPPING) && g_nAppMode == MODE_DEBUG) {
@@ -265,37 +208,45 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         self.savedAppMode = g_nAppMode;
     }
     
-#ifdef DEBUG
-    NSDate *start = [NSDate now];
-#endif
+    const int64_t frameTime = g_fCurrentCLK6502 / TARGET_FPS;
+    frame->ExecuteOneFrame(frameTime);
     
-    frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
-
+    if (g_bFullSpeed) {
+        frame->VideoRedrawScreenDuringFullSpeed(g_dwCyclesThisFrame);
+    } else {
+        frame->SyncVideoPresentScreen(frameTime);
+    }
+    
 #ifdef SHOW_EMULATED_CPU_SPEED
     self.frameCount++;
-    static uint64_t timeOfLastUpdate = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    uint64_t currentTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    if (currentTime - timeOfLastUpdate > 1000000000.0 / TARGET_FPS) {
+    if (runLoopStartTime - timeOfLastUpdate > 1000000000) {
         NSArray *cpus = @[ @"", @"6502", @"65C02", @"Z80" ];
         double clockSpeed =
             (double)(g_nCumulativeCycles - self.samplePeriodBeginCumulativeCycles) /
             -[self.samplePeriodBeginClockTime timeIntervalSinceNow];
         [self.delegate setStatus:[NSString stringWithFormat:@"%@@%.3f MHz", cpus[GetActiveCpu()], clockSpeed / 1000000]];
-
+        
         self.samplePeriodBeginClockTime = [NSDate now];
         self.samplePeriodBeginCumulativeCycles = g_nCumulativeCycles;
         self.frameCount = 0;
-        timeOfLastUpdate = currentTime;
+        timeOfLastUpdate = runLoopStartTime;
     }
 #endif // SHOW_EMULATED_CPU_SPEED
     
-#ifdef DEBUG
-    NSTimeInterval duration = -[start timeIntervalSinceNow];
-    if (duration > 1.0 / TARGET_FPS) {
-        // oops, took too long
-        NSLog(@"Frame time exceeded: %f ms", duration * 1000);
+    // allow the host CPU to rest until the next frame
+    const double timeSpent = NS_TO_S(clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - runLoopStartTime);
+    NSTimeInterval idleTime;
+    if (!frame->CanDoFullSpeed() && timeSpent < 1.0 / TARGET_FPS) {
+        idleTime = (1.0 / TARGET_FPS) - timeSpent;
     }
+    else {
+        idleTime = 0;
+#ifdef DEBUG
+        NSLog(@"Frame time exceeded: %f ms", timeSpent * 1000);
 #endif // DEBUG
+    }
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:idleTime target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
+    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)recordingTimerFired {
@@ -425,7 +376,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)pause {
-    [self.runLoopTimer invalidate];
     CVDisplayLinkStop(self.displayLink);
     CVDisplayLinkRelease(self.displayLink);
     self.displayLink = NULL;
@@ -436,8 +386,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)reboot {
-    // don't try to run the emulator during a restart
-    [self.runLoopTimer invalidate];
     frame->Restart();
     [self startRunLoopTimer];
     [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidRebootNotification object:self];
@@ -618,9 +566,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 #endif
         // ...and then convert it to PNG for saving
         NSImage *image = [[NSImage alloc] initWithData:[NSData dataWithBytes:buffer length:bufferSize]];
+        if ([[UserDefaults sharedInstance] takeScreenshotsBasedOnWindowSize]) {
+            const double scale = [self.delegate windowRectScale];
+            // i.e., SCREENSHOT_560x384
+            image = [self resize:image to:CGSizeMake(floor(560 * scale), floor(384 * scale))];
+        }
         CGImageRef cgRef = [image CGImageForProposedRect:NULL context:nil hints:nil];
         NSBitmapImageRep *newRep = [[NSBitmapImageRep alloc] initWithCGImage:cgRef];
-        [newRep setSize:[image size]];
         NSData *pngData = [newRep representationUsingType:NSBitmapImageFileTypePNG properties:@{}];
         free(buffer);
 #ifdef DEBUG
@@ -631,6 +583,29 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             completion(pngData);
         }
     });
+}
+
+- (NSImage *)resize:(NSImage*)sourceImage to:(NSSize)newSize {
+    // NSImage initWithSize takes screen coordinates, which on 2x screens
+    // has two pixels per point. Code below should divide newSize by 2 on
+    // 2x screens and do nothing on 1x screens...
+    CGRect r = { CGPointZero, newSize };
+    r = [self.view.window convertRectFromBacking:r];
+    newSize = r.size;
+    
+    // Report an error if the source isn't a valid image
+    if (![sourceImage isValid]){
+        NSLog(@"Invalid Image");
+    } else {
+        NSImage *resizedImage = [[NSImage alloc] initWithSize:newSize];
+        [resizedImage lockFocus];
+        [sourceImage setSize:newSize];
+        [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+        [sourceImage drawAtPoint:NSZeroPoint fromRect:CGRectMake(0, 0, newSize.width, newSize.height) operation:NSCompositingOperationCopy fraction:1.0];
+        [resizedImage unlockFocus];
+        return resizedImage;
+    }
+    return nil;
 }
 
 - (NSURL *)saveScreenshot:(BOOL)silent {
