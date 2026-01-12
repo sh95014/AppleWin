@@ -985,7 +985,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         tapeButton.frame = tapeButtonFrame;
         drivesRightEdge = CGRectGetMaxX(tapeButtonFrame);
         
-        tapeButton.toolTip = [NSString stringWithCString:tapeInfo.filename.c_str() encoding:NSUTF8StringEncoding];
+        tapeButton.toolTip = [NSString stringWithCString:tapeInfo.filename.data() encoding:NSUTF8StringEncoding];
     }
     
     self.driveButtons = driveButtons;
