@@ -35,6 +35,7 @@
 #import "PreferencesWindowController.h"
 #import "MarianiDriveButton.h"
 #import "MemoryViewerWindowController.h"
+#import "NSImage+SFSymbols.h"
 #import "DebuggerWindowController.h"
 #import "UserDefaults.h"
 
@@ -43,7 +44,7 @@ using namespace DiskImgLib;
 
 #define STATUS_BAR_HEIGHT           32
 #define STATUS_BAR_DIVIDER_MARGIN   3
-#define STATUS_BAR_BOTTOM_MARGIN    2
+#define STATUS_BAR_BOTTOM_MARGIN    1
 
 // needs to match tag of Edit menu item in MainMenu.xib
 #define EDIT_TAG            3917
@@ -153,10 +154,16 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     
     [self reconfigureDrives];
     
-    // macOS 11 doesn't have the SF Symbols we want, so fall back to available ones
     if (![theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
+        // macOS 11 doesn't have the SF Symbols we want, so fall back to available ones
         self.statusBarPowerButton.image = [NSImage imageWithSystemSymbolName:@"power" accessibilityDescription:@""];
-        self.statusBarResetButton.image = [NSImage imageWithSystemSymbolName:@"arrow.clockwise" accessibilityDescription:@""];
+        self.statusBarResetButton.image = [NSImage imageWithSystemSymbolName:@"arrow.counterclockwise" accessibilityDescription:@""];
+    }
+    else {
+        NSImage *customImage = [NSImage largeImageWithSymbolName:@"custom.arrow.trianglehead.2.counterclockwise.circle.fill"];
+        if (customImage) {
+            self.statusBarResetButton.image = customImage;
+        }
     }
     
     [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent * _Nullable(NSEvent * _Nonnull event) {

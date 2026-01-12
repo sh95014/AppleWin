@@ -317,7 +317,7 @@
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="iK9-st-1jl">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
-                                    <imageReference key="image" image="arrow.clockwise.circle.fill" catalog="system" symbolScale="large"/>
+                                    <imageReference key="image" image="arrow.counterclockwise.circle.fill" catalog="system" symbolScale="large"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="controlResetAction:" target="Voe-Tx-rLC" id="ULq-Qv-XWs"/>
@@ -366,7 +366,7 @@
         </window>
     </objects>
     <resources>
-        <image name="arrow.clockwise.circle.fill" catalog="system" width="20" height="20"/>
+        <image name="arrow.counterclockwise.circle.fill" catalog="system" width="20" height="20"/>
         <image name="camera" catalog="system" width="19" height="15"/>
         <image name="power.circle.fill" catalog="system" width="20" height="20"/>
         <image name="record.circle" catalog="system" width="15" height="15"/>
