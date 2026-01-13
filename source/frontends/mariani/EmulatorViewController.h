@@ -40,8 +40,6 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 - (void)terminateWithReason:(NSString *)reason;
 
 - (void)screenRecordingDidStart;
-- (void)screenRecordingDidTick;
-- (void)screenRecordingDidTock;
 - (void)screenRecordingDidStop:(NSURL *)url;
 
 - (void)setStatus:(nullable NSString *)status;
