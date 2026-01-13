@@ -58,7 +58,6 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 
 - (void)start;
 - (void)refreshTexture;
-- (void)pause;
 - (void)resetSpeed;
 - (void)reboot;
 - (void)reinitialize;

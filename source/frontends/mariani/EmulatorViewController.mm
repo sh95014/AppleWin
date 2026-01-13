@@ -56,7 +56,11 @@
 #undef SHOW_EMULATED_CPU_SPEED
 
 // nanoseconds to floating point seconds
-#define NS_TO_S(x) ((x)/1000000000.0)
+#define NS_PER_SEC 1000000000.0
+#define NS_TO_S(x) ((x) / NS_PER_SEC)
+
+// multiply to convert nanoseconds to CM_TIMEBASE
+#define CMTIME_NS_FACTOR ((double)CMTIME_BASE / NS_PER_SEC)
 
 const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
 const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
@@ -75,6 +79,7 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 
 @interface EmulatorViewController () {
     BOOL _isRecordingScreen;
+    BOOL _isEncodingFrame;
 }
 
 @property (strong) EmulatorRenderer *renderer;
@@ -89,14 +94,20 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property NSInteger frameCount;
 #endif // SHOW_EMULATED_CPU_SPEED
 @property NSTimer *runLoopTimer;
-@property CVDisplayLinkRef displayLink;
 
 @property AVAssetWriter *videoWriter;
 @property AVAssetWriterInput *videoWriterInput;
 @property AVAssetWriterInputPixelBufferAdaptor *videoWriterAdaptor;
 @property uint64_t clockAtRecordingStart;
+@property (getter=isEncodingFrame) BOOL encodingFrame;
 
 @property NSMutableArray<AudioOutput *> *audioOutputs;
+
+#ifdef DEBUG
+@property NSInteger encodeNormalCount;
+@property NSInteger encodeDeferredCount;
+@property NSInteger encodeSkippedCount;
+#endif // DEBUG
 
 @property AppMode_e savedAppMode;
 
@@ -182,13 +193,8 @@ extern common2::EmulatorOptions gEmulatorOptions;
     self.samplePeriodBeginCumulativeCycles = g_nCumulativeCycles;
     self.frameCount = 0;
 #endif // SHOW_EMULATED_CPU_SPEED
-    
-    [self startRunLoopTimer];
-}
 
-- (void)startRunLoopTimer {
     self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
-    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)runLoopTimerFired {
@@ -238,33 +244,47 @@ extern common2::EmulatorOptions gEmulatorOptions;
     NSTimeInterval idleTime;
     if (!frame->CanDoFullSpeed() && timeSpent < 1.0 / TARGET_FPS) {
         idleTime = (1.0 / TARGET_FPS) - timeSpent;
+        if (self.isRecordingScreen) {
+            if (!self.isEncodingFrame) {
+                [self encodeFrame];
+#ifdef DEBUG
+                self.encodeNormalCount++;
+#endif
+            }
+#ifdef DEBUG
+            else {
+                self.encodeDeferredCount++;
+            }
+#endif // DEBUG
+        }
     }
     else {
         idleTime = 0;
 #ifdef DEBUG
         NSLog(@"Frame time exceeded: %f ms", timeSpent * 1000);
+        if (self.isRecordingScreen) {
+            self.encodeSkippedCount++;
+        }
 #endif // DEBUG
     }
     self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:idleTime target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
-    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
-- (void)recordingTimerFired {
+- (void)encodeFrame {
+    NSAssert(!self.isEncodingFrame, @"must not already be encoding a frame");
+    
+    self.encodingFrame = YES;
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
         const uint64_t clockNow = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
         if (self.clockAtRecordingStart == 0) {
             // first frame of recording
             self.clockAtRecordingStart = clockNow;
         }
-        const double secondsSinceRecordingStart = NS_TO_S(clockNow - self.clockAtRecordingStart);
+        const double durationSinceRecordingStart = (clockNow - self.clockAtRecordingStart) * CMTIME_NS_FACTOR;
         
         self->frameBuffer.data = self->frame->FrameBufferData();
         
         if (self.videoWriterInput.readyForMoreMediaData) {
-            if (!self.isRecordingScreen) {
-                self.recordingScreen = YES;
-            }
-            
             // make a CVPixelBuffer and point the frame buffer to it
             CVPixelBufferRef pixelBuffer = NULL;
             CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault,
@@ -280,7 +300,7 @@ extern common2::EmulatorOptions gEmulatorOptions;
             if (status == kCVReturnSuccess && pixelBuffer != NULL) {
                 // append the CVPixelBuffer into the output stream
                 [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
-                                      withPresentationTime:CMTimeMake(floor(secondsSinceRecordingStart * CMTIME_BASE), CMTIME_BASE)];
+                                      withPresentationTime:CMTimeMake(floor(durationSinceRecordingStart), CMTIME_BASE)];
                 CVPixelBufferRelease(pixelBuffer);
             }
         }
@@ -368,17 +388,9 @@ extern common2::EmulatorOptions gEmulatorOptions;
             }
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // set next alarm to maintain TARGET_FPS
-            [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
-        });
+        // mark ourselves ready for next frame
+        self.encodingFrame = NO;
     });
-}
-
-- (void)pause {
-    CVDisplayLinkStop(self.displayLink);
-    CVDisplayLinkRelease(self.displayLink);
-    self.displayLink = NULL;
 }
 
 - (void)resetSpeed {
@@ -387,7 +399,8 @@ extern common2::EmulatorOptions gEmulatorOptions;
 
 - (void)reboot {
     frame->Restart();
-    [self startRunLoopTimer];
+    [self start];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidRebootNotification object:self];
 }
 
@@ -415,7 +428,6 @@ extern common2::EmulatorOptions gEmulatorOptions;
 }
 
 - (void)stop {
-    [self pause];
     if (frame != NULL) {
         frame->End();
     }
@@ -493,7 +505,13 @@ extern common2::EmulatorOptions gEmulatorOptions;
         [self.videoWriter startSessionAtSourceTime:kCMTimeZero];
         
         self.clockAtRecordingStart = 0;
-        [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
+        self.recordingScreen = YES;
+        self.encodingFrame = NO;
+#ifdef DEBUG
+        self.encodeNormalCount = 0;
+        self.encodeDeferredCount = 0;
+        self.encodeSkippedCount = 0;
+#endif // DEBUG
     }
     else {
         // stop recording
@@ -520,6 +538,11 @@ extern common2::EmulatorOptions gEmulatorOptions;
             self.videoWriterAdaptor = nil;
             
             NSLog(@"Ended screen recording");
+#ifdef DEBUG
+            NSLog(@"Encoding dispatched: %ld", self.encodeNormalCount);
+            NSLog(@"Encoding deferred: %ld", self.encodeDeferredCount);
+            NSLog(@"Encoding skipped: %ld", self.encodeSkippedCount);
+#endif // DEBUG
             
             [self.delegate screenRecordingDidStop:url];
         }];

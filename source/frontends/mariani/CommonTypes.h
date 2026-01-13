@@ -22,6 +22,6 @@ typedef struct {
 #define OVERSCAN                0.1
 
 #define TARGET_FPS              60
-#define CMTIME_BASE             600
+#define CMTIME_BASE             60000
 
 #endif /* CommonTypes_h */

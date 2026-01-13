@@ -214,10 +214,13 @@ std::shared_ptr<SoundBuffer> iCreateDirectSoundBuffer(
     uint32_t dwBufferSize, uint32_t nSampleRate, int nChannels, const char *pszVoiceName)
 {
     try {
-        std::shared_ptr<DirectSoundGenerator> generator = std::make_shared<DirectSoundGenerator>(dwBufferSize, nSampleRate, nChannels, pszVoiceName);
-        DirectSoundGenerator * ptr = generator.get();
-        activeSoundGenerators.insert(ptr);
-        ptr->SetAudioOutput(RegisterAudioOutput(ptr->myChannels, ptr->mySampleRate));
+        static std::shared_ptr<DirectSoundGenerator> generator = 0;
+        if (!generator) {
+            generator = std::make_shared<DirectSoundGenerator>(dwBufferSize, nSampleRate, nChannels, pszVoiceName);
+            DirectSoundGenerator * ptr = generator.get();
+            activeSoundGenerators.insert(ptr);
+            ptr->SetAudioOutput(RegisterAudioOutput(ptr->myChannels, ptr->mySampleRate));
+        }
         return generator;
     }
     catch (const std::exception & e) {
