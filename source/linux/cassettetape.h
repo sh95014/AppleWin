@@ -3,6 +3,12 @@
 #include <vector>
 #include <cstdint>
 
+#ifdef __GNUC__
+#define DEPRECATED __attribute__((__deprecated__))
+#else
+#define DEPRECATED
+#endif
+
 class CassetteTape
 {
 public:
@@ -14,8 +20,11 @@ public:
     struct TapeInfo
     {
         std::string_view filename;
-        size_t size;
-        size_t pos;
+        uint32_t duration; // ms
+        uint32_t position; // ms
+        double playbackRate; // seconds per second
+        size_t size DEPRECATED;
+        size_t pos DEPRECATED;
         int frequency;
         uint8_t bit;
     };
@@ -23,6 +32,8 @@ public:
     void getTapeInfo(TapeInfo &info) const;
     void eject();
     void rewind();
+
+    void (*playbackRateChangeCallback)(double playbackRate) = 0;
 
     static CassetteTape &instance();
 
@@ -32,9 +43,9 @@ private:
 
     std::vector<tape_data_t> myData;
 
-    int64_t myBaseCycles;
+    int64_t myBaseCycles = -1;
+    bool myReachedEnd = false;
     int myFrequency;
-    bool myIsPlaying = false;
     BYTE myLastBit = 1;     // negative wave
     std::string myFilename; // just for info
 
