@@ -129,13 +129,13 @@ BYTE CassetteTape::getValue(const ULONG nExecutedCycles)
 void CassetteTape::getTapeInfo(TapeInfo &info) const
 {
     info.filename = myFilename;
-    const tape_data_t val = getCurrentWave(info.pos);
+    size_t pos;
+    const tape_data_t val = getCurrentWave(pos);
     const size_t size = myData.size();
     info.bit = myLastBit;
-    info.size = size;
     info.duration = (size * 1000.0) / myFrequency;
-    info.position = (info.pos * 1000.0) / myFrequency;
-    info.playbackRate = (myBaseCycles >= 0 && info.pos < size - 1) ? 1 : 0;
+    info.position = (pos * 1000.0) / myFrequency;
+    info.playbackRate = (myBaseCycles >= 0 && pos < size - 1) ? 1 : 0;
     info.frequency = myFrequency;
 }
 #pragma GCC diagnostic pop

@@ -3,12 +3,6 @@
 #include <vector>
 #include <cstdint>
 
-#ifdef __GNUC__
-#define DEPRECATED __attribute__((__deprecated__))
-#else
-#define DEPRECATED
-#endif
-
 class CassetteTape
 {
 public:
@@ -23,8 +17,6 @@ public:
         uint32_t duration; // ms
         uint32_t position; // ms
         double playbackRate; // seconds per second
-        size_t size DEPRECATED;
-        size_t pos DEPRECATED;
         int frequency;
         uint8_t bit;
     };
