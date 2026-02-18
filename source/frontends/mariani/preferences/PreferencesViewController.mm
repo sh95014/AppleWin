@@ -57,6 +57,7 @@ using namespace DiskImgLib;
 
 @property (strong) IBOutlet NSButton *generalScreenshotsFolderButton;
 @property (strong) IBOutlet NSButton *generalRecordingsFolderButton;
+@property (strong) IBOutlet NSPopUpButton *generalRecordingQualityButton;
 @property (strong) IBOutlet NSButton *generalMapDeleteKeyToLeftArrowButton;
 @property (strong) IBOutlet NSButton *generalTakeScreenshotsBasedOnWindowSize;
 @property (strong) IBOutlet NSButton *generalAutomaticallyCheckForUpdates;
@@ -164,6 +165,9 @@ BOOL configured;
 
     folder = [[UserDefaults sharedInstance] recordingsFolder];
     self.generalRecordingsFolderButton.title = [folder.path stringByAbbreviatingWithTildeInPath];
+
+    const NSInteger quality = [[UserDefaults sharedInstance] recordingQuality];
+    [self.generalRecordingQualityButton selectItemWithTag:quality];
 
     self.generalMapDeleteKeyToLeftArrowButton.state = [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow ? NSControlStateValueOn : NSControlStateValueOff;
     self.generalTakeScreenshotsBasedOnWindowSize.state = [UserDefaults sharedInstance].takeScreenshotsBasedOnWindowSize ? NSControlStateValueOn : NSControlStateValueOff;
@@ -443,6 +447,13 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         self.generalScreenshotsFolderButton.title = [panel.URL.path stringByAbbreviatingWithTildeInPath];
         [[UserDefaults sharedInstance] setScreenshotsFolder:panel.URL];
     }
+}
+
+- (IBAction)recordingQualityAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSInteger tag = self.generalRecordingQualityButton.selectedTag;
+    [[UserDefaults sharedInstance] setRecordingQuality:tag];
 }
 
 - (IBAction)mainBoardAction:(id)sender {

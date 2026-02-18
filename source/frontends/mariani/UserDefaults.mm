@@ -11,6 +11,7 @@
 
 #define RECORDINGS_FOLDER_KEY                   @"RecordingsFolder"
 #define SCREENSHOTS_FOLDER_KEY                  @"ScreenshotsFolder"
+#define RECORDING_QUALITY_KEY                   @"RecordingQuality"
 #define MAP_DELETE_KEY_TO_LEFT_ARROW            @"MapDeleteKeyToLeftArrow"
 #define TAKE_SCREENSHOTS_BASED_ON_WINDOW_SIZE   @"TakeScreenshotsBasedOnWindowSize"
 #define AUTOMATICALLY_CHECK_FOR_UPDATES         @"AutomaticallyCheckForUpdates"
@@ -63,6 +64,14 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 - (void)setScreenshotsFolder:(NSURL *)screenshotsFolder {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setURL:screenshotsFolder forKey:SCREENSHOTS_FOLDER_KEY];
+}
+
+- (NSInteger)recordingQuality {
+    return [[NSUserDefaults standardUserDefaults] integerForKey:RECORDING_QUALITY_KEY];
+}
+
+- (void)setRecordingQuality:(NSInteger)recordingQuality {
+    [[NSUserDefaults standardUserDefaults] setInteger:recordingQuality forKey:RECORDING_QUALITY_KEY];
 }
 
 - (BOOL)mapDeleteKeyToLeftArrow {

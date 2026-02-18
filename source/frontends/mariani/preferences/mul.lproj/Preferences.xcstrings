@@ -55,6 +55,24 @@
         }
       }
     },
+    "4cb-xG-y6h.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Best (~13 Mbps)\"; ObjectID = \"4cb-xG-y6h\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Best (~13 Mbps)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最佳（約 13 Mbps）"
+          }
+        }
+      }
+    },
     "4g8-iN-ZRm.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Expansion\"; ObjectID = \"4g8-iN-ZRm\";",
       "extractionState" : "extracted_with_value",
@@ -87,6 +105,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Button"
+          }
+        }
+      }
+    },
+    "6BP-E7-a4X.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"High Quality (~5 Mbps)\"; ObjectID = \"6BP-E7-a4X\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "High Quality (~5 Mbps)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高品質（約 5 Mbps）"
           }
         }
       }
@@ -141,6 +177,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "周邊擴充槽"
+          }
+        }
+      }
+    },
+    "Bja-M6-PA5.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Economy (~900 kbps)\"; ObjectID = \"Bja-M6-PA5\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Economy (~900 kbps)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "經濟（約 900 kbps）"
           }
         }
       }
@@ -285,6 +339,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "6:"
+          }
+        }
+      }
+    },
+    "ety-Lm-jf3.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Recording Quality\"; ObjectID = \"ety-Lm-jf3\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Recording Quality"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "錄影品質"
           }
         }
       }
