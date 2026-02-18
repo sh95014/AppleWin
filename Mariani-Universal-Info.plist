@@ -4,6 +4,23 @@
 <dict>
 	<key>ATSApplicationFontsPath</key>
 	<string>.</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<true/>
+			<key>CFBundleTypeName</key>
+			<string>Disk Image</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.applewin.mariani.disk</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleHelpBookFolder</key>
 	<string>Mariani.help</string>
 	<key>CFBundleHelpBookName</key>
@@ -12,5 +29,33 @@
 	<true/>
 	<key>OSAScriptingDefinition</key>
 	<string>Mariani.sdef</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Disk Image</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>com.applewin.mariani.disk</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bin</string>
+					<string>do</string>
+					<string>dsk</string>
+					<string>nib</string>
+					<string>po</string>
+					<string>woz</string>
+					<string>hdv</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>

@@ -277,6 +277,68 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     [self.emulatorVC start];
 }
 
+- (BOOL)application:(NSApplication *)sender openFile:(nonnull NSString *)filename {
+    // scan slots for floppy and hard drive controllers
+    CardManager &cardManager = GetCardMgr();
+    BOOL success = NO;
+    int firstDisk2Slot = -1;
+    int firstHDDSlot = -1;
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        const SS_CARDTYPE cardType = cardManager.QuerySlot(slot);
+        if (cardType == CT_GenericHDD) {
+            if (firstHDDSlot < 0) {
+                firstHDDSlot = slot;
+            }
+            // unplug all hard disks
+            HarddiskInterfaceCard *hddCard = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
+            for (int idx = HARDDISK_1; idx < NUM_HARDDISKS; idx++) {
+                hddCard->Unplug(idx);
+            }
+        }
+        else if (cardType == CT_Disk2) {
+            if (firstDisk2Slot < 0) {
+                firstDisk2Slot = slot;
+            }
+            // eject all floppy disks
+            Disk2InterfaceCard *disk2Card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
+            for (int idx = DRIVE_1; idx < NUM_DRIVES; idx++) {
+                disk2Card->EjectDisk(idx);
+            }
+        }
+    }
+    
+    std::string fn(filename.UTF8String);
+    if (firstHDDSlot >= 0 && [filename.lowercaseString hasSuffix:@".hdv"]) {
+        HarddiskInterfaceCard *hddCard = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(firstHDDSlot));
+        if (hddCard->Insert(HARDDISK_1, fn)) {
+            NSLog(@"Loaded '%@' as HDD 1", filename);
+            success = YES;
+        }
+        else {
+            NSLog(@"Failed to '%@' as HDD", filename);
+        }
+    }
+    else if (firstDisk2Slot >= 0) {
+        Disk2InterfaceCard *disk2Card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(firstDisk2Slot));
+        const ImageError_e error = disk2Card->InsertDisk(DRIVE_1, fn, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_DONT_CREATE);
+        if (error == eIMAGE_ERROR_NONE) {
+            NSLog(@"Loaded '%@' into slot %d drive 1", filename, firstDisk2Slot);
+            success = YES;
+        }
+        else {
+            NSLog(@"Failed to load '%@' into slot %d drive 1 due to error %d",
+                  filename, firstDisk2Slot, error);
+            disk2Card->NotifyInvalidImage(1, fn, error);
+        }
+    }
+    
+    [self reconfigureDrives];
+    [self updateDriveLights];
+    [self.emulatorVC reboot];
+    
+    return success;
+}
+
 #pragma mark - NSWindowDelegate
 
 - (BOOL)windowShouldClose:(NSWindow *)sender {
