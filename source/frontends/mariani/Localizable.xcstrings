@@ -1139,6 +1139,17 @@
         }
       }
     },
+    "Show in Finder" : {
+      "comment" : "show disk image in Finder",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "於 Finder 中顯示"
+          }
+        }
+      }
+    },
     "Show Status Bar" : {
       "localizations" : {
         "zh-Hant" : {

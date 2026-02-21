@@ -185,6 +185,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                                                        keyEquivalent:@""];
             menuItem.target = self;
             [menu addItem:menuItem];
+            
+            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Show in Finder", @"show disk image in Finder")
+                                                  action:@selector(showFloppyInFinder:)
+                                           keyEquivalent:@""];
+            menuItem.target = self;
+            [menu addItem:menuItem];
             [menu addItem:[NSMenuItem separatorItem]];
         }
         
@@ -219,6 +225,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 self.wrapper = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
                 [menu addItem:menuItem];
             }
+            
+            NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Show in Finder", @"show disk image in Finder")
+                                                              action:@selector(showHardDriveInFinder:)
+                                                       keyEquivalent:@""];
+            menuItem.target = self;
+            [menu addItem:menuItem];
         }
     }
 
@@ -264,6 +276,32 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
         card->EjectDisk(drive);
         [theAppDelegate updateDriveLights];
+    }
+}
+
+- (void)showFloppyInFinder:(id)sender {
+    if ([sender isKindOfClass:[NSMenuItem class]]) {
+        const int slot = self.slot;
+        const int drive = self.drive;
+        
+        CardManager &cardManager = GetCardMgr();
+        Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
+        NSString *path = [NSString stringWithUTF8String:card->DiskGetFullPathName(drive).c_str()];
+        NSURL *url = [NSURL fileURLWithPath:path];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ url ]];
+    }
+}
+
+- (void)showHardDriveInFinder:(id)sender {
+    if ([sender isKindOfClass:[NSMenuItem class]]) {
+        const int slot = self.slot;
+        const int drive = self.drive;
+        
+        CardManager &cardManager = GetCardMgr();
+        HarddiskInterfaceCard *card = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
+        NSString *path = [NSString stringWithUTF8String:card->HarddiskGetFullPathName(drive).c_str()];
+        NSURL *url = [NSURL fileURLWithPath:path];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ url ]];
     }
 }
 
