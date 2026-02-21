@@ -7,8 +7,10 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>FloppyDisk</string>
 			<key>CFBundleTypeIconSystemGenerated</key>
-			<true/>
+			<false/>
 			<key>CFBundleTypeName</key>
 			<string>Disk Image</string>
 			<key>CFBundleTypeRole</key>
@@ -18,6 +20,22 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.applewin.mariani.disk</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>HardDrive</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<false/>
+			<key>CFBundleTypeName</key>
+			<string>Hard Drive Image</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.applewin.mariani.harddrive</string>
 			</array>
 		</dict>
 	</array>
@@ -38,6 +56,8 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Disk Image</string>
+			<key>UTTypeIconFile</key>
+			<string>FloppyDisk</string>
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
@@ -52,6 +72,26 @@
 					<string>nib</string>
 					<string>po</string>
 					<string>woz</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Hard Drive Image</string>
+			<key>UTTypeIconFile</key>
+			<string>HardDrive</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>com.applewin.mariani.harddrive</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
 					<string>hdv</string>
 				</array>
 			</dict>
