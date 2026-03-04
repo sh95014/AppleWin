@@ -431,6 +431,9 @@
         }
       }
     },
+    "Control-Reset" : {
+      "shouldTranslate" : false
+    },
     "Copy" : {
       "localizations" : {
         "zh-Hant" : {
@@ -938,6 +941,16 @@
         }
       }
     },
+    "Record screen" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕錄影"
+          }
+        }
+      }
+    },
     "Recording saved to ‘%@’" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1238,6 +1251,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Switches C0xx"
+          }
+        }
+      }
+    },
+    "Take screenshot" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕快照"
           }
         }
       }
