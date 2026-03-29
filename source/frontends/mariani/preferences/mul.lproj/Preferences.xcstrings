@@ -757,6 +757,18 @@
         }
       }
     },
+    "z8e-d4-lms.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Use large status bar\"; ObjectID = \"z8e-d4-lms\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Use large status bar"
+          }
+        }
+      }
+    },
     "zxc-fb-W3p.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Recordings\"; ObjectID = \"zxc-fb-W3p\";",
       "extractionState" : "extracted_with_value",

@@ -1,0 +1,15 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "symbol-rendering-intent" : "multicolor"
+  },
+  "symbols" : [
+    {
+      "filename" : "custom.disk2.drive1.closed.svg",
+      "idiom" : "universal"
+    }
+  ]
+}

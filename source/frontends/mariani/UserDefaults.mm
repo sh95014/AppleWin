@@ -15,6 +15,7 @@
 #define MAP_DELETE_KEY_TO_LEFT_ARROW            @"MapDeleteKeyToLeftArrow"
 #define TAKE_SCREENSHOTS_BASED_ON_WINDOW_SIZE   @"TakeScreenshotsBasedOnWindowSize"
 #define AUTOMATICALLY_CHECK_FOR_UPDATES         @"AutomaticallyCheckForUpdates"
+#define USE_LARGE_STATUS_BAR                    @"UseLargeStatusBar"
 #define GAME_CONTROLLER_KEY                     @"GameController"
 #define JOYSTICK_MAPPING_KEY                    @"JoystickMapping"
 #define JOYSTICK_BUTTON0_MAPPING_KEY            @"JoystickButton0Mapping"
@@ -97,6 +98,14 @@ NSString *GameControllerNumericKeypad = @"GameControllerNumericKeypad";
 
 - (void)setAutomaticallyCheckForUpdates:(BOOL)automaticallyCheckForUpdates {
     [[NSUserDefaults standardUserDefaults] setBool:automaticallyCheckForUpdates forKey:AUTOMATICALLY_CHECK_FOR_UPDATES];
+}
+
+- (BOOL)useLargeStatusBar {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:USE_LARGE_STATUS_BAR];
+}
+
+- (void)setUseLargeStatusBar:(BOOL)useLargeStatusBar {
+    [[NSUserDefaults standardUserDefaults] setBool:useLargeStatusBar forKey:USE_LARGE_STATUS_BAR];
 }
 
 - (NSString *)gameController {

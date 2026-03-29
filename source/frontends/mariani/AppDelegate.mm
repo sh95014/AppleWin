@@ -47,6 +47,8 @@ using namespace DiskImgLib;
 #define SMALL_STATUS_BAR_DIVIDER_MARGIN     3
 #define SMALL_STATUS_BAR_BOTTOM_MARGIN      1
 
+#define LARGE_STATUS_BAR_HEIGHT             64
+
 // needs to match tag of Edit menu item in MainMenu.xib
 #define EDIT_TAG            3917
 
@@ -78,7 +80,8 @@ using namespace DiskImgLib;
 @property (strong) PreferencesWindowController *preferencesWC;
 @property NSArray *driveButtons;
 @property BOOL hasStatusBar;
-@property (readonly) double statusBarHeight;
+@property (readonly) double configuredStatusBarHeight;
+@property (readonly) double effectiveStatusBarHeight;
 @property CGFloat fullScreenScale;
 @property BOOL hadStatusBarWhileWindowed;
 
@@ -286,8 +289,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     // make contentBackgroundView conform to the window we've just sized to
     CGRect contentBackgroundFrame = self.window.contentView.bounds;
     if (self.hasStatusBar) {
-        contentBackgroundFrame.origin.y += SMALL_STATUS_BAR_HEIGHT;
-        contentBackgroundFrame.size.height -= SMALL_STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.origin.y += self.configuredStatusBarHeight;
+        contentBackgroundFrame.size.height -= self.configuredStatusBarHeight;
     }
     [self.contentBackgroundView setFrame:contentBackgroundFrame];
     [self.emulatorVC.view setFrame:self.contentBackgroundView.bounds];
@@ -298,7 +301,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     else if (self.hadStatusBarWhileWindowed != self.hasStatusBar) {
         CGRect windowFrame = self.window.frame;
-        windowFrame.size.height += self.hadStatusBarWhileWindowed ? -SMALL_STATUS_BAR_HEIGHT : SMALL_STATUS_BAR_HEIGHT;
+        windowFrame.size.height += self.hadStatusBarWhileWindowed ? -self.configuredStatusBarHeight : self.configuredStatusBarHeight;
         [self.window setFrame:windowFrame display:YES animate:YES];
     }
 }
@@ -717,13 +720,13 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
         contentBackgroundFrame = windowFrame;
         if (self.hasStatusBar) {
-            contentBackgroundFrame.size.height -= SMALL_STATUS_BAR_HEIGHT;
-            contentBackgroundFrame.origin.y += SMALL_STATUS_BAR_HEIGHT;
+            contentBackgroundFrame.size.height -= self.configuredStatusBarHeight;
+            contentBackgroundFrame.origin.y += self.configuredStatusBarHeight;
         }
     }
     else {
         // windowed
-        const double statusBarHeight = SMALL_STATUS_BAR_HEIGHT;
+        const double statusBarHeight = self.configuredStatusBarHeight;
         if (self.hasStatusBar) {
             // grow the window
             contentBackgroundFrame.origin.y = statusBarHeight;
@@ -1075,18 +1078,18 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 - (void)configureStatusBar {
     const CGSize windowContentViewSize = self.window.contentView.frame.size;
     
-    self.statusBarView = [[NSView alloc] initWithFrame:CGRectMake(0, 0, windowContentViewSize.width, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarView = [[NSView alloc] initWithFrame:CGRectMake(0, 0, windowContentViewSize.width, self.configuredStatusBarHeight)];
     
     // add some icons starting from the left margin
     CGFloat left = SMALL_STATUS_BAR_MARGIN;
-    self.statusBarPowerButton = [[NSButton alloc] initWithFrame:CGRectMake(left, 0, 20, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarPowerButton = [[NSButton alloc] initWithFrame:CGRectMake(left, 0, 20, self.configuredStatusBarHeight)];
     self.statusBarPowerButton.bordered = NO;
     self.statusBarPowerButton.target = self;
     self.statusBarPowerButton.action = @selector(rebootEmulatorIfConfirmed:);
     self.statusBarPowerButton.toolTip = NSLocalizedString(@"Reboot Emulator", @"");
     left = CGRectGetMaxX(self.statusBarPowerButton.frame) + SMALL_STATUS_BAR_MARGIN;
     
-    self.statusBarResetButton = [[NSButton alloc] initWithFrame:CGRectMake(left, 0, 20, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarResetButton = [[NSButton alloc] initWithFrame:CGRectMake(left, 0, 20, self.configuredStatusBarHeight)];
     self.statusBarResetButton.bordered = NO;
     self.statusBarResetButton.target = self;
     self.statusBarResetButton.action = @selector(controlResetAction:);
@@ -1106,13 +1109,13 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         self.statusBarResetButton.image = [NSImage imageWithSystemSymbolName:@"arrow.counterclockwise" accessibilityDescription:@""];
     }
     
-    self.statusBarDivider = [[NSBox alloc] initWithFrame:CGRectMake(left, 0, 0, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarDivider = [[NSBox alloc] initWithFrame:CGRectMake(left, 0, 0, self.configuredStatusBarHeight)];
     self.statusBarDivider.boxType = NSBoxSeparator;
     left = CGRectGetMaxX(self.statusBarResetButton.frame) + SMALL_STATUS_BAR_MARGIN;
     
     // add some buttons starting from the right margin
     CGFloat right = windowContentViewSize.width - SMALL_STATUS_BAR_MARGIN;
-    NSButton *screenshotButton = [[NSButton alloc] initWithFrame:CGRectMake(right - 26, 0, 26, SMALL_STATUS_BAR_HEIGHT)];
+    NSButton *screenshotButton = [[NSButton alloc] initWithFrame:CGRectMake(right - 26, 0, 26, self.configuredStatusBarHeight)];
     screenshotButton.bordered = NO;
     screenshotButton.image = [NSImage largeImageWithSystemSymbolName:@"camera"];
     screenshotButton.target = self;
@@ -1120,7 +1123,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     screenshotButton.toolTip = NSLocalizedString(@"Take screenshot", @"");
     right = CGRectGetMinX(screenshotButton.frame) - SMALL_STATUS_BAR_MARGIN;
     
-    self.screenRecordingButton = [[NSButton alloc] initWithFrame:CGRectMake(right - 21, 0, 21, SMALL_STATUS_BAR_HEIGHT)];
+    self.screenRecordingButton = [[NSButton alloc] initWithFrame:CGRectMake(right - 21, 0, 21, self.configuredStatusBarHeight)];
     self.screenRecordingButton.bordered = NO;
     self.screenRecordingButton.image = [NSImage largeImageWithSystemSymbolName:@"record.circle"];
     self.screenRecordingButton.target = self;
@@ -1131,7 +1134,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     // the status text field takes the remaining space in between
     self.statusLabel = [NSTextField labelWithString:@""];
     const CGFloat labelHeight = self.statusLabel.frame.size.height;
-    self.statusLabel.frame = CGRectMake(left, floor((SMALL_STATUS_BAR_HEIGHT - labelHeight) / 2), right - left, labelHeight);
+    self.statusLabel.frame = CGRectMake(left, floor((self.configuredStatusBarHeight - labelHeight) / 2), right - left, labelHeight);
     self.statusLabel.allowsDefaultTighteningForTruncation = YES;
     self.statusLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
     self.statusLabel.textColor = [NSColor systemGrayColor];
@@ -1154,8 +1157,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         self.showHideStatusBarMenuItem.title = NSLocalizedString(@"Show Status Bar", @"");
         
         CGRect contentBackgroundFrame = self.contentBackgroundView.frame;
-        contentBackgroundFrame.size.height += SMALL_STATUS_BAR_HEIGHT;
-        contentBackgroundFrame.origin.y -= SMALL_STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.size.height += self.configuredStatusBarHeight;
+        contentBackgroundFrame.origin.y -= self.configuredStatusBarHeight;
         [self.contentBackgroundView setFrame:contentBackgroundFrame];
     }
     [self setStatus:nil];
@@ -1309,7 +1312,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     if (minimumSize.width < video.GetFrameBufferBorderlessWidth() * scale) {
         minimumSize.width = video.GetFrameBufferBorderlessWidth() * scale;
     }
-    minimumSize.height = video.GetFrameBufferBorderlessHeight() * scale + self.statusBarHeight;  // status bar height
+    minimumSize.height = video.GetFrameBufferBorderlessHeight() * scale + self.effectiveStatusBarHeight;  // status bar height
     return minimumSize;
 }
 
@@ -1344,8 +1347,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     CGRect frame;
     frame.size.width = contentFrame.size.width * factor;
     // keep status bar out of the scaling because it's fixed height
-    frame.size.height = (contentFrame.size.height - [self statusBarHeight]) * factor;
-    frame.size.height += [self statusBarHeight];
+    frame.size.height = (contentFrame.size.height - [self effectiveStatusBarHeight]) * factor;
+    frame.size.height += [self effectiveStatusBarHeight];
     
     // but no smaller than minimum
     CGSize minimumSize = [self minimumWindowSizeAtScale:1];
@@ -1367,8 +1370,12 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     self.statusLabel.stringValue = (status != nil) ? status : @"";
 }
 
-- (double)statusBarHeight {
-    return self.hasStatusBar ? SMALL_STATUS_BAR_HEIGHT : 0;
+- (double)configuredStatusBarHeight {
+    return [UserDefaults sharedInstance].useLargeStatusBar ? LARGE_STATUS_BAR_HEIGHT : SMALL_STATUS_BAR_HEIGHT;
+}
+
+- (double)effectiveStatusBarHeight {
+    return self.hasStatusBar ? self.configuredStatusBarHeight : 0;
 }
 
 - (void)LogWindowFrame:(const char *)context {

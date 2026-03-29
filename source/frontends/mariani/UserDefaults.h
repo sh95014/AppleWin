@@ -23,6 +23,7 @@ extern NSString *GameControllerNumericKeypad;
 @property (nonatomic) BOOL mapDeleteKeyToLeftArrow;
 @property (nonatomic) BOOL takeScreenshotsBasedOnWindowSize;
 @property (nonatomic) BOOL automaticallyCheckForUpdates;
+@property (nonatomic) BOOL useLargeStatusBar;
 
 @property (nonatomic) NSString *gameController;
 @property (readonly) NSArray<NSString *> *joystickOptions;

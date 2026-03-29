@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "DiskMakerWindowController.h"
 #import "NSImage+SFSymbols.h"
+#import "UserDefaults.h"
 
 // AppleWin
 #include <string>
@@ -54,7 +55,13 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     button.bezelStyle = NSBezelStyleShadowlessSquare;
     button.bordered = NO;
     button.title = @"";
-    [button setSystemSymbolName:@"circle"];
+    if ([UserDefaults sharedInstance].useLargeStatusBar) {
+        NSString *name = [NSString stringWithFormat:@"custom.disk2.drive%d.open", drive + 1];
+        [button setSymbolName:name fallbackSystemSymbolName:@"circle"];
+    }
+    else {
+        [button setSystemSymbolName:@"circle"];
+    }
     button.frame = CGRectMake(0, 0, self.buttonWidth, 29);
     button.target = button;
     button.action = @selector(buttonPressed:);
@@ -91,6 +98,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     }
     
     NSColor *driveSwappingColor = [NSColor controlAccentColor];
+    const BOOL useLargeStatusBar = [UserDefaults sharedInstance].useLargeStatusBar;
     
     CardManager &cardManager = GetCardMgr();
     const int slot = self.slot;
