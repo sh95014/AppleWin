@@ -3811,7 +3811,8 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					source,
+					"$(SRCROOT)/source",
+					"$(SRCROOT)",
 					/opt/homebrew/include,
 					/usr/local/include,
 				);
@@ -3852,7 +3853,8 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
-					source,
+					"$(SRCROOT)/source",
+					"$(SRCROOT)",
 					/opt/homebrew/include,
 					/usr/local/include,
 				);
