@@ -616,7 +616,6 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     const int volume = volumeMax - self.audioMockingboardVolumeSlider.intValue;
     CardManager &cardManager = GetCardMgr();
     cardManager.GetMockingboardCardMgr().SetVolume(volume, volumeMax);
-    RegSaveValue(REG_CONFIG, REGVALUE_MB_VOLUME, true, volume);
     NSLog(@"Set Mockingboard volume to %d", volume);
 }
 
