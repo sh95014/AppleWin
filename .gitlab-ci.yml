@@ -8,7 +8,7 @@
 .core-defs:
   variables:
     CORENAME: applewin
-    CORE_ARGS: '-DBUILD_LIBRETRO=ON -G Ninja'
+    CORE_ARGS: '-DBUILD_LIBRETRO=ON -DENABLE_NETWORKING=OFF -G Ninja'
     GIT_SUBMODULE_STRATEGY: recursive
 
 # Inclusion templates, required for the build to work
@@ -24,8 +24,8 @@ include:
     file: '/linux-cmake.yml'
 
   # MacOS 64-bit
-#  - project: 'libretro-infrastructure/ci-templates'
-#    file: '/osx-cmake-x86.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/osx-cmake-x86.yml'
 
   # MacOS ARM 64-bit
   - project: 'libretro-infrastructure/ci-templates'
@@ -41,8 +41,8 @@ include:
     file: '/ios-cmake.yml'
 
   # tvOS (AppleTV)
-#  - project: 'libretro-infrastructure/ci-templates'
-#    file: '/tvos-cmake.yml'
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/tvos-cmake.yml'
 
   #################################### MISC ##################################
 
@@ -106,12 +106,13 @@ libretro-build-linux-i686:
     EXTRA_PATH: source/frontends/libretro
 
 # MacOS 64-bit
-#libretro-build-osx-x64:
-#  extends:
-#    - .libretro-osx-cmake-x86_64
-#    - .core-defs
-#  variables:
-#    MACOSX_DEPLOYMENT_TARGET: "10.15"
+libretro-build-osx-x64:
+  extends:
+    - .libretro-osx-cmake-x86_64
+    - .core-defs
+  variables:
+    EXTRA_PATH: source/frontends/libretro
+    MACOSX_DEPLOYMENT_TARGET: "10.15"
 
 # MacOS ARM 64-bit
 libretro-build-osx-arm64:
@@ -161,11 +162,10 @@ libretro-build-ios-arm64:
     EXTRA_PATH: source/frontends/libretro
 
 # tvOS
-#libretro-build-tvos-arm64:
-#  extends:
-#    - .libretro-tvos-cmake-arm64
-#    - .core-defs
-#  variables:
-#    CORE_ARGS: --toolchain ./cmake/toolchain/ios.toolchain.cmake -DPLATFORM=TVOS -DDEPLOYMENT_TARGET=13
-#    IOS_MINVER: "13.0"
-#    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
+libretro-build-tvos-arm64:
+  extends:
+    - .libretro-tvos-cmake-arm64
+    - .core-defs
+  variables:
+    MINVER: "13.0"
+    EXTRA_PATH: source/frontends/libretro

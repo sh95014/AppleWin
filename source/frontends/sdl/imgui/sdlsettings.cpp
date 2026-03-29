@@ -275,7 +275,7 @@ namespace sa2
 
                 if (ImGui::BeginTabItem("Hardware"))
                 {
-                    comboIterator(
+                    comboIterator1(
                         "Model", GetApple2Type(), getAapple2Types(),
                         [](eApple2Type x)
                         {
@@ -292,8 +292,8 @@ namespace sa2
                     for (size_t slot = SLOT1; slot < NUM_SLOTS; ++slot)
                     {
                         const SS_CARDTYPE current = cardManager.QuerySlot(slot);
-                        comboIterator(
-                            std::to_string(slot).c_str(), current, getCardsForSlot(slot), getCardNames(),
+                        comboIterator2(
+                            std::to_string(slot).c_str(), current, getCardsForSlot(slot), getCardName,
                             [slot, &frame](SS_CARDTYPE x) { insertCard(slot, x, frame); });
                     }
 
@@ -302,8 +302,8 @@ namespace sa2
                     {
                         // Expansion
                         const SS_CARDTYPE expansion = GetCurrentExpansionMemType();
-                        comboIterator(
-                            "Expansion", expansion, getExpansionCards(), getCardNames(),
+                        comboIterator2(
+                            "Expansion", expansion, getExpansionCards(), getCardName,
                             [](SS_CARDTYPE x) { setExpansionCard(x); });
 
                         int ramWorksMemorySize = GetRamWorksMemorySize();
@@ -315,7 +315,7 @@ namespace sa2
 
                     ImGui::Separator();
 
-                    comboIterator(
+                    comboIterator1(
                         "Game I/O Connector", GetCopyProtectionDongleType(), getDongleTypes(),
                         [](DONGLETYPE x)
                         {
@@ -595,7 +595,6 @@ namespace sa2
                     if (ImGui::SliderInt("Mockingboard volume", &myMockingboardVolume, 0, volumeMax))
                     {
                         mockingboard.SetVolume(volumeMax - myMockingboardVolume, volumeMax);
-                        REGSAVE(REGVALUE_MB_VOLUME, mockingboard.GetVolume());
                     }
 
                     ImGui::Separator();
@@ -653,7 +652,7 @@ namespace sa2
                 if (ImGui::BeginTabItem("Video"))
                 {
                     Video &video = GetVideo();
-                    comboIterator(
+                    comboIterator1(
                         "Video mode", video.GetVideoType(), getVideoTypes(),
                         [&video, &frame](VideoType_e x)
                         {

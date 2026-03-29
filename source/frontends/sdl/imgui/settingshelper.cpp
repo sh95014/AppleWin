@@ -15,34 +15,6 @@ void CreateLanguageCard(void);
 
 namespace
 {
-    const std::map<SS_CARDTYPE, std::string> cards = {
-        {CT_Empty, "Empty"},
-        {CT_Disk2, "Disk II"},
-        {CT_SSC, "SSC"},
-        {CT_MockingboardC, "Mockingboard"},
-        {CT_MegaAudio, "MEGA Audio"},
-        {CT_SDMusic, "SD Music"},
-        {CT_GenericPrinter, "Generic Printer"},
-        {CT_GenericHDD, "Generic HDD"},
-        {CT_GenericClock, "Generic Clock"},
-        {CT_MouseInterface, "Mouse Interface"},
-        {CT_Z80, "Z80"},
-        {CT_Phasor, "Phasor"},
-        {CT_Echo, "Echo"},
-        {CT_SAM, "SAM"},
-        {CT_80Col, "80 Column"},
-        {CT_Extended80Col, "Extended 80 Column"},
-        {CT_RamWorksIII, "RamWorks III"},
-        {CT_Uthernet, "Uthernet"},
-        {CT_LanguageCard, "Language Card"},
-        {CT_LanguageCardIIe, "Language Card IIe"},
-        {CT_Saturn128K, "Saturn 128K"},
-        {CT_FourPlay, "4Play"},
-        {CT_SNESMAX, "SNES MAX"},
-        {CT_VidHD, "VidHD"},
-        {CT_Uthernet2, "Uthernet //"},
-    };
-
     const std::map<eApple2Type, std::string> apple2Types = {
         {A2TYPE_APPLE2, "Apple ][ (Original)"},
         {A2TYPE_APPLE2PLUS, "Apple ][+"},
@@ -97,18 +69,12 @@ namespace
         {DT_HAYDENCOMPILER, "Hayden - Applesoft Compiler"},
     };
 
-    const std::map<size_t, std::vector<SS_CARDTYPE>> cardsForSlots = {
-        {0, {CT_Empty, CT_LanguageCard, CT_Saturn128K}},
-        {1, {CT_Empty, CT_GenericPrinter, CT_Uthernet2}},
-        {2, {CT_Empty, CT_SSC, CT_Uthernet2}},
-        {3, {CT_Empty, CT_Uthernet, CT_Uthernet2, CT_VidHD}},
-        {4, {CT_Empty, CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_MouseInterface, CT_Phasor, CT_Uthernet2}},
-        {5,
-         {CT_Empty, CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_Disk2, CT_GenericHDD, CT_Phasor, CT_Uthernet2,
-          CT_Z80, CT_SAM, CT_FourPlay, CT_SNESMAX}},
-        {6, {CT_Empty, CT_Disk2, CT_Uthernet2}},
-        {7, {CT_Empty, CT_GenericHDD, CT_Uthernet2}},
-    };
+    const std::vector<SS_CARDTYPE> uniqueCards = {CT_SSC, CT_GenericPrinter, CT_MouseInterface, CT_Z80, CT_VidHD};
+
+    const std::vector<SS_CARDTYPE> slot1_7 = {CT_Empty,          CT_Disk2,      CT_GenericHDD, CT_GenericPrinter,
+                                              CT_MouseInterface, CT_Saturn128K, CT_FourPlay,   CT_SNESMAX,
+                                              CT_MockingboardC,  CT_Phasor,     CT_SAM,        CT_Uthernet,
+                                              CT_Uthernet2,      CT_VidHD,      CT_Z80};
 
     const std::vector<SS_CARDTYPE> expansionCards = {
         CT_Empty, CT_LanguageCard, CT_Extended80Col, CT_Saturn128K, CT_RamWorksIII};
@@ -124,9 +90,9 @@ namespace
 namespace sa2
 {
 
-    const std::string &getCardName(SS_CARDTYPE card)
+    std::string getCardName(SS_CARDTYPE card)
     {
-        return cards.at(card);
+        return Card::GetCardName(card);
     }
 
     const std::string &getCPUName(eCpuType cpu)
@@ -139,19 +105,46 @@ namespace sa2
         return appModes.at(mode);
     }
 
-    const std::vector<SS_CARDTYPE> &getCardsForSlot(size_t slot)
+    std::vector<SS_CARDTYPE> getCardsForSlot(size_t slot)
     {
-        return cardsForSlots.at(slot);
+        CardManager &cardManager = GetCardMgr();
+
+        // 1. Collect unique cards currently plugged into other physical slots
+        std::vector<SS_CARDTYPE> occupiedUnique;
+        occupiedUnique.reserve(uniqueCards.size());
+
+        for (size_t otherSlot = SLOT1; otherSlot < NUM_SLOTS; ++otherSlot)
+        {
+            if (slot == otherSlot)
+                continue;
+
+            const SS_CARDTYPE card = cardManager.QuerySlot(otherSlot);
+
+            // If the card in this slot is a 'Unique' type, it's now forbidden for our target slot
+            if (std::find(uniqueCards.begin(), uniqueCards.end(), card) != uniqueCards.end())
+            {
+                occupiedUnique.push_back(card);
+            }
+        }
+
+        // 2. Return all cards from the master list except those currently occupied
+        std::vector<SS_CARDTYPE> result;
+        result.reserve(slot1_7.size());
+
+        for (const auto &card : slot1_7)
+        {
+            if (std::find(occupiedUnique.begin(), occupiedUnique.end(), card) == occupiedUnique.end())
+            {
+                result.push_back(card);
+            }
+        }
+
+        return result;
     }
 
     const std::vector<SS_CARDTYPE> &getExpansionCards()
     {
         return expansionCards;
-    }
-
-    const std::map<SS_CARDTYPE, std::string> &getCardNames()
-    {
-        return cards;
     }
 
     const std::map<eApple2Type, std::string> &getAapple2Types()
