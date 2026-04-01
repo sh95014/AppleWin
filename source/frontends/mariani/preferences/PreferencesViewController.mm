@@ -192,21 +192,6 @@ const eApple2Type computerTypes[] = {
     A2TYPE_PRAVETS8A, A2TYPE_TK30002E, A2TYPE_BASE64A
 };
 
-// CT_Empty is being used as the terminator here. the UI will insert an empty
-// option on its own
-const SS_CARDTYPE slot0Types[] = { CT_LanguageCard, CT_Saturn128K, CT_Empty };
-const SS_CARDTYPE slot1Types[] = { CT_GenericPrinter, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot2Types[] = { CT_SSC, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot3Types[] = { CT_Uthernet, CT_Uthernet2, CT_VidHD, CT_Empty };
-const SS_CARDTYPE slot4Types[] = { CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_MouseInterface, CT_Phasor, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot5Types[] = { CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_Z80, CT_SAM, CT_Disk2, CT_Phasor, CT_FourPlay, CT_SNESMAX, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot6Types[] = { CT_Disk2, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot7Types[] = { CT_GenericHDD, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE *slotTypes[] = {
-    slot0Types, slot1Types, slot2Types, slot3Types, slot4Types, slot5Types,
-    slot6Types, slot7Types,
-};
-
 - (void)configureComputer {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     // emulation computer types
@@ -537,35 +522,6 @@ const SS_CARDTYPE *slotTypes[] = {
         const BOOL newHasVidHD = (slotButton.selectedTag == CT_VidHD);
         if (oldHasVidHD == YES && newHasVidHD == NO) {
             video.SetVidHD(false);
-        }
-        
-        NSArray *slotButtons = [self slotButtonsArray];
-        
-        // Mockingboard takes both slots, so inserting in the other available
-        // slot than was specified and remove both if removing either
-        if (slotButton.selectedTag == CT_MockingboardC) {
-            // find the other slot and set it to MockingBoard
-            for (NSInteger slot = SLOT1; slot < NUM_SLOTS; slot++) {
-                for (int i = 0; slotTypes[slot][i] != CT_Empty; i++) {
-                    if (slotTypes[slot][i] == CT_MockingboardC && slot != currentSlot) {
-                        cardManager.Insert((SLOTS)slot, (SS_CARDTYPE)slotButton.selectedTag);
-                        [slotButtons[slot] selectItemWithTag:slotButton.selectedTag];
-                        [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
-                    }
-                }
-            }
-        }
-        else if (cardManager.QuerySlot((SLOTS)currentSlot) == CT_MockingboardC) {
-            // find the other slot and set it to empty
-            for (NSInteger slot = SLOT1; slot < NUM_SLOTS; slot++) {
-                for (int i = 0; slotTypes[slot][i] != CT_Empty; i++) {
-                    if (slotTypes[slot][i] == CT_MockingboardC && slot != currentSlot) {
-                        cardManager.Insert((SLOTS)slot, CT_Empty);
-                        [slotButtons[slot] selectItemWithTag:CT_Empty];
-                        [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
-                    }
-                }
-            }
         }
         
         const SS_CARDTYPE previousCard = cardManager.QuerySlot((SLOTS)currentSlot);
@@ -901,14 +857,14 @@ const SS_CARDTYPE *slotTypes[] = {
     // helps map SS_CARDTYPE to a readable string
     return @{
         @(CT_Empty):                NSLocalizedString(@"—", @"empty slot"),
-        @(CT_Disk2):                NSLocalizedString(@"Apple Disk ][", @""),
+        @(CT_Disk2):                NSLocalizedString(@"Apple Disk II", @""),
         @(CT_SSC):                  NSLocalizedString(@"Apple Super Serial Card", @""),
         @(CT_MockingboardC):        NSLocalizedString(@"Mockingboard C (sound)", @""),
         @(CT_GenericPrinter):       NSLocalizedString(@"Generic Printer", @""),
-        @(CT_GenericHDD):           NSLocalizedString(@"Generic Hard Disk Drive", @""),
+        @(CT_GenericHDD):           NSLocalizedString(@"Hard Disk Controller", @""),
         @(CT_GenericClock):         NSLocalizedString(@"Generic Clock", @""),
         @(CT_MouseInterface):       NSLocalizedString(@"Mouse Interface", @""),
-        @(CT_Z80):                  NSLocalizedString(@"Z-80", @""),
+        @(CT_Z80):                  NSLocalizedString(@"Z-80 SoftCard", @""),
         @(CT_Phasor):               NSLocalizedString(@"Phasor (sound)", @""),
         @(CT_Echo):                 NSLocalizedString(@"Echo (speech)", @""),
         @(CT_SAM):                  NSLocalizedString(@"Software Automatic Mouth (speech)", @""),

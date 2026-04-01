@@ -203,12 +203,12 @@
         }
       }
     },
-    "Apple Disk ][" : {
+    "Apple Disk II" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "蘋果 Disk ]["
+            "value" : "蘋果 Disk II 磁碟控制卡"
           }
         }
       }
@@ -587,22 +587,22 @@
         }
       }
     },
-    "Generic Hard Disk Drive" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "普通硬碟"
-          }
-        }
-      }
-    },
     "Generic Printer" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "普通印表機"
+          }
+        }
+      }
+    },
+    "Hard Disk Controller" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "硬碟控制卡"
           }
         }
       }
@@ -1441,12 +1441,12 @@
         }
       }
     },
-    "Z-80" : {
+    "Z-80 SoftCard" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Z-80"
+            "value" : "Z-80 SoftCard"
           }
         }
       }
