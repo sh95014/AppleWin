@@ -63,14 +63,25 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSButton *generalAutomaticallyCheckForUpdates;
 
 @property (strong) IBOutlet NSPopUpButton *computerMainBoardButton;
+
+@property (strong) IBOutlet NSPopUpButton *computerSlot0Button;
+@property (strong) IBOutlet NSButton *computerSlot0MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot1Button;
+@property (strong) IBOutlet NSButton *computerSlot1MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot2Button;
+@property (strong) IBOutlet NSButton *computerSlot2MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot3Button;
+@property (strong) IBOutlet NSButton *computerSlot3MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot4Button;
+@property (strong) IBOutlet NSButton *computerSlot4MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot5Button;
+@property (strong) IBOutlet NSButton *computerSlot5MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot6Button;
+@property (strong) IBOutlet NSButton *computerSlot6MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot7Button;
+@property (strong) IBOutlet NSButton *computerSlot7MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerExansionSlotButton;
+@property (strong) IBOutlet NSButton *computerExpansionSlotMoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerPcapSlotButton;
 @property (strong) IBOutlet NSPopUpButton *computerCopyProtectionDongleButton;
 @property (strong) IBOutlet NSButton *computerRebootEmulatorButton;
@@ -213,37 +224,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
             }
         }
     
-        // peripheral slots
-        CardManager &manager = GetCardMgr();
-        NSDictionary *cardNames = [self.class localizedCardNameMap];
-        for (int slot = SLOT1; slot < NUM_SLOTS; slot++) {
-            NSPopUpButton *slotButton = [[self slotButtonsArray] objectAtIndex:slot];
-            
-            // already set up that way in Preferences.storyboard but let's be
-            // explicit because slotAction: relies on it.
-            slotButton.tag = slot;
-            
-            // always start with "Empty" as an option
-            [slotButton addItemWithTitle:[cardNames objectForKey:@(CT_Empty)]];
-            slotButton.lastItem.tag = CT_Empty;
-            
-            for (int i = 0; slotTypes[slot][i] != CT_Empty; i++) {
-                [slotButton addItemWithTitle:[cardNames objectForKey:@(slotTypes[slot][i])]];
-                slotButton.lastItem.tag = slotTypes[slot][i];
-            }
-            
-            // show the current item as selected
-            [slotButton selectItemWithTag:manager.QuerySlot(slot)];
-        }
-        
-        // expansion slot
-        [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(CT_Empty)]];
-        self.computerExansionSlotButton.lastItem.tag = CT_Empty;
-        for (int i = 0; expansionSlotTypes[i] != CT_Empty; i++) {
-            [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(expansionSlotTypes[i])]];
-            self.computerExansionSlotButton.lastItem.tag = expansionSlotTypes[i];
-        }
-        [self.computerExansionSlotButton selectItemWithTag:GetCurrentExpansionMemType()];
+        [self configureSlots];
         
 #ifndef U2_USE_SLIRP
         // pcap
@@ -269,6 +250,61 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         }
         [self.computerCopyProtectionDongleButton selectItemAtIndex:GetCopyProtectionDongleType()];
     }
+}
+
+- (void)configureSlots {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    CardManager &manager = GetCardMgr();
+    NSDictionary *cardNames = [self.class localizedCardNameMap];
+    
+    SS_CARDTYPE currConfig[NUM_SLOTS];
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        currConfig[slot] = manager.QuerySlot(slot);
+    }
+    
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        NSPopUpButton *slotButton = [[self slotButtonsArray] objectAtIndex:slot];
+        NSButton *slotMoreButton = [[self slotMoreButtonsArray] objectAtIndex:slot];
+        
+        [slotButton removeAllItems];
+        
+        if (slot == SLOT0 && !IsApple2PlusOrClone(GetApple2Type())) {
+            // only Apple ][+ or clones have a configurable slot 0
+            slotButton.enabled = NO;
+            slotMoreButton.enabled = NO;
+            continue;
+        }
+        
+        // already set up that way in Preferences.storyboard but let's be
+        // explicit because slotAction: relies on it.
+        slotButton.tag = slot;
+        
+        std::string choices;
+        std::vector<SS_CARDTYPE> choicesList;
+        manager.GetCardChoicesForSlot(slot, currConfig, choices, choicesList);
+        
+        for (const SS_CARDTYPE& cardType : choicesList) {
+            [slotButton addItemWithTitle:[cardNames objectForKey:@(cardType)]];
+            slotButton.lastItem.tag = cardType;
+        }
+        
+        // show the current item as selected
+        const SS_CARDTYPE selectedCard = manager.QuerySlot(slot);
+        [slotButton selectItemWithTag:selectedCard];
+        
+        slotButton.enabled = YES;
+        slotMoreButton.enabled = [self cardTypeHasOptions:selectedCard];
+    }
+    
+    // expansion slot
+    [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(CT_Empty)]];
+    self.computerExansionSlotButton.lastItem.tag = CT_Empty;
+    for (int i = 0; expansionSlotTypes[i] != CT_Empty; i++) {
+        [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(expansionSlotTypes[i])]];
+        self.computerExansionSlotButton.lastItem.tag = expansionSlotTypes[i];
+    }
+    [self.computerExansionSlotButton selectItemWithTag:GetCurrentExpansionMemType()];
 }
 
 - (void)configureAudio {
@@ -467,6 +503,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
           computerTypes[index]);
     
     self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
+    
+    // main board affects which slots are available
+    [self configureSlots];
 }
 
 - (IBAction)slotAction:(id)sender {
@@ -534,6 +573,10 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
             [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
         }
         self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
+        
+        // FIXME avoid always calling configureSlots?
+        // needs https://github.com/AppleWin/AppleWin/issues/1489
+        [self configureSlots];
     }
 }
 
@@ -813,9 +856,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 }
 
 - (NSArray *)slotButtonsArray {
-    // so that we can index computerSlotButtons by SLOT1..SLOT7
+    // so that we can index computerSlotButtons by SLOT0..SLOT7
     return @[
-        [NSNull null],              // SLOT0
+        self.computerSlot0Button,
         self.computerSlot1Button,
         self.computerSlot2Button,
         self.computerSlot3Button,
@@ -823,6 +866,20 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         self.computerSlot5Button,
         self.computerSlot6Button,
         self.computerSlot7Button,
+    ];
+}
+
+- (NSArray *)slotMoreButtonsArray {
+    // so that we can index computerSlotMoreButtons by SLOT0..SLOT7
+    return @[
+        self.computerSlot0MoreButton,
+        self.computerSlot1MoreButton,
+        self.computerSlot2MoreButton,
+        self.computerSlot3MoreButton,
+        self.computerSlot4MoreButton,
+        self.computerSlot5MoreButton,
+        self.computerSlot6MoreButton,
+        self.computerSlot7MoreButton,
     ];
 }
 
@@ -868,6 +925,27 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         @(DT_ROBOCOM1500):          NSLocalizedString(@"Robocom Ltd - Robo 1500", @"Interface Module for Robocom Ltd's Robo 1500"),
         @(DT_HAYDENCOMPILER):       NSLocalizedString(@"Hayden - Applesoft Compiler", @"Protection key for Hayden Book Company, Inc's Applesoft Compiler (1981)"),
     };
+}
+
+// FIXME replace when https://github.com/AppleWin/AppleWin/issues/1488 is fixed
+- (BOOL)cardTypeHasOptions:(SS_CARDTYPE)cardType {
+    // must match CPageSlots::CardTypeHasOptions()
+    switch (cardType) {
+    case CT_Disk2: // fallthrough
+    case CT_GenericHDD: // fallthrough
+    case CT_SSC: // fallthrough
+    case CT_GenericPrinter: // fallthrough
+    case CT_MockingboardC: // fallthrough
+    case CT_MouseInterface: // fallthrough
+    case CT_Phasor: // fallthrough
+    case CT_Saturn128K: // fallthrough
+    case CT_Uthernet: // fallthrough
+    case CT_Uthernet2: // fallthrough
+    case CT_RamWorksIII: // fallthrough
+        return YES;
+    default:
+        return NO;
+    }
 }
 
 - (NSColor *)colorWithColorRef:(DWORD)colorRef {

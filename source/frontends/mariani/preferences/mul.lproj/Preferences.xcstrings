@@ -361,6 +361,24 @@
         }
       }
     },
+    "f4W-9B-5XB.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"0:\"; ObjectID = \"f4W-9B-5XB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "0:"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "0:"
+          }
+        }
+      }
+    },
     "FE3-Py-9oA.title" : {
       "comment" : "Class = \"NSViewController\"; title = \"General\"; ObjectID = \"FE3-Py-9oA\";",
       "extractionState" : "extracted_with_value",
