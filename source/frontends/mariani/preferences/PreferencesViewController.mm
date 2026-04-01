@@ -207,8 +207,6 @@ const SS_CARDTYPE *slotTypes[] = {
     slot6Types, slot7Types,
 };
 
-const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT_Saturn128K, CT_RamWorksIII, CT_Empty };
-
 - (void)configureComputer {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     // emulation computer types
@@ -255,6 +253,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 - (void)configureSlots {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
+    const eApple2Type computerType = GetApple2Type();
     CardManager &manager = GetCardMgr();
     NSDictionary *cardNames = [self.class localizedCardNameMap];
     
@@ -269,7 +268,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         
         [slotButton removeAllItems];
         
-        if (slot == SLOT0 && !IsApple2PlusOrClone(GetApple2Type())) {
+        if (slot == SLOT0 && !IsApple2PlusOrClone(computerType)) {
             // only Apple ][+ or clones have a configurable slot 0
             slotButton.enabled = NO;
             slotMoreButton.enabled = NO;
@@ -297,14 +296,29 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         slotMoreButton.enabled = [self cardTypeHasOptions:selectedCard];
     }
     
-    // expansion slot
-    [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(CT_Empty)]];
-    self.computerExansionSlotButton.lastItem.tag = CT_Empty;
-    for (int i = 0; expansionSlotTypes[i] != CT_Empty; i++) {
-        [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(expansionSlotTypes[i])]];
-        self.computerExansionSlotButton.lastItem.tag = expansionSlotTypes[i];
+    [self.computerExansionSlotButton removeAllItems];
+    if (IsAppleIIe(computerType)) {
+        // expansion slot
+        std::string choices;
+        std::vector<SS_CARDTYPE> choicesList;
+        manager.GetCardChoicesForAuxSlot(choices, choicesList);
+        
+        for (const SS_CARDTYPE& cardType : choicesList) {
+            [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(cardType)]];
+            self.computerExansionSlotButton.lastItem.tag = cardType;
+        }
+        
+        // show the current item as selected
+        const SS_CARDTYPE selectedCard = GetCurrentExpansionMemType();
+        [self.computerExansionSlotButton selectItemWithTag:selectedCard];
+        
+        self.computerExansionSlotButton.enabled = YES;
+        self.computerExpansionSlotMoreButton.enabled = [self cardTypeHasOptions:selectedCard];
     }
-    [self.computerExansionSlotButton selectItemWithTag:GetCurrentExpansionMemType()];
+    else {
+        self.computerExansionSlotButton.enabled = NO;
+        self.computerExpansionSlotMoreButton.enabled = NO;
+    }
 }
 
 - (void)configureAudio {
@@ -574,8 +588,6 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         }
         self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
         
-        // FIXME avoid always calling configureSlots?
-        // needs https://github.com/AppleWin/AppleWin/issues/1489
         [self configureSlots];
     }
 }
@@ -587,6 +599,8 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     MemInitializeIO();
     
     self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
+    
+    [self configureSlots];
 }
 
 - (IBAction)pcapSlotAction:(id)sender {
