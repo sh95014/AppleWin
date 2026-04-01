@@ -45,6 +45,9 @@ include:
     file: '/tvos-cmake.yml'
 
   #################################### MISC ##################################
+  # webOS (LGTV)
+  - project: 'libretro-infrastructure/ci-templates'
+    file: '/webos-cmake.yml'
 
 # Stages for building
 stages:
@@ -175,3 +178,9 @@ libretro-build-tvos-arm64:
   variables:
     MINVER: "13.0"
     EXTRA_PATH: source/frontends/libretro
+
+# webOS
+libretro-build-webos-armv7a:
+  extends:
+    - .libretro-webos-armv7a-cmake
+    - .core-defs
