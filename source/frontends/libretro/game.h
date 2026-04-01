@@ -74,7 +74,6 @@ namespace ra2
         DiskControl myDiskControl;
 
         std::vector<int16_t> myAudioBuffer;
-        LPBYTE myMainMemoryReference;
 
         void keyboardEmulation();
         void applyVariables();

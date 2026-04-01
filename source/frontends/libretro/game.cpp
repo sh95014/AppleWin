@@ -47,7 +47,6 @@ namespace ra2
         : myInputRemapper(supportsInputBitmasks)
         , myKeyboardType(KeyboardType::ASCII)
         , myMouseSpeed(1.0)
-        , myMainMemoryReference(nullptr)
     {
         myLoggerContext = std::make_unique<LoggerContext>(true);
         myRegistry = createRetroRegistry();
@@ -279,9 +278,6 @@ namespace ra2
     void Game::start()
     {
         myFrame->Begin();
-
-        // memmain is not exposed, but is returned by this function, so store it for later use
-        myMainMemoryReference = MemGetBankPtr(0, true);
     }
 
     void Game::restart()
@@ -328,7 +324,7 @@ namespace ra2
         // the libretro interface exposes memmain. for any pages that have a copy in mem,
         // copy the memmain back into mem in case it was changed between frames (by cheats,
         // debuggers, or other forms of memory editing)
-        LPBYTE memMainPtr = myMainMemoryReference;
+        LPBYTE memMainPtr = myFrame->GetMainMemoryReference();
         for (UINT loop = 0; loop < _6502_NUM_PAGES; loop++)
         {
             LPBYTE altptr = MemGetMainPtr(loop * _6502_PAGE_SIZE);

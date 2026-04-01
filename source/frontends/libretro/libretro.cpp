@@ -321,37 +321,29 @@ bool retro_load_game(const retro_game_info *info)
     try
     {
         std::unique_ptr<ra2::Game> game = std::make_unique<ra2::Game>(supportsInputBitmasks);
+        game->start();
 
         const std::string snapshotEnding = ".aws.yaml";
         const std::string playlistEnding = ".m3u";
 
-        bool ok;
+        bool ok = true; // we support no content
 
         if (info && info->path && *info->path)
         {
             const std::string gamePath = info->path;
             if (endsWith(gamePath, snapshotEnding))
             {
-                game->start(); // must happen before loading the snapshot!
                 ok = game->loadSnapshot(gamePath);
             }
             else if (endsWith(gamePath, playlistEnding))
             {
                 ok = game->getDiskControl().insertPlaylist(gamePath);
-                game->start();
             }
             else
             {
                 ok = game->getDiskControl().insertDisk(gamePath);
-                game->start();
             }
             ra2::log_cb(RETRO_LOG_INFO, "Game path: %s -> %d\n", info->path, ok);
-        }
-        else
-        {
-            // we support no content
-            ok = true;
-            game->start();
         }
 
         if (ok)

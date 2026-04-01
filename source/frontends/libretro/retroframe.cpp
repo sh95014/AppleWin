@@ -8,6 +8,7 @@
 #include "Interface.h"
 #include "Core.h"
 #include "Utilities.h"
+#include "Memory.h"
 
 namespace ra2
 {
@@ -98,6 +99,15 @@ namespace ra2
     {
         const common2::RestoreCurrentDirectory restoreChDir;
         common2::GNUFrame::Begin();
+
+        // memmain is not exposed, but is returned by this function, so store it for later use
+        myMainMemoryReference = MemGetBankPtr(0, true);
+    }
+
+    void RetroFrame::End()
+    {
+        myMainMemoryReference = nullptr;
+        common2::GNUFrame::End();
     }
 
     std::shared_ptr<SoundBuffer> RetroFrame::CreateSoundBuffer(
@@ -110,6 +120,11 @@ namespace ra2
     size_t RetroFrame::GetFrameBufferLinePeriod() const
     {
         return myLinePeriod;
+    }
+
+    LPBYTE RetroFrame::GetMainMemoryReference() const
+    {
+        return myMainMemoryReference;
     }
 
 } // namespace ra2

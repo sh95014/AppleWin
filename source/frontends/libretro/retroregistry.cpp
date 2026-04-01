@@ -207,11 +207,11 @@ namespace
                 CATEGORY_SYSTEM,
                 {
                     {"Empty", CT_Empty},
-                    {"Mockingboard", CT_MockingboardC},
-                    {"Mouse", CT_MouseInterface},
+                    {"Mockingboard C", CT_MockingboardC},
+                    {"Mouse Card", CT_MouseInterface},
                     {"Phasor", CT_Phasor},
                 },
-                "Mockingboard",
+                "Mockingboard C",
             },
             "Configuration\\Slot 4",
             REGVALUE_CARD_TYPE, // reset required
@@ -223,13 +223,27 @@ namespace
                 CATEGORY_SYSTEM,
                 {
                     {"Empty", CT_Empty},
-                    {"CP/M", CT_Z80},
-                    {"Mockingboard", CT_MockingboardC},
+                    {"Z80 SoftCard", CT_Z80},
+                    {"Mockingboard C", CT_MockingboardC},
                     {"Phasor", CT_Phasor},
-                    {"SAM/DAC", CT_SAM},
+                    {"SAM", CT_SAM},
                 },
             },
             "Configuration\\Slot 5",
+            REGVALUE_CARD_TYPE, // reset required
+        },
+        {
+            {
+                "slot7",
+                "Card in Slot 7",
+                CATEGORY_SYSTEM,
+                {
+                    {"Empty", CT_Empty},
+                    {"Hard Disk Controller", CT_GenericHDD},
+                },
+                "Hard Disk Controller",
+            },
+            "Configuration\\Slot 7",
             REGVALUE_CARD_TYPE, // reset required
         },
         {

@@ -278,12 +278,14 @@ void LoadConfiguration(bool loadImages)
 		}
 	}
 
-	if (REGLOAD(REGVALUE_MASTER_VOLUME, &dwTmp) ||	// Try MASTER_VOLUME
-		REGLOAD(REGVALUE_SPKR_VOLUME, &dwTmp))		// ...else try older SPKR_VOLUME
+	dwTmp = 60;  // a volume of 100 is too loud for the PC speaker, so default to 60
+	if (!REGLOAD(REGVALUE_MASTER_VOLUME, &dwTmp))	// Try MASTER_VOLUME
 	{
-		SpkrSetVolume(dwTmp, GetPropertySheet().GetVolumeMax());
-		GetCardMgr().GetMockingboardCardMgr().SetVolume(dwTmp, GetPropertySheet().GetVolumeMax());
+		REGLOAD(REGVALUE_SPKR_VOLUME, &dwTmp);		// ...else try older SPKR_VOLUME
 	}
+
+	SpkrSetVolume(dwTmp, GetPropertySheet().GetVolumeMax());
+	GetCardMgr().GetMockingboardCardMgr().SetVolume(dwTmp, GetPropertySheet().GetVolumeMax());
 
 	// Load save-state pathname *before* inserting any harddisk/disk images (for both init & reinit cases)
 	// NB. inserting harddisk/disk can change snapshot pathname
