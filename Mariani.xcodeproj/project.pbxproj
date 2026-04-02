@@ -48,6 +48,8 @@
 		976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
 		976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */; };
 		978FE34F2F794C42003FF928 /* PageSlots.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 978FE34E2F794C42003FF928 /* PageSlots.cpp */; };
+		978FE3592F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 978FE3582F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm */; };
+		978FE35A2F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm in Sources */ = {isa = PBXBuildFile; fileRef = 978FE3582F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm */; };
 		9795A3512E48ED1600504B55 /* HexFiend.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9795A3412E48E98700504B55 /* HexFiend.framework */; };
 		9795A3542E48ED7E00504B55 /* HexFiend.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9795A3412E48E98700504B55 /* HexFiend.framework */; };
 		9795A3552E48EE0C00504B55 /* HexFiend.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9795A3412E48E98700504B55 /* HexFiend.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -779,6 +781,8 @@
 		976D11A92B379D9000EEA1D6 /* CharacterMappings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CharacterMappings.h; sourceTree = "<group>"; };
 		976D11AA2B379D9000EEA1D6 /* CharacterMappings.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = CharacterMappings.mm; sourceTree = "<group>"; };
 		978FE34E2F794C42003FF928 /* PageSlots.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PageSlots.cpp; path = source/linux/duplicates/PageSlots.cpp; sourceTree = "<group>"; };
+		978FE3582F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = SlotPreferencesViewControllers.mm; sourceTree = "<group>"; };
+		978FE35B2F7E9B76003FF928 /* SlotPreferencesViewControllers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlotPreferencesViewControllers.h; sourceTree = "<group>"; };
 		979E45CD2CF56C2700D6A957 /* HDC-SmartPort.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = "HDC-SmartPort.bin"; path = "resource/HDC-SmartPort.bin"; sourceTree = SOURCE_ROOT; };
 		97ACC9BC2C3B2C3E0028821E /* PageConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageConfig.cpp; path = source/linux/duplicates/PageConfig.cpp; sourceTree = "<group>"; };
 		97ACC9BD2C3B2C3E0028821E /* PageInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PageInput.cpp; path = source/linux/duplicates/PageInput.cpp; sourceTree = "<group>"; };
@@ -2239,6 +2243,8 @@
 			children = (
 				B0927414277D9399003FFB79 /* PreferencesViewController.h */,
 				B0927415277D9399003FFB79 /* PreferencesViewController.mm */,
+				978FE35B2F7E9B76003FF928 /* SlotPreferencesViewControllers.h */,
+				978FE3582F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm */,
 				B0927418277D9403003FFB79 /* PreferencesWindowController.h */,
 				B0927419277D9403003FFB79 /* PreferencesWindowController.m */,
 				B0F0138E2785A211002936B4 /* Preferences.storyboard */,
@@ -3117,6 +3123,7 @@
 				976D11AE2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */,
 				B00ECBA3279EEB600041E16C /* winhandles.cpp in Sources */,
 				B0F5270D2A2C1F2200288820 /* NSColor+AppleWin.mm in Sources */,
+				978FE3592F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm in Sources */,
 				9765C6182B26452B00C8AF42 /* cadirectsound.cpp in Sources */,
 				B00ECBA6279EEB600041E16C /* winuser.cpp in Sources */,
 				B00ECBA7279EEB600041E16C /* timeapi.cpp in Sources */,
@@ -3185,6 +3192,7 @@
 				976D11AD2B379D9000EEA1D6 /* CharacterMappings.mm in Sources */,
 				B09AB811277A21410002A6C3 /* winhandles.cpp in Sources */,
 				B0F526FE2A2C1F2100288820 /* NSColor+AppleWin.mm in Sources */,
+				978FE35A2F7E9B3C003FF928 /* SlotPreferencesViewControllers.mm in Sources */,
 				9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */,
 				B09AB803277A21410002A6C3 /* winuser.cpp in Sources */,
 				B09AB804277A21410002A6C3 /* timeapi.cpp in Sources */,

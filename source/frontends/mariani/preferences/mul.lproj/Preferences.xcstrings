@@ -559,6 +559,24 @@
         }
       }
     },
+    "MvF-Th-bX1.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"13-Sector Firmware\"; ObjectID = \"MvF-Th-bX1\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "13-Sector Firmware"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "13 磁區韌體"
+          }
+        }
+      }
+    },
     "ngy-Or-HNh.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"－\"; ObjectID = \"ngy-Or-HNh\";",
       "extractionState" : "extracted_with_value",

@@ -266,6 +266,9 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="3qy-hJ-Cce"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="37e-66-sfP">
                                 <rect key="frame" x="18" y="298" width="120" height="16"/>
@@ -288,13 +291,16 @@
                                     <action selector="slotAction:" target="cWg-fO-BCh" id="87j-B4-fye"/>
                                 </connections>
                             </popUpButton>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9P3-7N-xu7">
+                            <button tag="1" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9P3-7N-xu7">
                                 <rect key="frame" x="409" y="292.5" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ellipsis.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="Gwf-pa-TxZ">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="9dN-Ui-gUb"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rbp-yA-Dtf">
                                 <rect key="frame" x="18" y="273" width="120" height="16"/>
@@ -317,13 +323,16 @@
                                     <action selector="slotAction:" target="cWg-fO-BCh" id="pnc-C1-jpg"/>
                                 </connections>
                             </popUpButton>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4pc-lX-V3V">
+                            <button tag="2" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4pc-lX-V3V">
                                 <rect key="frame" x="409" y="266.5" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ellipsis.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="goS-dL-k97">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="icP-ZK-H4i"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tFZ-hB-7vw">
                                 <rect key="frame" x="18" y="247" width="120" height="16"/>
@@ -346,13 +355,16 @@
                                     <action selector="slotAction:" target="cWg-fO-BCh" id="NR0-wG-Arx"/>
                                 </connections>
                             </popUpButton>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iOh-7O-cWF">
+                            <button tag="3" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iOh-7O-cWF">
                                 <rect key="frame" x="409" y="240.5" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ellipsis.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="Yr5-4B-MSo">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="jqV-EV-w8T"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zXU-cf-WKi">
                                 <rect key="frame" x="18" y="221" width="120" height="16"/>
@@ -375,13 +387,16 @@
                                     <action selector="slotAction:" target="cWg-fO-BCh" id="Z5A-kM-H81"/>
                                 </connections>
                             </popUpButton>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fOJ-1h-u56">
+                            <button tag="4" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fOJ-1h-u56">
                                 <rect key="frame" x="409" y="214.5" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ellipsis.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="c05-cW-gPM">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="MeR-mQ-xxu"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iEb-V6-q5I">
                                 <rect key="frame" x="18" y="195" width="120" height="16"/>
@@ -404,13 +419,16 @@
                                     <action selector="slotAction:" target="cWg-fO-BCh" id="Fdp-MT-lvR"/>
                                 </connections>
                             </popUpButton>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KrB-xI-QrX">
+                            <button tag="5" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KrB-xI-QrX">
                                 <rect key="frame" x="409" y="188.5" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ellipsis.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="Jme-NH-aFF">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="tG3-Jy-mOf"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exT-qZ-wy4">
                                 <rect key="frame" x="18" y="169" width="120" height="16"/>
@@ -433,13 +451,16 @@
                                     <action selector="slotAction:" target="cWg-fO-BCh" id="Xxi-X6-EKp"/>
                                 </connections>
                             </popUpButton>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pTp-lK-e9j">
+                            <button tag="6" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pTp-lK-e9j">
                                 <rect key="frame" x="409" y="162.5" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ellipsis.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="ynV-HS-Dbf">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="91S-w6-RMk"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wNA-n3-RvP">
                                 <rect key="frame" x="18" y="143" width="120" height="16"/>
@@ -462,13 +483,16 @@
                                     <action selector="slotAction:" target="cWg-fO-BCh" id="Qeg-hj-lOU"/>
                                 </connections>
                             </popUpButton>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CzT-rt-QCi">
+                            <button tag="7" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CzT-rt-QCi">
                                 <rect key="frame" x="409" y="136.5" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="ellipsis.circle" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="itM-lT-UBS">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="slotMoreAction:" target="cWg-fO-BCh" id="gaG-Ly-PjM"/>
+                                </connections>
                             </button>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Smo-sS-8zG">
                                 <rect key="frame" x="18" y="117" width="120" height="16"/>
@@ -546,6 +570,9 @@
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" textStyle="title2" name=".SFNS-Regular"/>
                                 </buttonCell>
+                                <connections>
+                                    <action selector="expansionSlotMoreAction:" target="cWg-fO-BCh" id="WrX-nk-gGf"/>
+                                </connections>
                             </button>
                         </subviews>
                     </view>
@@ -949,6 +976,35 @@
                 <customObject id="tfD-Tu-edh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-312" y="906"/>
+        </scene>
+        <!--DiskII Preferences View Controller-->
+        <scene sceneID="tQr-w0-P5P">
+            <objects>
+                <viewController storyboardIdentifier="DiskIIPreferencesID" id="AjE-ok-uj1" customClass="DiskIIPreferencesViewController" sceneMemberID="viewController">
+                    <view key="view" id="ZXx-WO-qu9">
+                        <rect key="frame" x="0.0" y="0.0" width="181" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HSq-Fj-KSq">
+                                <rect key="frame" x="20" y="20" width="141" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="13-Sector Firmware" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="MvF-Th-bX1">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="thirteenSectorFirmwareAction:" target="AjE-ok-uj1" id="8ck-0l-Lg3"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="thirteenSectorFirmwareButton" destination="HSq-Fj-KSq" id="eGF-qy-HOe"/>
+                    </connections>
+                </viewController>
+                <customObject id="Viq-hv-n3a" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="958" y="-259"/>
         </scene>
     </scenes>
     <resources>

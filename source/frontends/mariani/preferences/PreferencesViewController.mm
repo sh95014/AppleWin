@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "DiskMakerWindowController.h"
 #import "UserDefaults.h"
+#import "SlotPreferencesViewControllers.h"
 
 // AppleWin
 #include "StdAfx.h"
@@ -24,6 +25,7 @@
 #import "CardManager.h"
 #import "Common.h"
 #import "Core.h"
+#import "Disk.h"
 #import "Harddisk.h"
 #import "Interface.h"
 #import "Memory.h"
@@ -101,6 +103,8 @@ using namespace DiskImgLib;
 @property (weak) IBOutlet NSPopUpButton *gameControllerJoystick;
 @property (weak) IBOutlet NSPopUpButton *gameControllerButton0;
 @property (weak) IBOutlet NSPopUpButton *gameControllerButton1;
+
+@property (strong) NSPopover *morePopover;
 
 @property NSMutableDictionary *keyValueStore;
 @property BOOL configured;
@@ -261,8 +265,9 @@ const eApple2Type computerTypes[] = {
         }
         
         // already set up that way in Preferences.storyboard but let's be
-        // explicit because slotAction: relies on it.
+        // explicit because slotAction: and slotMoreAction: rely on it.
         slotButton.tag = slot;
+        slotMoreButton.tag = slot;
         
         std::string choices;
         std::vector<SS_CARDTYPE> choicesList;
@@ -548,6 +553,38 @@ const eApple2Type computerTypes[] = {
     }
 }
 
+- (IBAction)slotMoreAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if ([sender isKindOfClass:[NSButton class]]) {
+        NSButton *moreButton = (NSButton *)sender;
+        const UINT slot = (UINT)moreButton.tag;
+        CardManager &cardManager = GetCardMgr();
+        const SS_CARDTYPE type = cardManager.QuerySlot(slot);
+        
+        NSViewController *viewController = nil;
+        switch (type) {
+            case CT_Disk2: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"DiskIIPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[DiskIIPreferencesViewController class]], @"");
+                DiskIIPreferencesViewController *vc = (DiskIIPreferencesViewController *)viewController;
+                [vc setCard:dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot))];
+                break;
+            }
+            default:
+                break;
+        }
+        
+        if (viewController != nil) {
+            NSPopover *popover = [[NSPopover alloc] init];
+            popover.behavior = NSPopoverBehaviorTransient;
+            popover.contentViewController = viewController;
+            [popover showRelativeToRect:moreButton.bounds ofView:moreButton preferredEdge:NSRectEdgeMaxX];
+        }
+    }
+}
+
 - (IBAction)expansionSlotAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     SetExpansionMemType((SS_CARDTYPE)self.computerExansionSlotButton.selectedTag);
@@ -557,6 +594,10 @@ const eApple2Type computerTypes[] = {
     self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
     
     [self configureSlots];
+}
+
+- (IBAction)expansionSlotMoreAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 
 - (IBAction)pcapSlotAction:(id)sender {
