@@ -243,6 +243,24 @@
         }
       }
     },
+    "78q-NW-2Rd.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"＋\"; ObjectID = \"78q-NW-2Rd\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "＋"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "＋"
+          }
+        }
+      }
+    },
     "Avh-Ly-PyJ.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Peripheral Slots\"; ObjectID = \"Avh-Ly-PyJ\";",
       "extractionState" : "extracted_with_value",
@@ -805,6 +823,24 @@
         }
       }
     },
+    "Qpe-iK-YmR.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Create New Hard Disk\"; ObjectID = \"Qpe-iK-YmR\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Create New Hard Disk"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新建硬碟映像檔"
+          }
+        }
+      }
+    },
     "rzE-im-fXn.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Screenshots\"; ObjectID = \"rzE-im-fXn\";",
       "extractionState" : "extracted_with_value",
@@ -1007,6 +1043,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "2"
+          }
+        }
+      }
+    },
+    "zW6-pk-x4F.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"－\"; ObjectID = \"zW6-pk-x4F\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "－"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "－"
           }
         }
       }

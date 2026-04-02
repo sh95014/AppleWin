@@ -563,6 +563,7 @@ const eApple2Type computerTypes[] = {
         const SS_CARDTYPE type = cardManager.QuerySlot(slot);
         
         NSViewController *viewController = nil;
+        NSPopoverBehavior behavior = NSPopoverBehaviorTransient;
         switch (type) {
             case CT_Disk2: {
                 viewController = [self.storyboard instantiateControllerWithIdentifier:@"DiskIIPreferencesID"];
@@ -570,6 +571,15 @@ const eApple2Type computerTypes[] = {
                 NSAssert([viewController isKindOfClass:[DiskIIPreferencesViewController class]], @"");
                 DiskIIPreferencesViewController *vc = (DiskIIPreferencesViewController *)viewController;
                 [vc setCard:dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot))];
+                break;
+            }
+            case CT_GenericHDD: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"HardDiskPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[HardDiskPreferencesViewController class]], @"");
+                HardDiskPreferencesViewController *vc = (HardDiskPreferencesViewController *)viewController;
+                [vc setCard:dynamic_cast<HarddiskInterfaceCard*>(cardManager.GetObj(slot))];
+                behavior = NSPopoverBehaviorSemitransient;
                 break;
             }
             case CT_MockingboardC: {
@@ -592,7 +602,7 @@ const eApple2Type computerTypes[] = {
         
         if (viewController != nil) {
             NSPopover *popover = [[NSPopover alloc] init];
-            popover.behavior = NSPopoverBehaviorTransient;
+            popover.behavior = behavior;
             popover.contentViewController = viewController;
             [popover showRelativeToRect:moreButton.bounds ofView:moreButton preferredEdge:NSRectEdgeMaxX];
         }

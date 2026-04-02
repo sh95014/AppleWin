@@ -7,6 +7,7 @@
 
 #import "SlotPreferencesViewControllers.h"
 #import "AppDelegate.h"
+#import "DiskMakerWindowController.h"
 
 @interface DiskIIPreferencesViewController ()
 @property (strong) IBOutlet NSButton *thirteenSectorFirmwareButton;
@@ -31,6 +32,143 @@
 - (IBAction)thirteenSectorFirmwareAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     card->Set13SectorFirmware(self.thirteenSectorFirmwareButton.state == NSControlStateValueOn);
+}
+
+@end
+
+#pragma mark -
+
+@interface HardDiskPreferencesViewController ()
+@property (strong) IBOutlet NSTableView *hardDisksTableView;
+@property (strong) IBOutlet NSButton *addButton;
+@property (strong) IBOutlet NSButton *deleteButton;
+@property (strong) DiskMakerWindowController *diskMakerWC;
+@end
+
+@implementation HardDiskPreferencesViewController {
+    HarddiskInterfaceCard *card;
+}
+
+- (void)loadView {
+    [super loadView];
+    if (self->card) {
+        self.hardDisksTableView.delegate = self;
+        self.hardDisksTableView.dataSource = self;
+        [self.hardDisksTableView deselectAll:self];
+        [self updateButtons];
+    }
+}
+
+- (void)setCard:(HarddiskInterfaceCard *)card {
+    self->card = card;
+    [self updateButtons];
+}
+
+- (IBAction)addAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    panel.canChooseFiles = YES;
+    panel.canChooseDirectories = NO;
+    panel.allowsMultipleSelection = NO;
+    panel.canDownloadUbiquitousContents = YES;
+    panel.message = NSLocalizedString(@"Select hard disk image", @"");
+    panel.prompt = NSLocalizedString(@"Connect", @"");
+    panel.delegate = self;
+
+    if ([panel runModal] == NSModalResponseOK) {
+        const char *fileSystemRepresentation = panel.URL.fileSystemRepresentation;
+        std::string pathname(fileSystemRepresentation);
+        int hddIndex;
+        if (self.hardDisksTableView.selectedRow >= 0) {
+            hddIndex = (int)self.hardDisksTableView.selectedRow;
+            NSAssert(hddIndex >= HARDDISK_1 && hddIndex < NUM_HARDDISKS, @"selection was out of range");
+        }
+        else {
+            // find the first empty slot
+            for (hddIndex = 0; hddIndex < NUM_HARDDISKS; hddIndex++) {
+                if (card->HarddiskGetFullPathName(hddIndex).empty()) {
+                    break;
+                }
+            }
+            NSAssert(hddIndex < NUM_HARDDISKS, @"add button should not have been enabled");
+        }
+        if (card->Insert(hddIndex, pathname)) {
+            NSLog(@"Loaded '%s' as HDD %d", fileSystemRepresentation, hddIndex);
+            [self.hardDisksTableView reloadData];
+            [self updateButtons];
+            [theAppDelegate reconfigureDrives];
+        }
+        else {
+            NSLog(@"Failed to '%s' as HDD", fileSystemRepresentation);
+        }
+    }
+}
+
+- (IBAction)deleteAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (self.hardDisksTableView.selectedRow >= 0) {
+        int hddIndex = (int)self.hardDisksTableView.selectedRow;
+        NSAssert(hddIndex >= HARDDISK_1 && hddIndex < NUM_HARDDISKS, @"selection was out of range");
+        NSAssert(!card->HarddiskGetFullPathName(hddIndex).empty(), @"delete sent to empty slot");
+        card->Unplug(hddIndex);
+        [self.hardDisksTableView reloadData];
+        [self updateButtons];
+        [theAppDelegate reconfigureDrives];
+    }
+}
+
+- (IBAction)createAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    self.diskMakerWC = [[DiskMakerWindowController alloc] init];
+    [self.diskMakerWC selectHardDisk];
+    [self.diskMakerWC showWindow:self];
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
+    return NUM_HARDDISKS;
+}
+
+- (id)tableView:(NSTableView *)tableView viewForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row {
+    NSTableCellView *result = [tableView makeViewWithIdentifier:@"HardDiskTableCellView" owner:self];
+    if (card != nil) {
+        NSString *hddImagePath = [NSString stringWithUTF8String:card->HarddiskGetFullPathName((int)row).c_str()];
+        if (hddImagePath.length == 0) {
+            hddImagePath = NSLocalizedString(@"—", @"empty slot");
+        }
+        result.textField.stringValue = hddImagePath;
+    }
+    else {
+        result.textField.stringValue = NSLocalizedString(@"—", @"empty slot");
+    }
+    return result;
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+    [self updateButtons];
+}
+
+- (void)updateButtons {
+    NSInteger selectedRow = self.hardDisksTableView.selectedRow;
+    if (selectedRow < 0) {
+        int count = 0;
+        for (int i = HARDDISK_1; i < NUM_HARDDISKS; i++) {
+            count += !card->HarddiskGetFullPathName(i).empty();
+        }
+        
+        // with no selection, enable "+" button if an empty slot is available
+        self.addButton.enabled = (count < NUM_HARDDISKS);
+        // with no selection, nothing to delete
+        self.deleteButton.enabled = NO;
+    }
+    else {
+        // always enable "+" button to add image to empty slot or replace image in filled slot
+        self.addButton.enabled = YES;
+        // enable "-" button if slot is filled
+        self.deleteButton.enabled = !card->HarddiskGetFullPathName((int)selectedRow).empty();
+    }
 }
 
 @end
