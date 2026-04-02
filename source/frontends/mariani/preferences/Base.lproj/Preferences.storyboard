@@ -1102,7 +1102,7 @@
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MUR-cP-Ykz">
                                 <rect key="frame" x="20" y="41" width="250" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="16" doubleValue="16" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="9QY-Nk-sFG">
+                                <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="16" doubleValue="12" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="9QY-Nk-sFG">
                                     <font key="font" metaFont="system" size="12"/>
                                 </sliderCell>
                                 <connections>
@@ -1110,45 +1110,45 @@
                                 </connections>
                             </slider>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gE6-i9-p5e">
-                                <rect key="frame" x="25" y="20" width="9" height="13"/>
+                                <rect key="frame" x="23" y="20" width="13" height="13"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="1" id="o51-w3-zDv">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="1" id="o51-w3-zDv">
                                     <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ark-AX-5p8">
-                                <rect key="frame" x="38" y="20" width="11" height="13"/>
+                                <rect key="frame" x="38" y="20" width="15" height="13"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="2" id="Zda-1C-vOg">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="2" id="Zda-1C-vOg">
                                     <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fRd-jW-rg5">
-                                <rect key="frame" x="72" y="20" width="11" height="13"/>
+                                <rect key="frame" x="69" y="20" width="15" height="13"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="4" id="0dM-TZ-Vd2">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="4" id="0dM-TZ-Vd2">
                                     <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fBN-cx-k5E">
-                                <rect key="frame" x="132" y="20" width="11" height="13"/>
+                                <rect key="frame" x="130" y="20" width="15" height="13"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="8" id="Kv7-UH-hBi">
+                                <textFieldCell key="cell" lineBreakMode="truncatingTail" alignment="center" title="8" id="Kv7-UH-hBi">
                                     <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vtn-N2-G1o">
-                                <rect key="frame" x="238" y="20" width="31" height="13"/>
+                                <rect key="frame" x="235" y="20" width="35" height="13"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="16MB" id="7Zw-sX-0zB">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="16MB" id="7Zw-sX-0zB">
                                     <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

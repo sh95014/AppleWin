@@ -6,6 +6,7 @@
 //
 
 #import "SlotPreferencesViewControllers.h"
+#import "AppDelegate.h"
 
 @interface DiskIIPreferencesViewController ()
 @property (strong) IBOutlet NSButton *thirteenSectorFirmwareButton;
@@ -119,15 +120,16 @@
 }
 
 - (void)centerView:(NSView *)view underTick:(NSInteger)tick {
+    const NSOperatingSystemVersion macOS26 = { 26, 0, 0 };
     const NSInteger tickIndex = tick - self.memorySizeSlider.minValue;
     const NSRect sliderFrame = self.memorySizeSlider.frame;
-    NSRect tickFrame = [self.memorySizeSlider rectOfTickMarkAtIndex:tickIndex];
-    tickFrame.origin.x += sliderFrame.origin.x;
-    tickFrame.origin.y += sliderFrame.origin.y;
+    const CGFloat margin = [theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS26] ? 10 : 0;
+    const CGFloat tickGap = (CGRectGetWidth(sliderFrame) - margin * 2) / (self.memorySizeSlider.numberOfTickMarks - 1);
+    const CGFloat tickPosition = CGRectGetMinX(sliderFrame) + margin + tickIndex * tickGap;
     
     // center the frame at the tick mark...
     NSRect viewFrame = view.frame;
-    viewFrame.origin.x = floorf(CGRectGetMidX(tickFrame) - CGRectGetWidth(tickFrame) / 2);
+    viewFrame.origin.x = floorf(tickPosition - CGRectGetWidth(viewFrame) / 2);
     
     // ...but don't exceed the left or right edge of the slider
     if (CGRectGetMinX(viewFrame) < CGRectGetMinX(sliderFrame)) {
