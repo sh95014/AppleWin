@@ -1096,11 +1096,11 @@
             <objects>
                 <viewController storyboardIdentifier="RamWorksPreferencesID" id="O3a-F1-YSY" customClass="RamWorksPreferencesViewController" sceneMemberID="viewController">
                     <view key="view" id="ggG-E4-eSb">
-                        <rect key="frame" x="0.0" y="0.0" width="290" height="77"/>
+                        <rect key="frame" x="0.0" y="0.0" width="290" height="73"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MUR-cP-Ykz">
-                                <rect key="frame" x="20" y="41" width="250" height="16"/>
+                                <rect key="frame" x="20" y="37" width="250" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="16" doubleValue="12" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="9QY-Nk-sFG">
                                     <font key="font" metaFont="system" size="12"/>
@@ -1167,7 +1167,7 @@
                 </viewController>
                 <customObject id="IKf-m5-Lr1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="955" y="87.5"/>
+            <point key="canvasLocation" x="955" y="85.5"/>
         </scene>
     </scenes>
     <resources>

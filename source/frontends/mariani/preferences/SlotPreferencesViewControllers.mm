@@ -123,13 +123,22 @@
     const NSOperatingSystemVersion macOS26 = { 26, 0, 0 };
     const NSInteger tickIndex = tick - self.memorySizeSlider.minValue;
     const NSRect sliderFrame = self.memorySizeSlider.frame;
-    const CGFloat margin = [theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS26] ? 10 : 0;
-    const CGFloat tickGap = (CGRectGetWidth(sliderFrame) - margin * 2) / (self.memorySizeSlider.numberOfTickMarks - 1);
-    const CGFloat tickPosition = CGRectGetMinX(sliderFrame) + margin + tickIndex * tickGap;
+    
+    // unfortunately, rectOfTickMarkAtIndex: seems to be broken at least in macOS26
+    CGFloat tickPosition;
+    if ([theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS26]) {
+        const CGFloat margin = 9;
+        const CGFloat tickWidth = 2;
+        const CGFloat tickGap = (CGRectGetWidth(sliderFrame) - margin * 2 - tickWidth * self.memorySizeSlider.numberOfTickMarks) / (self.memorySizeSlider.numberOfTickMarks - 1);
+        tickPosition = CGRectGetMinX(sliderFrame) + margin + tickIndex * (tickGap + tickWidth) + tickWidth / 2;
+    }
+    else {
+        tickPosition = CGRectGetMinX(sliderFrame) + CGRectGetMidX([self.memorySizeSlider rectOfTickMarkAtIndex:tickIndex]);
+    }
     
     // center the frame at the tick mark...
     NSRect viewFrame = view.frame;
-    viewFrame.origin.x = floorf(tickPosition - CGRectGetWidth(viewFrame) / 2);
+    viewFrame.origin.x = tickPosition - CGRectGetWidth(viewFrame) / 2;
     
     // ...but don't exceed the left or right edge of the slider
     if (CGRectGetMinX(viewFrame) < CGRectGetMinX(sliderFrame)) {
