@@ -1091,6 +1091,84 @@
             </objects>
             <point key="canvasLocation" x="982" y="-96"/>
         </scene>
+        <!--Ram Works Preferences View Controller-->
+        <scene sceneID="4ih-Fq-i7c">
+            <objects>
+                <viewController storyboardIdentifier="RamWorksPreferencesID" id="O3a-F1-YSY" customClass="RamWorksPreferencesViewController" sceneMemberID="viewController">
+                    <view key="view" id="ggG-E4-eSb">
+                        <rect key="frame" x="0.0" y="0.0" width="290" height="77"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MUR-cP-Ykz">
+                                <rect key="frame" x="20" y="41" width="250" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="16" doubleValue="16" tickMarkPosition="below" numberOfTickMarks="16" allowsTickMarkValuesOnly="YES" sliderType="linear" id="9QY-Nk-sFG">
+                                    <font key="font" metaFont="system" size="12"/>
+                                </sliderCell>
+                                <connections>
+                                    <action selector="memorySliderAction:" target="O3a-F1-YSY" id="7Fc-Ah-Ahw"/>
+                                </connections>
+                            </slider>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gE6-i9-p5e">
+                                <rect key="frame" x="25" y="20" width="9" height="13"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="1" id="o51-w3-zDv">
+                                    <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ark-AX-5p8">
+                                <rect key="frame" x="38" y="20" width="11" height="13"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="2" id="Zda-1C-vOg">
+                                    <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fRd-jW-rg5">
+                                <rect key="frame" x="72" y="20" width="11" height="13"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="4" id="0dM-TZ-Vd2">
+                                    <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fBN-cx-k5E">
+                                <rect key="frame" x="132" y="20" width="11" height="13"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="8" id="Kv7-UH-hBi">
+                                    <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vtn-N2-G1o">
+                                <rect key="frame" x="238" y="20" width="31" height="13"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="16MB" id="7Zw-sX-0zB">
+                                    <font key="font" textStyle="caption1" name=".SFNS-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="eightMBLabel" destination="fBN-cx-k5E" id="lx1-ST-ZBc"/>
+                        <outlet property="fourMBLabel" destination="fRd-jW-rg5" id="0eN-WF-JCa"/>
+                        <outlet property="memorySizeSlider" destination="MUR-cP-Ykz" id="gj2-EH-7B8"/>
+                        <outlet property="oneMBLabel" destination="gE6-i9-p5e" id="47W-We-xp8"/>
+                        <outlet property="sixteenMBLabel" destination="Vtn-N2-G1o" id="Xnf-ZZ-RDa"/>
+                        <outlet property="twoMBLabel" destination="ark-AX-5p8" id="8oe-tf-hr0"/>
+                    </connections>
+                </viewController>
+                <customObject id="IKf-m5-Lr1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="955" y="87.5"/>
+        </scene>
     </scenes>
     <resources>
         <image name="ellipsis.circle" catalog="system" width="15" height="15"/>

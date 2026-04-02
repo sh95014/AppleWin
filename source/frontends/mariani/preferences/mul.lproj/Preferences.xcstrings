@@ -1,6 +1,24 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "0dM-TZ-Vd2.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"4\"; ObjectID = \"0dM-TZ-Vd2\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "4"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "4"
+          }
+        }
+      }
+    },
     "1BI-8L-w0O.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"SSI263 $Cs40 (main):\"; ObjectID = \"1BI-8L-w0O\";",
       "extractionState" : "extracted_with_value",
@@ -170,6 +188,24 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "7Zw-sX-0zB.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"16MB\"; ObjectID = \"7Zw-sX-0zB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "16MB"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "16MB"
+          }
+        }
+      }
     },
     "8J1-iv-XcH.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Enhanced speed for floppy drives\"; ObjectID = \"8J1-iv-XcH\";",
@@ -611,6 +647,24 @@
         }
       }
     },
+    "Kv7-UH-hBi.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"8\"; ObjectID = \"Kv7-UH-hBi\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "8"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "8"
+          }
+        }
+      }
+    },
     "lZG-5R-Dzg.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Create New Hard Disk\"; ObjectID = \"lZG-5R-Dzg\";",
       "extractionState" : "extracted_with_value",
@@ -665,6 +719,24 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "o51-w3-zDv.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"1\"; ObjectID = \"o51-w3-zDv\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "1"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1"
+          }
+        }
+      }
     },
     "ofG-8s-O3i.title" : {
       "comment" : "Class = \"NSMenuItem\"; title = \"SSI263AP\"; ObjectID = \"ofG-8s-O3i\";",
@@ -920,6 +992,24 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "Zda-1C-vOg.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"2\"; ObjectID = \"Zda-1C-vOg\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "2"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "2"
+          }
+        }
+      }
     },
     "zxc-fb-W3p.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Recordings\"; ObjectID = \"zxc-fb-W3p\";",

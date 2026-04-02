@@ -901,12 +901,12 @@
         }
       }
     },
-    "RamWorks III (up to 8MB)" : {
+    "RamWorks III (up to 16MB)" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "RamWorks III (高達 8MB)"
+            "value" : "RamWorks III (高達 16MB)"
           }
         }
       }

@@ -87,3 +87,57 @@
 }
 
 @end
+
+#pragma mark -
+
+@interface RamWorksPreferencesViewController ()
+@property (strong) IBOutlet NSSlider *memorySizeSlider;
+@property (strong) IBOutlet NSTextField *oneMBLabel;
+@property (strong) IBOutlet NSTextField *twoMBLabel;
+@property (strong) IBOutlet NSTextField *fourMBLabel;
+@property (strong) IBOutlet NSTextField *eightMBLabel;
+@property (strong) IBOutlet NSTextField *sixteenMBLabel;
+@end
+
+@implementation RamWorksPreferencesViewController
+
+- (void)loadView {
+    [super loadView];
+    const unsigned banks = GetRamWorksMemorySize();
+    self.memorySizeSlider.intValue = banks / 16; // 64 KB per bank
+    
+    [self centerView:self.oneMBLabel underTick:1];
+    [self centerView:self.twoMBLabel underTick:2];
+    [self centerView:self.fourMBLabel underTick:4];
+    [self centerView:self.eightMBLabel underTick:8];
+    [self centerView:self.sixteenMBLabel underTick:16];
+}
+
+- (IBAction)memorySliderAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    SetRamWorksMemorySize(self.memorySizeSlider.intValue * 16); // 64 KB per bank
+}
+
+- (void)centerView:(NSView *)view underTick:(NSInteger)tick {
+    const NSInteger tickIndex = tick - self.memorySizeSlider.minValue;
+    const NSRect sliderFrame = self.memorySizeSlider.frame;
+    NSRect tickFrame = [self.memorySizeSlider rectOfTickMarkAtIndex:tickIndex];
+    tickFrame.origin.x += sliderFrame.origin.x;
+    tickFrame.origin.y += sliderFrame.origin.y;
+    
+    // center the frame at the tick mark...
+    NSRect viewFrame = view.frame;
+    viewFrame.origin.x = floorf(CGRectGetMidX(tickFrame) - CGRectGetWidth(tickFrame) / 2);
+    
+    // ...but don't exceed the left or right edge of the slider
+    if (CGRectGetMinX(viewFrame) < CGRectGetMinX(sliderFrame)) {
+        viewFrame.origin.x = sliderFrame.origin.x;
+    }
+    else if (CGRectGetMaxX(viewFrame) > CGRectGetMaxX(sliderFrame)) {
+        viewFrame.origin.x = floorf(CGRectGetMaxX(sliderFrame) - CGRectGetWidth(viewFrame));
+    }
+    
+    view.frame = viewFrame;
+}
+
+@end

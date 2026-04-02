@@ -10,6 +10,7 @@
 #include "StdAfx.h"
 #import "Disk.h"
 #import "Mockingboard.h"
+#import "Memory.h"
 
 @interface DiskIIPreferencesViewController : NSViewController
 - (void)setCard:(Disk2InterfaceCard *)card;
@@ -17,4 +18,7 @@
 
 @interface MockingboardPreferencesViewController : NSViewController
 - (void)setCard:(MockingboardCard *)card;
+@end
+
+@interface RamWorksPreferencesViewController : NSViewController
 @end

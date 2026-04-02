@@ -580,6 +580,12 @@ const eApple2Type computerTypes[] = {
                 [vc setCard:dynamic_cast<MockingboardCard*>(cardManager.GetObj(slot))];
                 break;
             }
+            case CT_RamWorksIII: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"RamWorksPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[RamWorksPreferencesViewController class]], @"");
+                break;
+            }
             default:
                 break;
         }
@@ -606,6 +612,27 @@ const eApple2Type computerTypes[] = {
 
 - (IBAction)expansionSlotMoreAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSViewController *viewController = nil;
+    if ([sender isKindOfClass:[NSButton class]]) {
+        NSButton *moreButton = (NSButton *)sender;
+        
+        switch (GetCurrentExpansionMemType()) {
+            case CT_RamWorksIII: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"RamWorksPreferencesID"];
+                break;
+            }
+            default:
+                break;
+        }
+        
+        if (viewController != nil) {
+            NSPopover *popover = [[NSPopover alloc] init];
+            popover.behavior = NSPopoverBehaviorTransient;
+            popover.contentViewController = viewController;
+            [popover showRelativeToRect:moreButton.bounds ofView:moreButton preferredEdge:NSRectEdgeMaxX];
+        }
+    }
 }
 
 - (IBAction)pcapSlotAction:(id)sender {
@@ -919,7 +946,7 @@ const eApple2Type computerTypes[] = {
         @(CT_SAM):                  NSLocalizedString(@"Software Automatic Mouth (speech)", @""),
         @(CT_80Col):                NSLocalizedString(@"80-column text card (1K)", @""),
         @(CT_Extended80Col):        NSLocalizedString(@"Extended 80-column text card (64K)", @""),
-        @(CT_RamWorksIII):          NSLocalizedString(@"RamWorks III (up to 8MB)", @""),
+        @(CT_RamWorksIII):          NSLocalizedString(@"RamWorks III (up to 16MB)", @""),
         @(CT_Uthernet):             NSLocalizedString(@"Uthernet I (network)", @""),
         @(CT_LanguageCard):         NSLocalizedString(@"Apple Language Card", @""),
         @(CT_LanguageCardIIe):      NSLocalizedString(@"Apple Language Card //e", @""),
