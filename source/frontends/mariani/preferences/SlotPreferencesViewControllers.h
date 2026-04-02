@@ -9,9 +9,12 @@
 
 #include "StdAfx.h"
 #import "Disk.h"
+#import "Mockingboard.h"
 
 @interface DiskIIPreferencesViewController : NSViewController
-
 - (void)setCard:(Disk2InterfaceCard *)card;
+@end
 
+@interface MockingboardPreferencesViewController : NSViewController
+- (void)setCard:(MockingboardCard *)card;
 @end

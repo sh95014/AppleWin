@@ -1,6 +1,24 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "1BI-8L-w0O.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"SSI263 $Cs40 (main):\"; ObjectID = \"1BI-8L-w0O\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SSI263 $Cs40 (main):"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSI263 $Cs40 (主插槽):"
+          }
+        }
+      }
+    },
     "2wM-ew-aAs.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Button 0\"; ObjectID = \"2wM-ew-aAs\";",
       "extractionState" : "extracted_with_value",
@@ -91,6 +109,19 @@
         }
       }
     },
+    "4vr-mh-UWK.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"－\"; ObjectID = \"4vr-mh-UWK\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "－"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "5k3-sD-Bqh.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Button\"; ObjectID = \"5k3-sD-Bqh\";",
       "extractionState" : "extracted_with_value",
@@ -126,6 +157,19 @@
           }
         }
       }
+    },
+    "7F9-Vq-1vB.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"SSI263P\"; ObjectID = \"7F9-Vq-1vB\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SSI263P"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "8J1-iv-XcH.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Enhanced speed for floppy drives\"; ObjectID = \"8J1-iv-XcH\";",
@@ -216,6 +260,19 @@
           }
         }
       }
+    },
+    "bzv-Ld-ovP.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"－\"; ObjectID = \"bzv-Ld-ovP\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "－"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "cWg-fO-BCh.title" : {
       "comment" : "Class = \"NSViewController\"; title = \"Computer\"; ObjectID = \"cWg-fO-BCh\";",
@@ -487,6 +544,19 @@
         }
       }
     },
+    "I0r-WD-ytK.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"SC-01\"; ObjectID = \"I0r-WD-ytK\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SC-01"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "iDE-ks-BPL.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Automatically check for updates\"; ObjectID = \"iDE-ks-BPL\";",
       "extractionState" : "extracted_with_value",
@@ -593,7 +663,21 @@
             "value" : "－"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
+    },
+    "ofG-8s-O3i.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"SSI263AP\"; ObjectID = \"ofG-8s-O3i\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SSI263AP"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "paq-mq-NdY.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Speaker Volume\"; ObjectID = \"paq-mq-NdY\";",
@@ -739,6 +823,24 @@
         }
       }
     },
+    "WRv-0i-2xk.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"SSI263 $Cs20 (unused):\"; ObjectID = \"WRv-0i-2xk\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SSI263 $Cs20 (unused):"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SSI263 $Cs20 (未使用):"
+          }
+        }
+      }
+    },
     "WV6-AZ-bPD.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Button\"; ObjectID = \"WV6-AZ-bPD\";",
       "extractionState" : "extracted_with_value",
@@ -775,6 +877,19 @@
         }
       }
     },
+    "xFA-bT-x6E.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"SSI263P\"; ObjectID = \"xFA-bT-x6E\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SSI263P"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
     "yJi-x4-80i.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"1:\"; ObjectID = \"yJi-x4-80i\";",
       "extractionState" : "extracted_with_value",
@@ -792,6 +907,19 @@
           }
         }
       }
+    },
+    "yxY-KK-go6.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"SSI263AP\"; ObjectID = \"yxY-KK-go6\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SSI263AP"
+          }
+        }
+      },
+      "shouldTranslate" : false
     },
     "zxc-fb-W3p.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Recordings\"; ObjectID = \"zxc-fb-W3p\";",

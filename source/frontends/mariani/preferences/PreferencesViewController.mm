@@ -572,6 +572,14 @@ const eApple2Type computerTypes[] = {
                 [vc setCard:dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot))];
                 break;
             }
+            case CT_MockingboardC: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"MockingboardPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[MockingboardPreferencesViewController class]], @"");
+                MockingboardPreferencesViewController *vc = (MockingboardPreferencesViewController *)viewController;
+                [vc setCard:dynamic_cast<MockingboardCard*>(cardManager.GetObj(slot))];
+                break;
+            }
             default:
                 break;
         }
