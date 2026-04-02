@@ -59,6 +59,10 @@
     }
 }
 
+- (void)viewWillDisappear {
+    [self.diskMakerWC close];
+}
+
 - (void)setCard:(HarddiskInterfaceCard *)card {
     self->card = card;
     [self updateButtons];
