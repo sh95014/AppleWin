@@ -582,7 +582,8 @@ const eApple2Type computerTypes[] = {
                 behavior = NSPopoverBehaviorSemitransient;
                 break;
             }
-            case CT_MockingboardC: {
+            case CT_MockingboardC: // fallthrough
+            case CT_Phasor: {
                 viewController = [self.storyboard instantiateControllerWithIdentifier:@"MockingboardPreferencesID"];
                 
                 NSAssert([viewController isKindOfClass:[MockingboardPreferencesViewController class]], @"");
@@ -990,9 +991,7 @@ const eApple2Type computerTypes[] = {
     case CT_Disk2: // fallthrough
     case CT_GenericHDD: // fallthrough
     case CT_SSC: // fallthrough
-    case CT_GenericPrinter: // fallthrough
     case CT_MockingboardC: // fallthrough
-    case CT_MouseInterface: // fallthrough
     case CT_Phasor: // fallthrough
     case CT_Saturn128K: // fallthrough
     case CT_Uthernet: // fallthrough
