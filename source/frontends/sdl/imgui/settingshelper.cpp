@@ -69,16 +69,6 @@ namespace
         {DT_HAYDENCOMPILER, "Hayden - Applesoft Compiler"},
     };
 
-    const std::vector<SS_CARDTYPE> uniqueCards = {CT_SSC, CT_GenericPrinter, CT_MouseInterface, CT_Z80, CT_VidHD};
-
-    const std::vector<SS_CARDTYPE> slot1_7 = {CT_Empty,          CT_Disk2,      CT_GenericHDD, CT_GenericPrinter,
-                                              CT_MouseInterface, CT_Saturn128K, CT_FourPlay,   CT_SNESMAX,
-                                              CT_MockingboardC,  CT_Phasor,     CT_SAM,        CT_Uthernet,
-                                              CT_Uthernet2,      CT_VidHD,      CT_Z80};
-
-    const std::vector<SS_CARDTYPE> expansionCards = {
-        CT_Empty, CT_LanguageCard, CT_Extended80Col, CT_Saturn128K, CT_RamWorksIII};
-
     uint8_t roundToRGB(float x)
     {
         // c++ cast truncates
@@ -108,43 +98,24 @@ namespace sa2
     std::vector<SS_CARDTYPE> getCardsForSlot(size_t slot)
     {
         CardManager &cardManager = GetCardMgr();
+        SS_CARDTYPE currConfig[NUM_SLOTS];
 
-        // 1. Collect unique cards currently plugged into other physical slots
-        std::vector<SS_CARDTYPE> occupiedUnique;
-        occupiedUnique.reserve(uniqueCards.size());
-
-        for (size_t otherSlot = SLOT1; otherSlot < NUM_SLOTS; ++otherSlot)
+        for (size_t i = 0; i < NUM_SLOTS; i++)
         {
-            if (slot == otherSlot)
-                continue;
-
-            const SS_CARDTYPE card = cardManager.QuerySlot(otherSlot);
-
-            // If the card in this slot is a 'Unique' type, it's now forbidden for our target slot
-            if (std::find(uniqueCards.begin(), uniqueCards.end(), card) != uniqueCards.end())
-            {
-                occupiedUnique.push_back(card);
-            }
+            currConfig[i] = cardManager.QuerySlot(i);
         }
 
-        // 2. Return all cards from the master list except those currently occupied
         std::vector<SS_CARDTYPE> result;
-        result.reserve(slot1_7.size());
-
-        for (const auto &card : slot1_7)
-        {
-            if (std::find(occupiedUnique.begin(), occupiedUnique.end(), card) == occupiedUnique.end())
-            {
-                result.push_back(card);
-            }
-        }
-
+        cardManager.GetCardChoicesForSlot(slot, currConfig, result);
         return result;
     }
 
-    const std::vector<SS_CARDTYPE> &getExpansionCards()
+    std::vector<SS_CARDTYPE> getExpansionCards()
     {
-        return expansionCards;
+        CardManager &cardManager = GetCardMgr();
+        std::vector<SS_CARDTYPE> result;
+        cardManager.GetCardChoicesForAuxSlot(result);
+        return result;
     }
 
     const std::map<eApple2Type, std::string> &getAapple2Types()
