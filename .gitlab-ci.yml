@@ -113,6 +113,8 @@ libretro-build-linux-aarch64:
   extends:
     - .libretro-linux-cmake-aarch64
     - .core-defs
+  variables:
+    EXTRA_PATH: source/frontends/libretro
 
 # MacOS 64-bit
 libretro-build-osx-x64:
@@ -184,3 +186,5 @@ libretro-build-webos-armv7a:
   extends:
     - .libretro-webos-armv7a-cmake
     - .core-defs
+  variables:
+    EXTRA_PATH: source/frontends/libretro

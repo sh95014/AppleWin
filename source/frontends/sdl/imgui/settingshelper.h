@@ -72,7 +72,7 @@ namespace sa2
     const std::string &getDiskStatusName(Disk_Status_e status);
 
     std::vector<SS_CARDTYPE> getCardsForSlot(size_t slot);
-    const std::vector<SS_CARDTYPE> &getExpansionCards();
+    std::vector<SS_CARDTYPE> getExpansionCards();
 
     const std::map<eApple2Type, std::string> &getAapple2Types();
     const std::map<DONGLETYPE, std::string> &getDongleTypes();

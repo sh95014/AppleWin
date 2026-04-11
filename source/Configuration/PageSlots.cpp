@@ -51,6 +51,18 @@ const char CPageSlots::m_defaultHDDOptions[] =
 				"Select Hard Disk Image...\0"
 				"Unplug Hard Disk Image\0";
 
+std::string CPageSlots::GetCardNameChoices(const std::vector<SS_CARDTYPE> &choicesList)
+{
+    std::string choices;
+    for (const auto &card : choicesList)
+    {
+        choices += Card::GetCardName(card);
+        choices += '\0';
+    }
+    choices += '\0';
+    return choices;
+}
+
 INT_PTR CALLBACK CPageSlots::DlgProc(HWND hWnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	// Switch from static func to our instance
@@ -276,39 +288,32 @@ void CPageSlots::InitOptions(HWND hWnd)
 	for (int i = SLOT0; i < NUM_SLOTS; i++)
 		currConfig[i] = m_PropertySheetHelper.GetConfigNew().m_Slot[i];
 
-	if (IsApple2PlusOrClone(m_PropertySheetHelper.GetConfigNew().m_Apple2Type))
+	for (int slot = SLOT0; slot < NUM_SLOTS; slot++)
 	{
-		std::string choices;
-		GetCardMgr().GetCardChoicesForSlot(SLOT0, currConfig, choices, m_choicesList[SLOT0]);
-		int currentChoice = CardTypeToComboItem(SLOT0);
-		m_PropertySheetHelper.FillComboBox(hWnd, IDC_SLOT0, choices.c_str(), currentChoice);
+		if (slot == SLOT0 && IsAppleIIe(m_PropertySheetHelper.GetConfigNew().m_Apple2Type))
+		{
+			enable = FALSE;
+			enableOpt = FALSE;
+		}
+		else
+		{
+			GetCardMgr().GetCardChoicesForSlot(slot, currConfig, m_choicesList[slot]);
+			const std::string choices = GetCardNameChoices(m_choicesList[slot]);
+			int currentChoice = CardTypeToComboItem(slot);
+			m_PropertySheetHelper.FillComboBox(hWnd, IDC_SLOT0 + slot, choices.c_str(), currentChoice);
 
-		enable = TRUE;
-		enableOpt = CardTypeHasOptions(m_PropertySheetHelper.GetConfigNew().m_Slot[SLOT0]);
-	}
-	else
-	{
-		enable = FALSE;
-		enableOpt = FALSE;
-	}
-	EnableWindow(GetDlgItem(hWnd, IDC_SLOT0), enable);
-	EnableWindow(GetDlgItem(hWnd, IDC_SLOT0_OPTION), enableOpt);
+			enable = TRUE;
+			enableOpt = CardTypeHasOptions(m_PropertySheetHelper.GetConfigNew().m_Slot[slot]);
+		}
 
-	for (int slot = SLOT1; slot < NUM_SLOTS; slot++)
-	{
-		std::string choices;
-		GetCardMgr().GetCardChoicesForSlot(slot, currConfig, choices, m_choicesList[slot]);
-		int currentChoice = CardTypeToComboItem(slot);
-		m_PropertySheetHelper.FillComboBox(hWnd, IDC_SLOT0 + slot, choices.c_str(), currentChoice);
-
-		enableOpt = CardTypeHasOptions(m_PropertySheetHelper.GetConfigNew().m_Slot[slot]);
+		EnableWindow(GetDlgItem(hWnd, IDC_SLOT0 + slot), enable);
 		EnableWindow(GetDlgItem(hWnd, IDC_SLOT0_OPTION + slot), enableOpt);
 	}
 
 	if (IsAppleIIe(m_PropertySheetHelper.GetConfigNew().m_Apple2Type))
 	{
-		std::string choices;
-		GetCardMgr().GetCardChoicesForAuxSlot(choices, m_choicesListAux);
+		GetCardMgr().GetCardChoicesForAuxSlot(m_choicesListAux);
+		const std::string choices = GetCardNameChoices(m_choicesListAux);
 		int currentChoice = CardTypeToComboItem(SLOT_AUX);
 		m_PropertySheetHelper.FillComboBox(hWnd, IDC_SLOTAUX, choices.c_str(), currentChoice);
 
@@ -320,6 +325,7 @@ void CPageSlots::InitOptions(HWND hWnd)
 		enable = FALSE;
 		enableOpt = FALSE;
 	}
+
 	EnableWindow(GetDlgItem(hWnd, IDC_SLOTAUX), enable);
 	EnableWindow(GetDlgItem(hWnd, IDC_SLOTAUX_OPTION), enableOpt);
 
@@ -508,9 +514,9 @@ INT_PTR CPageSlots::DlgProcDisk2Internal(HWND hWnd, UINT message, WPARAM wparam,
 	case WM_INITDIALOG:
 		InitComboFloppyDrive(hWnd, ms_slot);
 
-		if (ms_slot == SLOT5 || ms_slot == SLOT6)
-			CheckDlgButton(hWnd, IDC_DISKII_STATUS_ENABLE, Win32Frame::GetWin32Frame().GetWindowedModeShowDiskiiStatus() ? BST_CHECKED : BST_UNCHECKED);
-		else
+		CheckDlgButton(hWnd, IDC_DISKII_STATUS_ENABLE, Win32Frame::GetWin32Frame().GetWindowedModeShowDiskiiStatus() ? BST_CHECKED : BST_UNCHECKED);
+
+		if (ms_slot != SLOT5 && ms_slot != SLOT6)
 			EnableWindow(GetDlgItem(hWnd, IDC_DISKII_STATUS_ENABLE), FALSE);
 
 		CheckDlgButton(hWnd, IDC_DISKII_13_SECTOR_FW_ENABLE, m_PropertySheetHelper.GetConfigNew().m_diskII13SectorFirmware[ms_slot] ? BST_CHECKED : BST_UNCHECKED);
