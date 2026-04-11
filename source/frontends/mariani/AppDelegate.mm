@@ -95,6 +95,7 @@ using namespace DiskImgLib;
 @end
 
 static void DiskImgMsgHandler(const char *file, int line, const char *msg);
+static void TapePlaybackRateDidChange(double playbackRate);
 const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 @implementation AppDelegate
@@ -636,6 +637,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         ExtAudioFileDispose(inputFile);
         self.tapeOpenPanel = nil;
         [self reconfigureDrives];
+        CassetteTape::instance().playbackRateChangeCallback = TapePlaybackRateDidChange;
     }
 }
 
@@ -1448,4 +1450,10 @@ DiskImgMsgHandler(const char *file, int line, const char *msg)
 #ifdef DEBUG
     fprintf(stderr, "%s:%d: %s\n", file, line, msg);
 #endif
+}
+
+static void
+TapePlaybackRateDidChange(double playbackRate)
+{
+    [theAppDelegate updateDriveLights];
 }
