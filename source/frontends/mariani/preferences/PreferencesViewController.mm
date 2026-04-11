@@ -269,9 +269,8 @@ const eApple2Type computerTypes[] = {
         slotButton.tag = slot;
         slotMoreButton.tag = slot;
         
-        std::string choices;
         std::vector<SS_CARDTYPE> choicesList;
-        manager.GetCardChoicesForSlot(slot, currConfig, choices, choicesList);
+        manager.GetCardChoicesForSlot(slot, currConfig, choicesList);
         
         for (const SS_CARDTYPE& cardType : choicesList) {
             [slotButton addItemWithTitle:[cardNames objectForKey:@(cardType)]];
@@ -289,9 +288,8 @@ const eApple2Type computerTypes[] = {
     [self.computerExansionSlotButton removeAllItems];
     if (IsAppleIIe(computerType)) {
         // expansion slot
-        std::string choices;
         std::vector<SS_CARDTYPE> choicesList;
-        manager.GetCardChoicesForAuxSlot(choices, choicesList);
+        manager.GetCardChoicesForAuxSlot(choicesList);
         
         for (const SS_CARDTYPE& cardType : choicesList) {
             [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(cardType)]];
