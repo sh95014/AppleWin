@@ -169,20 +169,21 @@ namespace
         {
             {
                 "machine",
-                "Apple ][ Type",
+                "Apple II Type",
                 CATEGORY_SYSTEM,
                 {
-                    {"Enhanced Apple //e", A2TYPE_APPLE2EENHANCED},
-                    {"Apple ][ (Original)", A2TYPE_APPLE2},
-                    {"Apple ][+", A2TYPE_APPLE2PLUS},
-                    {"Apple ][ J-Plus", A2TYPE_APPLE2JPLUS},
-                    {"Apple //e", A2TYPE_APPLE2E},
+                    {"Apple II (original)", A2TYPE_APPLE2},
+                    {"Apple II Plus", A2TYPE_APPLE2PLUS},
+                    {"Apple II J-Plus", A2TYPE_APPLE2JPLUS},
+                    {"Apple //e (original)", A2TYPE_APPLE2E},
+                    {"Apple //e (enhanced)", A2TYPE_APPLE2EENHANCED},
                     {"Pravets 82", A2TYPE_PRAVETS82},
                     {"Pravets 8M", A2TYPE_PRAVETS8M},
                     {"Pravets 8A", A2TYPE_PRAVETS8A},
                     {"Base64A", A2TYPE_BASE64A},
                     {"TK3000 //e", A2TYPE_TK30002E},
                 },
+                "Apple //e (enhanced)",
             },
             REG_CONFIG,
             REGVALUE_APPLE2_TYPE, // reset required
