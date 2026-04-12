@@ -165,7 +165,7 @@ namespace sa2
                     ImGui::Checkbox("Apple keyboard enabled", &keyboardEnabled);
                     ImGui::EndDisabled();
                     ImGui::SameLine();
-                    HelpMarker("Keys go to Apple ][.");
+                    HelpMarker("Keys go to Apple II.");
                     ImGui::Separator();
 
                     const std::string &snapshotPathname = Snapshot_GetPathname();
@@ -830,7 +830,7 @@ namespace sa2
     {
         if (ImGui::Begin("About", &myShowAbout, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGui::TextUnformatted("sa2: Apple ][ emulator for Linux");
+            ImGui::TextUnformatted("sa2: Apple II emulator for Linux");
             ImGui::Text("Based on AppleWin %s", getVersion().c_str());
 
             int nMajor, nMinor, nFixMajor, nFixMinor;

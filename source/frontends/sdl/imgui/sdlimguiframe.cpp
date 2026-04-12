@@ -191,7 +191,7 @@ namespace sa2
 
         if (mySettings.windowed)
         {
-            if (ImGui::Begin("Apple ]["))
+            if (ImGui::Begin("Apple II"))
             {
                 UpdateTexture();
                 ImGui::Image(myTexture, ImGui::GetContentRegionAvail(), uv0, uv1);

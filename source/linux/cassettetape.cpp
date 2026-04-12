@@ -114,11 +114,11 @@ BYTE CassetteTape::getValue(const ULONG nExecutedCycles)
         // - getValue() isn't called all the way through pos == myData.size() - 1,
         //   presumably because it read all the data it cared about, so we fudge it
         //   at 99%.
+        myReachedEnd = true; // avoid invoking callback again
         if (playbackRateChangeCallback)
         {
             playbackRateChangeCallback(0);
         }
-        myReachedEnd = true; // avoid invoking callback again
     }
 
     return highBit;
@@ -128,12 +128,12 @@ void CassetteTape::getTapeInfo(TapeInfo &info) const
 {
     info.filename = myFilename;
     size_t pos;
-    const tape_data_t val = getCurrentWave(pos);
+    getCurrentWave(pos);
     const size_t size = myData.size();
     info.bit = myLastBit;
     info.duration = (size * 1000.0) / myFrequency;
     info.position = (pos * 1000.0) / myFrequency;
-    info.playbackRate = (myBaseCycles >= 0 && pos < size - 1) ? 1 : 0;
+    info.playbackRate = (!myReachedEnd && myBaseCycles >= 0 && pos < size - 1) ? 1 : 0;
     info.frequency = myFrequency;
 }
 
