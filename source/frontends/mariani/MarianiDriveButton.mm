@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 #import "windows.h"
+#import "cassettetape.h"
 #import "Card.h"
 #import "CardManager.h"
 #import "Disk.h"
@@ -27,6 +28,8 @@ using namespace DiskImgLib;
 
 #define BLANK_FILE_NAME     NSLocalizedString(@"Blank", @"default file name for new blank disk")
 
+#define BLINK_INTERVAL 0.5
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MarianiDriveButton ()
@@ -35,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong) DiskImageWrapper *wrapper;
 @property (strong) DiskMakerWindowController *diskMakerWC;
 @property (strong) NSImageView *imageView;
+@property (strong) NSTimer *blinkTimer;
 @end
 
 @implementation MarianiDriveButton
@@ -86,7 +90,16 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     static BOOL isAtLeastMacOS12 = [theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS12];
     
     if (self.slot < 0 || self.drive < 0) {
-        // cassette tape, do nothing for now
+        CassetteTape::TapeInfo tapeInfo;
+        CassetteTape::instance().getTapeInfo(tapeInfo);
+        if (fabs(tapeInfo.playbackRate) < 0.0001) {
+            self.imageView.contentTintColor = [NSColor secondaryLabelColor];
+            [self.blinkTimer invalidate];
+        }
+        else {
+            self.imageView.contentTintColor = [NSColor controlAccentColor];
+            self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tick) userInfo:nil repeats:NO];
+        }
         return;
     }
     
@@ -408,6 +421,18 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     else {
         self.imageView.image = [NSImage largeImageWithSystemSymbolName:fallbackSymbolName];
     }
+}
+
+#pragma mark - Tape button blinking
+
+- (void)tick {
+    self.imageView.contentTintColor = [NSColor secondaryLabelColor];
+    self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tock) userInfo:nil repeats:NO];
+}
+
+- (void)tock {
+    self.imageView.contentTintColor = [NSColor controlAccentColor];
+    self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tick) userInfo:nil repeats:NO];
 }
 
 @end
