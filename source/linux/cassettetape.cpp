@@ -32,12 +32,12 @@ void CassetteTape::eject()
 
 void CassetteTape::rewind()
 {
-    if (myBaseCycles > 0 && !myReachedEnd && playbackRateChangeCallback)
+    if (myBaseCycles && !myReachedEnd && playbackRateChangeCallback)
     {
         // rewind() called while playing, notify playback stop
         playbackRateChangeCallback(0);
     }
-    myBaseCycles = -1;
+    myBaseCycles = std::nullopt;
     myReachedEnd = false;
 }
 
@@ -65,9 +65,9 @@ BYTE CassetteTape::getBitValue(const tape_data_t val)
 
 CassetteTape::tape_data_t CassetteTape::getCurrentWave(size_t &pos) const
 {
-    if (myBaseCycles >= 0)
+    if (myBaseCycles)
     {
-        const double delta = g_nCumulativeCycles - myBaseCycles;
+        const double delta = g_nCumulativeCycles - *myBaseCycles;
         const double position = delta / g_fCurrentCLK6502 * myFrequency;
         pos = static_cast<size_t>(position);
 
@@ -94,7 +94,7 @@ BYTE CassetteTape::getValue(const ULONG nExecutedCycles)
 {
     CpuCalcCycles(nExecutedCycles);
 
-    if (myBaseCycles < 0)
+    if (!myBaseCycles)
     {
         // start play as soon as TAPEIN is read
         myBaseCycles = g_nCumulativeCycles;
@@ -133,7 +133,7 @@ void CassetteTape::getTapeInfo(TapeInfo &info) const
     info.bit = myLastBit;
     info.duration = (size * 1000.0) / myFrequency;
     info.position = (pos * 1000.0) / myFrequency;
-    info.playbackRate = (!myReachedEnd && myBaseCycles >= 0 && pos < size - 1) ? 1 : 0;
+    info.playbackRate = (!myReachedEnd && myBaseCycles && pos < size - 1) ? 1 : 0;
     info.frequency = myFrequency;
 }
 
