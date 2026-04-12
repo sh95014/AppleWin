@@ -244,7 +244,6 @@ const eApple2Type computerTypes[] = {
     
     const eApple2Type computerType = GetApple2Type();
     CardManager &manager = GetCardMgr();
-    NSDictionary *cardNames = [self.class localizedCardNameMap];
     
     SS_CARDTYPE currConfig[NUM_SLOTS];
     for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
@@ -273,7 +272,7 @@ const eApple2Type computerTypes[] = {
         manager.GetCardChoicesForSlot(slot, currConfig, choicesList);
         
         for (const SS_CARDTYPE& cardType : choicesList) {
-            [slotButton addItemWithTitle:[cardNames objectForKey:@(cardType)]];
+            [slotButton addItemWithTitle:[self cardNameForType:cardType]];
             slotButton.lastItem.tag = cardType;
         }
         
@@ -292,7 +291,7 @@ const eApple2Type computerTypes[] = {
         manager.GetCardChoicesForAuxSlot(choicesList);
         
         for (const SS_CARDTYPE& cardType : choicesList) {
-            [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(cardType)]];
+            [self.computerExansionSlotButton addItemWithTitle:[self cardNameForType:cardType]];
             self.computerExansionSlotButton.lastItem.tag = cardType;
         }
         
@@ -938,9 +937,21 @@ const eApple2Type computerTypes[] = {
     ];
 }
 
-+ (NSDictionary *)localizedCardNameMap {
-    // helps map SS_CARDTYPE to a readable string
++ (NSDictionary *)localizedCopyProtectionDongleNameMap {
+    // helps map DONGLETYPE to a readable string
     return @{
+        @(DT_EMPTY):                NSLocalizedString(@"—", @"empty slot"),
+        @(DT_SDSSPEEDSTAR):         NSLocalizedString(@"SDS DataKey - SpeedStar", @"Protection dongle for Southwestern Data Systems 'SpeedStar' Applesoft Compiler"),
+        @(DT_CODEWRITER):           NSLocalizedString(@"Cortechs Corp - CodeWriter", @"Protection key for Dynatech Microsoftware / Cortechs Corp 'CodeWriter'"),
+        @(DT_ROBOCOM500):           NSLocalizedString(@"Robocom Ltd - Robo 500", @"Interface Module for Robocom Ltd's Robo 500"),
+        @(DT_ROBOCOM1000):          NSLocalizedString(@"Robocom Ltd - Robo 1000", @"Interface Module for Robocom Ltd's Robo 1000"),
+        @(DT_ROBOCOM1500):          NSLocalizedString(@"Robocom Ltd - Robo 1500", @"Interface Module for Robocom Ltd's Robo 1500"),
+        @(DT_HAYDENCOMPILER):       NSLocalizedString(@"Hayden - Applesoft Compiler", @"Protection key for Hayden Book Company, Inc's Applesoft Compiler (1981)"),
+    };
+}
+
+- (NSString *)cardNameForType:(SS_CARDTYPE)cardType {
+    NSDictionary *cardNames = @{
         @(CT_Empty):                NSLocalizedString(@"—", @"empty slot"),
         @(CT_Disk2):                NSLocalizedString(@"Apple Disk II", @""),
         @(CT_SSC):                  NSLocalizedString(@"Apple Super Serial Card", @""),
@@ -967,19 +978,12 @@ const eApple2Type computerTypes[] = {
         @(CT_MegaAudio):            NSLocalizedString(@"MEGA Audio", @""),
         @(CT_SDMusic):              NSLocalizedString(@"SD Music (sound)", @""),
     };
-}
-
-+ (NSDictionary *)localizedCopyProtectionDongleNameMap {
-    // helps map DONGLETYPE to a readable string
-    return @{
-        @(DT_EMPTY):                NSLocalizedString(@"—", @"empty slot"),
-        @(DT_SDSSPEEDSTAR):         NSLocalizedString(@"SDS DataKey - SpeedStar", @"Protection dongle for Southwestern Data Systems 'SpeedStar' Applesoft Compiler"),
-        @(DT_CODEWRITER):           NSLocalizedString(@"Cortechs Corp - CodeWriter", @"Protection key for Dynatech Microsoftware / Cortechs Corp 'CodeWriter'"),
-        @(DT_ROBOCOM500):           NSLocalizedString(@"Robocom Ltd - Robo 500", @"Interface Module for Robocom Ltd's Robo 500"),
-        @(DT_ROBOCOM1000):          NSLocalizedString(@"Robocom Ltd - Robo 1000", @"Interface Module for Robocom Ltd's Robo 1000"),
-        @(DT_ROBOCOM1500):          NSLocalizedString(@"Robocom Ltd - Robo 1500", @"Interface Module for Robocom Ltd's Robo 1500"),
-        @(DT_HAYDENCOMPILER):       NSLocalizedString(@"Hayden - Applesoft Compiler", @"Protection key for Hayden Book Company, Inc's Applesoft Compiler (1981)"),
-    };
+    NSString *name = [cardNames objectForKey:@(cardType)];
+    if (name == nil) {
+        // fall back to unlocalized upstream string
+        name = [NSString stringWithCString:Card::GetCardName(cardType).c_str() encoding:NSUTF8StringEncoding];
+    }
+    return name;
 }
 
 // FIXME replace when https://github.com/AppleWin/AppleWin/issues/1488 is fixed
