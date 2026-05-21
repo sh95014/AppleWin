@@ -8,6 +8,7 @@
 #import "AppDelegate.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <Carbon/Carbon.h>
+#import "NSDictionary+Mariani.h"
 #import "windows.h"
 
 #import "context.h"
@@ -537,7 +538,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         enum {
             UP_TO_DATE, UPDATE_AVAILABLE, UNEXPECTED_RESPONSE, FETCH_ERROR,
         } updateAction = UNEXPECTED_RESPONSE;
-        NSString *updateURLString = nil;
+        NSString *updateURLString;
+        NSString *latestReleaseString;
         NSURL *url = [NSURL URLWithString:@"https://api.github.com/repos/sh95014/AppleWin/releases/latest"];
         NSData *data = [NSData dataWithContentsOfURL:url];
         NSError *error = nil;
@@ -547,10 +549,9 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                 NSDictionary *results = object;
                 if (![[results objectForKey:@"prerelease"] boolValue]) {
                     // "prerelease": false
-                    if ((updateURLString = [[results objectForKey:@"html_url"] stringValue]) != nil) {
-                        // "html_url": "https://...",
-                        NSString *latestReleaseString = [[results objectForKey:@"name"] stringValue];
-                        // e.g., "name": "Mariani 1.5 (2)" => ["Mariani", "1.5", "(2)"]
+                    if ((updateURLString = [results stringForKey:@"html_url"]) != nil &&
+                        (latestReleaseString = [results stringForKey:@"name"]) != nil) {
+                        // "name": "Mariani 1.5 (2)" => ["Mariani", "1.5", "(2)"]
                         NSArray *latestReleaseParts = [latestReleaseString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                         if (latestReleaseParts.count == 3) {
                             // e.g., "1.5" => ["1", "5"]

@@ -31,6 +31,10 @@
 		973F681D2D21E7CC00309C45 /* NSWindow+AccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */; };
 		97419F302AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
 		97419F312AF5EE4900FC1B52 /* PrintChar21.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */; };
+		975B76CA2FBF608200BC15EF /* NSDictionary+Mariani.m in Sources */ = {isa = PBXBuildFile; fileRef = 975B76C92FBF608200BC15EF /* NSDictionary+Mariani.m */; };
+		975B76CB2FBF608200BC15EF /* NSDictionary+Mariani.h in Headers */ = {isa = PBXBuildFile; fileRef = 975B76C82FBF608200BC15EF /* NSDictionary+Mariani.h */; };
+		975B76CC2FBF608200BC15EF /* NSDictionary+Mariani.h in Headers */ = {isa = PBXBuildFile; fileRef = 975B76C82FBF608200BC15EF /* NSDictionary+Mariani.h */; };
+		975B76CD2FBF608200BC15EF /* NSDictionary+Mariani.m in Sources */ = {isa = PBXBuildFile; fileRef = 975B76C92FBF608200BC15EF /* NSDictionary+Mariani.m */; };
 		9765C6172B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
 		9765C6182B26452B00C8AF42 /* cadirectsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9765C6162B26452B00C8AF42 /* cadirectsound.cpp */; };
 		976892F42DEB58030040CB83 /* linuxsoundbuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 976892F22DEB58030040CB83 /* linuxsoundbuffer.h */; };
@@ -769,6 +773,8 @@
 		973F68102D21E75700309C45 /* NSWindow+AccessoryView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSWindow+AccessoryView.h"; sourceTree = "<group>"; };
 		973F681B2D21E7CC00309C45 /* NSWindow+AccessoryView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSWindow+AccessoryView.m"; sourceTree = "<group>"; };
 		97419F2F2AF5EE4900FC1B52 /* PrintChar21.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = PrintChar21.ttf; path = debugger/Kreative/PrintChar21.ttf; sourceTree = "<group>"; };
+		975B76C82FBF608200BC15EF /* NSDictionary+Mariani.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Mariani.h"; sourceTree = "<group>"; };
+		975B76C92FBF608200BC15EF /* NSDictionary+Mariani.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Mariani.m"; sourceTree = "<group>"; };
 		9765C6162B26452B00C8AF42 /* cadirectsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cadirectsound.cpp; sourceTree = "<group>"; };
 		976892F22DEB58030040CB83 /* linuxsoundbuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = linuxsoundbuffer.h; path = source/linux/linuxsoundbuffer.h; sourceTree = "<group>"; };
 		976892F32DEB58030040CB83 /* linuxsoundbuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = linuxsoundbuffer.cpp; path = source/linux/linuxsoundbuffer.cpp; sourceTree = "<group>"; };
@@ -1594,6 +1600,8 @@
 				B0689D082780B9B60029EB7D /* MarianiFrame.cpp */,
 				B090CF2127B5A2A900C6C23D /* MarianiJoystick.h */,
 				B090CF2027B5A2A900C6C23D /* MarianiJoystick.mm */,
+				975B76C82FBF608200BC15EF /* NSDictionary+Mariani.h */,
+				975B76C92FBF608200BC15EF /* NSDictionary+Mariani.m */,
 				97CD22B12F1589B400EB3914 /* NSImage+SFSymbols.h */,
 				97CD22B22F1589B400EB3914 /* NSImage+SFSymbols.m */,
 				B049E8A4277C4F0E00FC14A3 /* ShaderTypes.h */,
@@ -2408,6 +2416,7 @@
 				976893012DEB72F10040CB83 /* cadirectsound.h in Headers */,
 				973F68122D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AC2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
+				975B76CC2FBF608200BC15EF /* NSDictionary+Mariani.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2484,6 +2493,7 @@
 				976893002DEB72F10040CB83 /* cadirectsound.h in Headers */,
 				973F68112D21E75700309C45 /* NSWindow+AccessoryView.h in Headers */,
 				976D11AB2B379D9000EEA1D6 /* CharacterMappings.h in Headers */,
+				975B76CB2FBF608200BC15EF /* NSDictionary+Mariani.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3085,6 +3095,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				975B76CD2FBF608200BC15EF /* NSDictionary+Mariani.m in Sources */,
 				B0F527162A2C1F2200288820 /* ConsoleViewController.mm in Sources */,
 				B0F527092A2C1F2200288820 /* DisassemblyTableViewController.mm in Sources */,
 				B00ECB7A279EEB600041E16C /* guiddef.cpp in Sources */,
@@ -3153,6 +3164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				975B76CA2FBF608200BC15EF /* NSDictionary+Mariani.m in Sources */,
 				B0F527072A2C1F2100288820 /* ConsoleViewController.mm in Sources */,
 				B0F526FA2A2C1F2100288820 /* DisassemblyTableViewController.mm in Sources */,
 				B09AB80D277A21410002A6C3 /* guiddef.cpp in Sources */,
