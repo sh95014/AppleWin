@@ -8,6 +8,7 @@
 #import "AppDelegate.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <Carbon/Carbon.h>
+#import "NSDictionary+Mariani.h"
 #import "windows.h"
 
 #import "context.h"
@@ -35,15 +36,17 @@
 #import "PreferencesWindowController.h"
 #import "MarianiDriveButton.h"
 #import "MemoryViewerWindowController.h"
+#import "NSImage+SFSymbols.h"
 #import "DebuggerWindowController.h"
 #import "UserDefaults.h"
 
 #import "DiskImg.h"
 using namespace DiskImgLib;
 
-#define STATUS_BAR_HEIGHT           32
-#define STATUS_BAR_DIVIDER_MARGIN   3
-#define STATUS_BAR_BOTTOM_MARGIN    2
+#define SMALL_STATUS_BAR_HEIGHT             32
+#define SMALL_STATUS_BAR_MARGIN             8
+#define SMALL_STATUS_BAR_DIVIDER_MARGIN     3
+#define SMALL_STATUS_BAR_BOTTOM_MARGIN      1
 
 // needs to match tag of Edit menu item in MainMenu.xib
 #define EDIT_TAG            3917
@@ -78,6 +81,7 @@ using namespace DiskImgLib;
 @property BOOL hasStatusBar;
 @property (readonly) double statusBarHeight;
 @property CGFloat fullScreenScale;
+@property BOOL hadStatusBarWhileWindowed;
 
 @property (strong) NSOpenPanel *tapeOpenPanel;
 @property (strong) NSOpenPanel *stateOpenPanel;
@@ -87,9 +91,12 @@ using namespace DiskImgLib;
 @property (strong) DebuggerWindowController *debuggerWC;
 @property (strong) DiskMakerWindowController *diskMakerWC;
 
+@property (strong) NSTimer *liveResizeUpdateTimer;
+
 @end
 
 static void DiskImgMsgHandler(const char *file, int line, const char *msg);
+static void TapePlaybackRateDidChange(double playbackRate);
 const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 @implementation AppDelegate
@@ -102,13 +109,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     Global::SetDebugMsgHandler(DiskImgMsgHandler);
     Global::AppInit();
     
-    _hasStatusBar = YES;
-    if (![[UserDefaults sharedInstance] showStatusBar]) {
-        // the storyboard assumes that status bar is visible, so force a
-        // toggle if it's supposed to be hidden
-        [self toggleStatusBarAction:self];
-    }
-    [self setStatus:nil];
+    [self configureStatusBar];
     
     NSString *appName = [NSRunningApplication currentApplication].localizedName;
     self.aboutMarianiMenuItem.title = [NSString stringWithFormat:NSLocalizedString(@"About %@", @""), appName];
@@ -116,92 +117,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     self.window.delegate = self;
     self.emulatorVC.delegate = self;
     
-    // remove the "Start Dictation..." and "Emoji & Symbols" items
-    NSMenu *editMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:EDIT_TAG] submenu];
-    for (NSMenuItem *item in [editMenu itemArray]) {
-        if ([item action] == NSSelectorFromString(@"startDictation:") ||
-            [item action] == NSSelectorFromString(@"orderFrontCharacterPalette:")) {
-            [editMenu removeItem:item];
-        }
-    }
-    // make sure a separator is not the bottom option
-    const NSInteger lastItemIndex = [editMenu numberOfItems] - 1;
-    if ([[editMenu itemAtIndex:lastItemIndex] isSeparatorItem]) {
-        [editMenu removeItemAtIndex:lastItemIndex];
-    }
-    
-    // populate the Display Type menu with options
-    Video &video = GetVideo();
-    const VideoType_e currentVideoType = video.GetVideoType();
-    for (NSInteger videoType = VT_MONO_CUSTOM; videoType < NUM_VIDEO_MODES; videoType++) {
-        NSString *itemTitle = [self localizedVideoType:videoType];
-        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:itemTitle
-                                                      action:@selector(displayTypeAction:)
-                                               keyEquivalent:@""];
-        item.tag = videoType;
-        item.state = (currentVideoType == videoType) ? NSControlStateValueOn : NSControlStateValueOff;
-        [self.displayTypeMenu addItem:item];
-    }
+    [self configureMenus];
     
     [self reconfigureDrives];
     
-    // macOS 11 doesn't have the SF Symbols we want, so fall back to available ones
-    if (![theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
-        self.statusBarPowerButton.image = [NSImage imageWithSystemSymbolName:@"power" accessibilityDescription:@""];
-        self.statusBarResetButton.image = [NSImage imageWithSystemSymbolName:@"arrow.clockwise" accessibilityDescription:@""];
-    }
-    
-    [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent * _Nullable(NSEvent * _Nonnull event) {
-        const BOOL shift = (event.modifierFlags & NSEventModifierFlagShift) != 0;
-        const BOOL control = (event.modifierFlags & NSEventModifierFlagControl) != 0;
-        const BOOL option = (event.modifierFlags & NSEventModifierFlagOption) != 0;
-        const BOOL command = (event.modifierFlags & NSEventModifierFlagCommand) != 0;
-        Video &video = GetVideo();
-        switch (event.keyCode) {
-            case kVK_F2: {
-                [self rebootEmulatorIfConfirmed:self];
-                break;
-            }
-            case kVK_F5: {
-                self.driveSwapCount++;
-                dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(SLOT6)).DriveSwap();
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    self.driveSwapCount--;
-                    [self updateDriveLights];
-                });
-                break;
-            }
-            case kVK_F9:
-                if (shift && control && !option && !command) {
-                    // ^⇧F9: toggle 50% scan lines
-                    video.SetVideoStyle(VideoStyle_e(video.GetVideoStyle() ^ VS_HALF_SCANLINES));
-                    [self applyVideoModeChange];
-                    return nil;
-                }
-                else if (!shift && !control && !option && !command) {
-                    // F9: cycle through display types
-                    NSMenuItem *newItem = [self.displayTypeMenu itemWithTag:(video.GetVideoType() + 1) % NUM_VIDEO_MODES];
-                    [self displayTypeAction:newItem];
-                    return nil;
-                }
-            case kVK_F10:
-                switch (g_Apple2Type) {
-                    case A2TYPE_APPLE2E:
-                    case A2TYPE_APPLE2EENHANCED:
-                    case A2TYPE_BASE64A:
-                        // toggle rocker switch
-                        video.SetVideoRomRockerSwitch(!video.GetVideoRomRockerSwitch());
-                        NTSC_VideoInitAppleType();
-                        break;
-                    case A2TYPE_PRAVETS8A:
-                        GetPravets().ToggleP8ACapsLock();
-                        break;
-                    default:
-                        break;
-                }
-        }
-        return event;
-    }];
+    [self configureFunctionKeys];
     
     NSOperationQueue *mainQueue = [NSOperationQueue mainQueue];
     [[NSNotificationCenter defaultCenter] addObserverForName:EmulatorDidChangeDisplayNotification object:nil queue:mainQueue usingBlock:^(NSNotification *note) {
@@ -222,9 +142,24 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 #endif
     
     [self.emulatorVC start];
+    
+    if ([[UserDefaults sharedInstance] automaticallyCheckForUpdates]) {
+        // parameter must be nil for a silent check
+        [self checkForUpdates:nil];
+    }
+    
+    // in case user launches straight to full-screen
+    self.fullScreenScale = -1;
+    self.hadStatusBarWhileWindowed = self.hasStatusBar;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self LogWindowFrame:__PRETTY_FUNCTION__];
+    });
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
+    [self LogWindowFrame:__PRETTY_FUNCTION__];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.emulatorVC stop];
 
@@ -245,6 +180,68 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (void)applicationWillUnhide:(NSNotification *)notification {
     [self.emulatorVC start];
+}
+
+- (BOOL)application:(NSApplication *)sender openFile:(nonnull NSString *)filename {
+    // scan slots for floppy and hard drive controllers
+    CardManager &cardManager = GetCardMgr();
+    BOOL success = NO;
+    int firstDisk2Slot = -1;
+    int firstHDDSlot = -1;
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        const SS_CARDTYPE cardType = cardManager.QuerySlot(slot);
+        if (cardType == CT_GenericHDD) {
+            if (firstHDDSlot < 0) {
+                firstHDDSlot = slot;
+            }
+            // unplug all hard disks
+            HarddiskInterfaceCard *hddCard = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
+            for (int idx = HARDDISK_1; idx < NUM_HARDDISKS; idx++) {
+                hddCard->Unplug(idx);
+            }
+        }
+        else if (cardType == CT_Disk2) {
+            if (firstDisk2Slot < 0) {
+                firstDisk2Slot = slot;
+            }
+            // eject all floppy disks
+            Disk2InterfaceCard *disk2Card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
+            for (int idx = DRIVE_1; idx < NUM_DRIVES; idx++) {
+                disk2Card->EjectDisk(idx);
+            }
+        }
+    }
+    
+    std::string fn(filename.UTF8String);
+    if (firstHDDSlot >= 0 && [filename.lowercaseString hasSuffix:@".hdv"]) {
+        HarddiskInterfaceCard *hddCard = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(firstHDDSlot));
+        if (hddCard->Insert(HARDDISK_1, fn)) {
+            NSLog(@"Loaded '%@' as HDD 1", filename);
+            success = YES;
+        }
+        else {
+            NSLog(@"Failed to '%@' as HDD", filename);
+        }
+    }
+    else if (firstDisk2Slot >= 0) {
+        Disk2InterfaceCard *disk2Card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(firstDisk2Slot));
+        const ImageError_e error = disk2Card->InsertDisk(DRIVE_1, fn, IMAGE_USE_FILES_WRITE_PROTECT_STATUS, IMAGE_DONT_CREATE);
+        if (error == eIMAGE_ERROR_NONE) {
+            NSLog(@"Loaded '%@' into slot %d drive 1", filename, firstDisk2Slot);
+            success = YES;
+        }
+        else {
+            NSLog(@"Failed to load '%@' into slot %d drive 1 due to error %d",
+                  filename, firstDisk2Slot, error);
+            disk2Card->NotifyInvalidImage(1, fn, error);
+        }
+    }
+    
+    [self reconfigureDrives];
+    [self updateDriveLights];
+    [self.emulatorVC reboot];
+    
+    return success;
 }
 
 #pragma mark - NSWindowDelegate
@@ -281,6 +278,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     NSApp.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
     
     self.fullScreenScale = -1;
+    self.hadStatusBarWhileWindowed = self.hasStatusBar;
 }
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification {
@@ -290,8 +288,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     // make contentBackgroundView conform to the window we've just sized to
     CGRect contentBackgroundFrame = self.window.contentView.bounds;
     if (self.hasStatusBar) {
-        contentBackgroundFrame.origin.y += STATUS_BAR_HEIGHT;
-        contentBackgroundFrame.size.height -= STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.origin.y += SMALL_STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.size.height -= SMALL_STATUS_BAR_HEIGHT;
     }
     [self.contentBackgroundView setFrame:contentBackgroundFrame];
     [self.emulatorVC.view setFrame:self.contentBackgroundView.bounds];
@@ -300,6 +298,23 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     if (self.fullScreenScale > 0) {
         [self.window setFrame:[self windowRectAtScale:self.fullScreenScale] display:YES animate:YES];
     }
+    else if (self.hadStatusBarWhileWindowed != self.hasStatusBar) {
+        CGRect windowFrame = self.window.frame;
+        windowFrame.size.height += self.hadStatusBarWhileWindowed ? -SMALL_STATUS_BAR_HEIGHT : SMALL_STATUS_BAR_HEIGHT;
+        [self.window setFrame:windowFrame display:YES animate:YES];
+    }
+}
+
+- (void)windowWillStartLiveResize:(NSNotification *)notification {
+    self.liveResizeUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [self updateStatusLabelWidthWithOriginX:NAN];
+    }];
+    [[NSRunLoop currentRunLoop] addTimer:self.liveResizeUpdateTimer forMode:NSRunLoopCommonModes];
+}
+
+- (void)windowDidEndLiveResize:(NSNotification *)notification {
+    [self.liveResizeUpdateTimer invalidate];
+    self.liveResizeUpdateTimer = nil;
 }
 
 #pragma mark - NSOpenSavePanelDelegate
@@ -320,7 +335,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     
     if ([sender isEqual:self.tapeOpenPanel]) {
-        return [url.pathExtension.uppercaseString isEqual:@"WAV"];
+        NSArray *allowedExtensions = @[ @"WAV", @"WAVE", @"AIFF", @"AIF" ];
+        return [allowedExtensions containsObject:url.pathExtension.uppercaseString];
     }
     else if ([sender isEqual:self.stateOpenPanel]) {
         NSArray <NSString *> *components = [url.filePathURL.lastPathComponent componentsSeparatedByString:@"."];
@@ -409,6 +425,142 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://github.com/sh95014/AppleWin"]];
 }
 
+- (IBAction)checkForUpdates:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if (sender == nil) {
+        // not user-initiated
+        NSDate *lastUpdateCheckDate = [[UserDefaults sharedInstance] lastUpdateCheckDate];
+        if (lastUpdateCheckDate != nil &&                                       // never checked
+            [lastUpdateCheckDate timeIntervalSinceNow] > -30 * 24 * 60 * 60) {  // checked over 30 days ago
+            NSLog(@"Skip, last check only %f seconds ago", -[lastUpdateCheckDate timeIntervalSinceNow]);
+            return;
+        }
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        enum {
+            API_DOWN, UP_TO_DATE, UPDATE_AVAILABLE, UNEXPECTED_RESPONSE, FETCH_ERROR,
+        } updateAction = UNEXPECTED_RESPONSE;
+        NSString *updateURLString;
+        NSString *latestReleaseString;
+        NSString *myVersionString = nil;
+        NSString *myBuildString = nil;
+        NSError *error = nil;
+        NSURL *url = [NSURL URLWithString:@"https://api.github.com/repos/sh95014/AppleWin/releases/latest"];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        if (data != nil) {
+            id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error == nil) {
+                if ([object isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *results = object;
+                    if (![[results objectForKey:@"prerelease"] boolValue]) {
+                        // "prerelease": false
+                        if ((updateURLString = [results stringForKey:@"html_url"]) != nil &&
+                            (latestReleaseString = [results stringForKey:@"name"]) != nil) {
+                            // "name": "Mariani 1.5 (2)" => ["Mariani", "1.5", "(2)"]
+                            NSArray *latestReleaseParts = [latestReleaseString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                            if (latestReleaseParts.count == 3) {
+                                // e.g., "1.5" => ["1", "5"]
+                                NSArray<NSString *> *latestVersionParts = [latestReleaseParts[1] componentsSeparatedByString:@"."];
+                                // e.g., "(2)" => "2"
+                                NSCharacterSet *parentheses = [NSCharacterSet characterSetWithCharactersInString:@"()"];
+                                NSString *latestBuildString = [latestReleaseParts[2] stringByTrimmingCharactersInSet:parentheses];
+                                
+                                NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+                                myVersionString = infoDictionary[@"CFBundleShortVersionString"];
+                                NSArray<NSString *> *myVersionParts = [myVersionString componentsSeparatedByString:@"."];
+                                myBuildString = infoDictionary[@"CFBundleVersion"];
+                                
+                                NSInteger latestVersion =
+                                latestVersionParts[0].integerValue * 1000000 +
+                                latestVersionParts[1].integerValue * 1000 +
+                                latestBuildString.integerValue;
+                                NSInteger myVersion =
+                                myVersionParts[0].integerValue * 1000000 +
+                                myVersionParts[1].integerValue * 1000 +
+                                myBuildString.integerValue;
+                                
+                                NSLog(@"Latest version: %ld.%ld (%ld)",
+                                      latestVersionParts[0].integerValue,
+                                      latestVersionParts[1].integerValue,
+                                      latestBuildString.integerValue);
+                                updateAction = (latestVersion > myVersion) ? UPDATE_AVAILABLE : UP_TO_DATE;
+                                [[UserDefaults sharedInstance] setLastUpdateCheckDate:[NSDate now]];
+                            }
+                            else {
+                                NSLog(@"Unexpected version '%@'", latestReleaseString);
+                            }
+                        }
+                        else {
+                            NSLog(@"Unexpected html_url");
+                        }
+                    }
+                }
+                else {
+                    NSLog(@"Unexpected data format");
+                }
+            }
+            else {
+                updateAction = FETCH_ERROR;
+                NSLog(@"Error: %@", error.localizedDescription);
+            }
+        }
+        else {
+            updateAction = API_DOWN;
+        }
+        if (updateAction == UPDATE_AVAILABLE || sender != nil) {
+            // pop a dialog if updates are available, or if this was initiated
+            // by the user from the menu.
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSAlert *alert = [[NSAlert alloc] init];
+                
+                switch (updateAction) {
+                    case API_DOWN:
+                        alert.messageText = NSLocalizedString(@"Service Unavailable", @"");
+                        alert.informativeText = NSLocalizedString(@"Please try again later.", @"");
+                        alert.alertStyle = NSAlertStyleWarning;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"hand.thumbsdown" accessibilityDescription:@""];
+                        break;
+                    case UP_TO_DATE:
+                        alert.messageText = NSLocalizedString(@"Up-to-Date", @"");
+                        alert.informativeText = NSLocalizedString(@"No newer version of this software is available.", @"");
+                        alert.alertStyle = NSAlertStyleInformational;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"hand.thumbsup" accessibilityDescription:@""];
+                        break;
+                    case UPDATE_AVAILABLE:
+                        alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Version %@ is now available", @""),
+                                             latestReleaseString];
+                        alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"You are running version %@ (%@)", @""),
+                                                 myVersionString, myBuildString];
+                        alert.alertStyle = NSAlertStyleInformational;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"square.and.arrow.down" accessibilityDescription:@""];
+                        [alert addButtonWithTitle:NSLocalizedString(@"Download…", @"")];
+                        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+                        break;
+                    case UNEXPECTED_RESPONSE:
+                        alert.messageText = NSLocalizedString(@"Error", @"");
+                        alert.informativeText = NSLocalizedString(@"Unexpected server response", @"");
+                        alert.alertStyle = NSAlertStyleWarning;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle" accessibilityDescription:@""];
+                        break;
+                    case FETCH_ERROR:
+                        alert.messageText = NSLocalizedString(@"Error", @"");
+                        alert.informativeText = error.localizedDescription;
+                        alert.alertStyle = NSAlertStyleWarning;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"exclamationmark.triangle" accessibilityDescription:@""];
+                        break;
+                }
+                [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
+                    if (returnCode == NSAlertFirstButtonReturn) {
+                        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:updateURLString]];
+                    }
+                }];
+            });
+        }
+    });
+}
+
 #pragma mark - App menu actions
 
 - (IBAction)preferencesAction:(id)sender {
@@ -491,6 +643,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
             }
             audioData.insert(audioData.end(), data, data + frameCount * outputFormat.mBytesPerFrame);
         }
+        NSLog(@"loaded %lu bytes", (unsigned long)audioData.size());
         
         std::string filename(self.tapeOpenPanel.URL.lastPathComponent.UTF8String);
         CassetteTape::instance().setData(filename,
@@ -499,6 +652,8 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         
         ExtAudioFileDispose(inputFile);
         self.tapeOpenPanel = nil;
+        [self reconfigureDrives];
+        CassetteTape::instance().playbackRateChangeCallback = TapePlaybackRateDidChange;
     }
 }
 
@@ -580,19 +735,21 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     if (self.window.styleMask & NSWindowStyleMaskFullScreen) {
         contentBackgroundFrame = windowFrame;
         if (self.hasStatusBar) {
-            contentBackgroundFrame.size.height -= STATUS_BAR_HEIGHT;
-            contentBackgroundFrame.origin.y += STATUS_BAR_HEIGHT;
+            contentBackgroundFrame.size.height -= SMALL_STATUS_BAR_HEIGHT;
+            contentBackgroundFrame.origin.y += SMALL_STATUS_BAR_HEIGHT;
         }
     }
     else {
         // windowed
-        const double statusBarHeight = STATUS_BAR_HEIGHT;
+        const double statusBarHeight = SMALL_STATUS_BAR_HEIGHT;
         if (self.hasStatusBar) {
+            // grow the window
             contentBackgroundFrame.origin.y = statusBarHeight;
             windowFrame.size.height += statusBarHeight;
             windowFrame.origin.y -= statusBarHeight;
         }
         else {
+            // shrink the window
             contentBackgroundFrame.origin.y = 0;
             windowFrame.size.height -= statusBarHeight;
             windowFrame.origin.y += statusBarHeight;
@@ -742,7 +899,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     [self.openDiskImageMenu removeAllItems];
     
-    const NSInteger statusBarLeftMargin = CGRectGetMaxX(self.statusBarDivider.frame) + STATUS_BAR_DIVIDER_MARGIN;
+    const NSInteger statusBarLeftMargin = CGRectGetMaxX(self.statusBarDivider.frame) + SMALL_STATUS_BAR_DIVIDER_MARGIN;
     
     NSInteger drivesRightEdge = statusBarLeftMargin;
     NSMutableArray *driveButtons = [NSMutableArray array];
@@ -758,7 +915,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                 // offset each drive light button from the left
                 CGRect driveButtonFrame = driveButton.frame;
                 driveButtonFrame.origin.x = statusBarLeftMargin + position * [MarianiDriveButton buttonWidth];
-                driveButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
+                driveButtonFrame.origin.y = SMALL_STATUS_BAR_BOTTOM_MARGIN;
                 driveButton.frame = driveButtonFrame;
                 drivesRightEdge = CGRectGetMaxX(driveButtonFrame);
                 
@@ -793,7 +950,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                     // offset each drive light button from the left
                     CGRect driveButtonFrame = driveButton.frame;
                     driveButtonFrame.origin.x = statusBarLeftMargin + position * [MarianiDriveButton buttonWidth];
-                    driveButtonFrame.origin.y = STATUS_BAR_BOTTOM_MARGIN;
+                    driveButtonFrame.origin.y = SMALL_STATUS_BAR_BOTTOM_MARGIN;
                     driveButton.frame = driveButtonFrame;
                     drivesRightEdge = CGRectGetMaxX(driveButtonFrame);
                     
@@ -806,12 +963,26 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         }
     }
     
+    // add an icon for a loaded cassette tape with filename as tooltip
+    CassetteTape::TapeInfo tapeInfo;
+    CassetteTape::instance().getTapeInfo(tapeInfo);
+    if (tapeInfo.filename.length() > 0) {
+        MarianiDriveButton *tapeButton = [MarianiDriveButton buttonForTape];
+        [driveButtons addObject:tapeButton];
+        [self.statusBarView addSubview:tapeButton];
+        
+        CGRect tapeButtonFrame = tapeButton.frame;
+        tapeButtonFrame.origin.x = statusBarLeftMargin + position * [MarianiDriveButton buttonWidth];
+        tapeButtonFrame.origin.y = SMALL_STATUS_BAR_BOTTOM_MARGIN;
+        tapeButton.frame = tapeButtonFrame;
+        drivesRightEdge = CGRectGetMaxX(tapeButtonFrame);
+        
+        tapeButton.toolTip = [NSString stringWithCString:tapeInfo.filename.data() encoding:NSUTF8StringEncoding];
+    }
+    
     self.driveButtons = driveButtons;
     
-    CGRect statusLabelFrame = self.statusLabel.frame;
-    statusLabelFrame.origin.x = drivesRightEdge + 5;
-    statusLabelFrame.size.width = self.screenRecordingButton.frame.origin.x - statusLabelFrame.origin.x - 5;
-    self.statusLabel.frame = statusLabelFrame;
+    [self updateStatusLabelWidthWithOriginX:drivesRightEdge + 5];
     
     if (self.driveButtons.count != oldDriveLightButtonsCount) {
         // constrain our window to not allow it to be resized so small that our
@@ -820,6 +991,15 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     }
     
     [self updateDriveLights];
+}
+
+- (void)updateStatusLabelWidthWithOriginX:(CGFloat)x {
+    CGRect statusLabelFrame = self.statusLabel.frame;
+    if (!isnan(x)) {
+        statusLabelFrame.origin.x = x;
+    }
+    statusLabelFrame.size.width = self.screenRecordingButton.frame.origin.x - statusLabelFrame.origin.x - 5;
+    self.statusLabel.frame = statusLabelFrame;
 }
 
 - (void)reinitializeFrame {
@@ -910,6 +1090,178 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 #pragma mark - Utilities
 
+- (void)configureStatusBar {
+    const CGSize windowContentViewSize = self.window.contentView.frame.size;
+    
+    self.statusBarView = [[NSView alloc] initWithFrame:CGRectMake(0, 0, windowContentViewSize.width, SMALL_STATUS_BAR_HEIGHT)];
+    
+    // add some icons starting from the left margin
+    CGFloat left = SMALL_STATUS_BAR_MARGIN;
+    self.statusBarPowerButton = [[NSButton alloc] initWithFrame:CGRectMake(left, 0, 20, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarPowerButton.bordered = NO;
+    self.statusBarPowerButton.target = self;
+    self.statusBarPowerButton.action = @selector(rebootEmulatorIfConfirmed:);
+    self.statusBarPowerButton.toolTip = NSLocalizedString(@"Reboot Emulator", @"");
+    left = CGRectGetMaxX(self.statusBarPowerButton.frame) + SMALL_STATUS_BAR_MARGIN;
+    
+    self.statusBarResetButton = [[NSButton alloc] initWithFrame:CGRectMake(left, 0, 20, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarResetButton.bordered = NO;
+    self.statusBarResetButton.target = self;
+    self.statusBarResetButton.action = @selector(controlResetAction:);
+    self.statusBarResetButton.toolTip = NSLocalizedString(@"Control-Reset", @"");
+    left = CGRectGetMaxX(self.statusBarResetButton.frame) + SMALL_STATUS_BAR_MARGIN;
+    
+    if ([theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
+        self.statusBarPowerButton.image = [NSImage largeImageWithSystemSymbolName:@"power.circle.fill"];
+        NSImage *customImage = [NSImage largeImageWithSymbolName:@"custom.arrow.trianglehead.2.counterclockwise.circle.fill"];
+        if (customImage) {
+            self.statusBarResetButton.image = customImage;
+        }
+    }
+    else {
+        // macOS 11 doesn't have the SF Symbols we want, so fall back to available ones
+        self.statusBarPowerButton.image = [NSImage imageWithSystemSymbolName:@"power" accessibilityDescription:@""];
+        self.statusBarResetButton.image = [NSImage imageWithSystemSymbolName:@"arrow.counterclockwise" accessibilityDescription:@""];
+    }
+    
+    self.statusBarDivider = [[NSBox alloc] initWithFrame:CGRectMake(left, 0, 0, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarDivider.boxType = NSBoxSeparator;
+    left = CGRectGetMaxX(self.statusBarResetButton.frame) + SMALL_STATUS_BAR_MARGIN;
+    
+    // add some buttons starting from the right margin
+    CGFloat right = windowContentViewSize.width - SMALL_STATUS_BAR_MARGIN;
+    NSButton *screenshotButton = [[NSButton alloc] initWithFrame:CGRectMake(right - 26, 0, 26, SMALL_STATUS_BAR_HEIGHT)];
+    screenshotButton.bordered = NO;
+    screenshotButton.image = [NSImage largeImageWithSystemSymbolName:@"camera"];
+    screenshotButton.target = self;
+    screenshotButton.action = @selector(saveScreenshotAction:);
+    screenshotButton.toolTip = NSLocalizedString(@"Take screenshot", @"");
+    right = CGRectGetMinX(screenshotButton.frame) - SMALL_STATUS_BAR_MARGIN;
+    
+    self.screenRecordingButton = [[NSButton alloc] initWithFrame:CGRectMake(right - 21, 0, 21, SMALL_STATUS_BAR_HEIGHT)];
+    self.screenRecordingButton.bordered = NO;
+    self.screenRecordingButton.image = [NSImage largeImageWithSystemSymbolName:@"record.circle"];
+    self.screenRecordingButton.target = self;
+    self.screenRecordingButton.action = @selector(recordScreenAction:);
+    self.screenRecordingButton.toolTip = NSLocalizedString(@"Record screen", @"");
+    right = CGRectGetMinX(self.screenRecordingButton.frame) - SMALL_STATUS_BAR_MARGIN;
+    
+    // the status text field takes the remaining space in between
+    self.statusLabel = [NSTextField labelWithString:@""];
+    const CGFloat labelHeight = self.statusLabel.frame.size.height;
+    self.statusLabel.frame = CGRectMake(left, floor((SMALL_STATUS_BAR_HEIGHT - labelHeight) / 2), right - left, labelHeight);
+    self.statusLabel.allowsDefaultTighteningForTruncation = YES;
+    self.statusLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
+    self.statusLabel.textColor = [NSColor systemGrayColor];
+    
+    [self.statusBarView addSubview:self.statusBarPowerButton];
+    [self.statusBarView addSubview:self.statusBarResetButton];
+    [self.statusBarView addSubview:self.statusBarDivider];
+    [self.statusBarView addSubview:self.statusLabel];
+    [self.statusBarView addSubview:screenshotButton];
+    [self.statusBarView addSubview:self.screenRecordingButton];
+    
+    // always add statusBarView to the contentView...
+    [self.window.contentView addSubview:self.statusBarView];
+    
+    // ...but show it only if the user wanted to
+    _hasStatusBar = [[UserDefaults sharedInstance] showStatusBar];
+    if (!self.hasStatusBar) {
+        self.statusBarView.hidden = YES;
+        [self updateDriveLights];
+        self.showHideStatusBarMenuItem.title = NSLocalizedString(@"Show Status Bar", @"");
+        
+        CGRect contentBackgroundFrame = self.contentBackgroundView.frame;
+        contentBackgroundFrame.size.height += SMALL_STATUS_BAR_HEIGHT;
+        contentBackgroundFrame.origin.y -= SMALL_STATUS_BAR_HEIGHT;
+        [self.contentBackgroundView setFrame:contentBackgroundFrame];
+    }
+    [self setStatus:nil];
+}
+
+- (void)configureMenus {
+    // remove the "Start Dictation..." and "Emoji & Symbols" items
+    NSMenu *editMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:EDIT_TAG] submenu];
+    for (NSMenuItem *item in [editMenu itemArray]) {
+        if ([item action] == NSSelectorFromString(@"startDictation:") ||
+            [item action] == NSSelectorFromString(@"orderFrontCharacterPalette:")) {
+            [editMenu removeItem:item];
+        }
+    }
+    // make sure a separator is not the bottom option
+    const NSInteger lastItemIndex = [editMenu numberOfItems] - 1;
+    if ([[editMenu itemAtIndex:lastItemIndex] isSeparatorItem]) {
+        [editMenu removeItemAtIndex:lastItemIndex];
+    }
+    
+    // populate the Display Type menu with options
+    Video &video = GetVideo();
+    const VideoType_e currentVideoType = video.GetVideoType();
+    for (NSInteger videoType = VT_MONO_CUSTOM; videoType < NUM_VIDEO_MODES; videoType++) {
+        NSString *itemTitle = [self localizedVideoType:videoType];
+        NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:itemTitle
+                                                      action:@selector(displayTypeAction:)
+                                               keyEquivalent:@""];
+        item.tag = videoType;
+        item.state = (currentVideoType == videoType) ? NSControlStateValueOn : NSControlStateValueOff;
+        [self.displayTypeMenu addItem:item];
+    }
+}
+
+- (void)configureFunctionKeys {
+    [NSEvent addLocalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^NSEvent * _Nullable(NSEvent * _Nonnull event) {
+        const BOOL shift = (event.modifierFlags & NSEventModifierFlagShift) != 0;
+        const BOOL control = (event.modifierFlags & NSEventModifierFlagControl) != 0;
+        const BOOL option = (event.modifierFlags & NSEventModifierFlagOption) != 0;
+        const BOOL command = (event.modifierFlags & NSEventModifierFlagCommand) != 0;
+        Video &video = GetVideo();
+        switch (event.keyCode) {
+            case kVK_F2: {
+                [self rebootEmulatorIfConfirmed:self];
+                break;
+            }
+            case kVK_F5: {
+                self.driveSwapCount++;
+                dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(SLOT6)).DriveSwap();
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    self.driveSwapCount--;
+                    [self updateDriveLights];
+                });
+                break;
+            }
+            case kVK_F9:
+                if (shift && control && !option && !command) {
+                    // ^⇧F9: toggle 50% scan lines
+                    video.SetVideoStyle(VideoStyle_e(video.GetVideoStyle() ^ VS_HALF_SCANLINES));
+                    [self applyVideoModeChange];
+                    return nil;
+                }
+                else if (!shift && !control && !option && !command) {
+                    // F9: cycle through display types
+                    NSMenuItem *newItem = [self.displayTypeMenu itemWithTag:(video.GetVideoType() + 1) % NUM_VIDEO_MODES];
+                    [self displayTypeAction:newItem];
+                    return nil;
+                }
+            case kVK_F10:
+                switch (g_Apple2Type) {
+                    case A2TYPE_APPLE2E:
+                    case A2TYPE_APPLE2EENHANCED:
+                    case A2TYPE_BASE64A:
+                        // toggle rocker switch
+                        video.SetVideoRomRockerSwitch(!video.GetVideoRomRockerSwitch());
+                        NTSC_VideoInitAppleType();
+                        break;
+                    case A2TYPE_PRAVETS8A:
+                        GetPravets().ToggleP8ACapsLock();
+                        break;
+                    default:
+                        break;
+                }
+        }
+        return event;
+    }];
+}
+
 - (NSString *)localizedVideoType:(NSInteger)videoType {
     static NSDictionary *videoTypeNames;
     static dispatch_once_t token;
@@ -957,13 +1309,14 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     else {
         CGRect frame = [self windowRectAtScale:scale];
         [self.window setFrame:frame display:YES animate:NO];
+        [self updateStatusLabelWidthWithOriginX:NAN];
     }
 }
 
 - (CGSize)minimumWindowSizeAtScale:(double)scale {
     NSSize minimumSize;
     // width of all the things in the status bar...
-    const NSInteger statusBarLeftMargin = CGRectGetMaxX(self.statusBarDivider.frame) + STATUS_BAR_DIVIDER_MARGIN;
+    const NSInteger statusBarLeftMargin = CGRectGetMaxX(self.statusBarDivider.frame) + SMALL_STATUS_BAR_DIVIDER_MARGIN;
     minimumSize.width =
         statusBarLeftMargin +
         [MarianiDriveButton buttonWidth] * self.driveButtons.count +           // drive light buttons
@@ -995,7 +1348,11 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (double)windowRectScale {
     Video &video = GetVideo();
-    return self.window.frame.size.width / video.GetFrameBufferBorderlessWidth();
+    double horizontalRatio = self.emulatorVC.view.frame.size.width / video.GetFrameBufferBorderlessWidth();
+    double verticalRatio = self.emulatorVC.view.frame.size.height / video.GetFrameBufferBorderlessHeight();
+    // because we scale the emulated screen to fit the window,
+    // the effective scale is the smaller of the two.
+    return MIN(horizontalRatio, verticalRatio);
 }
 
 - (void)scaleWindowByFactor:(double)factor {
@@ -1007,7 +1364,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     // keep status bar out of the scaling because it's fixed height
     frame.size.height = (contentFrame.size.height - [self statusBarHeight]) * factor;
     frame.size.height += [self statusBarHeight];
-
+    
     // but no smaller than minimum
     CGSize minimumSize = [self minimumWindowSizeAtScale:1];
     if (frame.size.width < minimumSize.width || frame.size.height < minimumSize.height) {
@@ -1021,6 +1378,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     frame.origin.y = windowFrame.origin.y + (windowFrame.size.height - frame.size.height) / 2;
     
     [self.window setFrame:frame display:YES animate:NO];
+    [self updateStatusLabelWidthWithOriginX:NAN];
 }
 
 - (void)setStatus:(nullable NSString *)status {
@@ -1028,7 +1386,15 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 }
 
 - (double)statusBarHeight {
-    return self.hasStatusBar ? STATUS_BAR_HEIGHT : 0;
+    return self.hasStatusBar ? SMALL_STATUS_BAR_HEIGHT : 0;
+}
+
+- (void)LogWindowFrame:(const char *)context {
+    const CGRect windowFrame = self.window.frame;
+    NSLog(@"%s: window.frame = { %.1f, %.1f, %.1f, %.1f }",
+          context,
+          windowFrame.origin.x, windowFrame.origin.y,
+          windowFrame.size.width, windowFrame.size.height);
 }
 
 @end
@@ -1100,4 +1466,10 @@ DiskImgMsgHandler(const char *file, int line, const char *msg)
 #ifdef DEBUG
     fprintf(stderr, "%s:%d: %s\n", file, line, msg);
 #endif
+}
+
+static void
+TapePlaybackRateDidChange(double playbackRate)
+{
+    [theAppDelegate updateDriveLights];
 }

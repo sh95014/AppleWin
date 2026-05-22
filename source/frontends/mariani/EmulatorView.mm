@@ -224,22 +224,7 @@ enum {
 }
 
 - (void)addStringToKeyboardBuffer:(NSString *)string {
-    [string enumerateSubstringsInRange:NSMakeRange(0, string.length)
-                               options:NSStringEnumerationByComposedCharacterSequences
-                            usingBlock:^(NSString * _Nullable substring, NSRange substringRange, NSRange enclosingRange, BOOL * _Nonnull stop) {
-        // filter out multi-byte characters
-        if (substringRange.length == 1) {
-            unichar ch = [substring characterAtIndex:0];
-            if (ch == ASCII_LF) {
-                // pasted lines end with LF character, but we probably want to
-                // paste a CR instead
-                addKeyToBuffer(ASCII_CR);
-            }
-            else if (ch < ASCII_DEL) {
-                addKeyToBuffer((BYTE)ch);
-            }
-        }
-    }];
+    addTextToBuffer(string.UTF8String);
 }
 
 - (void)mouseDown:(NSEvent *)event {

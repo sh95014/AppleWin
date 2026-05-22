@@ -1,10 +1,10 @@
 #pragma once
 
+#include "frontends/sdl/sdlcompat.h"
 #include "frontends/common2/gnuframe.h"
 #include "frontends/common2/controllerdoublepress.h"
 #include "frontends/common2/programoptions.h"
 #include "linux/network/portfwds.h"
-#include <SDL.h>
 
 namespace sa2
 {
@@ -39,11 +39,15 @@ namespace sa2
         bool &getPreserveAspectRatio();
         bool &getAutoBoot();
 
+        bool getFullscreen() const;
+        void setFullscreen(const bool value);
+
         const common2::Speed &getSpeed() const;
 
         void SaveSnapshot();
 
-        static void setGLSwapInterval(const int interval);
+        static bool setGLSwapInterval(const int interval);
+        static void changeGLSwapInterval(const int interval);
 
     protected:
         void SetApplicationIcon();
@@ -69,9 +73,9 @@ namespace sa2
 
         int myTargetGLSwap;
         bool myPreserveAspectRatio;
+        bool myFullscreen;
         bool myForceCapsLock;
         int myMultiplier;
-        bool myFullscreen;
 
         size_t myDragAndDropSlot;
         size_t myDragAndDropDrive;

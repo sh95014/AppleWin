@@ -181,6 +181,24 @@
         }
       }
     },
+    "aV1-6h-w7i.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Check for Updates…\"; ObjectID = \"aV1-6h-w7i\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Check for Updates…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查詢更新版本⋯"
+          }
+        }
+      }
+    },
     "AYu-sK-qS6.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Main Menu\"; ObjectID = \"AYu-sK-qS6\";",
       "extractionState" : "extracted_with_value",
@@ -289,24 +307,6 @@
         }
       }
     },
-    "DSR-xi-Jep.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Record screen\"; ObjectID = \"DSR-xi-Jep\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Record screen"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "螢幕錄影"
-          }
-        }
-      }
-    },
     "F2S-fz-NVQ.title" : {
       "comment" : "Class = \"NSMenu\"; title = \"Help\"; ObjectID = \"F2S-fz-NVQ\";",
       "extractionState" : "extracted_with_value",
@@ -321,24 +321,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "輔助說明"
-          }
-        }
-      }
-    },
-    "F3i-G1-HHY.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Reboot Emulator\"; ObjectID = \"F3i-G1-HHY\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Reboot Emulator"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "重啟模擬器"
           }
         }
       }
@@ -375,24 +357,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mariani 輔助說明"
-          }
-        }
-      }
-    },
-    "GCW-F3-7D6.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Label\"; ObjectID = \"GCW-F3-7D6\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Label"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Label"
           }
         }
       }
@@ -555,42 +519,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "將此程式所有視窗移到最前"
-          }
-        }
-      }
-    },
-    "lMj-oj-jRW.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Take screenshot\"; ObjectID = \"lMj-oj-jRW\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Take screenshot"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "螢幕快照"
-          }
-        }
-      }
-    },
-    "MB0-IJ-zRW.ibShadowedToolTip" : {
-      "comment" : "Class = \"NSButton\"; ibShadowedToolTip = \"Control-Reset\"; ObjectID = \"MB0-IJ-zRW\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Control-Reset"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Control-Reset"
           }
         }
       }

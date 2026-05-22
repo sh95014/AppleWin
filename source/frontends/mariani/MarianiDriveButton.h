@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)buttonForFloppyDrive:(int)drive inSlot:(int)slot;
 + (instancetype)buttonForHardDrive:(int)drive inSlot:(int)slot;
++ (instancetype)buttonForTape;
 + (NSInteger)buttonWidth;
 
 - (void)updateDriveLight;

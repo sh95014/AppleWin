@@ -64,12 +64,11 @@ namespace sa2
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-        const SDL_WindowFlags windowFlags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+        const SDL_WindowFlags windowFlags =
+            (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | (myFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
         const common2::Geometry geometry = getGeometryOrDefault(options.geometry);
 
-        myWindow.reset(
-            SDL_CreateWindow(g_pAppTitle.c_str(), geometry.x, geometry.y, geometry.width, geometry.height, windowFlags),
-            SDL_DestroyWindow);
+        myWindow.reset(compat::createWindow(g_pAppTitle.c_str(), geometry, windowFlags), SDL_DestroyWindow);
         if (!myWindow)
         {
             throw std::runtime_error(decorateSDLError("SDL_CreateWindow"));
@@ -100,12 +99,16 @@ namespace sa2
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
 
-        io.Fonts->AddFontDefault();
-        const auto debug6502TTF = GetResourceData(IDB_DEBUG_FONT_7_by_8);
         ImFontConfig fontConfig;
         fontConfig.FontDataOwnedByAtlas = false;
+
+        const auto cousineTTF = GetResourceData(IDB_IMGUI_FONT_COUSINE);
+        io.Fonts->AddFontFromMemoryTTF(
+            const_cast<unsigned char *>(cousineTTF.first), cousineTTF.second, 18.0f, &fontConfig);
+
+        const auto debug6502TTF = GetResourceData(IDB_DEBUG_FONT_7_by_8);
         myDebuggerFont = io.Fonts->AddFontFromMemoryTTF(
-            const_cast<unsigned char *>(debug6502TTF.first), debug6502TTF.second, 13, &fontConfig);
+            const_cast<unsigned char *>(debug6502TTF.first), debug6502TTF.second, 13.0f, &fontConfig);
 
         myIniFileLocation = common2::getConfigFile("imgui.ini").string();
         if (myIniFileLocation.empty())
@@ -122,7 +125,7 @@ namespace sa2
 
         ImGui::StyleColorsDark();
 
-        ImGui_ImplSDL2_InitForOpenGL(myWindow.get(), myGLContext);
+        ImGui_ImplSDLX_InitForOpenGL(myWindow.get(), myGLContext);
         ImGui_ImplOpenGL3_Init();
 
         myDeadTopZone = 0;
@@ -133,7 +136,7 @@ namespace sa2
     {
         glDeleteTextures(1, &myTexture);
         ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplSDL2_Shutdown();
+        ImGui_ImplSDLX_Shutdown();
         ImGui::DestroyContext();
         SDL_GL_DeleteContext(myGLContext);
     }
@@ -188,7 +191,7 @@ namespace sa2
 
         if (mySettings.windowed)
         {
-            if (ImGui::Begin("Apple ]["))
+            if (ImGui::Begin("Apple II"))
             {
                 UpdateTexture();
                 ImGui::Image(myTexture, ImGui::GetContentRegionAvail(), uv0, uv1);
@@ -236,7 +239,7 @@ namespace sa2
         {
             myPresenting = true;
             ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplSDL2_NewFrame();
+            ImGui_ImplSDLX_NewFrame();
             ImGui::NewFrame();
 
             if (!myShowMouseCursor)
@@ -258,7 +261,7 @@ namespace sa2
 
     void SDLImGuiFrame::ProcessSingleEvent(const SDL_Event &event, bool &quit)
     {
-        ImGui_ImplSDL2_ProcessEvent(&event);
+        ImGui_ImplSDLX_ProcessEvent(&event);
 
         switch (event.type)
         {
@@ -298,7 +301,7 @@ namespace sa2
         {
             const size_t modifiers = getCanonicalModifiers(key);
 
-            switch (key.keysym.sym)
+            switch (SA2_KEY_CODE(key))
             {
             case SDLK_F8:
             {

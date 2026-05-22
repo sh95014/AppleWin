@@ -16,10 +16,9 @@ namespace sa2
     {
         const common2::Geometry geometry = getGeometryOrDefault(options.geometry);
 
-        myWindow.reset(
-            SDL_CreateWindow(
-                g_pAppTitle.c_str(), geometry.x, geometry.y, geometry.width, geometry.height, SDL_WINDOW_RESIZABLE),
-            SDL_DestroyWindow);
+        const SDL_WindowFlags flags =
+            (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | (myFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+        myWindow.reset(compat::createWindow(g_pAppTitle.c_str(), geometry, flags), SDL_DestroyWindow);
         if (!myWindow)
         {
             throw std::runtime_error(decorateSDLError("SDL_CreateWindow"));
@@ -27,9 +26,7 @@ namespace sa2
 
         SetApplicationIcon();
 
-        myRenderer.reset(
-            SDL_CreateRenderer(myWindow.get(), options.sdlDriver, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
-            SDL_DestroyRenderer);
+        myRenderer.reset(compat::createRenderer(myWindow.get(), options.sdlDriver), SDL_DestroyRenderer);
         if (!myRenderer)
         {
             throw std::runtime_error(decorateSDLError("SDL_CreateRenderer"));
@@ -50,7 +47,7 @@ namespace sa2
         const int sw = video.GetFrameBufferBorderlessWidth();
         const int sh = video.GetFrameBufferBorderlessHeight();
 
-        if (myPreserveAspectRatio && SDL_RenderSetLogicalSize(myRenderer.get(), sw, sh))
+        if (myPreserveAspectRatio && SA2_RENDERER_LOGICAL_SIZE(myRenderer.get(), sw, sh))
         {
             throw std::runtime_error(decorateSDLError("SDL_RenderSetLogicalSize"));
         }
@@ -90,8 +87,7 @@ namespace sa2
 
     void SDLRendererFrame::ToggleMouseCursor()
     {
-        const int current = SDL_ShowCursor(SDL_QUERY);
-        SDL_ShowCursor(current ^ 1);
+        compat::toggleCursor();
     }
 
 } // namespace sa2

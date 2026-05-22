@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "DiskMakerWindowController.h"
 #import "UserDefaults.h"
+#import "SlotPreferencesViewControllers.h"
 
 // AppleWin
 #include "StdAfx.h"
@@ -24,6 +25,7 @@
 #import "CardManager.h"
 #import "Common.h"
 #import "Core.h"
+#import "Disk.h"
 #import "Harddisk.h"
 #import "Interface.h"
 #import "Memory.h"
@@ -34,6 +36,7 @@ void CreateLanguageCard(void); // FIXME should be in Memory.h
 #import "PCapBackend.h"
 #endif
 #import "tfesupp.h"
+#import "Uthernet2.h"
 
 // Objective-C typedefs BOOL to be bool, but wincompat.h typedefs it to be
 // int32_t, which causes function signature mismatches (such as with the
@@ -57,17 +60,31 @@ using namespace DiskImgLib;
 
 @property (strong) IBOutlet NSButton *generalScreenshotsFolderButton;
 @property (strong) IBOutlet NSButton *generalRecordingsFolderButton;
+@property (strong) IBOutlet NSPopUpButton *generalRecordingQualityButton;
 @property (strong) IBOutlet NSButton *generalMapDeleteKeyToLeftArrowButton;
+@property (strong) IBOutlet NSButton *generalTakeScreenshotsBasedOnWindowSize;
+@property (strong) IBOutlet NSButton *generalAutomaticallyCheckForUpdates;
 
 @property (strong) IBOutlet NSPopUpButton *computerMainBoardButton;
+
+@property (strong) IBOutlet NSPopUpButton *computerSlot0Button;
+@property (strong) IBOutlet NSButton *computerSlot0MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot1Button;
+@property (strong) IBOutlet NSButton *computerSlot1MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot2Button;
+@property (strong) IBOutlet NSButton *computerSlot2MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot3Button;
+@property (strong) IBOutlet NSButton *computerSlot3MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot4Button;
+@property (strong) IBOutlet NSButton *computerSlot4MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot5Button;
+@property (strong) IBOutlet NSButton *computerSlot5MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot6Button;
+@property (strong) IBOutlet NSButton *computerSlot6MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerSlot7Button;
+@property (strong) IBOutlet NSButton *computerSlot7MoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerExansionSlotButton;
+@property (strong) IBOutlet NSButton *computerExpansionSlotMoreButton;
 @property (strong) IBOutlet NSPopUpButton *computerPcapSlotButton;
 @property (strong) IBOutlet NSPopUpButton *computerCopyProtectionDongleButton;
 @property (strong) IBOutlet NSButton *computerRebootEmulatorButton;
@@ -75,7 +92,6 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSButton *video50PercentScanLinesButton;
 @property (strong) IBOutlet NSColorWell *videoCustomColorWell;
 @property (strong) IBOutlet NSSlider *audioSpeakerVolumeSlider;
-@property (strong) IBOutlet NSSlider *audioMockingboardVolumeSlider;
 
 @property (strong) IBOutlet NSButton *storageEnhancedSpeedButton;
 @property (strong) IBOutlet NSTableView *storageHardDiskTableView;
@@ -87,6 +103,8 @@ using namespace DiskImgLib;
 @property (weak) IBOutlet NSPopUpButton *gameControllerJoystick;
 @property (weak) IBOutlet NSPopUpButton *gameControllerButton0;
 @property (weak) IBOutlet NSPopUpButton *gameControllerButton1;
+
+@property (strong) NSPopover *morePopover;
 
 @property NSMutableDictionary *keyValueStore;
 @property BOOL configured;
@@ -163,7 +181,12 @@ BOOL configured;
     folder = [[UserDefaults sharedInstance] recordingsFolder];
     self.generalRecordingsFolderButton.title = [folder.path stringByAbbreviatingWithTildeInPath];
 
+    const NSInteger quality = [[UserDefaults sharedInstance] recordingQuality];
+    [self.generalRecordingQualityButton selectItemWithTag:quality];
+
     self.generalMapDeleteKeyToLeftArrowButton.state = [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow ? NSControlStateValueOn : NSControlStateValueOff;
+    self.generalTakeScreenshotsBasedOnWindowSize.state = [UserDefaults sharedInstance].takeScreenshotsBasedOnWindowSize ? NSControlStateValueOn : NSControlStateValueOff;
+    self.generalAutomaticallyCheckForUpdates.state = [UserDefaults sharedInstance].automaticallyCheckForUpdates ? NSControlStateValueOn : NSControlStateValueOff;
 }
 
 // types of main boards, ordered as we want them to appear in UI
@@ -172,23 +195,6 @@ const eApple2Type computerTypes[] = {
     A2TYPE_APPLE2EENHANCED, A2TYPE_PRAVETS82, A2TYPE_PRAVETS8M,
     A2TYPE_PRAVETS8A, A2TYPE_TK30002E, A2TYPE_BASE64A
 };
-
-// CT_Empty is being used as the terminator here. the UI will insert an empty
-// option on its own
-const SS_CARDTYPE slot0Types[] = { CT_LanguageCard, CT_Saturn128K, CT_Empty };
-const SS_CARDTYPE slot1Types[] = { CT_GenericPrinter, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot2Types[] = { CT_SSC, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot3Types[] = { CT_Uthernet, CT_Uthernet2, CT_VidHD, CT_Empty };
-const SS_CARDTYPE slot4Types[] = { CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_MouseInterface, CT_Phasor, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot5Types[] = { CT_MockingboardC, CT_MegaAudio, CT_SDMusic, CT_Z80, CT_SAM, CT_Disk2, CT_Phasor, CT_FourPlay, CT_SNESMAX, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot6Types[] = { CT_Disk2, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE slot7Types[] = { CT_GenericHDD, CT_Uthernet2, CT_Empty };
-const SS_CARDTYPE *slotTypes[] = {
-    slot0Types, slot1Types, slot2Types, slot3Types, slot4Types, slot5Types,
-    slot6Types, slot7Types,
-};
-
-const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT_Saturn128K, CT_RamWorksIII, CT_Empty };
 
 - (void)configureComputer {
     NSLog(@"%s", __PRETTY_FUNCTION__);
@@ -205,37 +211,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
             }
         }
     
-        // peripheral slots
-        CardManager &manager = GetCardMgr();
-        NSDictionary *cardNames = [self.class localizedCardNameMap];
-        for (int slot = SLOT1; slot < NUM_SLOTS; slot++) {
-            NSPopUpButton *slotButton = [[self slotButtonsArray] objectAtIndex:slot];
-            
-            // already set up that way in Preferences.storyboard but let's be
-            // explicit because slotAction: relies on it.
-            slotButton.tag = slot;
-            
-            // always start with "Empty" as an option
-            [slotButton addItemWithTitle:[cardNames objectForKey:@(CT_Empty)]];
-            slotButton.lastItem.tag = CT_Empty;
-            
-            for (int i = 0; slotTypes[slot][i] != CT_Empty; i++) {
-                [slotButton addItemWithTitle:[cardNames objectForKey:@(slotTypes[slot][i])]];
-                slotButton.lastItem.tag = slotTypes[slot][i];
-            }
-            
-            // show the current item as selected
-            [slotButton selectItemWithTag:manager.QuerySlot(slot)];
-        }
-        
-        // expansion slot
-        [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(CT_Empty)]];
-        self.computerExansionSlotButton.lastItem.tag = CT_Empty;
-        for (int i = 0; expansionSlotTypes[i] != CT_Empty; i++) {
-            [self.computerExansionSlotButton addItemWithTitle:[cardNames objectForKey:@(expansionSlotTypes[i])]];
-            self.computerExansionSlotButton.lastItem.tag = expansionSlotTypes[i];
-        }
-        [self.computerExansionSlotButton selectItemWithTag:GetCurrentExpansionMemType()];
+        [self configureSlots];
         
 #ifndef U2_USE_SLIRP
         // pcap
@@ -263,6 +239,75 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     }
 }
 
+- (void)configureSlots {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    const eApple2Type computerType = GetApple2Type();
+    CardManager &manager = GetCardMgr();
+    
+    SS_CARDTYPE currConfig[NUM_SLOTS];
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        currConfig[slot] = manager.QuerySlot(slot);
+    }
+    
+    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
+        NSPopUpButton *slotButton = [[self slotButtonsArray] objectAtIndex:slot];
+        NSButton *slotMoreButton = [[self slotMoreButtonsArray] objectAtIndex:slot];
+        
+        [slotButton removeAllItems];
+        
+        if (slot == SLOT0 && !IsApple2PlusOrClone(computerType)) {
+            // only Apple ][+ or clones have a configurable slot 0
+            slotButton.enabled = NO;
+            slotMoreButton.enabled = NO;
+            continue;
+        }
+        
+        // already set up that way in Preferences.storyboard but let's be
+        // explicit because slotAction: and slotMoreAction: rely on it.
+        slotButton.tag = slot;
+        slotMoreButton.tag = slot;
+        
+        std::vector<SS_CARDTYPE> choicesList;
+        manager.GetCardChoicesForSlot(slot, currConfig, choicesList);
+        
+        for (const SS_CARDTYPE& cardType : choicesList) {
+            [slotButton addItemWithTitle:[self cardNameForType:cardType]];
+            slotButton.lastItem.tag = cardType;
+        }
+        
+        // show the current item as selected
+        const SS_CARDTYPE selectedCard = manager.QuerySlot(slot);
+        [slotButton selectItemWithTag:selectedCard];
+        
+        slotButton.enabled = YES;
+        slotMoreButton.enabled = [self cardTypeHasOptions:selectedCard];
+    }
+    
+    [self.computerExansionSlotButton removeAllItems];
+    if (IsAppleIIe(computerType)) {
+        // expansion slot
+        std::vector<SS_CARDTYPE> choicesList;
+        manager.GetCardChoicesForAuxSlot(choicesList);
+        
+        for (const SS_CARDTYPE& cardType : choicesList) {
+            [self.computerExansionSlotButton addItemWithTitle:[self cardNameForType:cardType]];
+            self.computerExansionSlotButton.lastItem.tag = cardType;
+        }
+        
+        // show the current item as selected
+        const SS_CARDTYPE selectedCard = GetCurrentExpansionMemType();
+        [self.computerExansionSlotButton selectItemWithTag:selectedCard];
+        
+        self.computerExansionSlotButton.enabled = YES;
+        self.computerExpansionSlotMoreButton.enabled = [self cardTypeHasOptions:selectedCard];
+    }
+    else {
+        self.computerExansionSlotButton.enabled = NO;
+        self.computerExpansionSlotMoreButton.enabled = NO;
+    }
+}
+
 - (void)configureAudio {
     // speaker volume slider. for some reason lower numbers are quieter so we
     // need to get the complements
@@ -271,17 +316,7 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         const int volumeMax = GetPropertySheet().GetVolumeMax();
         self.audioSpeakerVolumeSlider.maxValue = volumeMax;
         self.audioSpeakerVolumeSlider.intValue = volumeMax - SpkrGetVolume();
-        
-        // Mockingboard volume slider
-        CardManager &cardManager = GetCardMgr();
-        self.audioMockingboardVolumeSlider.maxValue = volumeMax;
-        self.audioMockingboardVolumeSlider.intValue = volumeMax - cardManager.GetMockingboardCardMgr().GetVolume();
-        [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
     }
-}
-
-- (void)updateMockingboardPreferences {
-    self.audioMockingboardVolumeSlider.enabled = [self isMockingboardInstalled];
 }
 
 - (void)configureVideo {
@@ -395,6 +430,20 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     [UserDefaults sharedInstance].mapDeleteKeyToLeftArrow = !mapDeleteKeyToLeftArrow;
 }
 
+- (IBAction)toggleTakeScreenshotsBasedOnWindowSize:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    BOOL takeScreenshotsBasedOnWindowSize = [UserDefaults sharedInstance].takeScreenshotsBasedOnWindowSize;
+    [UserDefaults sharedInstance].takeScreenshotsBasedOnWindowSize = !takeScreenshotsBasedOnWindowSize;
+}
+
+- (IBAction)toggleAutomaticallyCheckForUpdates:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    BOOL automaticallyCheckForUpdates = [UserDefaults sharedInstance].automaticallyCheckForUpdates;
+    [UserDefaults sharedInstance].automaticallyCheckForUpdates = !automaticallyCheckForUpdates;
+}
+
 - (IBAction)recordingsFolderAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -427,6 +476,13 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     }
 }
 
+- (IBAction)recordingQualityAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSInteger tag = self.generalRecordingQualityButton.selectedTag;
+    [[UserDefaults sharedInstance] setRecordingQuality:tag];
+}
+
 - (IBAction)mainBoardAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
@@ -438,6 +494,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
           computerTypes[index]);
     
     self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
+    
+    // main board affects which slots are available
+    [self configureSlots];
 }
 
 - (IBAction)slotAction:(id)sender {
@@ -457,35 +516,6 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
             video.SetVidHD(false);
         }
         
-        NSArray *slotButtons = [self slotButtonsArray];
-        
-        // Mockingboard takes both slots, so inserting in the other available
-        // slot than was specified and remove both if removing either
-        if (slotButton.selectedTag == CT_MockingboardC) {
-            // find the other slot and set it to MockingBoard
-            for (NSInteger slot = SLOT1; slot < NUM_SLOTS; slot++) {
-                for (int i = 0; slotTypes[slot][i] != CT_Empty; i++) {
-                    if (slotTypes[slot][i] == CT_MockingboardC && slot != currentSlot) {
-                        cardManager.Insert((SLOTS)slot, (SS_CARDTYPE)slotButton.selectedTag);
-                        [slotButtons[slot] selectItemWithTag:slotButton.selectedTag];
-                        [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
-                    }
-                }
-            }
-        }
-        else if (cardManager.QuerySlot((SLOTS)currentSlot) == CT_MockingboardC) {
-            // find the other slot and set it to empty
-            for (NSInteger slot = SLOT1; slot < NUM_SLOTS; slot++) {
-                for (int i = 0; slotTypes[slot][i] != CT_Empty; i++) {
-                    if (slotTypes[slot][i] == CT_MockingboardC && slot != currentSlot) {
-                        cardManager.Insert((SLOTS)slot, CT_Empty);
-                        [slotButtons[slot] selectItemWithTag:CT_Empty];
-                        [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
-                    }
-                }
-            }
-        }
-        
         const SS_CARDTYPE previousCard = cardManager.QuerySlot((SLOTS)currentSlot);
         
         cardManager.Insert((SLOTS)currentSlot, (SS_CARDTYPE)slotButton.selectedTag);
@@ -501,10 +531,78 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         if (previousCard == CT_GenericHDD || cardManager.QuerySlot((SLOTS)currentSlot) == CT_GenericHDD) {
             [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
         }
-        if (previousCard == CT_MockingboardC) {
-            [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
-        }
         self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
+        
+        [self configureSlots];
+    }
+}
+
+- (IBAction)slotMoreAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    if ([sender isKindOfClass:[NSButton class]]) {
+        NSButton *moreButton = (NSButton *)sender;
+        const UINT slot = (UINT)moreButton.tag;
+        CardManager &cardManager = GetCardMgr();
+        const SS_CARDTYPE type = cardManager.QuerySlot(slot);
+        
+        NSViewController *viewController = nil;
+        NSPopoverBehavior behavior = NSPopoverBehaviorTransient;
+        switch (type) {
+            case CT_Disk2: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"DiskIIPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[DiskIIPreferencesViewController class]], @"");
+                DiskIIPreferencesViewController *vc = (DiskIIPreferencesViewController *)viewController;
+                [vc setCard:dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot))];
+                break;
+            }
+            case CT_GenericHDD: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"HardDiskPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[HardDiskPreferencesViewController class]], @"");
+                HardDiskPreferencesViewController *vc = (HardDiskPreferencesViewController *)viewController;
+                [vc setCard:dynamic_cast<HarddiskInterfaceCard*>(cardManager.GetObj(slot))];
+                behavior = NSPopoverBehaviorSemitransient;
+                break;
+            }
+            case CT_MockingboardC: // fallthrough
+            case CT_Phasor: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"MockingboardPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[MockingboardPreferencesViewController class]], @"");
+                MockingboardPreferencesViewController *vc = (MockingboardPreferencesViewController *)viewController;
+                [vc setCard:dynamic_cast<MockingboardCard*>(cardManager.GetObj(slot))];
+                break;
+            }
+            case CT_RamWorksIII: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"RamWorksPreferencesID"];
+                
+                NSAssert([viewController isKindOfClass:[RamWorksPreferencesViewController class]], @"");
+                break;
+            }
+            case CT_Saturn128K: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"Saturn128KPreferencesID"];
+                NSAssert([viewController isKindOfClass:[Saturn128KPreferencesViewController class]], @"");
+                break;
+            }
+            case CT_Uthernet: // fallthrough
+            case CT_Uthernet2: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"UthernetPreferencesID"];
+                NSAssert([viewController isKindOfClass:[UthernetPreferencesViewController class]], @"");
+                UthernetPreferencesViewController *vc = (UthernetPreferencesViewController *)viewController;
+                vc.slot = slot;
+            }
+            default:
+                break;
+        }
+        
+        if (viewController != nil) {
+            NSPopover *popover = [[NSPopover alloc] init];
+            popover.behavior = behavior;
+            popover.contentViewController = viewController;
+            [popover showRelativeToRect:moreButton.bounds ofView:moreButton preferredEdge:NSRectEdgeMaxX];
+        }
     }
 }
 
@@ -515,6 +613,34 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     MemInitializeIO();
     
     self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
+    
+    [self configureSlots];
+}
+
+- (IBAction)expansionSlotMoreAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    NSViewController *viewController = nil;
+    if ([sender isKindOfClass:[NSButton class]]) {
+        NSButton *moreButton = (NSButton *)sender;
+        
+        switch (GetCurrentExpansionMemType()) {
+            case CT_RamWorksIII: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"RamWorksPreferencesID"];
+                NSAssert([viewController isKindOfClass:[RamWorksPreferencesViewController class]], @"");
+                break;
+            }
+            default:
+                break;
+        }
+        
+        if (viewController != nil) {
+            NSPopover *popover = [[NSPopover alloc] init];
+            popover.behavior = NSPopoverBehaviorTransient;
+            popover.contentViewController = viewController;
+            [popover showRelativeToRect:moreButton.bounds ofView:moreButton preferredEdge:NSRectEdgeMaxX];
+        }
+    }
 }
 
 - (IBAction)pcapSlotAction:(id)sender {
@@ -579,16 +705,6 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     SpkrSetVolume(volume, volumeMax);
     RegSaveValue(REG_CONFIG, REGVALUE_SPKR_VOLUME, true, volume);
     NSLog(@"Set speaker volume to %d", volume);
-}
-
-- (IBAction)mockingboardVolumeSliderAction:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    const int volumeMax = GetPropertySheet().GetVolumeMax();
-    const int volume = volumeMax - self.audioMockingboardVolumeSlider.intValue;
-    CardManager &cardManager = GetCardMgr();
-    cardManager.GetMockingboardCardMgr().SetVolume(volume, volumeMax);
-    RegSaveValue(REG_CONFIG, REGVALUE_MB_VOLUME, true, volume);
-    NSLog(@"Set Mockingboard volume to %d", volume);
 }
 
 - (IBAction)diskAction:(id)sender {
@@ -770,11 +886,11 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 - (NSDictionary *)localizedComputerNameMap {
     // helps map eApple2Type to a readable string
     return @{
-        @(A2TYPE_APPLE2):           NSLocalizedString(@"Apple ][ Emulator", @""),
-        @(A2TYPE_APPLE2PLUS):       NSLocalizedString(@"Apple ][+ Emulator", @""),
-        @(A2TYPE_APPLE2JPLUS):      NSLocalizedString(@"Apple ][ J-Plus Emulator", @""),
-        @(A2TYPE_APPLE2E):          NSLocalizedString(@"Apple //e Emulator", @""),
-        @(A2TYPE_APPLE2EENHANCED):  NSLocalizedString(@"Enhanced Apple //e Emulator", @""),
+        @(A2TYPE_APPLE2):           NSLocalizedString(@"Apple II (original) Emulator", @""),
+        @(A2TYPE_APPLE2PLUS):       NSLocalizedString(@"Apple II Plus Emulator", @""),
+        @(A2TYPE_APPLE2JPLUS):      NSLocalizedString(@"Apple II J-Plus Emulator", @""),
+        @(A2TYPE_APPLE2E):          NSLocalizedString(@"Apple //e (original) Emulator", @""),
+        @(A2TYPE_APPLE2EENHANCED):  NSLocalizedString(@"Apple //e (enhanced) Emulator", @""),
         @(A2TYPE_APPLE2C):          NSLocalizedString(@"Apple //c Emulator", @""),
         @(A2TYPE_PRAVETS82):        NSLocalizedString(@"Pravets 82 Emulator", @""),
         @(A2TYPE_PRAVETS8M):        NSLocalizedString(@"Pravets 8M Emulator", @""),
@@ -785,9 +901,9 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
 }
 
 - (NSArray *)slotButtonsArray {
-    // so that we can index computerSlotButtons by SLOT1..SLOT7
+    // so that we can index computerSlotButtons by SLOT0..SLOT7
     return @[
-        [NSNull null],              // SLOT0
+        self.computerSlot0Button,
         self.computerSlot1Button,
         self.computerSlot2Button,
         self.computerSlot3Button,
@@ -798,35 +914,18 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
     ];
 }
 
-+ (NSDictionary *)localizedCardNameMap {
-    // helps map SS_CARDTYPE to a readable string
-    return @{
-        @(CT_Empty):                NSLocalizedString(@"—", @"empty slot"),
-        @(CT_Disk2):                NSLocalizedString(@"Apple Disk ][", @""),
-        @(CT_SSC):                  NSLocalizedString(@"Apple Super Serial Card", @""),
-        @(CT_MockingboardC):        NSLocalizedString(@"Mockingboard C (sound)", @""),
-        @(CT_GenericPrinter):       NSLocalizedString(@"Generic Printer", @""),
-        @(CT_GenericHDD):           NSLocalizedString(@"Generic Hard Disk Drive", @""),
-        @(CT_GenericClock):         NSLocalizedString(@"Generic Clock", @""),
-        @(CT_MouseInterface):       NSLocalizedString(@"Mouse Interface", @""),
-        @(CT_Z80):                  NSLocalizedString(@"Z-80", @""),
-        @(CT_Phasor):               NSLocalizedString(@"Phasor (sound)", @""),
-        @(CT_Echo):                 NSLocalizedString(@"Echo (speech)", @""),
-        @(CT_SAM):                  NSLocalizedString(@"Software Automatic Mouth (speech)", @""),
-        @(CT_80Col):                NSLocalizedString(@"80-column text card (1K)", @""),
-        @(CT_Extended80Col):        NSLocalizedString(@"Extended 80-column text card (64K)", @""),
-        @(CT_RamWorksIII):          NSLocalizedString(@"RamWorks III (up to 8MB)", @""),
-        @(CT_Uthernet):             NSLocalizedString(@"Uthernet I (network)", @""),
-        @(CT_LanguageCard):         NSLocalizedString(@"Apple Language Card", @""),
-        @(CT_LanguageCardIIe):      NSLocalizedString(@"Apple Language Card //e", @""),
-        @(CT_Saturn128K):           NSLocalizedString(@"Saturn 128K (memory)", @""),
-        @(CT_FourPlay):             NSLocalizedString(@"4play (joystick)", @""),
-        @(CT_SNESMAX):              NSLocalizedString(@"SNES MAX (game controller)", @""),
-        @(CT_VidHD):                NSLocalizedString(@"VidHD (video)", @""),
-        @(CT_Uthernet2):            NSLocalizedString(@"Uthernet II (network)", @""),
-        @(CT_MegaAudio):            NSLocalizedString(@"MEGA Audio", @""),
-        @(CT_SDMusic):              NSLocalizedString(@"SD Music (sound)", @""),
-    };
+- (NSArray *)slotMoreButtonsArray {
+    // so that we can index computerSlotMoreButtons by SLOT0..SLOT7
+    return @[
+        self.computerSlot0MoreButton,
+        self.computerSlot1MoreButton,
+        self.computerSlot2MoreButton,
+        self.computerSlot3MoreButton,
+        self.computerSlot4MoreButton,
+        self.computerSlot5MoreButton,
+        self.computerSlot6MoreButton,
+        self.computerSlot7MoreButton,
+    ];
 }
 
 + (NSDictionary *)localizedCopyProtectionDongleNameMap {
@@ -840,6 +939,61 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         @(DT_ROBOCOM1500):          NSLocalizedString(@"Robocom Ltd - Robo 1500", @"Interface Module for Robocom Ltd's Robo 1500"),
         @(DT_HAYDENCOMPILER):       NSLocalizedString(@"Hayden - Applesoft Compiler", @"Protection key for Hayden Book Company, Inc's Applesoft Compiler (1981)"),
     };
+}
+
+- (NSString *)cardNameForType:(SS_CARDTYPE)cardType {
+    NSDictionary *cardNames = @{
+        @(CT_Empty):                NSLocalizedString(@"—", @"empty slot"),
+        @(CT_Disk2):                NSLocalizedString(@"Apple Disk II", @""),
+        @(CT_SSC):                  NSLocalizedString(@"Apple Super Serial Card", @""),
+        @(CT_MockingboardC):        NSLocalizedString(@"Mockingboard C (sound)", @""),
+        @(CT_GenericPrinter):       NSLocalizedString(@"Generic Printer", @""),
+        @(CT_GenericHDD):           NSLocalizedString(@"Hard Disk Controller", @""),
+        @(CT_GenericClock):         NSLocalizedString(@"Generic Clock", @""),
+        @(CT_MouseInterface):       NSLocalizedString(@"Mouse Interface", @""),
+        @(CT_Z80):                  NSLocalizedString(@"Z-80 SoftCard", @""),
+        @(CT_Phasor):               NSLocalizedString(@"Phasor (sound)", @""),
+        @(CT_Echo):                 NSLocalizedString(@"Echo (speech)", @""),
+        @(CT_SAM):                  NSLocalizedString(@"Software Automatic Mouth (speech)", @""),
+        @(CT_80Col):                NSLocalizedString(@"80-column text card (1K)", @""),
+        @(CT_Extended80Col):        NSLocalizedString(@"Extended 80-column text card (64K)", @""),
+        @(CT_RamWorksIII):          NSLocalizedString(@"RamWorks III (up to 16MB)", @""),
+        @(CT_Uthernet):             NSLocalizedString(@"Uthernet I (network)", @""),
+        @(CT_LanguageCard):         NSLocalizedString(@"Apple Language Card", @""),
+        @(CT_LanguageCardIIe):      NSLocalizedString(@"Apple Language Card //e", @""),
+        @(CT_Saturn128K):           NSLocalizedString(@"Saturn 128K (memory)", @""),
+        @(CT_FourPlay):             NSLocalizedString(@"4play (joystick)", @""),
+        @(CT_SNESMAX):              NSLocalizedString(@"SNES MAX (game controller)", @""),
+        @(CT_VidHD):                NSLocalizedString(@"VidHD (video)", @""),
+        @(CT_Uthernet2):            NSLocalizedString(@"Uthernet II (network)", @""),
+        @(CT_MegaAudio):            NSLocalizedString(@"MEGA Audio", @""),
+        @(CT_SDMusic):              NSLocalizedString(@"SD Music (sound)", @""),
+    };
+    NSString *name = [cardNames objectForKey:@(cardType)];
+    if (name == nil) {
+        // fall back to unlocalized upstream string
+        name = [NSString stringWithCString:Card::GetCardName(cardType).c_str() encoding:NSUTF8StringEncoding];
+    }
+    return name;
+}
+
+// FIXME replace when https://github.com/AppleWin/AppleWin/issues/1488 is fixed
+- (BOOL)cardTypeHasOptions:(SS_CARDTYPE)cardType {
+    // must match CPageSlots::CardTypeHasOptions()
+    switch (cardType) {
+    case CT_Disk2: // fallthrough
+    case CT_GenericHDD: // fallthrough
+    case CT_SSC: // fallthrough
+    case CT_MockingboardC: // fallthrough
+    case CT_Phasor: // fallthrough
+    case CT_Saturn128K: // fallthrough
+    case CT_Uthernet: // fallthrough
+    case CT_Uthernet2: // fallthrough
+    case CT_RamWorksIII: // fallthrough
+        return YES;
+    default:
+        return NO;
+    }
 }
 
 - (NSColor *)colorWithColorRef:(DWORD)colorRef {
@@ -872,16 +1026,6 @@ const SS_CARDTYPE expansionSlotTypes[] = { CT_LanguageCard, CT_Extended80Col, CT
         }
     }
     return nil;
-}
-
-- (BOOL)isMockingboardInstalled {
-    CardManager &cardManager = GetCardMgr();
-    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
-        if (cardManager.QuerySlot(slot) == CT_MockingboardC) {
-            return YES;
-        }
-    }
-    return NO;
 }
 
 #pragma clang diagnostic push

@@ -10,11 +10,13 @@
 #import "MarianiDriveButton.h"
 #import "AppDelegate.h"
 #import "DiskMakerWindowController.h"
+#import "NSImage+SFSymbols.h"
 
 // AppleWin
 #include <string>
 #include <vector>
 #import "windows.h"
+#import "cassettetape.h"
 #import "Card.h"
 #import "CardManager.h"
 #import "Disk.h"
@@ -26,6 +28,8 @@ using namespace DiskImgLib;
 
 #define BLANK_FILE_NAME     NSLocalizedString(@"Blank", @"default file name for new blank disk")
 
+#define BLINK_INTERVAL 0.5
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface MarianiDriveButton ()
@@ -33,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nullable) NSOpenPanel *diskOpenPanel;
 @property (strong) DiskImageWrapper *wrapper;
 @property (strong) DiskMakerWindowController *diskMakerWC;
+@property (strong) NSImageView *imageView;
+@property (strong) NSTimer *blinkTimer;
 @end
 
 @implementation MarianiDriveButton
@@ -51,7 +57,8 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     [button setButtonType:NSButtonTypeMomentaryPushIn];
     button.bezelStyle = NSBezelStyleShadowlessSquare;
     button.bordered = NO;
-    button.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
+    button.title = @"";
+    [button setSystemSymbolName:@"circle"];
     button.frame = CGRectMake(0, 0, self.buttonWidth, 29);
     button.target = button;
     button.action = @selector(buttonPressed:);
@@ -63,7 +70,39 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     return [self buttonForFloppyDrive:drive inSlot:slot];
 }
 
++ (instancetype)buttonForTape {
+    // not a drive, but easier to share the status bar like this
+    MarianiDriveButton *button = [[MarianiDriveButton alloc] init];
+    button.slot = -1;
+    button.drive = -1;
+    [button setButtonType:NSButtonTypeMomentaryPushIn];
+    button.bezelStyle = NSBezelStyleShadowlessSquare;
+    button.bordered = NO;
+    button.enabled = NO;
+    button.title = @"";
+    [button setSystemSymbolName:@"recordingtape"];
+    button.frame = CGRectMake(0, 0, self.buttonWidth, 29);
+    
+    return button;
+}
+
 - (void)updateDriveLight {
+    static BOOL isAtLeastMacOS12 = [theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS12];
+    
+    if (self.slot < 0 || self.drive < 0) {
+        CassetteTape::TapeInfo tapeInfo;
+        CassetteTape::instance().getTapeInfo(tapeInfo);
+        if (fabs(tapeInfo.playbackRate) < 0.0001) {
+            self.imageView.contentTintColor = [NSColor secondaryLabelColor];
+            [self.blinkTimer invalidate];
+        }
+        else {
+            self.imageView.contentTintColor = [NSColor controlAccentColor];
+            self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tick) userInfo:nil repeats:NO];
+        }
+        return;
+    }
+    
     NSColor *driveSwappingColor = [NSColor controlAccentColor];
     
     CardManager &cardManager = GetCardMgr();
@@ -72,34 +111,38 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
     if (cardManager.QuerySlot(slot) == CT_Disk2) {
         Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard *>(cardManager.GetObj(slot));
         if (card->IsDriveEmpty(drive)) {
-            if ([theAppDelegate.processInfo isOperatingSystemAtLeastVersion:macOS12]) {
-                self.image = [NSImage imageWithSystemSymbolName:@"circle.dotted" accessibilityDescription:@""];
+            if (isAtLeastMacOS12) {
+                [self setSystemSymbolName:@"circle.dotted"];
             }
             else {
-                self.image = [NSImage imageWithSystemSymbolName:@"circle.dashed" accessibilityDescription:@""];
+                [self setSystemSymbolName:@"circle.dashed"];
             }
-            self.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
+            self.imageView.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
         }
         else {
             Disk_Status_e status[NUM_DRIVES];
             card->GetLightStatus(&status[0], &status[1]);
             if (status[drive] != DISK_STATUS_OFF) {
                 if (card->GetProtect(drive)) {
-                    self.image = [NSImage imageWithSystemSymbolName:@"lock.circle.fill" accessibilityDescription:@""];
+                    [self setSystemSymbolName:@"lock.circle.fill"];
+                }
+                else if (@available(macOS 15.0, *)) {
+                    [self setSymbolName:@"custom.dot.radiowaves.left.and.right.circle.fill" fallbackSystemSymbolName:@"circle.fill"];
+                    [self.imageView addSymbolEffect:[NSSymbolRotateEffect effect]];
                 }
                 else {
-                    self.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
+                    [self setSystemSymbolName:@"circle.fill"];
                 }
-                self.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
+                self.imageView.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
             }
             else {
                 if (card->GetProtect(drive)) {
-                    self.image = [NSImage imageWithSystemSymbolName:@"lock.circle" accessibilityDescription:@""];
+                    [self setSystemSymbolName:@"lock.circle"];
                 }
                 else {
-                    self.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
+                    [self setSystemSymbolName:@"circle"];
                 }
-                self.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
+                self.imageView.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
             }
         }
     }
@@ -108,12 +151,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         Disk_Status_e status;
         card->GetLightStatus(&status);
         if (status != DISK_STATUS_OFF) {
-            self.image = [NSImage imageWithSystemSymbolName:@"circle.fill" accessibilityDescription:@""];
-            self.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
+            [self setSystemSymbolName:@"circle.fill"];
+            self.imageView.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor controlAccentColor];
         }
         else {
-            self.image = [NSImage imageWithSystemSymbolName:@"circle" accessibilityDescription:@""];
-            self.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
+            [self setSystemSymbolName:@"circle"];
+            self.imageView.contentTintColor = theAppDelegate.driveSwapCount ? driveSwappingColor : [NSColor secondaryLabelColor];
         }
     }
 }
@@ -155,6 +198,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                                                        keyEquivalent:@""];
             menuItem.target = self;
             [menu addItem:menuItem];
+            
+            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Show in Finder", @"show disk image in Finder")
+                                                  action:@selector(showFloppyInFinder:)
+                                           keyEquivalent:@""];
+            menuItem.target = self;
+            [menu addItem:menuItem];
             [menu addItem:[NSMenuItem separatorItem]];
         }
         
@@ -189,6 +238,12 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
                 self.wrapper = [[DiskImageWrapper alloc] initWithPath:pathString diskImg:diskImg];
                 [menu addItem:menuItem];
             }
+            
+            NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Show in Finder", @"show disk image in Finder")
+                                                              action:@selector(showHardDriveInFinder:)
+                                                       keyEquivalent:@""];
+            menuItem.target = self;
+            [menu addItem:menuItem];
         }
     }
 
@@ -234,6 +289,32 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
         Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
         card->EjectDisk(drive);
         [theAppDelegate updateDriveLights];
+    }
+}
+
+- (void)showFloppyInFinder:(id)sender {
+    if ([sender isKindOfClass:[NSMenuItem class]]) {
+        const int slot = self.slot;
+        const int drive = self.drive;
+        
+        CardManager &cardManager = GetCardMgr();
+        Disk2InterfaceCard *card = dynamic_cast<Disk2InterfaceCard*>(cardManager.GetObj(slot));
+        NSString *path = [NSString stringWithUTF8String:card->DiskGetFullPathName(drive).c_str()];
+        NSURL *url = [NSURL fileURLWithPath:path];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ url ]];
+    }
+}
+
+- (void)showHardDriveInFinder:(id)sender {
+    if ([sender isKindOfClass:[NSMenuItem class]]) {
+        const int slot = self.slot;
+        const int drive = self.drive;
+        
+        CardManager &cardManager = GetCardMgr();
+        HarddiskInterfaceCard *card = dynamic_cast<HarddiskInterfaceCard *>(cardManager.GetObj(slot));
+        NSString *path = [NSString stringWithUTF8String:card->HarddiskGetFullPathName(drive).c_str()];
+        NSURL *url = [NSURL fileURLWithPath:path];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[ url ]];
     }
 }
 
@@ -310,6 +391,48 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 - (void)browserWindowWillClose:(NSString *)path {
     [self.browserWindowControllers removeObjectForKey:path];
+}
+
+#pragma mark - SF Symbol subview
+
+- (void)setImage:(nullable NSImage *)image {
+    NSAssert(NO, @"call setSystemSymbolName or setSymbolName instead");
+}
+
+- (void)createImageViewIfNecessary {
+    if (self.imageView == nil) {
+        self.imageView = [[NSImageView alloc] init];
+        self.imageView.frame = self.bounds;
+        self.imageView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+        [self addSubview:self.imageView];
+    }
+}
+
+- (void)setSystemSymbolName:(NSString *)symbolName {
+    [self createImageViewIfNecessary];
+    self.imageView.image = [NSImage largeImageWithSystemSymbolName:symbolName];
+}
+
+- (void)setSymbolName:(NSString *)symbolName fallbackSystemSymbolName:(NSString *)fallbackSymbolName {
+    [self createImageViewIfNecessary];
+    if (@available(macOS 13.0, *)) {
+        self.imageView.image = [NSImage largeImageWithSymbolName:symbolName];
+    }
+    else {
+        self.imageView.image = [NSImage largeImageWithSystemSymbolName:fallbackSymbolName];
+    }
+}
+
+#pragma mark - Tape button blinking
+
+- (void)tick {
+    self.imageView.contentTintColor = [NSColor secondaryLabelColor];
+    self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tock) userInfo:nil repeats:NO];
+}
+
+- (void)tock {
+    self.imageView.contentTintColor = [NSColor controlAccentColor];
+    self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tick) userInfo:nil repeats:NO];
 }
 
 @end
