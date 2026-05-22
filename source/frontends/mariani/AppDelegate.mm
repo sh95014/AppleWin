@@ -174,10 +174,6 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     return YES;
 }
 
-- (void)applicationDidHide:(NSNotification *)notification {
-    [self.emulatorVC pause];
-}
-
 - (void)applicationWillUnhide:(NSNotification *)notification {
     [self.emulatorVC start];
 }

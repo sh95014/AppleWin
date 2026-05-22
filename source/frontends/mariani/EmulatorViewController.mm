@@ -87,7 +87,6 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property NSInteger frameCount;
 #endif // SHOW_EMULATED_CPU_SPEED
 @property NSTimer *runLoopTimer;
-@property CVDisplayLinkRef displayLink;
 
 @property AVAssetWriter *videoWriter;
 @property AVAssetWriterInput *videoWriterInput;
@@ -375,12 +374,6 @@ extern common2::EmulatorOptions gEmulatorOptions;
     }
 }
 
-- (void)pause {
-    CVDisplayLinkStop(self.displayLink);
-    CVDisplayLinkRelease(self.displayLink);
-    self.displayLink = NULL;
-}
-
 - (void)resetSpeed {
     frame->ResetSpeed();
 }
@@ -415,7 +408,6 @@ extern common2::EmulatorOptions gEmulatorOptions;
 }
 
 - (void)stop {
-    [self pause];
     if (frame != NULL) {
         frame->End();
     }
