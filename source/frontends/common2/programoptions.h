@@ -37,6 +37,8 @@ namespace common2
         bool headless = false;
         bool noVideoUpdate = false; // only for applen
 
+        bool fullscreen = false;
+
         bool paddleSquaring = true; // turn the x/y range to a square
         // on my PC it is something like
         // "/dev/input/by-id/usb-©Microsoft_Corporation_Controller_1BBE3DB-event-joystick"
@@ -56,7 +58,7 @@ namespace common2
         bool imgui = true;                // use imgui renderer
         std::optional<Geometry> geometry; // must be initialised with defaults
         bool aspectRatio = false;         // preserve aspect ratio
-        int glSwapInterval = 1;           // SDL_GL_SetSwapInterval
+        int glSwapInterval = -1;          // SDL_GL_SetSwapInterval
         std::optional<int> gameControllerIndex;
         std::string gameControllerMappingFile;
         std::string audioDeviceName;

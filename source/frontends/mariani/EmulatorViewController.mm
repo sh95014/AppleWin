@@ -448,7 +448,25 @@ extern common2::EmulatorOptions gEmulatorOptions;
         self.videoWriter = [[AVAssetWriter alloc] initWithURL:url
                                                      fileType:AVFileTypeAppleM4V
                                                         error:&error];
-        
+
+        float encodingQuality;
+        int maxKeyFrameInterval;
+        const NSInteger quality = [[UserDefaults sharedInstance] recordingQuality];
+        switch (quality) {
+            case 1:
+                encodingQuality = 0.7;
+                maxKeyFrameInterval = 10;
+                break;
+            case 2:
+                encodingQuality = 0.8;
+                maxKeyFrameInterval = 5;
+                break;
+            default:
+                encodingQuality = 0.5;
+                maxKeyFrameInterval = 30;
+                break;
+        }
+
         // set up the video writer input
         const NSInteger shouldOverscan = [self shouldOverscan];
         const NSInteger overscanWidth = shouldOverscan ? frameBuffer.borderWidth * OVERSCAN * 2 : 0;
@@ -465,6 +483,10 @@ extern common2::EmulatorOptions gEmulatorOptions;
                 AVVideoCleanApertureHorizontalOffsetKey: @(0),
                 AVVideoCleanApertureVerticalOffsetKey: @(0),
             },
+            AVVideoCompressionPropertiesKey: @{
+                AVVideoQualityKey: @(encodingQuality),
+                AVVideoMaxKeyFrameIntervalKey: @(maxKeyFrameInterval),
+            }
         };
         self.videoWriterInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo
                                                                    outputSettings:videoSettings];

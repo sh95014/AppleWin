@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <deque>
 #include "Configuration/Config.h"
 #include "commonframe.h"
 #include <map>

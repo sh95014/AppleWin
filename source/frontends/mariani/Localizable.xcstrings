@@ -123,16 +123,6 @@
         }
       }
     },
-    "A newer version of this software is available." : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已有比本軟體較新的版本"
-          }
-        }
-      }
-    },
     "About %@" : {
       "localizations" : {
         "zh-Hant" : {
@@ -153,36 +143,6 @@
         }
       }
     },
-    "Apple ][ Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "蘋果 ][ 模擬器"
-          }
-        }
-      }
-    },
-    "Apple ][ J-Plus Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "蘋果 ][ J-Plus 模擬器"
-          }
-        }
-      }
-    },
-    "Apple ][+ Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "蘋果 ][+ 模擬器"
-          }
-        }
-      }
-    },
     "Apple //c Emulator" : {
       "localizations" : {
         "zh-Hant" : {
@@ -193,22 +153,62 @@
         }
       }
     },
-    "Apple //e Emulator" : {
+    "Apple //e (enhanced) Emulator" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "蘋果 //e 模擬器"
+            "value" : "加強版 Apple //e 模擬器"
           }
         }
       }
     },
-    "Apple Disk ][" : {
+    "Apple //e (original) Emulator" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "蘋果 Disk ]["
+            "value" : "Apple //e 模擬器"
+          }
+        }
+      }
+    },
+    "Apple Disk II" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "蘋果 Disk II 磁碟控制卡"
+          }
+        }
+      }
+    },
+    "Apple II (original) Emulator" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple II 模擬器"
+          }
+        }
+      }
+    },
+    "Apple II J-Plus Emulator" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple II J-Plus 模擬器"
+          }
+        }
+      }
+    },
+    "Apple II Plus Emulator" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple II Plus 模擬器"
           }
         }
       }
@@ -431,6 +431,9 @@
         }
       }
     },
+    "Control-Reset" : {
+      "shouldTranslate" : false
+    },
     "Copy" : {
       "localizations" : {
         "zh-Hant" : {
@@ -533,16 +536,6 @@
         }
       }
     },
-    "Enhanced Apple //e Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加強版蘋果 //e 模擬器"
-          }
-        }
-      }
-    },
     "Error" : {
       "localizations" : {
         "zh-Hant" : {
@@ -584,22 +577,22 @@
         }
       }
     },
-    "Generic Hard Disk Drive" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "普通硬碟"
-          }
-        }
-      }
-    },
     "Generic Printer" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "普通印表機"
+          }
+        }
+      }
+    },
+    "Hard Disk Controller" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "硬碟控制卡"
           }
         }
       }
@@ -802,7 +795,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本軟體仍是最新版本"
+            "value" : "本軟體仍是最新版本。"
           }
         }
       }
@@ -868,6 +861,16 @@
         }
       }
     },
+    "Please try again later." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請稍後再重試。"
+          }
+        }
+      }
+    },
     "Pravets 8A Emulator" : {
       "localizations" : {
         "zh-Hant" : {
@@ -898,12 +901,12 @@
         }
       }
     },
-    "RamWorks III (up to 8MB)" : {
+    "RamWorks III (up to 16MB)" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "RamWorks III (高達 8MB)"
+            "value" : "RamWorks III (高達 16MB)"
           }
         }
       }
@@ -934,6 +937,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "重啟模擬器？"
+          }
+        }
+      }
+    },
+    "Record screen" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕錄影"
           }
         }
       }
@@ -1139,6 +1152,27 @@
         }
       }
     },
+    "Service Unavailable" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務暫時無法提供"
+          }
+        }
+      }
+    },
+    "Show in Finder" : {
+      "comment" : "show disk image in Finder",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "於 Finder 中顯示"
+          }
+        }
+      }
+    },
     "Show Status Bar" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1227,6 +1261,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Switches C0xx"
+          }
+        }
+      }
+    },
+    "Take screenshot" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "螢幕快照"
           }
         }
       }
@@ -1341,16 +1385,6 @@
         }
       }
     },
-    "Update Available" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已有更新"
-          }
-        }
-      }
-    },
     "Uthernet I (network)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1387,6 +1421,16 @@
         }
       }
     },
+    "Version %@ is now available" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 版已可下載"
+          }
+        }
+      }
+    },
     "VidHD (video)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1407,12 +1451,28 @@
         }
       }
     },
-    "Z-80" : {
+    "You are running version %@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You are running version %1$@ (%2$@)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您正在使用 %1$@ (%2$@) 版。"
+          }
+        }
+      }
+    },
+    "Z-80 SoftCard" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Z-80"
+            "value" : "Z-80 SoftCard"
           }
         }
       }

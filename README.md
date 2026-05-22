@@ -7,10 +7,10 @@ AppleWin is a fully-featured emulator supporting different Apple II models and c
 
 Apple II models supported include:
 
-* ][
-* ][+
-* //e
-* //e Enhanced
+* II (original)
+* II Plus
+* //e (original)
+* //e (enhanced)
 * Various clones (Pravets, TK3000, Base 64)
 
 There is currently no support for the //c, //c+, Laser 128, Laser 128EX, Laser 128EX2, or Apple IIgs.
@@ -27,7 +27,7 @@ Peripheral cards and add-on hardware supported:
 - RGB cards: Apple's Extended 80-Column Text/AppleColor Adaptor Card and 'Le Chat Mauve' Féline.
 - CP/M SoftCard
 - Uthernet I and II (ethernet cards)
-- Language Card and Saturn 64/128K for Apple II/II+ (and Saturn 128K for any Apple II in slot 3)
+- Language Card and Saturn 64/128K for Apple II/II Plus (and Saturn 128K for any Apple II in any slot)
 - 4Play and SNES MAX joystick cards
 - VidHD card (functionality limited to IIgs' Super Hi-Res video modes)
 - No Slot Clock (NSC)
@@ -47,6 +47,15 @@ To compile for Windows from source see:
 
 * [docs/compiling.txt](https://github.com/AppleWin/AppleWin/blob/master/docs/compiling.txt)
 
+Debugging
+=========
+If you are experencing a system-wide input unresponsiveness when debugging under MSVC 2022 then use the command-line argument `-no-hook-system-key` to prevent an input thread for system keys. See `g_bHookSystemKey`, `HookFilter::HookFilterForKeyboard()` and `HookFilter::HookThread()`.
+
+Alternative work arounds include:
+
+* Debug with MSVC 2026,
+* Debug with MSVC 2019, or
+* Manually use the older v5.01 Windows Common Controls.
 
 Unofficial Ports
 ================
