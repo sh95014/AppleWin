@@ -91,7 +91,6 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSButton *video50PercentScanLinesButton;
 @property (strong) IBOutlet NSColorWell *videoCustomColorWell;
 @property (strong) IBOutlet NSSlider *audioSpeakerVolumeSlider;
-@property (strong) IBOutlet NSSlider *audioMockingboardVolumeSlider;
 
 @property (strong) IBOutlet NSButton *storageEnhancedSpeedButton;
 @property (strong) IBOutlet NSTableView *storageHardDiskTableView;
@@ -316,17 +315,7 @@ const eApple2Type computerTypes[] = {
         const int volumeMax = GetPropertySheet().GetVolumeMax();
         self.audioSpeakerVolumeSlider.maxValue = volumeMax;
         self.audioSpeakerVolumeSlider.intValue = volumeMax - SpkrGetVolume();
-        
-        // Mockingboard volume slider
-        CardManager &cardManager = GetCardMgr();
-        self.audioMockingboardVolumeSlider.maxValue = volumeMax;
-        self.audioMockingboardVolumeSlider.intValue = volumeMax - cardManager.GetMockingboardCardMgr().GetVolume();
-        [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
     }
-}
-
-- (void)updateMockingboardPreferences {
-    self.audioMockingboardVolumeSlider.enabled = [self isMockingboardInstalled];
 }
 
 - (void)configureVideo {
@@ -541,9 +530,6 @@ const eApple2Type computerTypes[] = {
         if (previousCard == CT_GenericHDD || cardManager.QuerySlot((SLOTS)currentSlot) == CT_GenericHDD) {
             [self performSelector:@selector(updateHardDiskPreferences) inViewControllerWithID:STORAGE_PANE_ID];
         }
-        if (previousCard == CT_MockingboardC) {
-            [self performSelector:@selector(updateMockingboardPreferences) inViewControllerWithID:AUDIO_VIDEO_PANE_ID];
-        }
         self.computerRebootEmulatorButton.enabled = [theAppDelegate emulationHardwareChanged];
         
         [self configureSlots];
@@ -711,15 +697,6 @@ const eApple2Type computerTypes[] = {
     SpkrSetVolume(volume, volumeMax);
     RegSaveValue(REG_CONFIG, REGVALUE_SPKR_VOLUME, true, volume);
     NSLog(@"Set speaker volume to %d", volume);
-}
-
-- (IBAction)mockingboardVolumeSliderAction:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    const int volumeMax = GetPropertySheet().GetVolumeMax();
-    const int volume = volumeMax - self.audioMockingboardVolumeSlider.intValue;
-    CardManager &cardManager = GetCardMgr();
-    cardManager.GetMockingboardCardMgr().SetVolume(volume, volumeMax);
-    NSLog(@"Set Mockingboard volume to %d", volume);
 }
 
 - (IBAction)diskAction:(id)sender {
@@ -1041,16 +1018,6 @@ const eApple2Type computerTypes[] = {
         }
     }
     return nil;
-}
-
-- (BOOL)isMockingboardInstalled {
-    CardManager &cardManager = GetCardMgr();
-    for (int slot = SLOT0; slot < NUM_SLOTS; slot++) {
-        if (cardManager.QuerySlot(slot) == CT_MockingboardC) {
-            return YES;
-        }
-    }
-    return NO;
 }
 
 #pragma clang diagnostic push

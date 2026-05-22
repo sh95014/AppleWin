@@ -647,24 +647,6 @@
         }
       }
     },
-    "iT1-07-Syr.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Mockingboard Volume\"; ObjectID = \"iT1-07-Syr\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Mockingboard Volume"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mockingboard 音量"
-          }
-        }
-      }
-    },
     "kRE-Os-hyf.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Main Board\"; ObjectID = \"kRE-Os-hyf\";",
       "extractionState" : "extracted_with_value",
@@ -788,19 +770,19 @@
       "shouldTranslate" : false
     },
     "paq-mq-NdY.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Speaker Volume\"; ObjectID = \"paq-mq-NdY\";",
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Audio Volume\"; ObjectID = \"paq-mq-NdY\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Speaker Volume"
+            "value" : "Audio Volume"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "內建喇叭音量"
+            "value" : "音量"
           }
         }
       }
