@@ -11,7 +11,7 @@ using namespace DiskImgLib;
 
 @interface DiskImageWrapper()
 
-@property (assign) NSString *path;
+@property (strong) NSString *path;
 
 @end
 
