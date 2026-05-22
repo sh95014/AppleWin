@@ -37,6 +37,24 @@
         }
       }
     },
+    "1O7-r8-P72.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"64\"; ObjectID = \"1O7-r8-P72\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "64"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "64"
+          }
+        }
+      }
+    },
     "2wM-ew-aAs.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Button 0\"; ObjectID = \"2wM-ew-aAs\";",
       "extractionState" : "extracted_with_value",
@@ -841,6 +859,24 @@
         }
       }
     },
+    "RMy-BN-8Yz.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"16\"; ObjectID = \"RMy-BN-8Yz\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "16"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "16"
+          }
+        }
+      }
+    },
     "rzE-im-fXn.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Screenshots\"; ObjectID = \"rzE-im-fXn\";",
       "extractionState" : "extracted_with_value",
@@ -927,6 +963,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "遊戲控制器"
+          }
+        }
+      }
+    },
+    "Waa-Qa-Osy.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"128KB\"; ObjectID = \"Waa-Qa-Osy\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "128KB"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "128KB"
           }
         }
       }
@@ -1028,6 +1082,24 @@
         }
       },
       "shouldTranslate" : false
+    },
+    "YZE-9d-qgt.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"32\"; ObjectID = \"YZE-9d-qgt\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "32"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "32"
+          }
+        }
+      }
     },
     "Zda-1C-vOg.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"2\"; ObjectID = \"Zda-1C-vOg\";",

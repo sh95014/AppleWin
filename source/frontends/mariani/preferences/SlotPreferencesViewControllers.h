@@ -25,5 +25,11 @@
 - (void)setCard:(MockingboardCard *)card;
 @end
 
-@interface RamWorksPreferencesViewController : NSViewController
+@interface SliderPreferencesViewController : NSViewController
+@end
+
+@interface RamWorksPreferencesViewController : SliderPreferencesViewController
+@end
+
+@interface Saturn128KPreferencesViewController : SliderPreferencesViewController
 @end

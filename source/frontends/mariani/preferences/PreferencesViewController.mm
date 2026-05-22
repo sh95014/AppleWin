@@ -594,6 +594,11 @@ const eApple2Type computerTypes[] = {
                 NSAssert([viewController isKindOfClass:[RamWorksPreferencesViewController class]], @"");
                 break;
             }
+            case CT_Saturn128K: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"Saturn128KPreferencesID"];
+                NSAssert([viewController isKindOfClass:[Saturn128KPreferencesViewController class]], @"");
+                break;
+            }
             default:
                 break;
         }
@@ -628,6 +633,7 @@ const eApple2Type computerTypes[] = {
         switch (GetCurrentExpansionMemType()) {
             case CT_RamWorksIII: {
                 viewController = [self.storyboard instantiateControllerWithIdentifier:@"RamWorksPreferencesID"];
+                NSAssert([viewController isKindOfClass:[RamWorksPreferencesViewController class]], @"");
                 break;
             }
             default:

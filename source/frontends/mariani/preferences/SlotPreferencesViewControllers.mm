@@ -233,33 +233,11 @@
 
 #pragma mark -
 
-@interface RamWorksPreferencesViewController ()
+@interface SliderPreferencesViewController ()
 @property (strong) IBOutlet NSSlider *memorySizeSlider;
-@property (strong) IBOutlet NSTextField *oneMBLabel;
-@property (strong) IBOutlet NSTextField *twoMBLabel;
-@property (strong) IBOutlet NSTextField *fourMBLabel;
-@property (strong) IBOutlet NSTextField *eightMBLabel;
-@property (strong) IBOutlet NSTextField *sixteenMBLabel;
 @end
 
-@implementation RamWorksPreferencesViewController
-
-- (void)loadView {
-    [super loadView];
-    const unsigned banks = GetRamWorksMemorySize();
-    self.memorySizeSlider.intValue = banks / 16; // 64 KB per bank
-    
-    [self centerView:self.oneMBLabel underTick:1];
-    [self centerView:self.twoMBLabel underTick:2];
-    [self centerView:self.fourMBLabel underTick:4];
-    [self centerView:self.eightMBLabel underTick:8];
-    [self centerView:self.sixteenMBLabel underTick:16];
-}
-
-- (IBAction)memorySliderAction:(id)sender {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    SetRamWorksMemorySize(self.memorySizeSlider.intValue * 16); // 64 KB per bank
-}
+@implementation SliderPreferencesViewController
 
 - (void)centerView:(NSView *)view underTick:(NSInteger)tick {
     const NSOperatingSystemVersion macOS26 = { 26, 0, 0 };
@@ -291,6 +269,65 @@
     }
     
     view.frame = viewFrame;
+}
+
+@end
+
+#pragma mark -
+
+@interface RamWorksPreferencesViewController ()
+@property (strong) IBOutlet NSTextField *oneMBLabel;
+@property (strong) IBOutlet NSTextField *twoMBLabel;
+@property (strong) IBOutlet NSTextField *fourMBLabel;
+@property (strong) IBOutlet NSTextField *eightMBLabel;
+@property (strong) IBOutlet NSTextField *sixteenMBLabel;
+@end
+
+@implementation RamWorksPreferencesViewController
+
+- (void)loadView {
+    [super loadView];
+    const unsigned banks = GetRamWorksMemorySize();
+    self.memorySizeSlider.intValue = banks / 16; // 64 KB per bank
+    
+    [self centerView:self.oneMBLabel underTick:1];
+    [self centerView:self.twoMBLabel underTick:2];
+    [self centerView:self.fourMBLabel underTick:4];
+    [self centerView:self.eightMBLabel underTick:8];
+    [self centerView:self.sixteenMBLabel underTick:16];
+}
+
+- (IBAction)memorySliderAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    SetRamWorksMemorySize(self.memorySizeSlider.intValue * 16); // 64 KB per bank
+}
+
+@end
+
+#pragma mark -
+
+@interface Saturn128KPreferencesViewController ()
+@property (strong) IBOutlet NSTextField *sixteenKBLabel;
+@property (strong) IBOutlet NSTextField *thirtyTwoKBLabel;
+@property (strong) IBOutlet NSTextField *sixtyFourKBLabel;
+@property (strong) IBOutlet NSTextField *oneHundredTwentyEightKBLabel;
+@end
+
+@implementation Saturn128KPreferencesViewController
+
+- (void)loadView {
+    [super loadView];
+    self.memorySizeSlider.enabled = NO; // https://github.com/audetto/AppleWin/issues/400
+    
+    [self centerView:self.sixteenKBLabel underTick:1];
+    [self centerView:self.thirtyTwoKBLabel underTick:2];
+    [self centerView:self.sixtyFourKBLabel underTick:4];
+    [self centerView:self.oneHundredTwentyEightKBLabel underTick:8];
+}
+
+- (IBAction)memorySliderAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    // https://github.com/audetto/AppleWin/issues/400
 }
 
 @end
