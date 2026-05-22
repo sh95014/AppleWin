@@ -36,6 +36,7 @@ void CreateLanguageCard(void); // FIXME should be in Memory.h
 #import "PCapBackend.h"
 #endif
 #import "tfesupp.h"
+#import "Uthernet2.h"
 
 // Objective-C typedefs BOOL to be bool, but wincompat.h typedefs it to be
 // int32_t, which causes function signature mismatches (such as with the
@@ -584,6 +585,13 @@ const eApple2Type computerTypes[] = {
                 viewController = [self.storyboard instantiateControllerWithIdentifier:@"Saturn128KPreferencesID"];
                 NSAssert([viewController isKindOfClass:[Saturn128KPreferencesViewController class]], @"");
                 break;
+            }
+            case CT_Uthernet: // fallthrough
+            case CT_Uthernet2: {
+                viewController = [self.storyboard instantiateControllerWithIdentifier:@"UthernetPreferencesID"];
+                NSAssert([viewController isKindOfClass:[UthernetPreferencesViewController class]], @"");
+                UthernetPreferencesViewController *vc = (UthernetPreferencesViewController *)viewController;
+                vc.slot = slot;
             }
             default:
                 break;

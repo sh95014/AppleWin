@@ -261,6 +261,24 @@
         }
       }
     },
+    "10e-Qm-MZE.title" : {
+      "comment" : "Class = \"NSButtonCell\"; title = \"Virtual DNS\"; ObjectID = \"10e-Qm-MZE\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Virtual DNS"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "虛擬域名系統"
+          }
+        }
+      }
+    },
     "78q-NW-2Rd.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"＋\"; ObjectID = \"78q-NW-2Rd\";",
       "extractionState" : "extracted_with_value",

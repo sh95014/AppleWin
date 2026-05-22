@@ -8,6 +8,7 @@
 #import "SlotPreferencesViewControllers.h"
 #import "AppDelegate.h"
 #import "DiskMakerWindowController.h"
+#import "Uthernet2.h"
 
 @interface DiskIIPreferencesViewController ()
 @property (strong) IBOutlet NSButton *thirteenSectorFirmwareButton;
@@ -328,6 +329,26 @@
 - (IBAction)memorySliderAction:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     // https://github.com/audetto/AppleWin/issues/400
+}
+
+@end
+
+#pragma mark -
+
+@interface UthernetPreferencesViewController ()
+@property (strong) IBOutlet NSButton *virtualDNSButton;
+@end
+
+@implementation UthernetPreferencesViewController
+
+- (void)loadView {
+    [super loadView];
+    self.virtualDNSButton.state = Uthernet2::GetRegistryVirtualDNS(self.slot) ? NSControlStateValueOn : NSControlStateValueOff;
+}
+
+- (IBAction)virtualDNSAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    Uthernet2::SetRegistryVirtualDNS(self.slot, self.virtualDNSButton.state == NSControlStateValueOn);
 }
 
 @end

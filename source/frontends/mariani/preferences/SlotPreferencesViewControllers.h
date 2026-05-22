@@ -33,3 +33,7 @@
 
 @interface Saturn128KPreferencesViewController : SliderPreferencesViewController
 @end
+
+@interface UthernetPreferencesViewController : NSViewController
+@property (assign) unsigned slot;
+@end
