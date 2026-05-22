@@ -440,67 +440,74 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         enum {
-            UP_TO_DATE, UPDATE_AVAILABLE, UNEXPECTED_RESPONSE, FETCH_ERROR,
+            API_DOWN, UP_TO_DATE, UPDATE_AVAILABLE, UNEXPECTED_RESPONSE, FETCH_ERROR,
         } updateAction = UNEXPECTED_RESPONSE;
         NSString *updateURLString;
         NSString *latestReleaseString;
+        NSString *myVersionString = nil;
+        NSString *myBuildString = nil;
+        NSError *error = nil;
         NSURL *url = [NSURL URLWithString:@"https://api.github.com/repos/sh95014/AppleWin/releases/latest"];
         NSData *data = [NSData dataWithContentsOfURL:url];
-        NSError *error = nil;
-        id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-        if (error == nil) {
-            if ([object isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *results = object;
-                if (![[results objectForKey:@"prerelease"] boolValue]) {
-                    // "prerelease": false
-                    if ((updateURLString = [results stringForKey:@"html_url"]) != nil &&
-                        (latestReleaseString = [results stringForKey:@"name"]) != nil) {
-                        // "name": "Mariani 1.5 (2)" => ["Mariani", "1.5", "(2)"]
-                        NSArray *latestReleaseParts = [latestReleaseString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                        if (latestReleaseParts.count == 3) {
-                            // e.g., "1.5" => ["1", "5"]
-                            NSArray<NSString *> *latestVersionParts = [latestReleaseParts[1] componentsSeparatedByString:@"."];
-                            // e.g., "(2)" => "2"
-                            NSCharacterSet *parentheses = [NSCharacterSet characterSetWithCharactersInString:@"()"];
-                            NSString *latestBuildString = [latestReleaseParts[2] stringByTrimmingCharactersInSet:parentheses];
-                            
-                            NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-                            NSString *myVersionString = infoDictionary[@"CFBundleShortVersionString"];
-                            NSArray<NSString *> *myVersionParts = [myVersionString componentsSeparatedByString:@"."];
-                            NSString *myBuildString = infoDictionary[@"CFBundleVersion"];
-                            
-                            NSInteger latestVersion =
+        if (data != nil) {
+            id object = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+            if (error == nil) {
+                if ([object isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *results = object;
+                    if (![[results objectForKey:@"prerelease"] boolValue]) {
+                        // "prerelease": false
+                        if ((updateURLString = [results stringForKey:@"html_url"]) != nil &&
+                            (latestReleaseString = [results stringForKey:@"name"]) != nil) {
+                            // "name": "Mariani 1.5 (2)" => ["Mariani", "1.5", "(2)"]
+                            NSArray *latestReleaseParts = [latestReleaseString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                            if (latestReleaseParts.count == 3) {
+                                // e.g., "1.5" => ["1", "5"]
+                                NSArray<NSString *> *latestVersionParts = [latestReleaseParts[1] componentsSeparatedByString:@"."];
+                                // e.g., "(2)" => "2"
+                                NSCharacterSet *parentheses = [NSCharacterSet characterSetWithCharactersInString:@"()"];
+                                NSString *latestBuildString = [latestReleaseParts[2] stringByTrimmingCharactersInSet:parentheses];
+                                
+                                NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+                                myVersionString = infoDictionary[@"CFBundleShortVersionString"];
+                                NSArray<NSString *> *myVersionParts = [myVersionString componentsSeparatedByString:@"."];
+                                myBuildString = infoDictionary[@"CFBundleVersion"];
+                                
+                                NSInteger latestVersion =
                                 latestVersionParts[0].integerValue * 1000000 +
                                 latestVersionParts[1].integerValue * 1000 +
                                 latestBuildString.integerValue;
-                            NSInteger myVersion =
+                                NSInteger myVersion =
                                 myVersionParts[0].integerValue * 1000000 +
                                 myVersionParts[1].integerValue * 1000 +
                                 myBuildString.integerValue;
-                            
-                            NSLog(@"Latest version: %ld.%ld (%ld)",
-                                  latestVersionParts[0].integerValue,
-                                  latestVersionParts[1].integerValue,
-                                  latestBuildString.integerValue);
-                            updateAction = (latestVersion > myVersion) ? UPDATE_AVAILABLE : UP_TO_DATE;
-                            [[UserDefaults sharedInstance] setLastUpdateCheckDate:[NSDate now]];
+                                
+                                NSLog(@"Latest version: %ld.%ld (%ld)",
+                                      latestVersionParts[0].integerValue,
+                                      latestVersionParts[1].integerValue,
+                                      latestBuildString.integerValue);
+                                updateAction = (latestVersion > myVersion) ? UPDATE_AVAILABLE : UP_TO_DATE;
+                                [[UserDefaults sharedInstance] setLastUpdateCheckDate:[NSDate now]];
+                            }
+                            else {
+                                NSLog(@"Unexpected version '%@'", latestReleaseString);
+                            }
                         }
                         else {
-                            NSLog(@"Unexpected version '%@'", latestReleaseString);
+                            NSLog(@"Unexpected html_url");
                         }
                     }
-                    else {
-                        NSLog(@"Unexpected html_url");
-                    }
+                }
+                else {
+                    NSLog(@"Unexpected data format");
                 }
             }
             else {
-                NSLog(@"Unexpected data format");
+                updateAction = FETCH_ERROR;
+                NSLog(@"Error: %@", error.localizedDescription);
             }
         }
         else {
-            updateAction = FETCH_ERROR;
-            NSLog(@"Error: %@", error.localizedDescription);
+            updateAction = API_DOWN;
         }
         if (updateAction == UPDATE_AVAILABLE || sender != nil) {
             // pop a dialog if updates are available, or if this was initiated
@@ -509,6 +516,12 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                 NSAlert *alert = [[NSAlert alloc] init];
                 
                 switch (updateAction) {
+                    case API_DOWN:
+                        alert.messageText = NSLocalizedString(@"Service Unavailable", @"");
+                        alert.informativeText = NSLocalizedString(@"Please try again later.", @"");
+                        alert.alertStyle = NSAlertStyleWarning;
+                        alert.icon = [NSImage imageWithSystemSymbolName:@"hand.thumbsdown" accessibilityDescription:@""];
+                        break;
                     case UP_TO_DATE:
                         alert.messageText = NSLocalizedString(@"Up-to-Date", @"");
                         alert.informativeText = NSLocalizedString(@"No newer version of this software is available.", @"");
@@ -516,8 +529,10 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
                         alert.icon = [NSImage imageWithSystemSymbolName:@"hand.thumbsup" accessibilityDescription:@""];
                         break;
                     case UPDATE_AVAILABLE:
-                        alert.messageText = NSLocalizedString(@"Update Available", @"");
-                        alert.informativeText = NSLocalizedString(@"A newer version of this software is available.", @"");
+                        alert.messageText = [NSString stringWithFormat:NSLocalizedString(@"Version %@ is now available", @""),
+                                             latestReleaseString];
+                        alert.informativeText = [NSString stringWithFormat:NSLocalizedString(@"You are running version %@ (%@)", @""),
+                                                 myVersionString, myBuildString];
                         alert.alertStyle = NSAlertStyleInformational;
                         alert.icon = [NSImage imageWithSystemSymbolName:@"square.and.arrow.down" accessibilityDescription:@""];
                         [alert addButtonWithTitle:NSLocalizedString(@"Download…", @"")];

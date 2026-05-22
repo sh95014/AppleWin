@@ -123,16 +123,6 @@
         }
       }
     },
-    "A newer version of this software is available." : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已有比本軟體較新的版本"
-          }
-        }
-      }
-    },
     "About %@" : {
       "localizations" : {
         "zh-Hant" : {
@@ -805,7 +795,7 @@
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "本軟體仍是最新版本"
+            "value" : "本軟體仍是最新版本。"
           }
         }
       }
@@ -867,6 +857,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Phasor (音效卡)"
+          }
+        }
+      }
+    },
+    "Please try again later." : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請稍後再重試。"
           }
         }
       }
@@ -1152,6 +1152,16 @@
         }
       }
     },
+    "Service Unavailable" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "服務暫時無法提供"
+          }
+        }
+      }
+    },
     "Show in Finder" : {
       "comment" : "show disk image in Finder",
       "localizations" : {
@@ -1375,16 +1385,6 @@
         }
       }
     },
-    "Update Available" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已有更新"
-          }
-        }
-      }
-    },
     "Uthernet I (network)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1421,6 +1421,16 @@
         }
       }
     },
+    "Version %@ is now available" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 版已可下載"
+          }
+        }
+      }
+    },
     "VidHD (video)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1437,6 +1447,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "是"
+          }
+        }
+      }
+    },
+    "You are running version %@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You are running version %1$@ (%2$@)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "您正在使用 %1$@ (%2$@) 版。"
           }
         }
       }
