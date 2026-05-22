@@ -901,11 +901,11 @@ const eApple2Type computerTypes[] = {
 - (NSDictionary *)localizedComputerNameMap {
     // helps map eApple2Type to a readable string
     return @{
-        @(A2TYPE_APPLE2):           NSLocalizedString(@"Apple ][ Emulator", @""),
-        @(A2TYPE_APPLE2PLUS):       NSLocalizedString(@"Apple ][+ Emulator", @""),
-        @(A2TYPE_APPLE2JPLUS):      NSLocalizedString(@"Apple ][ J-Plus Emulator", @""),
-        @(A2TYPE_APPLE2E):          NSLocalizedString(@"Apple //e Emulator", @""),
-        @(A2TYPE_APPLE2EENHANCED):  NSLocalizedString(@"Enhanced Apple //e Emulator", @""),
+        @(A2TYPE_APPLE2):           NSLocalizedString(@"Apple II (original) Emulator", @""),
+        @(A2TYPE_APPLE2PLUS):       NSLocalizedString(@"Apple II Plus Emulator", @""),
+        @(A2TYPE_APPLE2JPLUS):      NSLocalizedString(@"Apple II J-Plus Emulator", @""),
+        @(A2TYPE_APPLE2E):          NSLocalizedString(@"Apple //e (original) Emulator", @""),
+        @(A2TYPE_APPLE2EENHANCED):  NSLocalizedString(@"Apple //e (enhanced) Emulator", @""),
         @(A2TYPE_APPLE2C):          NSLocalizedString(@"Apple //c Emulator", @""),
         @(A2TYPE_PRAVETS82):        NSLocalizedString(@"Pravets 82 Emulator", @""),
         @(A2TYPE_PRAVETS8M):        NSLocalizedString(@"Pravets 8M Emulator", @""),

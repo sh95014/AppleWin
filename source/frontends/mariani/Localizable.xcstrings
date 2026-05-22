@@ -143,36 +143,6 @@
         }
       }
     },
-    "Apple ][ Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "蘋果 ][ 模擬器"
-          }
-        }
-      }
-    },
-    "Apple ][ J-Plus Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "蘋果 ][ J-Plus 模擬器"
-          }
-        }
-      }
-    },
-    "Apple ][+ Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "蘋果 ][+ 模擬器"
-          }
-        }
-      }
-    },
     "Apple //c Emulator" : {
       "localizations" : {
         "zh-Hant" : {
@@ -183,12 +153,22 @@
         }
       }
     },
-    "Apple //e Emulator" : {
+    "Apple //e (enhanced) Emulator" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "蘋果 //e 模擬器"
+            "value" : "加強版 Apple //e 模擬器"
+          }
+        }
+      }
+    },
+    "Apple //e (original) Emulator" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple //e 模擬器"
           }
         }
       }
@@ -199,6 +179,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "蘋果 Disk II 磁碟控制卡"
+          }
+        }
+      }
+    },
+    "Apple II (original) Emulator" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple II 模擬器"
+          }
+        }
+      }
+    },
+    "Apple II J-Plus Emulator" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple II J-Plus 模擬器"
+          }
+        }
+      }
+    },
+    "Apple II Plus Emulator" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple II Plus 模擬器"
           }
         }
       }
@@ -522,16 +532,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "即將結束模擬器"
-          }
-        }
-      }
-    },
-    "Enhanced Apple //e Emulator" : {
-      "localizations" : {
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加強版蘋果 //e 模擬器"
           }
         }
       }
