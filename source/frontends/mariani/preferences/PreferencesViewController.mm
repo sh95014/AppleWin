@@ -53,7 +53,7 @@ using namespace DiskImgLib;
 #define GENERAL_PANE_ID         @"general"
 #define COMPUTER_PANE_ID        @"computer"
 #define AUDIO_VIDEO_PANE_ID     @"audioVideo"
-#define STORAGE_PANE_ID         @"storage"
+#define SPEED_PANE_ID           @"speed"
 #define GAME_CONTROLLER_ID      @"gameController"
 
 @interface PreferencesViewController ()
@@ -93,7 +93,8 @@ using namespace DiskImgLib;
 @property (strong) IBOutlet NSColorWell *videoCustomColorWell;
 @property (strong) IBOutlet NSSlider *audioSpeakerVolumeSlider;
 
-@property (strong) IBOutlet NSButton *storageEnhancedSpeedButton;
+@property (strong) IBOutlet NSPopUpButton *speedCPUButton;
+@property (strong) IBOutlet NSButton *speedEnhancedDiskButton;
 
 @property (weak) IBOutlet NSPopUpButton *gameController;
 @property (weak) IBOutlet NSPopUpButton *gameControllerJoystick;
@@ -126,8 +127,8 @@ BOOL configured;
             [self configureAudio];
             [self configureVideo];
         }
-        else if ([vcId isEqualToString:STORAGE_PANE_ID]) {
-            [self configureStorage];
+        else if ([vcId isEqualToString:SPEED_PANE_ID]) {
+            [self configureSpeed];
         }
         else if ([vcId isEqualToString:GAME_CONTROLLER_ID]) {
             [self configureGameController];
@@ -328,13 +329,15 @@ const eApple2Type computerTypes[] = {
     }
 }
 
-- (void)configureStorage {
+- (void)configureSpeed {
     NSString *vcId = [self valueForKey:@"vcId"];
-    if ([vcId isEqualToString:STORAGE_PANE_ID]) {
+    if ([vcId isEqualToString:SPEED_PANE_ID]) {
         CardManager &cardManager = GetCardMgr();
-
+        
+        [self.speedCPUButton selectItemWithTag:g_dwSpeed];
+        
         // Enhanced speed for floppy drives
-        self.storageEnhancedSpeedButton.state = cardManager.GetDisk2CardMgr().GetEnhanceDisk() ? NSControlStateValueOn : NSControlStateValueOff;
+        self.speedEnhancedDiskButton.state = cardManager.GetDisk2CardMgr().GetEnhanceDisk() ? NSControlStateValueOn : NSControlStateValueOff;
     }
 }
 
@@ -675,11 +678,20 @@ const eApple2Type computerTypes[] = {
     NSLog(@"%s (%ld)", __PRETTY_FUNCTION__, (long)[(NSView *)sender tag]);
 }
 
+- (IBAction)speedCPUAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    g_dwSpeed = (uint32_t)self.speedCPUButton.selectedTag;
+    SetCurrentCLK6502();
+    REGSAVE(REGVALUE_EMULATION_SPEED, g_dwSpeed);
+    [theAppDelegate resetSpeed];
+}
+
 - (IBAction)toggleDiskEnhancedSpeed:(id)sender {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     CardManager &cardManager = GetCardMgr();
-    BOOL enhancedDisk = (self.storageEnhancedSpeedButton.state == NSControlStateValueOn);
+    BOOL enhancedDisk = (self.speedEnhancedDiskButton.state == NSControlStateValueOn);
     cardManager.GetDisk2CardMgr().SetEnhanceDisk(enhancedDisk);
     RegSaveValue(REG_CONFIG, REGVALUE_ENHANCE_DISK_SPEED, true, enhancedDisk);
 }

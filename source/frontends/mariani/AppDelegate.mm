@@ -1397,6 +1397,10 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
           windowFrame.size.width, windowFrame.size.height);
 }
 
+- (void)resetSpeed {
+    [self.emulatorVC resetSpeed];
+}
+
 @end
 
 #pragma mark - C++ Helpers
