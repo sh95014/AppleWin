@@ -73,10 +73,7 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @implementation AudioOutput
 @end
 
-@interface EmulatorViewController () {
-    BOOL _isRecordingScreen;
-}
-
+@interface EmulatorViewController ()
 @property (strong) EmulatorRenderer *renderer;
 
 @property LoggerContext *loggerContext;
@@ -183,31 +180,6 @@ extern common2::EmulatorOptions gEmulatorOptions;
 #endif // SHOW_EMULATED_CPU_SPEED
     
     [self startRunLoopTimer];
-}
-
-- (void)setRecordingScreen:(BOOL)recordingScreen {
-    if (_isRecordingScreen != recordingScreen) {
-        _isRecordingScreen = recordingScreen;
-        [self tick];
-    }
-}
-
-- (BOOL)isRecordingScreen {
-    return _isRecordingScreen;
-}
-
-- (void)tick {
-    if (self.isRecordingScreen) {
-        [self.delegate screenRecordingDidTick];
-        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(tock) userInfo:nil repeats:NO];
-    }
-}
-
-- (void)tock {
-    if (self.isRecordingScreen) {
-        [self.delegate screenRecordingDidTock];
-        [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(tick) userInfo:nil repeats:NO];
-    }
 }
 
 - (void)startRunLoopTimer {
@@ -560,7 +532,9 @@ extern common2::EmulatorOptions gEmulatorOptions;
             
             NSLog(@"Ended screen recording");
             
-            [self.delegate screenRecordingDidStop:url];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate screenRecordingDidStop:url];
+            });
         }];
     }
 }

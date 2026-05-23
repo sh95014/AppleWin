@@ -356,7 +356,7 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (void)screenRecordingDidStop:(NSURL *)url {
     [self stopBlinkTimer];
-    self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
+    self.screenRecordingButton.image = [NSImage largeImageWithSystemSymbolName:@"record.circle"];
     self.screenRecordingButton.contentTintColor = [NSColor secondaryLabelColor];
     [self setStatus:[NSString stringWithFormat:NSLocalizedString(@"Recording saved to ‘%@’", @""), url.path]];
 }
@@ -1398,14 +1398,14 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 
 - (void)tick {
     if (theAppDelegate.emulatorVC.isRecordingScreen) {
-        self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle.fill" accessibilityDescription:@""];
+        self.screenRecordingButton.image = [NSImage largeImageWithSystemSymbolName:@"record.circle.fill"];
     }
     self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tock) userInfo:nil repeats:NO];
 }
 
 - (void)tock {
     if (theAppDelegate.emulatorVC.isRecordingScreen) {
-        self.screenRecordingButton.image = [NSImage imageWithSystemSymbolName:@"record.circle" accessibilityDescription:@""];
+        self.screenRecordingButton.image = [NSImage largeImageWithSystemSymbolName:@"record.circle"];
     }
     self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tick) userInfo:nil repeats:NO];
 }
