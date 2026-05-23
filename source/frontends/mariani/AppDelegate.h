@@ -33,6 +33,7 @@
 #endif // __OBJC__
 
 // for calling into AppDelegate from C++
+void VideoRefresh(void);
 int ShowModalAlertOfType(int type, const char *message, const char *information);
 void UpdateDriveLights(void);
 const char *PathToResourceNamed(const char *name);

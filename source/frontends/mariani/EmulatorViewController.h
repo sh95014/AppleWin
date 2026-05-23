@@ -57,7 +57,7 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 @property (nullable, weak) id<EmulatorViewControllerDelegate> delegate;
 
 - (void)start;
-- (void)pause;
+- (void)refreshTexture;
 - (void)resetSpeed;
 - (void)reboot;
 - (void)reinitialize;

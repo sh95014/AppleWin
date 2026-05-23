@@ -174,10 +174,6 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
     return YES;
 }
 
-- (void)applicationDidHide:(NSNotification *)notification {
-    [self.emulatorVC pause];
-}
-
 - (void)applicationWillUnhide:(NSNotification *)notification {
     [self.emulatorVC start];
 }
@@ -1404,6 +1400,10 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 // These are needed because AppleWin redeclares BOOL in wincompat.h, so
 // MarianiFrame can't be compile as Objective-C++ to call these methods
 // itself.
+
+void VideoRefresh(void) {
+    [theAppDelegate.emulatorVC refreshTexture];
+}
 
 int ShowModalAlertOfType(int type, const char *message, const char *information) {
     NSString *msg = (message != NULL) ? [NSString stringWithUTF8String:message] : @"";
