@@ -68,6 +68,7 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property (assign) UInt32 sampleRate;
 @property (retain) AVAssetWriterInput *writerInput;
 @property (retain) NSMutableData *data;
+@property (assign) NSUInteger cumulativeAudioDataLength;
 @end
 
 @implementation AudioOutput
@@ -90,7 +91,6 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property AVAssetWriter *videoWriter;
 @property AVAssetWriterInput *videoWriterInput;
 @property AVAssetWriterInputPixelBufferAdaptor *videoWriterAdaptor;
-@property uint64_t clockAtRecordingStart;
 
 @property NSMutableArray<AudioOutput *> *audioOutputs;
 
@@ -246,43 +246,21 @@ extern common2::EmulatorOptions gEmulatorOptions;
 }
 
 - (void)recordingTimerFired {
+    self->frameBuffer.data = self->frame->FrameBufferData();
+    
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-        const uint64_t clockNow = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-        if (self.clockAtRecordingStart == 0) {
-            // first frame of recording
-            self.clockAtRecordingStart = clockNow;
-        }
-        const double secondsSinceRecordingStart = NS_TO_S(clockNow - self.clockAtRecordingStart);
-        
-        self->frameBuffer.data = self->frame->FrameBufferData();
-        
-        if (self.videoWriterInput.readyForMoreMediaData) {
-            if (!self.isRecordingScreen) {
-                self.recordingScreen = YES;
-            }
-            
-            // make a CVPixelBuffer and point the frame buffer to it
-            CVPixelBufferRef pixelBuffer = NULL;
-            CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault,
-                                                           self->frameBuffer.bufferWidth,
-                                                           self->frameBuffer.bufferHeight,
-                                                           kCVPixelFormatType_32BGRA,
-                                                           self->frameBuffer.data,
-                                                           self->frameBuffer.bufferWidth * 4,
-                                                           NULL,
-                                                           NULL,
-                                                           NULL,
-                                                           &pixelBuffer);
-            if (status == kCVReturnSuccess && pixelBuffer != NULL) {
-                // append the CVPixelBuffer into the output stream
-                [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
-                                      withPresentationTime:CMTimeMake(floor(secondsSinceRecordingStart * CMTIME_BASE), CMTIME_BASE)];
-                CVPixelBufferRelease(pixelBuffer);
-            }
-        }
+        BOOL alreadyUpdatedAudioTime = NO;
+        double currentAudioTime = -1;
         
         for (AudioOutput *audioOutput in self.audioOutputs) {
             if (audioOutput.writerInput.readyForMoreMediaData && audioOutput.data.length > 0) {
+                audioOutput.cumulativeAudioDataLength += audioOutput.data.length;
+                if (!alreadyUpdatedAudioTime) {
+                    // any audioOutput can compute currentAudioTime but we only need one
+                    currentAudioTime = (double)audioOutput.cumulativeAudioDataLength / (audioOutput.channels * sizeof(UInt16) * audioOutput.sampleRate);
+                    alreadyUpdatedAudioTime = YES;
+                }
+                
                 const UInt32 bytesPerFrame = audioOutput.channels * sizeof(UInt16);
                 const UInt32 frames = (UInt32)audioOutput.data.length / bytesPerFrame;
                 const UInt32 blockSize = frames * bytesPerFrame;
@@ -361,6 +339,27 @@ extern common2::EmulatorOptions gEmulatorOptions;
                 if (format) { CFRelease(format); }
                 if (blockBuffer) { CFRelease(blockBuffer); }
                 audioOutput.data.length = 0;
+            }
+        }
+        
+        if (currentAudioTime >= 0 && self.videoWriterInput.readyForMoreMediaData) {
+            // make a CVPixelBuffer and point the frame buffer to it
+            CVPixelBufferRef pixelBuffer = NULL;
+            CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault,
+                                                           self->frameBuffer.bufferWidth,
+                                                           self->frameBuffer.bufferHeight,
+                                                           kCVPixelFormatType_32BGRA,
+                                                           self->frameBuffer.data,
+                                                           self->frameBuffer.bufferWidth * 4,
+                                                           NULL,
+                                                           NULL,
+                                                           NULL,
+                                                           &pixelBuffer);
+            if (status == kCVReturnSuccess && pixelBuffer != NULL) {
+                // append the CVPixelBuffer into the output stream
+                [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
+                                      withPresentationTime:CMTimeMake(floor(currentAudioTime * CMTIME_BASE), CMTIME_BASE)];
+                CVPixelBufferRelease(pixelBuffer);
             }
         }
         
@@ -503,7 +502,10 @@ extern common2::EmulatorOptions gEmulatorOptions;
         [self.videoWriter startWriting];
         [self.videoWriter startSessionAtSourceTime:kCMTimeZero];
         
-        self.clockAtRecordingStart = 0;
+        for (AudioOutput *audioOutput in self.audioOutputs) {
+            audioOutput.cumulativeAudioDataLength = 0;
+        }
+        self.recordingScreen = YES;
         [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
     }
     else {
