@@ -701,24 +701,6 @@
         }
       }
     },
-    "lZG-5R-Dzg.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"Create New Hard Disk\"; ObjectID = \"lZG-5R-Dzg\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Create New Hard Disk"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "新建硬碟映像檔"
-          }
-        }
-      }
-    },
     "MvF-Th-bX1.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"13-Sector Firmware\"; ObjectID = \"MvF-Th-bX1\";",
       "extractionState" : "extracted_with_value",
@@ -736,25 +718,6 @@
           }
         }
       }
-    },
-    "ngy-Or-HNh.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"－\"; ObjectID = \"ngy-Or-HNh\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "－"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "－"
-          }
-        }
-      },
-      "shouldTranslate" : false
     },
     "o51-w3-zDv.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"1\"; ObjectID = \"o51-w3-zDv\";",
@@ -801,24 +764,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "音量"
-          }
-        }
-      }
-    },
-    "pBX-bw-eKh.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Hard disks\"; ObjectID = \"pBX-bw-eKh\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Hard disks"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "硬碟"
           }
         }
       }
@@ -909,24 +854,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "啟動較快但不真實的磁碟存取速度"
-          }
-        }
-      }
-    },
-    "Tng-6I-1yN.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"＋\"; ObjectID = \"Tng-6I-1yN\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "＋"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "＋"
           }
         }
       }
