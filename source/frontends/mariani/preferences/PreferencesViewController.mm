@@ -482,8 +482,6 @@ const eApple2Type computerTypes[] = {
             video.SetVidHD(false);
         }
         
-        const SS_CARDTYPE previousCard = cardManager.QuerySlot((SLOTS)currentSlot);
-        
         cardManager.Insert((SLOTS)currentSlot, (SS_CARDTYPE)slotButton.selectedTag);
         
         MemInitializeIO();

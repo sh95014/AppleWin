@@ -40,6 +40,7 @@
 #pragma mark -
 
 @interface HardDiskPreferencesViewController ()
+@property (strong) IBOutlet NSPopUpButton *firmwareButton;
 @property (strong) IBOutlet NSTableView *hardDisksTableView;
 @property (strong) IBOutlet NSButton *addButton;
 @property (strong) IBOutlet NSButton *deleteButton;
@@ -53,6 +54,15 @@
 - (void)loadView {
     [super loadView];
     if (self->card) {
+        // we rely on these enum values corresponding to the UI options exactly
+        NSAssert(HdcDefault == 0, @"");
+        NSAssert(HdcSmartPort == 1, @"");
+        NSAssert(HdcBlockMode2Devices == 2, @"");
+        NSAssert(HdcBlockMode4Devices == 3, @"");
+        
+        HdcMode firmwareMode = self->card->GetHdcFirmwareMode();
+        firmwareMode = (firmwareMode < HdcUndefinedFromCmdLine) ? firmwareMode : HdcDefault;
+        [self.firmwareButton selectItemAtIndex:firmwareMode];
         self.hardDisksTableView.delegate = self;
         self.hardDisksTableView.dataSource = self;
         [self.hardDisksTableView deselectAll:self];
@@ -67,6 +77,11 @@
 - (void)setCard:(HarddiskInterfaceCard *)card {
     self->card = card;
     [self updateButtons];
+}
+
+- (IBAction)firmwareAction:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    self->card->SetHdcFirmwareMode((HdcMode)self.firmwareButton.indexOfSelectedItem);
 }
 
 - (IBAction)addAction:(id)sender {

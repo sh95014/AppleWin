@@ -1100,9 +1100,37 @@
             <objects>
                 <viewController storyboardIdentifier="HardDiskPreferencesID" id="xUq-cU-Iq3" customClass="HardDiskPreferencesViewController" sceneMemberID="viewController">
                     <view key="view" id="Exj-o1-EEQ">
-                        <rect key="frame" x="0.0" y="0.0" width="380" height="239"/>
+                        <rect key="frame" x="0.0" y="0.0" width="380" height="291"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="38N-Xf-ToA">
+                                <rect key="frame" x="10" y="251" width="144" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Firmware" id="idO-a6-vxa">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aNF-8S-ghm">
+                                <rect key="frame" x="160" y="247" width="208" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" title="Auto" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="n08-4T-l2O" id="ULg-AN-RbU">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="f7E-7k-ZZI">
+                                        <items>
+                                            <menuItem title="Auto" state="on" id="n08-4T-l2O"/>
+                                            <menuItem title="SmartPort Mode" id="2VL-Sy-YQU"/>
+                                            <menuItem title="ProDOS block mode (2 devices)" id="HG1-mx-ylA"/>
+                                            <menuItem title="ProDOS block mode (4 devices)" id="90z-hW-IJv"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="firmwareAction:" target="xUq-cU-Iq3" id="33b-DA-QbA"/>
+                                </connections>
+                            </popUpButton>
                             <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="EQE-4h-Oh7">
                                 <rect key="frame" x="0.0" y="57" width="380" height="182"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1169,7 +1197,7 @@
                                 </scroller>
                             </scrollView>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wuk-5N-Tvf">
-                                <rect key="frame" x="10" y="20" width="25" height="25"/>
+                                <rect key="frame" x="12" y="20" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="＋" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="78q-NW-2Rd">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1180,7 +1208,7 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nke-pR-11s">
-                                <rect key="frame" x="31" y="20" width="25" height="25"/>
+                                <rect key="frame" x="33" y="20" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="－" bezelStyle="rounded" alignment="center" enabled="NO" imageScaling="proportionallyDown" inset="2" id="zW6-pk-x4F">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1191,7 +1219,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zGn-rt-AGG">
-                                <rect key="frame" x="158" y="17" width="208" height="32"/>
+                                <rect key="frame" x="160" y="17" width="208" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Create New Hard Disk" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Qpe-iK-YmR">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1206,12 +1234,13 @@
                     <connections>
                         <outlet property="addButton" destination="wuk-5N-Tvf" id="Nya-KQ-MIx"/>
                         <outlet property="deleteButton" destination="nke-pR-11s" id="XRc-tL-zGx"/>
+                        <outlet property="firmwareButton" destination="aNF-8S-ghm" id="W1J-mG-0bR"/>
                         <outlet property="hardDisksTableView" destination="WCf-Ne-FNb" id="E6U-cL-PWN"/>
                     </connections>
                 </viewController>
                 <customObject id="sJZ-TT-dLU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1003" y="313.5"/>
+            <point key="canvasLocation" x="1003" y="339.5"/>
         </scene>
         <!--Uthernet Preferences View Controller-->
         <scene sceneID="m3e-eU-Dfb">
