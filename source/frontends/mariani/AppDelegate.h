@@ -25,6 +25,7 @@
 - (void)terminateWithReason:(NSString *)reason;
 - (void)updateDriveLights;
 - (void)setStatus:(nullable NSString *)status;
+- (void)resetSpeed;
 
 @end
 

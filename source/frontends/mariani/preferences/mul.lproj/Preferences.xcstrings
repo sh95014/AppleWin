@@ -55,6 +55,24 @@
         }
       }
     },
+    "2VL-Sy-YQU.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"SmartPort Mode\"; ObjectID = \"2VL-Sy-YQU\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "SmartPort Mode"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SmartPort 模式"
+          }
+        }
+      }
+    },
     "2wM-ew-aAs.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Button 0\"; ObjectID = \"2wM-ew-aAs\";",
       "extractionState" : "extracted_with_value",
@@ -297,6 +315,24 @@
         }
       }
     },
+    "90z-hW-IJv.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"ProDOS block mode (4 devices)\"; ObjectID = \"90z-hW-IJv\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "ProDOS block mode (4 devices)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ProDOS 區塊模式（四裝置）"
+          }
+        }
+      }
+    },
     "Avh-Ly-PyJ.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"Peripheral Slots\"; ObjectID = \"Avh-Ly-PyJ\";",
       "extractionState" : "extracted_with_value",
@@ -329,6 +365,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "經濟（約 900 kbps）"
+          }
+        }
+      }
+    },
+    "Bsn-Bf-SgN.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Fast (2 MHz)\"; ObjectID = \"Bsn-Bf-SgN\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Fast (2 MHz)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "快速（2 MHz）"
           }
         }
       }
@@ -437,19 +491,19 @@
       }
     },
     "e3Y-c0-dGl.title" : {
-      "comment" : "Class = \"NSViewController\"; title = \"Storage\"; ObjectID = \"e3Y-c0-dGl\";",
+      "comment" : "Class = \"NSViewController\"; title = \"Speed\"; ObjectID = \"e3Y-c0-dGl\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "Storage"
+            "value" : "Speed"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "儲存"
+            "value" : "速度"
           }
         }
       }
@@ -634,6 +688,24 @@
         }
       }
     },
+    "HG1-mx-ylA.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"ProDOS block mode (2 devices)\"; ObjectID = \"HG1-mx-ylA\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "ProDOS block mode (2 devices)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ProDOS 區塊模式（二裝置）"
+          }
+        }
+      }
+    },
     "I0r-WD-ytK.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"SC-01\"; ObjectID = \"I0r-WD-ytK\";",
       "extractionState" : "extracted_with_value",
@@ -661,6 +733,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自動查詢更新版本"
+          }
+        }
+      }
+    },
+    "idO-a6-vxa.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"Firmware\"; ObjectID = \"idO-a6-vxa\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Firmware"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "韌體"
           }
         }
       }
@@ -701,24 +791,6 @@
         }
       }
     },
-    "lZG-5R-Dzg.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"Create New Hard Disk\"; ObjectID = \"lZG-5R-Dzg\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Create New Hard Disk"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "新建硬碟映像檔"
-          }
-        }
-      }
-    },
     "MvF-Th-bX1.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"13-Sector Firmware\"; ObjectID = \"MvF-Th-bX1\";",
       "extractionState" : "extracted_with_value",
@@ -737,24 +809,41 @@
         }
       }
     },
-    "ngy-Or-HNh.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"－\"; ObjectID = \"ngy-Or-HNh\";",
+    "n08-4T-l2O.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Auto\"; ObjectID = \"n08-4T-l2O\";",
       "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "－"
+            "value" : "Auto"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "－"
+            "value" : "自動"
           }
         }
-      },
-      "shouldTranslate" : false
+      }
+    },
+    "NEB-mm-WBC.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Authentic (1 MHz)\"; ObjectID = \"NEB-mm-WBC\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Authentic (1 MHz)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "真實（1 MHz）"
+          }
+        }
+      }
     },
     "o51-w3-zDv.title" : {
       "comment" : "Class = \"NSTextFieldCell\"; title = \"1\"; ObjectID = \"o51-w3-zDv\";",
@@ -801,24 +890,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "音量"
-          }
-        }
-      }
-    },
-    "pBX-bw-eKh.title" : {
-      "comment" : "Class = \"NSTextFieldCell\"; title = \"Hard disks\"; ObjectID = \"pBX-bw-eKh\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "Hard disks"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "硬碟"
           }
         }
       }
@@ -913,24 +984,6 @@
         }
       }
     },
-    "Tng-6I-1yN.title" : {
-      "comment" : "Class = \"NSButtonCell\"; title = \"＋\"; ObjectID = \"Tng-6I-1yN\";",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "＋"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "＋"
-          }
-        }
-      }
-    },
     "trP-an-ayG.title" : {
       "comment" : "Class = \"NSWindow\"; title = \"Preferences\"; ObjectID = \"trP-an-ayG\";",
       "extractionState" : "extracted_with_value",
@@ -1021,6 +1074,24 @@
         }
       }
     },
+    "wXK-HR-0Mr.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Slow (0.5 MHz)\"; ObjectID = \"wXK-HR-0Mr\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Slow (0.5 MHz)"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低速（0.5 MHz）"
+          }
+        }
+      }
+    },
     "WZG-yc-ihw.title" : {
       "comment" : "Class = \"NSButtonCell\"; title = \"Map Delete key to Left Arrow\"; ObjectID = \"WZG-yc-ihw\";",
       "extractionState" : "extracted_with_value",
@@ -1035,6 +1106,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "將 delete 鍵對映至左箭頭鍵"
+          }
+        }
+      }
+    },
+    "Xbh-oD-mBK.title" : {
+      "comment" : "Class = \"NSMenuItem\"; title = \"Full Speed\"; ObjectID = \"Xbh-oD-mBK\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Full Speed"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全速"
           }
         }
       }
@@ -1115,6 +1204,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "2"
+          }
+        }
+      }
+    },
+    "zhD-2v-mwv.title" : {
+      "comment" : "Class = \"NSTextFieldCell\"; title = \"CPU Speed\"; ObjectID = \"zhD-2v-mwv\";",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "CPU Speed"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "處理器速度"
           }
         }
       }

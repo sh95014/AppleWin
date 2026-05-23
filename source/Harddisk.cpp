@@ -153,7 +153,7 @@ Overview
 
 
 HarddiskInterfaceCard::HarddiskInterfaceCard(UINT slot) :
-	Card(CT_GenericHDD, slot), m_userNumBlocks(0), m_isFirmwareV1or2(false), m_useHdcFirmwareV1(false), m_useHdcFirmwareV2(false), m_useHdcFirmwareMode(HdcDefault)
+	Card(CT_GenericHDD, slot), m_userNumBlocks(0), m_isFirmwareV1or2(false), m_useHdcFirmwareV1(false), m_useHdcFirmwareV2(false)
 {
 	if (m_slot == SLOT0)
 		ThrowErrorInvalidSlot();
@@ -182,23 +182,41 @@ HarddiskInterfaceCard::HarddiskInterfaceCard(UINT slot) :
 	m_saveStateFirmwareV2 = false;
 	m_saveStateFirmwareValid = false;
 	memset(m_saveStateFirmware, 0, sizeof(m_saveStateFirmware));
+
+	uint32_t tmp;
+	std::string regSection = RegGetConfigSlotSection(m_slot);
+	RegLoadValue(regSection.c_str(), REGVALUE_HDC_FIRMWARE, TRUE, &tmp, HdcDefault);
+	m_useHdcFirmwareMode = (HdcMode)tmp;
 }
 
 HarddiskInterfaceCard::~HarddiskInterfaceCard(void)
 {
-	for (UINT i = 0; i < NUM_HARDDISKS; i++)
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 		CleanupDriveInternal(i);
 }
 
 void HarddiskInterfaceCard::Reset(const bool powerCycle)
 {
-	for (UINT i = 0; i < NUM_HARDDISKS; i++)
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 		m_hardDiskDrive[i].m_error = 0;
 
 	m_fifoIdx = 0;
 }
 
 //===========================================================================
+
+HdcMode HarddiskInterfaceCard::GetHdcFirmwareMode()
+{
+	return m_useHdcFirmwareMode;
+}
+
+void HarddiskInterfaceCard::SetHdcFirmwareMode(HdcMode hdcMode)
+{
+	m_useHdcFirmwareMode = hdcMode;
+
+	std::string regSection = RegGetConfigSlotSection(m_slot);
+	RegSaveValue(regSection.c_str(), REGVALUE_HDC_FIRMWARE, TRUE, (UINT)m_useHdcFirmwareMode);
+}
 
 void HarddiskInterfaceCard::InitializeIO(LPBYTE pCxRomPeripheral)
 {
@@ -366,7 +384,7 @@ void HarddiskInterfaceCard::GetFilenameAndPathForSaveState(std::string& filename
 	filename = "";
 	path = "";
 
-	for (UINT i = 0; i < NUM_HARDDISKS; i++)
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 	{
 		if (!m_hardDiskDrive[i].m_imageloaded)
 			continue;
@@ -390,7 +408,7 @@ void HarddiskInterfaceCard::GetFilenameAndPathForSaveState(std::string& filename
 
 void HarddiskInterfaceCard::Destroy(void)
 {
-	for (UINT i = 0; i < NUM_HARDDISKS; i++)
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 	{
 		m_saveDiskImage = false;
 		CleanupDrive(i);
@@ -416,18 +434,22 @@ bool HarddiskInterfaceCard::Insert(const int iDrive, const std::string& pathname
 	else
 		m_hardDiskDrive[iDrive].m_bWriteProtected = (dwAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
 
-	// Check if image is being used by the other HDD, and unplug it in order to be swapped
+	// Check if image is being used by any other HDD, and unplug it in order to be swapped
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 	{
-		const std::string & pszOtherPathname = HarddiskGetFullPathName(!iDrive);
+		if (i == iDrive)
+			continue;
 
-		char szCurrentPathname[MAX_PATH]; 
+		const std::string& pszOtherPathname = HarddiskGetFullPathName(i);
+
+		char szCurrentPathname[MAX_PATH];
 		DWORD uNameLen = GetFullPathName(pathname.c_str(), MAX_PATH, szCurrentPathname, NULL);
 		if (uNameLen == 0 || uNameLen >= MAX_PATH)
 			strcpy_s(szCurrentPathname, MAX_PATH, pathname.c_str());
 
 		if (!strcmp(pszOtherPathname.c_str(), szCurrentPathname))
 		{
-			Unplug(!iDrive);
+			Unplug(i);
 			GetFrame().FrameRefreshStatus(DRAW_LEDS | DRAW_DISK_STATUS);
 		}
 	}
@@ -1308,7 +1330,7 @@ void HarddiskInterfaceCard::SaveSnapshot(YamlSaveHelper& yamlSaveHelper)
 		yamlSaveHelper.SaveMemory(MemGetCxRomPeripheral() + m_slot * APPLE_SLOT_SIZE, APPLE_SLOT_SIZE);
 	}
 
-	for (UINT i = 0; i < NUM_HARDDISKS; i++)
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 	{
 		if (m_hardDiskDrive[i].m_imageloaded)
 			SaveSnapshotHDDUnit(yamlSaveHelper, i);
@@ -1440,14 +1462,14 @@ bool HarddiskInterfaceCard::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT ve
 	}
 
 	// Unplug all HDDs first in case eg. HDD-2 is to be plugged in as HDD-1
-	for (UINT i = 0; i < NUM_HARDDISKS; i++)
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 	{
 		Unplug(i);
 		m_hardDiskDrive[i].clear();
 	}
 
 	bool userSelectedImageFolder = false;
-	for (UINT i = 0; i < NUM_HARDDISKS; i++)
+	for (UINT i = HARDDISK_1; i < NUM_HARDDISKS; i++)
 		userSelectedImageFolder |= LoadSnapshotHDDUnit(yamlLoadHelper, i, version);
 
 	if (!userSelectedImageFolder)

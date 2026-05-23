@@ -41,7 +41,7 @@
                         <tabViewItem image="gearshape" catalog="system" id="jsd-Sl-V0B"/>
                         <tabViewItem identifier="" image="memorychip" catalog="system" id="oTw-yW-hoa"/>
                         <tabViewItem identifier="" image="tv.and.hifispeaker.fill" catalog="system" id="Nzv-vD-1Ak"/>
-                        <tabViewItem image="opticaldiscdrive" catalog="system" id="lrd-Qt-kXD"/>
+                        <tabViewItem image="hare" catalog="system" id="lrd-Qt-kXD"/>
                         <tabViewItem image="gamecontroller" catalog="system" id="hDo-Pt-c6n"/>
                     </tabViewItems>
                     <tabView key="tabView" type="noTabsNoBorder" id="G7I-9y-XGO">
@@ -691,16 +691,44 @@
             </objects>
             <point key="canvasLocation" x="534" y="669.5"/>
         </scene>
-        <!--Storage-->
+        <!--Speed-->
         <scene sceneID="ITh-4o-u4V">
             <objects>
-                <viewController title="Storage" id="e3Y-c0-dGl" customClass="PreferencesViewController" sceneMemberID="viewController">
+                <viewController title="Speed" id="e3Y-c0-dGl" customClass="PreferencesViewController" sceneMemberID="viewController">
                     <view key="view" id="s0M-LS-SDq">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="315"/>
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="90"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aK0-B7-KRw">
+                                <rect key="frame" x="18" y="50" width="130" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="CPU Speed" id="zhD-2v-mwv">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="But-a2-3Co">
+                                <rect key="frame" x="154" y="46" width="276" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" title="Slow (0.5 MHz)" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="wXK-HR-0Mr" id="Zip-K5-LSs">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="rNW-Lc-v63">
+                                        <items>
+                                            <menuItem title="Slow (0.5 MHz)" id="wXK-HR-0Mr"/>
+                                            <menuItem title="Authentic (1 MHz)" state="on" tag="10" id="NEB-mm-WBC"/>
+                                            <menuItem title="Fast (2 MHz)" tag="20" id="Bsn-Bf-SgN"/>
+                                            <menuItem title="Full Speed" tag="40" id="Xbh-oD-mBK"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="speedCPUAction:" target="e3Y-c0-dGl" id="gS2-WF-bPd"/>
+                                </connections>
+                            </popUpButton>
                             <button toolTip="Enables faster but less authentic disk access" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T3p-Y6-znB">
-                                <rect key="frame" x="88" y="278" width="272" height="18"/>
+                                <rect key="frame" x="88" y="20" width="272" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Enhanced speed for floppy drives" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="8J1-iv-XcH">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -710,133 +738,19 @@
                                     <action selector="toggleDiskEnhancedSpeed:" target="e3Y-c0-dGl" id="SjK-gw-f7W"/>
                                 </connections>
                             </button>
-                            <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="MfP-cO-8w4">
-                                <rect key="frame" x="20" y="268" width="410" height="5"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </box>
-                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ur4-hX-Ps9">
-                                <rect key="frame" x="18" y="246" width="120" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Hard disks" id="pBX-bw-eKh">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <scrollView fixedFrame="YES" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="2y1-wH-SEu">
-                                <rect key="frame" x="90" y="66" width="340" height="172"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <clipView key="contentView" drawsBackground="NO" id="zcN-tf-gsf">
-                                    <rect key="frame" x="1" y="1" width="338" height="170"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="20" rowSizeStyle="automatic" viewBased="YES" id="rF4-52-smz">
-                                            <rect key="frame" x="0.0" y="0.0" width="338" height="170"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
-                                            <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                            <tableColumns>
-                                                <tableColumn identifier="AutomaticTableColumnIdentifier.0" width="306" minWidth="40" maxWidth="1000" id="soZ-hS-0GE">
-                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
-                                                    </tableHeaderCell>
-                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="qC4-oa-iiC">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                                    <prototypeCellViews>
-                                                        <tableCellView identifier="HardDiskTableCellView" id="dLo-cV-PCT">
-                                                            <rect key="frame" x="10" y="0.0" width="318" height="20"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                            <subviews>
-                                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uGZ-NX-P37">
-                                                                    <rect key="frame" x="0.0" y="4" width="318" height="16"/>
-                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" title="Table View Cell" usesSingleLineMode="YES" id="nsn-w4-9w3">
-                                                                        <font key="font" usesAppearanceFont="YES"/>
-                                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    </textFieldCell>
-                                                                </textField>
-                                                            </subviews>
-                                                            <connections>
-                                                                <outlet property="textField" destination="uGZ-NX-P37" id="OwD-ao-MhI"/>
-                                                            </connections>
-                                                        </tableCellView>
-                                                    </prototypeCellViews>
-                                                </tableColumn>
-                                            </tableColumns>
-                                            <connections>
-                                                <action trigger="doubleAction" selector="hardDiskAddAction:" target="e3Y-c0-dGl" id="2A6-D6-iz8"/>
-                                            </connections>
-                                        </tableView>
-                                    </subviews>
-                                    <nil key="backgroundColor"/>
-                                    <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
-                                </clipView>
-                                <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="hHw-LL-lHi">
-                                    <rect key="frame" x="-100" y="-100" width="338" height="16"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                                <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="BdT-fH-nVu">
-                                    <rect key="frame" x="-100" y="-100" width="15" height="102"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                            </scrollView>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sxs-gP-gjm">
-                                <rect key="frame" x="90" y="43" width="25" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" title="＋" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="Tng-6I-1yN">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" textStyle="title1" name=".SFNS-Regular"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="hardDiskAddAction:" target="e3Y-c0-dGl" id="1Kh-UU-VX0"/>
-                                </connections>
-                            </button>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s0K-H2-7Fu">
-                                <rect key="frame" x="111" y="43" width="25" height="25"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" title="－" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="ngy-Or-HNh">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" textStyle="title1" name=".SFNS-Regular"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="hardDiskDeleteAction:" target="e3Y-c0-dGl" id="GjQ-L7-M6Q"/>
-                                </connections>
-                            </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2sb-00-62f">
-                                <rect key="frame" x="229" y="13" width="208" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Create New Hard Disk" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="lZG-5R-Dzg">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="createHardDiskAction:" target="e3Y-c0-dGl" id="c4l-x6-vP0"/>
-                                </connections>
-                            </button>
                         </subviews>
                     </view>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="string" keyPath="vcId" value="storage"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="vcId" value="speed"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <outlet property="storageCreateHardDiskButton" destination="2sb-00-62f" id="QEO-cI-bra"/>
-                        <outlet property="storageEnhancedSpeedButton" destination="T3p-Y6-znB" id="5gE-8M-hQO"/>
-                        <outlet property="storageHardDiskAddButton" destination="Sxs-gP-gjm" id="x8K-QP-LBe"/>
-                        <outlet property="storageHardDiskDeleteButton" destination="s0K-H2-7Fu" id="14V-Pt-Xxz"/>
-                        <outlet property="storageHardDiskTableView" destination="rF4-52-smz" id="cVl-aL-m7I"/>
+                        <outlet property="speedCPUButton" destination="But-a2-3Co" id="qWl-TW-SoW"/>
+                        <outlet property="speedEnhancedDiskButton" destination="T3p-Y6-znB" id="5gE-8M-hQO"/>
                     </connections>
                 </viewController>
                 <customObject id="9EP-jI-MpJ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="229" y="984.5"/>
+            <point key="canvasLocation" x="229" y="872"/>
         </scene>
         <!--Game Controller-->
         <scene sceneID="npl-cd-dTs">
@@ -1215,9 +1129,37 @@
             <objects>
                 <viewController storyboardIdentifier="HardDiskPreferencesID" id="xUq-cU-Iq3" customClass="HardDiskPreferencesViewController" sceneMemberID="viewController">
                     <view key="view" id="Exj-o1-EEQ">
-                        <rect key="frame" x="0.0" y="0.0" width="380" height="239"/>
+                        <rect key="frame" x="0.0" y="0.0" width="380" height="291"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="38N-Xf-ToA">
+                                <rect key="frame" x="10" y="251" width="144" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="right" title="Firmware" id="idO-a6-vxa">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aNF-8S-ghm">
+                                <rect key="frame" x="160" y="247" width="208" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" title="Auto" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="n08-4T-l2O" id="ULg-AN-RbU">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="f7E-7k-ZZI">
+                                        <items>
+                                            <menuItem title="Auto" state="on" id="n08-4T-l2O"/>
+                                            <menuItem title="SmartPort Mode" id="2VL-Sy-YQU"/>
+                                            <menuItem title="ProDOS block mode (2 devices)" id="HG1-mx-ylA"/>
+                                            <menuItem title="ProDOS block mode (4 devices)" id="90z-hW-IJv"/>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="firmwareAction:" target="xUq-cU-Iq3" id="33b-DA-QbA"/>
+                                </connections>
+                            </popUpButton>
                             <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="20" horizontalPageScroll="10" verticalLineScroll="20" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="EQE-4h-Oh7">
                                 <rect key="frame" x="0.0" y="57" width="380" height="182"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1284,7 +1226,7 @@
                                 </scroller>
                             </scrollView>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wuk-5N-Tvf">
-                                <rect key="frame" x="10" y="20" width="25" height="25"/>
+                                <rect key="frame" x="12" y="20" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="＋" bezelStyle="rounded" alignment="center" imageScaling="proportionallyDown" inset="2" id="78q-NW-2Rd">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1295,7 +1237,7 @@
                                 </connections>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nke-pR-11s">
-                                <rect key="frame" x="31" y="20" width="25" height="25"/>
+                                <rect key="frame" x="33" y="20" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="－" bezelStyle="rounded" alignment="center" enabled="NO" imageScaling="proportionallyDown" inset="2" id="zW6-pk-x4F">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1306,7 +1248,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zGn-rt-AGG">
-                                <rect key="frame" x="158" y="17" width="208" height="32"/>
+                                <rect key="frame" x="160" y="17" width="208" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Create New Hard Disk" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Qpe-iK-YmR">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1321,12 +1263,13 @@
                     <connections>
                         <outlet property="addButton" destination="wuk-5N-Tvf" id="Nya-KQ-MIx"/>
                         <outlet property="deleteButton" destination="nke-pR-11s" id="XRc-tL-zGx"/>
+                        <outlet property="firmwareButton" destination="aNF-8S-ghm" id="W1J-mG-0bR"/>
                         <outlet property="hardDisksTableView" destination="WCf-Ne-FNb" id="E6U-cL-PWN"/>
                     </connections>
                 </viewController>
                 <customObject id="sJZ-TT-dLU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1003" y="313.5"/>
+            <point key="canvasLocation" x="1003" y="339.5"/>
         </scene>
         <!--Uthernet Preferences View Controller-->
         <scene sceneID="m3e-eU-Dfb">
@@ -1363,8 +1306,8 @@
         <image name="folder" catalog="system" width="18" height="14"/>
         <image name="gamecontroller" catalog="system" width="22" height="14"/>
         <image name="gearshape" catalog="system" width="16" height="16"/>
+        <image name="hare" catalog="system" width="23" height="17"/>
         <image name="memorychip" catalog="system" width="17" height="14"/>
-        <image name="opticaldiscdrive" catalog="system" width="18" height="13"/>
         <image name="power.circle" catalog="system" width="15" height="15"/>
         <image name="speaker.wave.1" catalog="system" width="16" height="14"/>
         <image name="speaker.wave.3" catalog="system" width="22" height="15"/>
