@@ -249,16 +249,14 @@ extern common2::EmulatorOptions gEmulatorOptions;
     self->frameBuffer.data = self->frame->FrameBufferData();
     
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-        BOOL alreadyUpdatedAudioTime = NO;
         double currentAudioTime = -1;
         
         for (AudioOutput *audioOutput in self.audioOutputs) {
             if (audioOutput.writerInput.readyForMoreMediaData && audioOutput.data.length > 0) {
                 audioOutput.cumulativeAudioDataLength += audioOutput.data.length;
-                if (!alreadyUpdatedAudioTime) {
+                if (currentAudioTime < 0) {
                     // any audioOutput can compute currentAudioTime but we only need one
                     currentAudioTime = (double)audioOutput.cumulativeAudioDataLength / (audioOutput.channels * sizeof(UInt16) * audioOutput.sampleRate);
-                    alreadyUpdatedAudioTime = YES;
                 }
                 
                 const UInt32 bytesPerFrame = audioOutput.channels * sizeof(UInt16);
@@ -364,8 +362,10 @@ extern common2::EmulatorOptions gEmulatorOptions;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            // set next alarm to maintain TARGET_FPS
-            [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
+            if (self.isRecordingScreen) {
+                // set next alarm to maintain TARGET_FPS
+                [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
+            }
         });
     });
 }
@@ -497,14 +497,13 @@ extern common2::EmulatorOptions gEmulatorOptions;
                                                                          outputSettings:audioSettings];
             audioOutput.writerInput.expectsMediaDataInRealTime = YES;
             [self.videoWriter addInput:audioOutput.writerInput];
+            
+            audioOutput.cumulativeAudioDataLength = 0;
         }
         
         [self.videoWriter startWriting];
         [self.videoWriter startSessionAtSourceTime:kCMTimeZero];
         
-        for (AudioOutput *audioOutput in self.audioOutputs) {
-            audioOutput.cumulativeAudioDataLength = 0;
-        }
         self.recordingScreen = YES;
         [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
     }
