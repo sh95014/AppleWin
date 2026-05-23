@@ -1390,6 +1390,34 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
           windowFrame.size.width, windowFrame.size.height);
 }
 
+- (void)startBlinkTimer {
+    if (!self.blinkTimer) {
+        [self tick];
+    }
+}
+
+- (void)tick {
+    if (theAppDelegate.emulatorVC.isRecordingScreen) {
+        self.screenRecordingButton.image = [NSImage largeImageWithSystemSymbolName:@"record.circle.fill"];
+    }
+    self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tock) userInfo:nil repeats:NO];
+}
+
+- (void)tock {
+    if (theAppDelegate.emulatorVC.isRecordingScreen) {
+        self.screenRecordingButton.image = [NSImage largeImageWithSystemSymbolName:@"record.circle"];
+    }
+    self.blinkTimer = [NSTimer scheduledTimerWithTimeInterval:BLINK_INTERVAL target:self selector:@selector(tick) userInfo:nil repeats:NO];
+}
+
+- (void)stopBlinkTimer {
+    if (theAppDelegate.emulatorVC.isRecordingScreen) {
+        return;
+    }
+    [self.blinkTimer invalidate];
+    self.blinkTimer = nil;
+}
+
 - (void)resetSpeed {
     [self.emulatorVC resetSpeed];
 }
