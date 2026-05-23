@@ -344,8 +344,14 @@ void CPropertySheetHelper::ApplyNewConfigForRestart()
 
 		if (m_ConfigNew.m_Slot[slot] == CT_Disk2)
 		{
-			if (CONFIG_CHANGED(m_diskII13SectorFirmware))
+			if (CONFIG_CHANGED(m_diskII13SectorFirmware[slot]))
 				dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(slot)).Set13SectorFirmware(m_ConfigNew.m_diskII13SectorFirmware[slot]);
+		}
+
+		if (m_ConfigNew.m_Slot[slot] == CT_GenericHDD)
+		{
+			if (CONFIG_CHANGED(m_hdcFirmware[slot]))
+				dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(slot)).SetHdcFirmwareMode(m_ConfigNew.m_hdcFirmware[slot]);
 		}
 
 		if (m_ConfigNew.m_Slot[slot] == CT_Uthernet || m_ConfigNew.m_Slot[slot] == CT_Uthernet2)
@@ -411,6 +417,9 @@ void CPropertySheetHelper::ApplyNewConfigFromSnapshot()
 	{
 //		if (config.m_Slot[slot] == CT_Disk2)
 //			dynamic_cast<Disk2InterfaceCard&>(GetCardMgr().GetRef(slot)).Set13SectorFirmware(config.m_diskII13SectorFirmware[slot]);	// Not currently in save-state
+
+//		if (config.m_Slot[slot] == CT_GenericHDD)
+//			dynamic_cast<HarddiskInterfaceCard&>(GetCardMgr().GetRef(slot)).SetHdcFirmwareMode(config.m_hdcFirmware[slot]);	// Not currently in save-state
 
 		if (config.m_Slot[slot] == CT_Saturn128K)
 			dynamic_cast<Saturn128K&>(GetCardMgr().GetRef(slot)).SetSaturnMemorySize(config.m_SaturnMemorySize[slot]);
@@ -512,13 +521,30 @@ bool CPropertySheetHelper::HardwareConfigChanged(HWND hWnd)
 			strMsgMain += ". RamWorks III memory size changed\n";
 
 		if (memcmp(m_ConfigOld.m_SaturnMemorySize, m_ConfigNew.m_SaturnMemorySize, sizeof(m_ConfigOld.m_SaturnMemorySize)) != 0)
-			strMsgMain += ". Saturn memory size has changed\n";
+		{
+			for (UINT slot = SLOT0; slot < NUM_SLOTS; slot++)
+			{
+				if (CONFIG_CHANGED(m_Slot[slot]))
+					continue;
+
+				if (CONFIG_CHANGED(m_SaturnMemorySize[slot]))
+				{
+					strMsgMain += ". Slot ";
+					strMsgMain += '0' + slot;
+					strMsgMain += ": ";
+					strMsgMain += "Saturn memory size has changed\n";
+				}
+			}
+		}
 
 		if (memcmp(m_ConfigOld.m_Mockingboard, m_ConfigNew.m_Mockingboard, sizeof(m_ConfigOld.m_Mockingboard)) != 0)
 			strMsgMain += ". Mockingboard/Phasor config has changed\n";
 
 		if (memcmp(m_ConfigOld.m_diskII13SectorFirmware, m_ConfigNew.m_diskII13SectorFirmware, sizeof(m_ConfigOld.m_diskII13SectorFirmware)) != 0)
 			strMsgMain += ". Disk II firmware has changed\n";
+
+		if (memcmp(m_ConfigOld.m_hdcFirmware, m_ConfigNew.m_hdcFirmware, sizeof(m_ConfigOld.m_hdcFirmware)) != 0)
+			strMsgMain += ". HDC firmware has changed\n";
 
 		if (CONFIG_CHANGED(m_tfeInterface))
 			strMsgMain += ". Uthernet interface has changed\n";

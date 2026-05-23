@@ -830,12 +830,13 @@ namespace sa2
     {
         if (ImGui::Begin("About", &myShowAbout, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGui::TextUnformatted("sa2: Apple II emulator for Linux");
+            const char *platform = SDL_GetPlatform();
+            ImGui::Text("sa2: Apple II emulator for %s", platform);
             ImGui::Text("Based on AppleWin %s", getVersion().c_str());
 
             int nMajor, nMinor, nFixMajor, nFixMinor;
             UnpackVersion(DEBUGGER_VERSION, nMajor, nMinor, nFixMajor, nFixMinor);
-            ImGui::Text("Debugger %d.%d.%d.%d", nMajor, nMinor, nFixMajor, nFixMinor);
+            ImGui::Text("Debugger: %d.%d.%d.%d", nMajor, nMinor, nFixMajor, nFixMinor);
 
             ImGui::Separator();
 
@@ -848,6 +849,12 @@ namespace sa2
             ImGui::Text("SDL version %d.%d.%d", sdl.major, sdl.minor, sdl.patch);
 #endif
             ImGui::Text("Dear ImGui %s", ImGui::GetVersion());
+
+            const char *str = reinterpret_cast<const char *>(glGetString(GL_VERSION));
+            if (str)
+            {
+                ImGui::Text("GL_VERSION: %s", str);
+            }
 
             ImGui::Separator();
             const int glSwap = compat::getGLSwapInterval();
