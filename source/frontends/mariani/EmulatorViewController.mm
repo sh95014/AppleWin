@@ -55,6 +55,9 @@
 // display emulated CPU speed in the status bar
 #undef SHOW_EMULATED_CPU_SPEED
 
+// nanoseconds to floating point seconds
+#define NS_TO_S(x) ((x)/1000000000.0)
+
 const NSNotificationName EmulatorDidEnterDebugModeNotification = @"EmulatorDidEnterDebugModeNotification";
 const NSNotificationName EmulatorDidExitDebugModeNotification = @"EmulatorDidExitDebugModeNotification";
 const NSNotificationName EmulatorDidRebootNotification = @"EmulatorDidRebootNotification";
@@ -65,13 +68,13 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property (assign) UInt32 sampleRate;
 @property (retain) AVAssetWriterInput *writerInput;
 @property (retain) NSMutableData *data;
+@property (assign) NSUInteger cumulativeAudioDataLength;
 @end
 
 @implementation AudioOutput
 @end
 
 @interface EmulatorViewController ()
-
 @property (strong) EmulatorRenderer *renderer;
 
 @property LoggerContext *loggerContext;
@@ -84,13 +87,10 @@ const NSNotificationName EmulatorDidChangeDisplayNotification = @"EmulatorDidCha
 @property NSInteger frameCount;
 #endif // SHOW_EMULATED_CPU_SPEED
 @property NSTimer *runLoopTimer;
-@property CVDisplayLinkRef displayLink;
 
 @property AVAssetWriter *videoWriter;
 @property AVAssetWriterInput *videoWriterInput;
 @property AVAssetWriterInputPixelBufferAdaptor *videoWriterAdaptor;
-@property int64_t videoWriterFrameNumber;
-@property NSTimer *recordingTimer;
 
 @property NSMutableArray<AudioOutput *> *audioOutputs;
 
@@ -179,53 +179,20 @@ extern common2::EmulatorOptions gEmulatorOptions;
     self.frameCount = 0;
 #endif // SHOW_EMULATED_CPU_SPEED
     
-    CVDisplayLinkCreateWithActiveCGDisplays(&_displayLink);
-    CVDisplayLinkSetOutputCallback(self.displayLink, &MyDisplayLinkCallback, (__bridge void *)self);
-    CGDirectDisplayID viewDisplayID =
-        (CGDirectDisplayID) [self.view.window.screen.deviceDescription[@"NSScreenNumber"] unsignedIntegerValue];
-    CVDisplayLinkSetCurrentCGDisplay(_displayLink, viewDisplayID);
-    CVDisplayLinkStart(self.displayLink);
-#ifdef SHOW_FPS
-    displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    displayLinkCallbackCount = 0;
-#endif // SHOW_FPS
-    
     [self startRunLoopTimer];
-    
-#ifdef SHOW_FPS
-    [NSTimer scheduledTimerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        uint64_t duration = clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - displayLinkCallbackStartTime;
-        double fps = displayLinkCallbackCount / (duration / 1000000000.0);
-        [self.delegate setStatus:[NSString stringWithFormat:@"%.3f fps", fps]];
-        
-        displayLinkCallbackStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-        displayLinkCallbackCount = 0;
-    }];
-#endif // SHOW_FPS
-}
-
-#ifdef SHOW_FPS
-static uint64_t displayLinkCallbackStartTime;
-static NSUInteger displayLinkCallbackCount;
-#endif // SHOW_FPS
-static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *now, const CVTimeStamp *outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void *displayLinkContext)
-{
-#ifdef SHOW_FPS
-    displayLinkCallbackCount++;
-#endif
-    dispatch_async(dispatch_get_main_queue(), ^{
-        EmulatorViewController *emulatorVC = (__bridge EmulatorViewController *)displayLinkContext;
-        [emulatorVC refreshTexture];
-    });
-    return kCVReturnSuccess;
 }
 
 - (void)startRunLoopTimer {
-    self.runLoopTimer = [NSTimer timerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:YES];
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
     [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)runLoopTimerFired {
+#ifdef SHOW_EMULATED_CPU_SPEED
+    static uint64_t timeOfLastUpdate = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+#endif
+    const uint64_t runLoopStartTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+    
     // g_nAppMode can change through a debugger CLI command, so we notice it and notify others
     if (self.savedAppMode != g_nAppMode) {
         if ((self.savedAppMode == MODE_RUNNING || self.savedAppMode == MODE_STEPPING) && g_nAppMode == MODE_DEBUG) {
@@ -237,171 +204,170 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         self.savedAppMode = g_nAppMode;
     }
     
-#ifdef DEBUG
-    NSDate *start = [NSDate now];
-#endif
+    const int64_t frameTime = g_fCurrentCLK6502 / TARGET_FPS;
+    frame->ExecuteOneFrame(frameTime);
     
-    frame->ExecuteOneFrame(1000000.0 / TARGET_FPS);
-
+    if (g_bFullSpeed) {
+        frame->VideoRedrawScreenDuringFullSpeed(g_dwCyclesThisFrame);
+    } else {
+        frame->SyncVideoPresentScreen(frameTime);
+    }
+    
 #ifdef SHOW_EMULATED_CPU_SPEED
     self.frameCount++;
-    static uint64_t timeOfLastUpdate = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    uint64_t currentTime = clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
-    if (currentTime - timeOfLastUpdate > 1000000000.0 / TARGET_FPS) {
+    if (runLoopStartTime - timeOfLastUpdate > 1000000000) {
         NSArray *cpus = @[ @"", @"6502", @"65C02", @"Z80" ];
         double clockSpeed =
             (double)(g_nCumulativeCycles - self.samplePeriodBeginCumulativeCycles) /
             -[self.samplePeriodBeginClockTime timeIntervalSinceNow];
         [self.delegate setStatus:[NSString stringWithFormat:@"%@@%.3f MHz", cpus[GetActiveCpu()], clockSpeed / 1000000]];
-
+        
         self.samplePeriodBeginClockTime = [NSDate now];
         self.samplePeriodBeginCumulativeCycles = g_nCumulativeCycles;
         self.frameCount = 0;
-        timeOfLastUpdate = currentTime;
+        timeOfLastUpdate = runLoopStartTime;
     }
 #endif // SHOW_EMULATED_CPU_SPEED
     
-#ifdef DEBUG
-    NSTimeInterval duration = -[start timeIntervalSinceNow];
-    if (duration > 1.0 / TARGET_FPS) {
-        // oops, took too long
-        NSLog(@"Frame time exceeded: %f ms", duration * 1000);
+    // allow the host CPU to rest until the next frame
+    const double timeSpent = NS_TO_S(clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - runLoopStartTime);
+    NSTimeInterval idleTime;
+    if (!frame->CanDoFullSpeed() && timeSpent < 1.0 / TARGET_FPS) {
+        idleTime = (1.0 / TARGET_FPS) - timeSpent;
     }
+    else {
+        idleTime = 0;
+#ifdef DEBUG
+        NSLog(@"Frame time exceeded: %f ms", timeSpent * 1000);
 #endif // DEBUG
+    }
+    self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:idleTime target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
+    [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)recordingTimerFired {
-    frameBuffer.data = frame->FrameBufferData();
+    self->frameBuffer.data = self->frame->FrameBufferData();
     
-    if (self.videoWriterInput.readyForMoreMediaData) {
-        if (!self.isRecordingScreen) {
-            self.recordingScreen = YES;
-        }
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        double currentAudioTime = -1;
         
-        // make a CVPixelBuffer and point the frame buffer to it
-        CVPixelBufferRef pixelBuffer = NULL;
-        CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault,
-                                                       frameBuffer.bufferWidth,
-                                                       frameBuffer.bufferHeight,
-                                                       kCVPixelFormatType_32BGRA,
-                                                       frameBuffer.data,
-                                                       frameBuffer.bufferWidth * 4,
-                                                       NULL,
-                                                       NULL,
-                                                       NULL,
-                                                       &pixelBuffer);
-        if (status == kCVReturnSuccess && pixelBuffer != NULL) {
-            // append the CVPixelBuffer into the output stream
-            [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
-                                  withPresentationTime:CMTimeMake(self.videoWriterFrameNumber * (CMTIME_BASE / TARGET_FPS), CMTIME_BASE)];
-            CVPixelBufferRelease(pixelBuffer);
-            
-            // if we realize that we've skipped a frame (i.e., videoWriter is
-            // not nil but readyForMoreMediaData is false) should we also
-            // increment videoWriterFrameNumber?
-            self.videoWriterFrameNumber++;
-        }
-    }
-    
-    for (AudioOutput *audioOutput in self.audioOutputs) {
-        if (audioOutput.writerInput.readyForMoreMediaData && audioOutput.data.length > 0) {
-            const UInt32 bytesPerFrame = audioOutput.channels * sizeof(UInt16);
-            const UInt32 frames = (UInt32)audioOutput.data.length / bytesPerFrame;
-            const UInt32 blockSize = frames * bytesPerFrame;
-            
-            CMBlockBufferRef blockBuffer = NULL;
-            OSStatus status = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault,
-                                                                 NULL,
-                                                                 blockSize,
-                                                                 NULL,
-                                                                 NULL,
-                                                                 0,
-                                                                 blockSize,
-                                                                 0,
-                                                                 &blockBuffer);
-            if (status != kCMBlockBufferNoErr) {
-                NSLog(@"failed CMBlockBufferCreateWithMemoryBlock");
-                continue;
-            }
-            
-            status = CMBlockBufferReplaceDataBytes(audioOutput.data.bytes,
+        for (AudioOutput *audioOutput in self.audioOutputs) {
+            if (audioOutput.writerInput.readyForMoreMediaData && audioOutput.data.length > 0) {
+                audioOutput.cumulativeAudioDataLength += audioOutput.data.length;
+                if (currentAudioTime < 0) {
+                    // any audioOutput can compute currentAudioTime but we only need one
+                    currentAudioTime = (double)audioOutput.cumulativeAudioDataLength / (audioOutput.channels * sizeof(UInt16) * audioOutput.sampleRate);
+                }
+                
+                const UInt32 bytesPerFrame = audioOutput.channels * sizeof(UInt16);
+                const UInt32 frames = (UInt32)audioOutput.data.length / bytesPerFrame;
+                const UInt32 blockSize = frames * bytesPerFrame;
+                
+                CMBlockBufferRef blockBuffer = NULL;
+                OSStatus status = CMBlockBufferCreateWithMemoryBlock(kCFAllocatorDefault,
+                                                                     NULL,
+                                                                     blockSize,
+                                                                     NULL,
+                                                                     NULL,
+                                                                     0,
+                                                                     blockSize,
+                                                                     0,
+                                                                     &blockBuffer);
+                if (status != kCMBlockBufferNoErr) {
+                    NSLog(@"failed CMBlockBufferCreateWithMemoryBlock");
+                    continue;
+                }
+                
+                status = CMBlockBufferReplaceDataBytes(audioOutput.data.bytes,
+                                                       blockBuffer,
+                                                       0,
+                                                       blockSize);
+                if (status != kCMBlockBufferNoErr) {
+                    NSLog(@"failed CMBlockBufferReplaceDataBytes");
+                    if (blockBuffer) { CFRelease(blockBuffer); }
+                    continue;
+                }
+                
+                AudioStreamBasicDescription asbd = { 0 };
+                asbd.mFormatID         = kAudioFormatLinearPCM;
+                asbd.mFormatFlags      = kLinearPCMFormatFlagIsSignedInteger;
+                asbd.mSampleRate       = audioOutput.sampleRate;
+                asbd.mChannelsPerFrame = audioOutput.channels;
+                asbd.mBitsPerChannel   = sizeof(SInt16) * CHAR_BIT;
+                asbd.mFramesPerPacket  = 1;  // uncompressed audio
+                asbd.mBytesPerFrame    = bytesPerFrame;
+                asbd.mBytesPerPacket   = bytesPerFrame;
+                
+                CMFormatDescriptionRef format = NULL;
+                status = CMAudioFormatDescriptionCreate(kCFAllocatorDefault,
+                                                        &asbd,
+                                                        0,
+                                                        NULL,
+                                                        0,
+                                                        NULL,
+                                                        NULL,
+                                                        &format);
+                if (status != noErr) {
+                    NSLog(@"failed CMAudioFormatDescriptionCreate");
+                    if (blockBuffer) { CFRelease(blockBuffer); }
+                    continue;
+                }
+                
+                CMSampleBufferRef sampleBuffer = NULL;
+                status = CMSampleBufferCreateReady(kCFAllocatorDefault,
                                                    blockBuffer,
+                                                   format,
+                                                   frames,
                                                    0,
-                                                   blockSize);
-            if (status != kCMBlockBufferNoErr) {
-                NSLog(@"failed CMBlockBufferReplaceDataBytes");
-                if (blockBuffer) { CFRelease(blockBuffer); }
-                continue;
-            }
-            
-            AudioStreamBasicDescription asbd = { 0 };
-            asbd.mFormatID         = kAudioFormatLinearPCM;
-            asbd.mFormatFlags      = kLinearPCMFormatFlagIsSignedInteger;
-            asbd.mSampleRate       = audioOutput.sampleRate;
-            asbd.mChannelsPerFrame = audioOutput.channels;
-            asbd.mBitsPerChannel   = sizeof(SInt16) * CHAR_BIT;
-            asbd.mFramesPerPacket  = 1;  // uncompressed audio
-            asbd.mBytesPerFrame    = bytesPerFrame;
-            asbd.mBytesPerPacket   = bytesPerFrame;
-            
-            CMFormatDescriptionRef format = NULL;
-            status = CMAudioFormatDescriptionCreate(kCFAllocatorDefault,
-                                                    &asbd,
-                                                    0,
-                                                    NULL,
-                                                    0,
-                                                    NULL,
-                                                    NULL,
-                                                    &format);
-            if (status != noErr) {
-                NSLog(@"failed CMAudioFormatDescriptionCreate");
-                if (blockBuffer) { CFRelease(blockBuffer); }
-                continue;
-            }
-            
-            CMSampleBufferRef sampleBuffer = NULL;
-            status = CMSampleBufferCreateReady(kCFAllocatorDefault,
-                                               blockBuffer,
-                                               format,
-                                               frames,
-                                               0,
-                                               NULL,
-                                               0,
-                                               NULL,
-                                               &sampleBuffer);
-            if (status != noErr) {
-                NSLog(@"failed CMSampleBufferCreateReady");
+                                                   NULL,
+                                                   0,
+                                                   NULL,
+                                                   &sampleBuffer);
+                if (status != noErr) {
+                    NSLog(@"failed CMSampleBufferCreateReady");
+                    if (format) { CFRelease(format); }
+                    if (blockBuffer) { CFRelease(blockBuffer); }
+                    continue;
+                }
+                
+                [audioOutput.writerInput appendSampleBuffer:sampleBuffer];
+                
+                // clean up
+                if (sampleBuffer) { CFRelease(sampleBuffer); }
                 if (format) { CFRelease(format); }
                 if (blockBuffer) { CFRelease(blockBuffer); }
-                continue;
+                audioOutput.data.length = 0;
             }
-            
-            [audioOutput.writerInput appendSampleBuffer:sampleBuffer];
-            
-            // clean up
-            if (sampleBuffer) { CFRelease(sampleBuffer); }
-            if (format) { CFRelease(format); }
-            if (blockBuffer) { CFRelease(blockBuffer); }
-            audioOutput.data.length = 0;
         }
-    }
-    
-    if (self.isRecordingScreen) {
-        // blink the screen recording button
-        if (self.videoWriterFrameNumber % TARGET_FPS == 0) {
-            [self.delegate screenRecordingDidTick];
+        
+        if (currentAudioTime >= 0 && self.videoWriterInput.readyForMoreMediaData) {
+            // make a CVPixelBuffer and point the frame buffer to it
+            CVPixelBufferRef pixelBuffer = NULL;
+            CVReturn status = CVPixelBufferCreateWithBytes(kCFAllocatorDefault,
+                                                           self->frameBuffer.bufferWidth,
+                                                           self->frameBuffer.bufferHeight,
+                                                           kCVPixelFormatType_32BGRA,
+                                                           self->frameBuffer.data,
+                                                           self->frameBuffer.bufferWidth * 4,
+                                                           NULL,
+                                                           NULL,
+                                                           NULL,
+                                                           &pixelBuffer);
+            if (status == kCVReturnSuccess && pixelBuffer != NULL) {
+                // append the CVPixelBuffer into the output stream
+                [self.videoWriterAdaptor appendPixelBuffer:pixelBuffer
+                                      withPresentationTime:CMTimeMake(floor(currentAudioTime * CMTIME_BASE), CMTIME_BASE)];
+                CVPixelBufferRelease(pixelBuffer);
+            }
         }
-        else if (self.videoWriterFrameNumber % TARGET_FPS == TARGET_FPS / 2) {
-            [self.delegate screenRecordingDidTock];
-        }
-    }
-}
-
-- (void)pause {
-    [self.runLoopTimer invalidate];
-    CVDisplayLinkStop(self.displayLink);
-    CVDisplayLinkRelease(self.displayLink);
-    self.displayLink = NULL;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.isRecordingScreen) {
+                // set next alarm to maintain TARGET_FPS
+                [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
+            }
+        });
+    });
 }
 
 - (void)resetSpeed {
@@ -409,8 +375,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)reboot {
-    // don't try to run the emulator during a restart
-    [self.runLoopTimer invalidate];
     frame->Restart();
     [self startRunLoopTimer];
     [[NSNotificationCenter defaultCenter] postNotificationName:EmulatorDidRebootNotification object:self];
@@ -440,7 +404,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)stop {
-    [self pause];
     if (frame != NULL) {
         frame->End();
     }
@@ -534,18 +497,19 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                                                                          outputSettings:audioSettings];
             audioOutput.writerInput.expectsMediaDataInRealTime = YES;
             [self.videoWriter addInput:audioOutput.writerInput];
+            
+            audioOutput.cumulativeAudioDataLength = 0;
         }
         
         [self.videoWriter startWriting];
         [self.videoWriter startSessionAtSourceTime:kCMTimeZero];
-        self.videoWriterFrameNumber = 0;
         
-        self.recordingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0 / TARGET_FPS) target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:YES];
+        self.recordingScreen = YES;
+        [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(recordingTimerFired) userInfo:nil repeats:NO];
     }
     else {
         // stop recording
         NSLog(@"Ending screen recording");
-        [self.recordingTimer invalidate];
         self.recordingScreen = NO;
         
         // mark the writer inputs as finished
@@ -566,13 +530,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
             self.videoWriter = nil;
             self.videoWriterInput = nil;
             self.videoWriterAdaptor = nil;
-            self.videoWriterFrameNumber = 0;
-            
-            self.recordingScreen = NO;
             
             NSLog(@"Ended screen recording");
             
-            dispatch_async(dispatch_get_main_queue(), ^(void) {
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self.delegate screenRecordingDidStop:url];
             });
         }];

@@ -40,8 +40,6 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 - (void)terminateWithReason:(NSString *)reason;
 
 - (void)screenRecordingDidStart;
-- (void)screenRecordingDidTick;
-- (void)screenRecordingDidTock;
 - (void)screenRecordingDidStop:(NSURL *)url;
 
 - (void)setStatus:(nullable NSString *)status;
@@ -57,7 +55,7 @@ extern const NSNotificationName EmulatorDidChangeDisplayNotification;
 @property (nullable, weak) id<EmulatorViewControllerDelegate> delegate;
 
 - (void)start;
-- (void)pause;
+- (void)refreshTexture;
 - (void)resetSpeed;
 - (void)reboot;
 - (void)reinitialize;
