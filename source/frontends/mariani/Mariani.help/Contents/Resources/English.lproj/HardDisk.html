@@ -12,29 +12,16 @@
         <h3 class="howto">To set up an existing hard disk image</h3>
         <ol>
             <li>Open Preferences and navigate to the Computer pane.</li>
-            <li>Select Generic Hard Disk Drive for slot 7.</li>
-            <li>Navigate to the Storage pane.</li>
-            <li>Click on the Hard Drive option, and select the appropriate .hdv disk image.</li>
+            <li>Select Generic Hard Disk Drive in an available slot.</li>
+            <li>Click on the <img class="icon" src="../shared/ellipsis.circle.svg" /> button to the right of the slot.</li>
+            <li>Click on the + button or double-click on an available spot, and select the appropriate hard disk image (typically with a .hdv extension).</li>
             <li>Reboot the emulator (such as by closing the Preferences window.)</li>
         </ol>
-    </div>
-    <div class="roundrect">
-        <h3 class="howto">To create a new hard disk image</h3>
-        <ol>
-            <li>Open Preferences and navigate to the Computer pane.</li>
-            <li>Select Generic Hard Disk Drive for slot 7.</li>
-            <li>Navigate to the Storage pane.</li>
-            <li>Click on the Create New Hard Disk button.</li>
-            <li>Enter a name and select a location for the .hdv image, then click Save.</li>
-            <li>Insert a ProDOS system disk image into slot 6, drive 1.</li>
-            <li>Reboot the emulator while holding down the <span class="key">&nbsp;<img class="key" src="../shared/apple.svg" />&nbsp;</span> key. The computer will boot with the floppy drive instead of the hard drive.</li>
-            <li>Select System Utilities from the main menu.</li>
-            <li>Select Copy Files, from Slot 6 Drive 1, to Slot 7 Drive 1.</li>
-            <li>Select Some Files, and then follow instructions on-screen to select the system files you wish to copy to the hard disk. You will at least need to the <span class="command">PRODOS</span> and <span class="command">BASIC.SYSTEM</span> files to the hard disk.</li>
-            <li>Reboot the emulator again to boot from the hard disk.</li>
-        </ol>
+        <p>
     </div>
     <p>You will see an additional circle <img class="icon" src="../shared/circle.svg" /> button representing the newly-added hard disk.</p>
     <p class="warning">Reconfiguring the hard disk while it is in operation may result in a corrupted disk image, analogous to shutting off the real computer or unplugging the hard disk card from its slot.</p>
+    <h5 class="related">Related Topics</h5>
+    <div class="related"><a href="CreatingDiskImages.html">Creating Disk Images</a></div>
 </body>
 </html>

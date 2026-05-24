@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>Loading and Saving State</title>
+    <meta name="AppleTitle" content="Loading and Saving State" />
+    <link rel="stylesheet" href="../shared/help.css" />
+</head>
+<body>
+    <h2>Loading and Saving State</h2>
+    <p>Most of the emulated Apple II's state can be saved to a file and restored at a later time. This can be useful for continuity across Mariani sessions or to help with games that don't have a save option.</p>
+    <div class="roundrect">
+        <h3 class="howto">To save the emulator's state</h3>
+        <ol>
+            <li>Select "Save State" or "Save State As..." from the File menu, depending on whether you would like to specify a different file name. Pressing the <key>F11</key> key is equivalent to the former.</li>
+        </ol>
+        <p>The location of the state file will be displayed in the status bar when complete.</p>
+    </div>
+    <div class="roundrect">
+        <h3 class="howto">To restore the emulator's state</h3>
+        <ol>
+            <li>Select "Load State..." from the File menu or press the <key>F12</key> key.</li>
+            <li>Locate the state file and click "Open".</li>
+        </ol>
+    </div>
+    <p>The following are persisted to the file:</p>
+	<ul>
+		<li>Apple model: II, II Plus, //e (original), //e (enhanced) or clone (eg. Pravets)</li>
+		<li>Apple II's slot-0 language card: 16K Language Card, Saturn 64K or Saturn 128K</li>
+		<li>Apple //e's auxiliary card: 80 Column, Extended 80 Column or RamWorks III</li>
+		<li>Any Apple II: Saturn 128K cards in slots other than slot 0</li>
+		<li>Disk II (even during r/w operation)</li>
+		<li>Hard disk (even during r/w operation)</li>
+		<li>Mockingboard & Phasor cards</li>
+		<li>SAM card</li>
+		<li>Mouse card</li>
+		<li>CP/M SoftCard</li>
+		<li>Parallel Printer card</li>
+		<li>Super Serial card</li>
+		<li>No-Slot clock</li>
+		<li>Uthernet & Uthernet II cards</li>
+		<li>4Play & SNES MAX joystick cards</li>
+		<li>VidHD card</li>
+		<li>Game I/O Connector copy protection dongle</li>
+	</ul>
+	<p>The following are not yet persisted to the file:</p>
+	<ul>
+		<li>Using The Freeze's F8 ROM</li>
+		<li>Alternate F8 ROM</li>
+		<li>Alternate ROM</li>
+		<li>Alternate video ROM</li>
+	</ul>
+</body>
+</html>

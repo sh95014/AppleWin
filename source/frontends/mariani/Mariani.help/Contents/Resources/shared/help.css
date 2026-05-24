@@ -73,8 +73,8 @@ h5.related {
 }
 
 img.screenshot {
-    width: 80%;
-    height: auto;
+    margin-top: 16pt;
+    margin-bottom: 16pt;
 }
 
 img.headericon {
@@ -118,16 +118,19 @@ p.warning {
     color: #DE3163;
 }
 
-span.command {
-    font-family: 'SFMono-Regular', ui-monospace, monospace;
+command {
+    display: span;
+    font-family: 'Courier New', 'Courier', ui-monospace, monospace;
     background-color: rgba(0, 0, 0, 0.1);
     padding: 0px 2px 0px 2px;
     border-radius: 3px;
 }
 
-span.key {
+key {
+    display: inline-block;
     font-family: 'SFMono-Regular', ui-monospace, monospace;
     background-color: rgba(0, 0, 0, 0.6);
+    margin: 2px 0px 2px 0px;
     padding: 0px 2px 0px 2px;
     border-radius: 3px;
     color: white;
@@ -181,11 +184,11 @@ span.nowrap {
         color: #F88379;
     }
 
-    span.command {
+    command {
         background-color: rgba(255, 255, 255, 0.1);
     }
 
-    span.key {
+    key {
         color: black;
         background-color: rgba(255, 255, 255, 0.5);
         box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.3);

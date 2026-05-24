@@ -8,23 +8,28 @@
 <body>
     <h2>The Status Bar</h2>
     <p>The status bar appears at the bottom of the main window, and provides quick access to some common functions.</p>
-    <img class="screenshot" src="../shared/StatusBar.png" />
-    
+    <img class="screenshot" srcset="../shared/StatusBar.png 2x" />
+
+    <div class="roundrect">
+        <h3 class="howto">Quick Controls</h3>
+        <p>On the left edge of the status bar:</p>
+        <ol style="list-style-type: none; margin: 20px; padding: 0">
+            <li><img class="largeicon" style="margin-right: 8px" src="../shared/power.circle.fill.svg" /> Reboot the emulator.</li>
+            <li><img class="largeicon" style="margin-right: 8px" src="../shared/custom.arrow.trianglehead.2.counterclockwise.circle.fill.svg" /> <key>Control</key>+<key>Reset</key></li>
+        </ol>
+    </div>
+        
     <div class="roundrect">
         <h3 class="howto">Drives</h3>
-        <p>On the left side of the status bar, circle buttons represent individual drives configured for the emulator. The circles can take one of the following appearances:</p>
+        <p>Circle buttons represent individual floppy and hard disk drives configured for the emulator. The circles can take one of the following appearances:</p>
         <ol style="list-style-type: none; margin: 20px; padding: 0">
             <li><img class="largeicon" style="margin-right: 8px" src="../shared/circle.dotted.svg" /> Drive is empty.</li>
             <li><img class="largeicon" style="margin-right: 8px" src="../shared/circle.svg" /> Drive contains a disk image.</li>
             <li><img class="largeicon" style="margin-right: 8px" src="../shared/lock.circle.svg" /> Drive contains a write-protected disk image.</li>
         </ol>
+        <p>You can also click on the circles to <a href="LoadingDiskImages.html">insert</a>, <a href="CreatingDiskImages.html">create</a>, <a href="DiskBrowser.html">examine</a>, or eject disk images.</p>
     </div>
     
-    <div class="roundrect">
-        <h3 class="howto"><a name="StatusBarMute"></a>Mute <img class="icon" src="../shared/speaker.svg" /> Switch</h3>
-        <p>The Mute <img class="icon" src="../shared/speaker.svg" /> button can be used to quickly disable all audio output from the emulator. Click on the button again to re-enable.</p>
-    </div>
-
     <div class="roundrect">
         <h3 class="howto">Screen Recording <img class="icon" src="../shared/record.circle.svg" /> and Screenshot  <img class="icon" src="../shared/camera.svg" /> buttons</h3>
         <div class="related"><a href="Screenshots.html">Taking Screenshots and Screen Recordings</a></div>
@@ -32,6 +37,8 @@
     
     <h5 class="related">Related Topics</h5>
     <div class="related"><a href="LoadingDiskImages.html">Loading Disk Images</a></div>
+    <div class="related"><a href="CreatingDiskImages.html">Creating Disk Images</a></div>
+    <div class="related"><a href="DiskBrowser.html">Browsing Through a Disk Image</a></div>
     <div class="related"><a href="AudioVideo.html">Audio/Video Settings</a></div>
 </body>
 </html>

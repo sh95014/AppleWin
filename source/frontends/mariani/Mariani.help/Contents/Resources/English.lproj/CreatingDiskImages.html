@@ -7,14 +7,12 @@
 </head>
 <body>
     <h2>Creating Disk Images</h2>
-    <div>You can create a new floppy disk image to store data in.</div>
+    <div>You can create a new floppy or hard disk image to store data in.</div>
     <div class="roundrect">
         <h3 class="howto">To create a new floppy disk image</h3>
-        <ol>
-            <li>Select "New Blank Disk Image" from the File menu, and select a drive to create the disk in. Mariani automatically selects a name for the disk image, but you can rename it afterwards in macOS.<br/><br/>If another disk is already in that drive, it will first be ejected unharmed.</li>
-            <li>Type in a program that you want DOS to run whenever this new disk is booted. A simple but useful program is:<div class="command">10 PRINT CHR$(4);"CATALOG"</div></li>
-            <li>Type <span class="command">INIT HELLO</span> to initialize the disk image.</li>
-        </ol>
+        <p>Select "New Disk Image..." from the File menu or from a drive icon in the status bar. If a disk image is currently in the drive, it would be ejected first, unharmed.</p>
+        <img class="screenshot" srcset="CreateDiskImage.png 2x" />
+        <p>A number of convenient options are provided to pre-populate the contents of the disk image.</p>
     </div>
     <div>You now have a working disk image, which you can use to save documents or other information. If you want to fill this image with data from a real floppy disk that you have, then you need to "transfer" the disk's data. See the <a href="TransferringDiskImages.html">Transferring Disk Images</a> topic for more information.</div>
     <h5 class="related">Related Topics</h5>
