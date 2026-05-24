@@ -1187,18 +1187,18 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
 }
 
 - (void)configureMenus {
-    // remove the "Start Dictation..." and "Emoji & Symbols" items
+    // remove extraneous items from the Edit menu, specifically
+    // "Start Dictation...", "Emoji & Symbols", and "AutoFill", although
+    // it's possible others will fall victim to the way we do it here:
     NSMenu *editMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:EDIT_TAG] submenu];
     for (NSMenuItem *item in [editMenu itemArray]) {
-        if ([item action] == NSSelectorFromString(@"startDictation:") ||
-            [item action] == NSSelectorFromString(@"orderFrontCharacterPalette:")) {
-            [editMenu removeItem:item];
+        if ([item action] == NSSelectorFromString(@"copy:") ||
+            [item action] == NSSelectorFromString(@"paste:")) {
+            // keep these
+            continue;
         }
-    }
-    // make sure a separator is not the bottom option
-    const NSInteger lastItemIndex = [editMenu numberOfItems] - 1;
-    if ([[editMenu itemAtIndex:lastItemIndex] isSeparatorItem]) {
-        [editMenu removeItemAtIndex:lastItemIndex];
+        NSLog(@"Removed menu item %@ > %@", editMenu.title, item.title.length ? item.title : @"(untitled)");
+        [editMenu removeItem:item];
     }
     
     // populate the Display Type menu with options
