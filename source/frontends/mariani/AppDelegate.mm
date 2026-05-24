@@ -112,7 +112,7 @@ const NSOperatingSystemVersion macOS12 = { 12, 0, 0 };
 
 @implementation AppDelegate
 
-Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
+Disk_Status_e driveStatus[(size_t)NUM_SLOTS * (size_t)NUM_DRIVES];
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     self.processInfo = [[NSProcessInfo alloc] init];

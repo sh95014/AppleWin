@@ -269,7 +269,7 @@ const eApple2Type computerTypes[] = {
         manager.GetCardChoicesForSlot(slot, currConfig, choicesList);
         
         for (const SS_CARDTYPE& cardType : choicesList) {
-            [slotButton addItemWithTitle:[self cardNameForType:cardType]];
+            [slotButton addItemWithTitle:[[self class] cardNameForType:cardType]];
             slotButton.lastItem.tag = cardType;
         }
         
@@ -288,7 +288,7 @@ const eApple2Type computerTypes[] = {
         manager.GetCardChoicesForAuxSlot(choicesList);
         
         for (const SS_CARDTYPE& cardType : choicesList) {
-            [self.computerExansionSlotButton addItemWithTitle:[self cardNameForType:cardType]];
+            [self.computerExansionSlotButton addItemWithTitle:[[self class] cardNameForType:cardType]];
             self.computerExansionSlotButton.lastItem.tag = cardType;
         }
         
@@ -793,7 +793,8 @@ const eApple2Type computerTypes[] = {
     };
 }
 
-- (NSString *)cardNameForType:(SS_CARDTYPE)cardType {
++ (NSString *)cardNameForType:(unsigned)cardTypeNumber {
+    SS_CARDTYPE cardType = (SS_CARDTYPE)cardTypeNumber;
     NSDictionary *cardNames = @{
         @(CT_Empty):                NSLocalizedString(@"—", @"empty slot"),
         @(CT_Disk2):                NSLocalizedString(@"Apple Disk II", @""),

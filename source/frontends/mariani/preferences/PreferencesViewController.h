@@ -11,7 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PreferencesViewController : NSViewController
 
-+ (NSDictionary *)localizedCardNameMap;
+// cardType is actually SS_CARDTYPE, but avoiding C++ header inclusion
+// here for simplicity.
++ (NSString *)cardNameForType:(unsigned)cardType;
 
 @end
 

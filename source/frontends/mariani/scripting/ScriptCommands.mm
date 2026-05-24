@@ -142,8 +142,7 @@
 }
 
 - (NSString *)card {
-    NSDictionary *cardNames = [PreferencesViewController localizedCardNameMap];
-    return cardNames[@(self.cardType)];
+    return [PreferencesViewController cardNameForType:self.cardType];
 }
 
 - (NSArray *)drives {
