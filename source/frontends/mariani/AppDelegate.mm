@@ -30,6 +30,14 @@
 #import "Utilities.h"
 #import "Video.h"
 
+// Objective-C typedefs BOOL to be bool, but wincompat.h typedefs it to be
+// int32_t, which causes function signature mismatches (such as with the
+// RegSaveValue() calls below.) This hack allows the function to be seen
+// with the correct signature and avoids the link error.
+#define BOOL int32_t
+#import "Registry.h"
+#undef BOOL
+
 #import "CommonTypes.h"
 #import "DiskMakerWindowController.h"
 #import "EmulatorViewController.h"
@@ -654,6 +662,12 @@ Disk_Status_e driveStatus[NUM_SLOTS * NUM_DRIVES];
         self.tapeOpenPanel = nil;
         [self reconfigureDrives];
         CassetteTape::instance().playbackRateChangeCallback = TapePlaybackRateDidChange;
+        
+        // tape loading fails if CPU is not at normal speed
+        g_dwSpeed = SPEED_NORMAL;
+        SetCurrentCLK6502();
+        REGSAVE(REGVALUE_EMULATION_SPEED, g_dwSpeed);
+        [self resetSpeed];
     }
 }
 
