@@ -379,7 +379,7 @@ NSArray *fileTypeStrings = @[
         textView.richText = YES;
         layoutView = scrollView;
         
-        self.toggleHexViewButton.enabled = NO;
+        [self.toggleHexViewButton setHidden:YES];
     }
     
     if (layoutView == nil) {
@@ -409,7 +409,7 @@ NSArray *fileTypeStrings = @[
         
         layoutView = [self layoutHFView];
         
-        self.toggleHexViewButton.enabled = YES;
+        [self.toggleHexViewButton setHidden:NO];
     }
     
     [layoutView setFrame:self.filePreviewPanel.contentView.bounds];
