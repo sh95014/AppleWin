@@ -830,13 +830,11 @@ const eApple2Type computerTypes[] = {
     return name;
 }
 
-// FIXME replace when https://github.com/AppleWin/AppleWin/issues/1488 is fixed
 - (BOOL)cardTypeHasOptions:(SS_CARDTYPE)cardType {
-    // must match CPageSlots::CardTypeHasOptions()
+    // should generally match CPageSlots::CardTypeHasOptions()
     switch (cardType) {
     case CT_Disk2: // fallthrough
     case CT_GenericHDD: // fallthrough
-    case CT_SSC: // fallthrough
     case CT_MockingboardC: // fallthrough
     case CT_Phasor: // fallthrough
     case CT_Saturn128K: // fallthrough
