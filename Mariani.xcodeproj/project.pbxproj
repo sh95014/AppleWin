@@ -972,14 +972,14 @@
 		B0689D162781984F0029EB7D /* UserDefaults.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = UserDefaults.mm; sourceTree = "<group>"; };
 		B07612322789E4BE009E79BE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/About.xib; sourceTree = "<group>"; };
 		B089EF2D27BADA5200BDC415 /* Mariani.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Mariani.help; sourceTree = "<group>"; };
-		B089EF3027BADA8100BDC415 /* Mariani-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mariani-Info.plist"; sourceTree = "<group>"; };
+		B089EF3027BADA8100BDC415 /* Mariani-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Mariani-Info.plist"; path = "source/frontends/mariani/Mariani-Info.plist"; sourceTree = "<group>"; };
 		B089EF3127BB051900BDC415 /* StrFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrFormat.h; path = source/StrFormat.h; sourceTree = "<group>"; };
 		B089EF3227BB051900BDC415 /* StrFormat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StrFormat.cpp; path = source/StrFormat.cpp; sourceTree = "<group>"; };
 		B08CFE4727889D44002B841D /* DiskImageWrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = DiskImageWrapper.h; sourceTree = "<group>"; };
 		B08CFE4827889D44002B841D /* DiskImageWrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DiskImageWrapper.mm; sourceTree = "<group>"; };
 		B08CFE53278949F2002B841D /* DiskImageBrowserWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DiskImageBrowserWindowController.h; sourceTree = "<group>"; };
 		B08CFE54278949F2002B841D /* DiskImageBrowserWindowController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DiskImageBrowserWindowController.mm; sourceTree = "<group>"; };
-		B08DC27527C06B03004987FC /* Mariani-Universal-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mariani-Universal-Info.plist"; sourceTree = "<group>"; };
+		B08DC27527C06B03004987FC /* Mariani-Universal-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Mariani-Universal-Info.plist"; path = "source/frontends/mariani/Mariani-Universal-Info.plist"; sourceTree = "<group>"; };
 		B090CF1C27B5A04F00C6C23D /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
 		B090CF2027B5A2A900C6C23D /* MarianiJoystick.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MarianiJoystick.mm; sourceTree = "<group>"; };
 		B090CF2127B5A2A900C6C23D /* MarianiJoystick.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MarianiJoystick.h; sourceTree = "<group>"; };
@@ -3574,7 +3574,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3585,7 +3585,7 @@
 					source,
 					/opt/homebrew/include,
 				);
-				INFOPLIST_FILE = "Mariani-Universal-Info.plist";
+				INFOPLIST_FILE = "source/frontends/mariani/Mariani-Universal-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
@@ -3595,7 +3595,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3610,7 +3610,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = ../;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3621,7 +3621,7 @@
 					source,
 					/opt/homebrew/include,
 				);
-				INFOPLIST_FILE = "Mariani-Universal-Info.plist";
+				INFOPLIST_FILE = "source/frontends/mariani/Mariani-Universal-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
@@ -3631,7 +3631,7 @@
 					"@executable_path/../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = Mariani;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3817,7 +3817,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -3832,7 +3832,7 @@
 					/opt/homebrew/include,
 					/usr/local/include,
 				);
-				INFOPLIST_FILE = "Mariani-Info.plist";
+				INFOPLIST_FILE = "source/frontends/mariani/Mariani-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
@@ -3846,7 +3846,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3862,7 +3862,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -3874,7 +3874,7 @@
 					/opt/homebrew/include,
 					/usr/local/include,
 				);
-				INFOPLIST_FILE = "Mariani-Info.plist";
+				INFOPLIST_FILE = "source/frontends/mariani/Mariani-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
@@ -3888,7 +3888,7 @@
 					/usr/local/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				OTHER_CFLAGS = "-Werror=unguarded-availability";
 				PRODUCT_BUNDLE_IDENTIFIER = com.applewin.marianipro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
