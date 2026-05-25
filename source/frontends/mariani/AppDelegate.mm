@@ -1101,6 +1101,7 @@ Disk_Status_e driveStatus[(size_t)NUM_SLOTS * (size_t)NUM_DRIVES];
     const CGSize windowContentViewSize = self.window.contentView.frame.size;
     
     self.statusBarView = [[NSView alloc] initWithFrame:CGRectMake(0, 0, windowContentViewSize.width, SMALL_STATUS_BAR_HEIGHT)];
+    self.statusBarView.autoresizingMask = NSViewWidthSizable;
     
     // add some icons starting from the left margin
     CGFloat left = SMALL_STATUS_BAR_MARGIN;
@@ -1143,6 +1144,7 @@ Disk_Status_e driveStatus[(size_t)NUM_SLOTS * (size_t)NUM_DRIVES];
     screenshotButton.target = self;
     screenshotButton.action = @selector(saveScreenshotAction:);
     screenshotButton.toolTip = NSLocalizedString(@"Take screenshot", @"");
+    screenshotButton.autoresizingMask = NSViewMinXMargin;
     right = CGRectGetMinX(screenshotButton.frame) - SMALL_STATUS_BAR_MARGIN;
     
     self.screenRecordingButton = [[NSButton alloc] initWithFrame:CGRectMake(right - 21, 0, 21, SMALL_STATUS_BAR_HEIGHT)];
@@ -1151,6 +1153,7 @@ Disk_Status_e driveStatus[(size_t)NUM_SLOTS * (size_t)NUM_DRIVES];
     self.screenRecordingButton.target = self;
     self.screenRecordingButton.action = @selector(recordScreenAction:);
     self.screenRecordingButton.toolTip = NSLocalizedString(@"Record screen", @"");
+    self.screenRecordingButton.autoresizingMask = NSViewMinXMargin;
     right = CGRectGetMinX(self.screenRecordingButton.frame) - SMALL_STATUS_BAR_MARGIN;
     
     // the status text field takes the remaining space in between
@@ -1160,6 +1163,7 @@ Disk_Status_e driveStatus[(size_t)NUM_SLOTS * (size_t)NUM_DRIVES];
     self.statusLabel.allowsDefaultTighteningForTruncation = YES;
     self.statusLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
     self.statusLabel.textColor = [NSColor systemGrayColor];
+    self.statusLabel.autoresizingMask = NSViewWidthSizable;
     
     [self.statusBarView addSubview:self.statusBarPowerButton];
     [self.statusBarView addSubview:self.statusBarResetButton];
