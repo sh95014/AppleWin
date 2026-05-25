@@ -232,14 +232,22 @@ extern common2::EmulatorOptions gEmulatorOptions;
     // allow the host CPU to rest until the next frame
     const double timeSpent = NS_TO_S(clock_gettime_nsec_np(CLOCK_UPTIME_RAW) - runLoopStartTime);
     NSTimeInterval idleTime;
-    if (!frame->CanDoFullSpeed() && timeSpent < 1.0 / TARGET_FPS) {
-        idleTime = (1.0 / TARGET_FPS) - timeSpent;
+    if (!frame->CanDoFullSpeed()) {
+        if (timeSpent < 1.0 / TARGET_FPS) {
+            // we're early, take a short nap
+            idleTime = (1.0 / TARGET_FPS) - timeSpent;
+        }
+        else {
+            // we're late, run the next frame immediately
+            idleTime = 0;
+#ifdef DEBUG
+            NSLog(@"Frame time exceeded: %f ms", timeSpent * 1000);
+#endif // DEBUG
+        }
     }
     else {
+        // going full-speed, no napping
         idleTime = 0;
-#ifdef DEBUG
-        NSLog(@"Frame time exceeded: %f ms", timeSpent * 1000);
-#endif // DEBUG
     }
     self.runLoopTimer = [NSTimer scheduledTimerWithTimeInterval:idleTime target:self selector:@selector(runLoopTimerFired) userInfo:nil repeats:NO];
     [[NSRunLoop currentRunLoop] addTimer:self.runLoopTimer forMode:NSRunLoopCommonModes];
