@@ -45,3 +45,14 @@ contained by Slots.<br/>
 - **VT\_MONO\_WHITE** : Monochrome (White)
 
 I'm a total beginner with both scripting support and AppleScript itself, so let me know if this can be improved.
+
+## Sample Script
+
+```applescript
+-- launch DOS in a green display
+tell application "Mariani"
+	insert "Apple DOS 3.3 January 1983.dsk" into Drive 1 of Slot 6
+	reboot
+	set display to VT_MONO_GREEN
+end tell
+```
