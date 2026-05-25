@@ -82,9 +82,10 @@
           margin: 25px;
           padding: 20px;
         }
-        div.box {
-          float: left;
-          width: 45%;
+        div.columns {
+          display: grid-lanes;
+          grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+          gap: 16px;
         }
       }
       img.box {
@@ -167,80 +168,82 @@
         <div class="left hole"></div> <div class="left hole"></div> <div class="left hole"></div>
       </div>
       <div class="content">
-        <div class="box">
-          <span class="callout">Play hundreds of old games</span>
-          <video width="100%" autoplay loop muted>
-            <source src="images/games.mov" />
-          </video>
-        </div>
-        <div class="box">
-          <span class="callout">Flex those command line skills</span>
-          <img class="box" src="images/dos33.png" /><br />
-          <span class="details">Easily switch to a monochrome display when things get a little serious</span>
-        </div>
-        <div class="box">
-          <span class="callout">Run modern Apple ][ software</span>
-          <img class="box" src="images/desktop.png" /><br />
-          <span class="details">AppleWin's long history of continuous support ensures broad adoption by new software and maximum compatibility</span>
-        </div>
-        <div class="box">
-          <span class="callout">Configure your Apple ][ to taste</span>
-          <img class="box" src="images/config.png" /><br />
-          <span class="details">Supports all the standard peripherals, plus:</span>
-          <ul class="details">
-            <li>4-Play Joystick</li>
-            <li>Echo Speech Card</li>
-            <li>MEGA Audio</li>
-            <li>Phasor Sound Card</li>
-            <li>RamWorks III (up to 8MB)</li>
-            <li>Saturn 128KB Memory Card</li>
-            <li>SD Music Sound Card</li>
-            <li>Software Automatic Mouth Speed Card</li>
-            <li>SNES Max Game Controller</li>
-            <li>Super Serial Card</li>
-            <li>Uthernet I Network Card</li>
-            <li>Uthernet II Network Card</li>
-            <li>VidHD Video Card</li>
-          </ul>
-        </div>
-        <div class="box">
-          <span class="callout">Create new disk images</span>
-          <img class="box" src="images/diskmaker.png" /><br />
-          <ul class="details">
-            <li>140 KB 5.25" as blank, DOS 3.3-formatted, or ProDOS-formatted</li>
-            <li>160 KB 5.25" as blank, DOS 3.3-formatted, or ProDOS-formatted</li>
-            <li>800 KB 3.5" as blank or ProDOS-formatted</li>
-            <li>32 MB hard disk as blank or ProDOS-formatted</li>
-          </ul>
-        </div>
-        <div class="box">
-          <span class="callout">Explore Apple-format disks</span>
-          <img class="box" src="images/explore.png" /><br />
-        </div>
-        <div class="box">
-          <span class="callout">Peek under the covers</span>
-          <img class="box" src="images/memory.png" /><br />
-        </div>
-        <div class="box">
-          <span class="callout">View BASIC program listings in memory or on disk</span>
-          <img class="box" src="images/basic.png" /><br />
-        </div>
-        <div class="box">
-          <span class="callout">Develop and debug new Apple ][ software</span>
-          <img class="box" src="images/debug.png" /><br />
-          <span class="details">AppleWin's full-featured debugger in a separate window and a macOS UI</span>
-        </div>
-        <div class="widebox">
-          <span class="callout">Other features:</span>
-          <ul class="bigdetails">
-            <li>Native, universal macOS UI supporting Intel and Apple Silicon Macs running macOS 11 or later</li>
-            <li>Take screenshots and screen recordings with one click</li>
-            <li>Save and resume emulator state at any time</li>
-            <li>Full-screen support</li>
-            <li><a href="https://github.com/sh95014/AppleWin/blob/macos/source/frontends/mariani/scripting/README.md">AppleScript support</a> for automation</li>
-            <li>Numeric keypad joystick emulation</li>
-            <li>Careful code branching practices ensure ease of keeping up to date with AppleWin improvements</li>
-          </ul>
+          <div class="columns">
+            <div class="box">
+              <span class="callout">Play hundreds of old games</span>
+              <video width="100%" autoplay loop muted>
+                <source src="images/games.mov" />
+              </video>
+            </div>
+            <div class="box">
+              <span class="callout">Flex those command line skills</span>
+              <img class="box" src="images/dos33.png" /><br />
+              <span class="details">Easily switch to a monochrome display when things get a little serious</span>
+            </div>
+            <div class="box">
+              <span class="callout">Run modern Apple ][ software</span>
+              <img class="box" src="images/desktop.png" /><br />
+              <span class="details">AppleWin's long history of continuous support ensures broad adoption by new software and maximum compatibility</span>
+            </div>
+            <div class="box">
+              <span class="callout">Configure your Apple ][ to taste</span>
+              <img class="box" src="images/config.png" /><br />
+              <span class="details">Supports all the standard peripherals, plus:</span>
+              <ul class="details">
+                <li>4-Play Joystick</li>
+                <li>Echo Speech Card</li>
+                <li>MEGA Audio</li>
+                <li>Phasor Sound Card</li>
+                <li>RamWorks III (up to 8MB)</li>
+                <li>Saturn 128KB Memory Card</li>
+                <li>SD Music Sound Card</li>
+                <li>Software Automatic Mouth Speed Card</li>
+                <li>SNES Max Game Controller</li>
+                <li>Super Serial Card</li>
+                <li>Uthernet I Network Card</li>
+                <li>Uthernet II Network Card</li>
+                <li>VidHD Video Card</li>
+              </ul>
+            </div>
+            <div class="box">
+              <span class="callout">Create new disk images</span>
+              <img class="box" src="images/diskmaker.png" /><br />
+              <ul class="details">
+                <li>140 KB 5.25" as blank, DOS 3.3-formatted, or ProDOS-formatted</li>
+                <li>160 KB 5.25" as blank, DOS 3.3-formatted, or ProDOS-formatted</li>
+                <li>800 KB 3.5" as blank or ProDOS-formatted</li>
+                <li>32 MB hard disk as blank or ProDOS-formatted</li>
+              </ul>
+            </div>
+            <div class="box">
+              <span class="callout">Explore Apple-format disks</span>
+              <img class="box" src="images/explore.png" /><br />
+            </div>
+            <div class="box">
+              <span class="callout">Peek under the covers</span>
+              <img class="box" src="images/memory.png" /><br />
+            </div>
+            <div class="box">
+              <span class="callout">View BASIC program listings in memory or on disk</span>
+              <img class="box" src="images/basic.png" /><br />
+            </div>
+            <div class="box">
+              <span class="callout">Develop and debug new Apple ][ software</span>
+              <img class="box" src="images/debug.png" /><br />
+              <span class="details">AppleWin's full-featured debugger in a separate window and a macOS UI</span>
+            </div>
+            <div class="widebox">
+              <span class="callout">Other features:</span>
+              <ul class="bigdetails">
+                <li>Native, universal macOS UI supporting Intel and Apple Silicon Macs running macOS 11 or later</li>
+                <li>Take screenshots and screen recordings with one click</li>
+                <li>Save and resume emulator state at any time</li>
+                <li>Full-screen support</li>
+                <li><a href="https://github.com/sh95014/AppleWin/blob/macos/source/frontends/mariani/scripting/README.md">AppleScript support</a> for automation</li>
+                <li>Numeric keypad joystick emulation</li>
+                <li>Careful code branching practices ensure ease of keeping up to date with AppleWin improvements</li>
+              </ul>
+            </div>
         </div>
         <div class="download">
           <a class="download" href="https://github.com/sh95014/AppleWin/releases/latest">
