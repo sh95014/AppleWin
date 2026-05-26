@@ -557,6 +557,27 @@
         }
       }
     },
+    "Export file as…" : {
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "將檔案輸出為⋯"
+          }
+        }
+      }
+    },
+    "Export…" : {
+      "comment" : "export file on disk image",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "輸出⋯"
+          }
+        }
+      }
+    },
     "Extended 80-column text card (64K)" : {
       "localizations" : {
         "zh-Hant" : {
@@ -1024,7 +1045,7 @@
         }
       }
     },
-    "Save disk image as..." : {
+    "Save disk image as…" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1034,7 +1055,7 @@
         }
       }
     },
-    "Save state as..." : {
+    "Save state as…" : {
       "localizations" : {
         "zh-Hant" : {
           "stringUnit" : {
@@ -1437,6 +1458,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "VidHD (顯示卡)"
+          }
+        }
+      }
+    },
+    "View…" : {
+      "comment" : "view file on disk image",
+      "localizations" : {
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示⋯"
           }
         }
       }

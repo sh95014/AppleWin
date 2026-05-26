@@ -687,7 +687,7 @@ Disk_Status_e driveStatus[(size_t)NUM_SLOTS * (size_t)NUM_DRIVES];
     NSLog(@"%s", __PRETTY_FUNCTION__);
     self.stateSavePanel = [NSSavePanel savePanel];
     self.stateSavePanel.canCreateDirectories = YES;
-    self.stateSavePanel.title = NSLocalizedString(@"Save state as...", @"");
+    self.stateSavePanel.title = NSLocalizedString(@"Save state as…", @"");
     NSURL *snapshotURL = [NSURL fileURLWithPath:[self.emulatorVC snapshotPath]];
     self.stateSavePanel.nameFieldStringValue = snapshotURL.lastPathComponent;
     self.stateSavePanel.directoryURL = [snapshotURL URLByDeletingLastPathComponent];

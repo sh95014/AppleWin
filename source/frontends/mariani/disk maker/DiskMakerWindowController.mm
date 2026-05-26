@@ -222,7 +222,7 @@ enum { FORMAT_BLANK, FORMAT_DOS33, FORMAT_PRODOS };
     
     self.diskImageSavePanel = [NSSavePanel savePanel];
     self.diskImageSavePanel.canCreateDirectories = YES;
-    self.diskImageSavePanel.title = NSLocalizedString(@"Save disk image as...", @"");
+    self.diskImageSavePanel.title = NSLocalizedString(@"Save disk image as…", @"");
     self.diskImageSavePanel.nameFieldStringValue = filename;
     if ([self.diskImageSavePanel runModal] == NSModalResponseOK) {
         NSURL *url = self.diskImageSavePanel.URL;

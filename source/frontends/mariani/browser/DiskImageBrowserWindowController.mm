@@ -84,6 +84,8 @@ using namespace DiskImgLib;
 @property (strong) HFHexTextRepresenter *hexRep;
 @property (assign) BOOL showingHexView;
 
+@property (strong) NSSavePanel *fileExportSavePanel;
+
 @end
 
 @implementation DiskImageBrowserWindowController
@@ -148,6 +150,20 @@ NSArray *fileTypeStrings = @[
         else {
             self.window.title = [self.wrapper.path lastPathComponent];
         }
+        
+        // contextual menu for the outline view
+        NSMenu *menu = [[NSMenu alloc] init];
+        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"View…", @"view file on disk image")
+                                                          action:@selector(viewFile:)
+                                                   keyEquivalent:@""];
+        menuItem.target = self;
+        [menu addItem:menuItem];
+        menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Export…", @"export file on disk image")
+                                              action:@selector(exportFile:)
+                                       keyEquivalent:@""];
+        menuItem.target = self;
+        [menu addItem:menuItem];
+        self.filesOutlineView.menu = menu;
     }
     return self;
 }
@@ -231,6 +247,15 @@ NSArray *fileTypeStrings = @[
     NSLog(@"%s", __PRETTY_FUNCTION__);
     
     FSItem *fsItem = (FSItem *)[sender itemAtRow:sender.clickedRow];
+    NSData *data = [self dataWithContentsOfItem:fsItem];
+    if (data != nil) {
+        [self previewFile:fsItem withData:data];
+    }
+}
+
+#pragma mark - Utilities
+
+- (NSData *)dataWithContentsOfItem:(FSItem *)fsItem {
     if (!fsItem.file->IsDirectory()) {
         A2FileDescr *fd;
         DIError error = fsItem.file->Open(&fd, true);
@@ -241,13 +266,11 @@ NSArray *fileTypeStrings = @[
             fd->Close();
             NSData *data = [NSData dataWithBytes:buffer length:length];
             free(buffer);
-            
-            [self previewFile:fsItem withData:data];
+            return data;
         }
     }
+    return nil;
 }
-
-#pragma mark - Utilities
 
 - (void)readFileSystem {
     self.diskFS->SetScanForSubVolumes(DiskFS::kScanSubEnabled);
@@ -441,6 +464,34 @@ NSArray *fileTypeStrings = @[
 - (void)toggleHexView:(id)sender {
     self.showingHexView = !self.showingHexView;
     [self layoutHFView];
+}
+
+- (void)viewFile:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    FSItem *fsItem = (FSItem *)[self.filesOutlineView itemAtRow:self.filesOutlineView.clickedRow];
+    NSData *data = [self dataWithContentsOfItem:fsItem];
+    if (data != nil) {
+        [self previewFile:fsItem withData:data];
+    }
+}
+
+- (void)exportFile:(id)sender {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    
+    FSItem *fsItem = (FSItem *)[self.filesOutlineView itemAtRow:self.filesOutlineView.clickedRow];
+    NSData *data = [self dataWithContentsOfItem:fsItem];
+    
+    if (data != nil) {
+        self.fileExportSavePanel = [NSSavePanel savePanel];
+        self.fileExportSavePanel.canCreateDirectories = YES;
+        self.fileExportSavePanel.title = NSLocalizedString(@"Export file as…", @"");
+        self.fileExportSavePanel.nameFieldStringValue = fsItem.name;
+        if ([self.fileExportSavePanel runModal] == NSModalResponseOK) {
+            [data writeToURL:self.fileExportSavePanel.URL atomically:YES];
+            self.fileExportSavePanel = nil;
+        }
+    }
 }
 
 @end
