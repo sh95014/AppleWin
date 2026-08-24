@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <cstddef>
 #include <initializer_list>
 
 namespace na2

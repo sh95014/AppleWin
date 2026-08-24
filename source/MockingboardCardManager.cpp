@@ -50,7 +50,7 @@ bool MockingboardCardManager::IsMockingboardExtraCardType(UINT slot)
 	return type == CT_MegaAudio || type == CT_SDMusic;
 }
 
-void MockingboardCardManager::ReinitializeClock(void)
+void MockingboardCardManager::ReinitializeClock()
 {
 	for (UINT i = SLOT0; i < NUM_SLOTS; i++)
 	{
@@ -59,7 +59,7 @@ void MockingboardCardManager::ReinitializeClock(void)
 	}
 }
 
-void MockingboardCardManager::InitializeForLoadingSnapshot(void)
+void MockingboardCardManager::InitializeForLoadingSnapshot()
 {
 	if (g_bDisableDirectSound || g_bDisableDirectSoundMockingboard)
 		return;
@@ -96,7 +96,7 @@ void MockingboardCardManager::MuteControl(bool mute)
 	}
 }
 
-void MockingboardCardManager::SetCumulativeCycles(void)
+void MockingboardCardManager::SetCumulativeCycles()
 {
 	for (UINT i = SLOT0; i < NUM_SLOTS; i++)
 	{
@@ -115,7 +115,7 @@ void MockingboardCardManager::UpdateCycles(ULONG executedCycles)
 }
 
 // Called from class SY6522
-void MockingboardCardManager::UpdateIRQ(void)
+void MockingboardCardManager::UpdateIRQ()
 {
 	bool irq = false;
 	for (UINT i = SLOT0; i < NUM_SLOTS; i++)
@@ -130,7 +130,7 @@ void MockingboardCardManager::UpdateIRQ(void)
 		CpuIrqDeassert(IS_6522);
 }
 
-bool MockingboardCardManager::IsActiveToPreventFullSpeed(void)
+bool MockingboardCardManager::IsActiveToPreventFullSpeed()
 {
 	if (!m_mockingboardVoice.bActive)
 		return false;
@@ -145,7 +145,7 @@ bool MockingboardCardManager::IsActiveToPreventFullSpeed(void)
 	return false;
 }
 
-uint32_t MockingboardCardManager::GetVolume(void)
+uint32_t MockingboardCardManager::GetVolume()
 {
 	return m_userVolume;
 }
@@ -167,7 +167,7 @@ void MockingboardCardManager::SetVolume(uint32_t volume, uint32_t volumeMax)
 	}
 }
 
-bool MockingboardCardManager::GetEnableExtraCardTypes(void)
+bool MockingboardCardManager::GetEnableExtraCardTypes()
 {
 	// Scan slots for any extra card types
 	// . eg. maybe started a new AppleWin (with empty cmd line), but with Registry's slot 4 = CT_MegaAudio
@@ -182,7 +182,7 @@ bool MockingboardCardManager::GetEnableExtraCardTypes(void)
 }
 
 #ifdef _DEBUG
-void MockingboardCardManager::CheckCumulativeCycles(void)
+void MockingboardCardManager::CheckCumulativeCycles()
 {
 	for (UINT i = SLOT0; i < NUM_SLOTS; i++)
 	{
@@ -202,7 +202,7 @@ void MockingboardCardManager::Get6522IrqDescription(std::string& desc)
 #endif
 
 // Called by CardManager::Destroy()
-void MockingboardCardManager::Destroy(void)
+void MockingboardCardManager::Destroy()
 {
 	// NB. All cards (including any Mockingboard cards) have just been destroyed by CardManager
 
@@ -247,7 +247,7 @@ void MockingboardCardManager::Update(const ULONG executedCycles)
 // Called by:
 // . MB_SyncEventCallback() on a TIMER1 (not TIMER2) underflow - when IsAnyTimer1Active() == true
 // . Update()                                                  - when IsAnyTimer1Active() == false
-void MockingboardCardManager::UpdateSoundBuffer(void)
+void MockingboardCardManager::UpdateSoundBuffer()
 {
 #ifdef LOG_PERF_TIMINGS
 	extern UINT64 g_timeMB_NoTimer;
@@ -281,7 +281,7 @@ void MockingboardCardManager::UpdateSoundBuffer(void)
 		MixAllAndCopyToRingBuffer(numSamples);
 }
 
-bool MockingboardCardManager::Init(void)
+bool MockingboardCardManager::Init()
 {
 	if (!DSAvailable())
 		return false;
@@ -305,7 +305,7 @@ bool MockingboardCardManager::Init(void)
 	return true;
 }
 
-UINT MockingboardCardManager::GenerateAllSoundData(void)
+UINT MockingboardCardManager::GenerateAllSoundData()
 {
 	UINT nNumSamples = 0;
 
@@ -331,38 +331,20 @@ UINT MockingboardCardManager::GenerateAllSoundData(void)
 	if (m_byteOffset == (uint32_t)-1)
 	{
 		// First time in this func
-
 		m_byteOffset = dwCurrentWriteCursor;
 	}
 	else
 	{
 		// Check that our offset isn't between Play & Write positions
-
-		if (dwCurrentWriteCursor > dwCurrentPlayCursor)
+		if (SoundCore_ValidateAndAlignWriteOffset(m_byteOffset, dwCurrentPlayCursor, dwCurrentWriteCursor))
 		{
-			// |-----PxxxxxW-----|
-			if ((m_byteOffset > dwCurrentPlayCursor) && (m_byteOffset < dwCurrentWriteCursor))
-			{
 #ifdef DBG_MB_UPDATE
-				double fTicksSecs = (double)GetTickCount() / 1000.0;
-				LogOutput("%010.3f: [MBUpdt]    PC=%08X, WC=%08X, Diff=%08X, Off=%08X, NS=%08X xxx\n", fTicksSecs, dwCurrentPlayCursor, dwCurrentWriteCursor, dwCurrentWriteCursor - dwCurrentPlayCursor, dwByteOffset, nNumSamples);
+			double fTicksSecs = (double)GetTickCount() / 1000.0;
+			const char* tag = (dwCurrentWriteCursor > dwCurrentPlayCursor) ? "xxx" : "XXX";
+			LogOutput("%010.3f: [MBUpdt]    PC=%08X, WC=%08X, Diff=%08X, Off=%08X, NS=%08X %s\n",
+				fTicksSecs, dwCurrentPlayCursor, dwCurrentWriteCursor, dwCurrentWriteCursor - dwCurrentPlayCursor, m_byteOffset, nNumSamples, tag);
 #endif
-				m_byteOffset = dwCurrentWriteCursor;
-				m_numSamplesError = 0;
-			}
-		}
-		else
-		{
-			// |xxW----------Pxxx|
-			if ((m_byteOffset > dwCurrentPlayCursor) || (m_byteOffset < dwCurrentWriteCursor))
-			{
-#ifdef DBG_MB_UPDATE
-				double fTicksSecs = (double)GetTickCount() / 1000.0;
-				LogOutput("%010.3f: [MBUpdt]    PC=%08X, WC=%08X, Diff=%08X, Off=%08X, NS=%08X XXX\n", fTicksSecs, dwCurrentPlayCursor, dwCurrentWriteCursor, dwCurrentWriteCursor - dwCurrentPlayCursor, dwByteOffset, nNumSamples);
-#endif
-				m_byteOffset = dwCurrentWriteCursor;
-				m_numSamplesError = 0;
-			}
+			m_numSamplesError = 0;
 		}
 	}
 
@@ -381,7 +363,8 @@ UINT MockingboardCardManager::GenerateAllSoundData(void)
 
 #ifdef DBG_MB_UPDATE
 	double fTicksSecs = (double)GetTickCount() / 1000.0;
-	LogOutput("%010.3f: [MBUpdt]    PC=%08X, WC=%08X, Diff=%08X, Off=%08X, NS=%08X, NSE=%08X, Interval=%f\n", fTicksSecs, dwCurrentPlayCursor, dwCurrentWriteCursor, dwCurrentWriteCursor - dwCurrentPlayCursor, dwByteOffset, nNumSamples, nNumSamplesError, updateInterval);
+	// NB. removed outputting 'updateInterval' - would need to get it above from MB.MB_Update()
+	LogOutput("%010.3f: [MBUpdt]    PC=%08X, WC=%08X, Diff=%08X, Off=%08X, NS=%08X, NSE=%08X\n", fTicksSecs, dwCurrentPlayCursor, dwCurrentWriteCursor, dwCurrentWriteCursor - dwCurrentPlayCursor, m_byteOffset, nNumSamples, m_numSamplesError);
 #endif
 
 	return nNumSamples;

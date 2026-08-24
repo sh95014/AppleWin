@@ -248,7 +248,7 @@ static LPBYTE	pCxRomPeripheral	= NULL;
 static LPBYTE g_pMemMainLanguageCard = NULL;
 
 static uint32_t   g_memmode = LanguageCardUnit::kMemModeInitialState;
-static BOOL    modechanging = 0;				// An Optimisation: means delay calling UpdatePaging() for 1 instruction
+static bool    modechanging = false;				// An Optimisation: means delay calling UpdatePaging() for 1 instruction
 
 static UINT    memrompages = 1;
 
@@ -273,7 +273,7 @@ static FILE * g_hMemTempFile = NULL;
 #endif
 
 BYTE __stdcall IO_Annunciator(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCycles);
-static void FreeMemImage(void);
+static void FreeMemImage();
 static bool g_isMemCacheValid = true;	// flag for is 'mem' valid - set in UpdatePaging() and valid for regular (not alternate) CPU emulation
 static bool g_forceAltCpuEmulation = false;	// set by cmd line
 
@@ -295,7 +295,7 @@ const UINT MaxRomPages = 4;		// For Copam Base64A
 const UINT Base64ARomSize = MaxRomPages * Apple2RomSize;
 
 // Called from MemLoadSnapshot()
-static void ResetDefaultMachineMemTypes(void)
+static void ResetDefaultMachineMemTypes()
 {
 	g_MemTypeAppleII = CT_Empty;
 	g_MemTypeAppleIIPlus = CT_LanguageCard;
@@ -303,7 +303,7 @@ static void ResetDefaultMachineMemTypes(void)
 }
 
 // Called from MemLoadSnapshot()
-static void SetExpansionMemTypeDefault(void)
+static void SetExpansionMemTypeDefault()
 {
 	SS_CARDTYPE defaultType = IsApple2Original(GetApple2Type()) ? g_MemTypeAppleII
 		: IsApple2PlusOrClone(GetApple2Type()) ? g_MemTypeAppleIIPlus
@@ -371,7 +371,7 @@ void SetExpansionMemType(const SS_CARDTYPE type, bool updateRegistry/*=true*/)
 	GetCardMgr().InsertAux(newSlotAuxCard, updateRegistry);
 }
 
-void CreateLanguageCard(void)
+void CreateLanguageCard()
 {
 	SS_CARDTYPE slot0CardType = GetCardMgr().QuerySlot(SLOT0);
 	if (IsApple2PlusOrClone(GetApple2Type()))
@@ -396,7 +396,7 @@ void CreateLanguageCard(void)
 	}
 }
 
-SS_CARDTYPE GetCurrentExpansionMemType(void)
+SS_CARDTYPE GetCurrentExpansionMemType()
 {
 	if (IsApple2PlusOrClone(GetApple2Type()))
 		return GetCardMgr().QuerySlot(SLOT0);
@@ -423,30 +423,30 @@ void SetRamWorksMemorySize(UINT banks, bool updateRegistry/*=true*/)
 		SetRegistryAuxNumberOfBanks();
 }
 
-void SetRegistryAuxNumberOfBanks(void)
+void SetRegistryAuxNumberOfBanks()
 {
 	std::string regSection = RegGetConfigSlotSection(SLOT_AUX);
-	RegSaveValue(regSection.c_str(), REGVALUE_AUX_NUM_BANKS, TRUE, g_uMaxExBanks);
+	RegSaveValue(regSection.c_str(), REGVALUE_AUX_NUM_BANKS, true, g_uMaxExBanks);
 }
 
-UINT GetRamWorksActiveBank(void)
+UINT GetRamWorksActiveBank()
 {
 	return g_uActiveBank;
 }
 
 //
 
-static BOOL GetLastRamWrite(void)
+static bool GetLastRamWrite()
 {
 	if (GetCardMgr().GetLanguageCardMgr().GetLanguageCard())
 		return GetCardMgr().GetLanguageCardMgr().GetLanguageCard()->GetLastRamWrite();
-	return 0;
+	return false;
 }
 
-static void SetLastRamWrite(BOOL count)
+static void SetLastRamWrite(bool bLastRamWrite)
 {
 	if (GetCardMgr().GetLanguageCardMgr().GetLanguageCard())
-		GetCardMgr().GetLanguageCardMgr().GetLanguageCard()->SetLastRamWrite(count);
+		GetCardMgr().GetLanguageCardMgr().GetLanguageCard()->SetLastRamWrite(bLastRamWrite);
 }
 
 //
@@ -461,12 +461,12 @@ void SetMemMainLanguageCard(LPBYTE ptr, UINT slot, bool bMemMain /*=false*/)
 	GetCardMgr().GetLanguageCardMgr().SetLastSlotToSetMainMemLC(slot);
 }
 
-LPBYTE GetCxRomPeripheral(void)
+LPBYTE GetCxRomPeripheral()
 {
 	return pCxRomPeripheral;	// Can be NULL if at MODE_LOGO
 }
 
-bool GetIsMemCacheValid(void)
+bool GetIsMemCacheValid()
 {
 	return g_isMemCacheValid;
 }
@@ -528,7 +528,7 @@ void CopyBytesFromMemoryPage(uint8_t* pDst, uint16_t srcAddr, size_t size)
 }
 
 // //e aux slot is empty & ALTZP=1
-bool IsZeroPageFloatingBus(void)
+bool IsZeroPageFloatingBus()
 {
 	if (GetIsMemCacheValid())
 		return false;
@@ -536,7 +536,7 @@ bool IsZeroPageFloatingBus(void)
 	return memreadPageType[0x0000 >> 8] == MEM_FloatingBus;
 }
 
-void ForceAltCpuEmulation(void)
+void ForceAltCpuEmulation()
 {
 	g_forceAltCpuEmulation = true;
 }
@@ -588,18 +588,18 @@ static BYTE __stdcall IORead_C01x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG
 	switch (addr & 0xf)
 	{
 	case 0x0: return KeybReadFlag();
-	case 0x1: res = SW_BANK2     ? true : false;		break;
-	case 0x2: res = SW_HIGHRAM   ? true : false;		break;
-	case 0x3: res = SW_AUXREAD   ? true : false;		break;
-	case 0x4: res = SW_AUXWRITE  ? true : false;		break;
-	case 0x5: res = SW_INTCXROM  ? true : false;		break;
-	case 0x6: res = SW_ALTZP     ? true : false;		break;
-	case 0x7: res = SW_SLOTC3ROM ? true : false;		break;
-	case 0x8: res = SW_80STORE   ? true : false;		break;
+	case 0x1: res = SW_BANK2;						    break;
+	case 0x2: res = SW_HIGHRAM;						break;
+	case 0x3: res = SW_AUXREAD;						break;
+	case 0x4: res = SW_AUXWRITE;						break;
+	case 0x5: res = SW_INTCXROM;						break;
+	case 0x6: res = SW_ALTZP;					    	break;
+	case 0x7: res = SW_SLOTC3ROM;						break;
+	case 0x8: res = SW_80STORE;						break;
 	case 0x9: res = GetVideo().VideoGetVblBar(nExecutedCycles);	break;
 	case 0xA: res = GetVideo().VideoGetSWTEXT();		break;
 	case 0xB: res = GetVideo().VideoGetSWMIXED();		break;
-	case 0xC: res = SW_PAGE2     ? true : false;		break;
+	case 0xC: res = SW_PAGE2;					    	break;
 	case 0xD: res = GetVideo().VideoGetSWHIRES();		break;
 	case 0xE: res = GetVideo().VideoGetSWAltCharSet();	break;
 	case 0xF: res = GetVideo().VideoGetSW80COL();		break;
@@ -771,7 +771,7 @@ static BYTE __stdcall IORead_C07x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG
 	case 0xB:	return IO_Null(pc, addr, bWrite, d, nExecutedCycles);
 	case 0xC:	return IO_Null(pc, addr, bWrite, d, nExecutedCycles);
 	case 0xD:	return IO_Null(pc, addr, bWrite, d, nExecutedCycles);
-	case 0xE:	return IS_APPLE2C()			? MemReadFloatingBus(SW_IOUDIS ? true : false, nExecutedCycles)	// GH#636
+	case 0xE:	return IS_APPLE2C()			? MemReadFloatingBus(SW_IOUDIS, nExecutedCycles)	// GH#636
 											: IO_Null(pc, addr, bWrite, d, nExecutedCycles);
 	case 0xF:	return IsEnhancedIIEorIIC()	? MemReadFloatingBus(GetVideo().VideoGetSWDHIRES(), nExecutedCycles)		// GH#636
 											: IO_Null(pc, addr, bWrite, d, nExecutedCycles);
@@ -883,7 +883,7 @@ BYTE __stdcall IO_Annunciator(WORD programcounter, WORD address, BYTE write, BYT
 
 	DongleControl(address);	// do before setting g_Annunciator[] as may need to access old MemGetAnnunciator() state
 
-	g_Annunciator[(address>>1) & 3] = (address&1) ? true : false;
+	g_Annunciator[(address>>1) & 3] = (address & 1);
 
 	if (address >= 0xC058 && address <= 0xC05B)
 		JoyportControl(address & 0x3);	// AN0 and AN1 control
@@ -1194,7 +1194,7 @@ LPVOID MemGetSlotParameters(UINT uSlot)
 }
 
 // From UTAIIe:5-28: Since INTCXROM==1 then state of SLOTC3ROM is not important
-static void IoHandlerCardsOut(void)
+static void IoHandlerCardsOut()
 {
 	_ASSERT( SW_INTCXROM );
 
@@ -1209,7 +1209,7 @@ static void IoHandlerCardsOut(void)
 }
 
 // From UTAIIe:5-28: If INTCXROM==0 && SLOTC3ROM==0 Then $C300-C3FF is internal ROM
-static void IoHandlerSlot3CardOut(void)
+static void IoHandlerSlot3CardOut()
 {
 	_ASSERT(!SW_INTCXROM && !SW_SLOTC3ROM);
 
@@ -1220,7 +1220,7 @@ static void IoHandlerSlot3CardOut(void)
 	}
 }
 
-static void IoHandlerCardsIn(void)
+static void IoHandlerCardsIn()
 {
 	_ASSERT( !SW_INTCXROM );
 
@@ -1251,7 +1251,7 @@ static bool IsCardInSlot(UINT slot)
 
 //===========================================================================
 
-uint32_t GetMemMode(void)
+uint32_t GetMemMode()
 {
 	return g_memmode;
 }
@@ -1300,56 +1300,56 @@ void SetMemMode(uint32_t uNewMemMode)
 
 //===========================================================================
 
-static void ResetPaging(BOOL initialize);
-static void UpdatePaging(BOOL initialize);
+static void ResetPaging(const UPDATEPAGING updateType);
+static void UpdatePaging(const UPDATEPAGING updateType);
 
 // Call by:
 // . CtrlReset() Soft-reset (Ctrl+Reset) for //e
 void MemResetPaging()
 {
-	ResetPaging(FALSE);	// Initialize=0
+	ResetPaging(PagingUpdateOnly);
 }
 
 // Call by:
-// . MemResetPaging() -> ResetPaging(FALSE)
-// . MemReset()       -> ResetPaging(TRUE)
-static void ResetPaging(BOOL initialize)
+// . MemResetPaging() -> ResetPaging(PagingUpdateOnly)
+// . MemReset()       -> ResetPaging(PagingFullInitialize)
+static void ResetPaging(const UPDATEPAGING updateType)
 {
-	GetCardMgr().GetLanguageCardMgr().Reset(initialize);
-	UpdatePaging(initialize);
+	GetCardMgr().GetLanguageCardMgr().Reset(updateType == PagingFullInitialize ? true : false);
+	UpdatePaging(updateType);
 }
 
 //===========================================================================
 
-static void UpdatePagingForAltRW(void);
+static void UpdatePagingForAltRW();
 
-void MemUpdatePaging(BOOL initialize)
+void MemUpdatePaging(const UPDATEPAGING updateType)
 {
-	UpdatePaging(initialize);
+	UpdatePaging(updateType);
 }
 
-static void UpdatePaging(BOOL initialize)
+static void UpdatePaging(const UPDATEPAGING updateType)
 {
-	if (initialize)
+	if (updateType == PagingFullInitialize)
 	{
 		// Importantly from:
-		// . MemReset() -> ResetPaging(TRUE)
-		// . MemInitializeFromSnapshot() -> MemUpdatePaging(TRUE);
+		// . MemReset() -> ResetPaging(true)
+		// . MemInitializeFromSnapshot() -> MemUpdatePaging(PagingFullInitialize);
 		g_isMemCacheValid = !(IsAppleIIe(GetApple2Type()) && (GetCardMgr().QueryAux() == CT_Empty || GetCardMgr().QueryAux() == CT_80Col));
 		if (g_forceAltCpuEmulation)
 			g_isMemCacheValid = false;
 	}
 
-	modechanging = 0;
+	modechanging = false;
 
 	// SAVE THE CURRENT PAGING SHADOW TABLE
 	LPBYTE oldshadow[256];
-	if (!initialize)
+	if (updateType == PagingUpdateOnly)
 		memcpy(oldshadow,memshadow,256*sizeof(LPBYTE));
 
 	// UPDATE THE PAGING TABLES BASED ON THE NEW PAGING SWITCH VALUES
 	UINT loop;
-	if (initialize)
+	if (updateType == PagingFullInitialize)
 	{
 		for (loop = 0x00; loop < 0xC0; loop++)
 			memwrite[loop] = mem+(loop << 8);
@@ -1462,9 +1462,9 @@ static void UpdatePaging(BOOL initialize)
 
 		for (UINT page = _6502_ZERO_PAGE; page < _6502_NUM_PAGES; page++)
 		{
-			if (initialize || (oldshadow[page] != memshadow[page]))
+			if (updateType == PagingFullInitialize || oldshadow[page] != memshadow[page])
 			{
-				if (!initialize &&
+				if (updateType == PagingUpdateOnly &&
 					((*(memdirty+page) & 1) || (page <= _6502_STACK_PAGE)))
 				{
 					*(memdirty+page) &= ~1;
@@ -1482,7 +1482,7 @@ static void UpdatePaging(BOOL initialize)
 }
 
 // For Cpu6502_altRW() & Cpu65C02_altRW()
-static void UpdatePagingForAltRW(void)
+static void UpdatePagingForAltRW()
 {
 	UINT page;
 
@@ -1635,12 +1635,12 @@ void MemDestroy()
 
 bool MemCheckSLOTC3ROM()
 {
-	return SW_SLOTC3ROM ? true : false;
+	return SW_SLOTC3ROM;
 }
 
 bool MemCheckINTCXROM()
 {
-	return SW_INTCXROM ? true : false;
+	return SW_INTCXROM;
 }
 
 //===========================================================================
@@ -1758,7 +1758,7 @@ LPBYTE MemGetMainPtr(const WORD offset)
 
 //===========================================================================
 
-static void BackMainImage(void)
+static void BackMainImage()
 {
 	if (!g_isMemCacheValid)
 		return;
@@ -1847,7 +1847,7 @@ bool MemIsAddrCodeMemory(const USHORT addr)
 
 //===========================================================================
 
-static void FreeMemImage(void)
+static void FreeMemImage()
 {
 #ifdef _WIN32
 	if (g_hMemImage)
@@ -1878,7 +1878,7 @@ static void FreeMemImage(void)
 #endif
 }
 
-static LPBYTE AllocMemImage(void)
+static LPBYTE AllocMemImage()
 {
 #ifdef _WIN32
 	LPBYTE baseAddr = NULL;
@@ -2044,7 +2044,7 @@ void MemInitialize()
 	MemReset();
 }
 
-void MemInitializeROM(void)
+void MemInitializeROM()
 {
 	// READ THE APPLE FIRMWARE ROMS INTO THE ROM IMAGE
 	UINT ROM_SIZE = 0;
@@ -2117,7 +2117,7 @@ void MemInitializeROM(void)
 	memcpy(memrom, pData, ROM_SIZE);			// ROM at $D000...$FFFF, one or several pages
 }
 
-void MemInitializeCustomF8ROM(void)
+void MemInitializeCustomF8ROM()
 {
 	const UINT F8RomSize = 0x800;
 	const UINT F8RomOffset = Apple2RomSize-F8RomSize;
@@ -2142,11 +2142,11 @@ void MemInitializeCustomF8ROM(void)
 
 		SetFilePointer(g_hCustomRomF8, 0, NULL, FILE_BEGIN);
 		DWORD uNumBytesRead;
-		BOOL bRes = ReadFile(g_hCustomRomF8, memrom+F8RomOffset, F8RomSize, &uNumBytesRead, NULL);
+		bool bRes = ReadFile(g_hCustomRomF8, memrom+F8RomOffset, F8RomSize, &uNumBytesRead, NULL);
 		if (uNumBytesRead != F8RomSize)
 		{
 			memcpy(memrom, &oldRom[0], Apple2RomSize);	// ROM at $D000...$FFFF
-			bRes = FALSE;
+			bRes = false;
 		}
 
 		// NB. If succeeded, then keep g_hCustomRomF8 handle open - so that any next restart can load it again
@@ -2170,14 +2170,14 @@ void MemInitializeCustomF8ROM(void)
 	}
 }
 
-void MemInitializeCustomROM(void)
+void MemInitializeCustomROM()
 {
 	if (g_hCustomRom == INVALID_HANDLE_VALUE)
 		return;
 
 	SetFilePointer(g_hCustomRom, 0, NULL, FILE_BEGIN);
 	DWORD uNumBytesRead;
-	BOOL bRes = TRUE;
+	bool bRes = true;
 
 	if (GetFileSize(g_hCustomRom, NULL) == Apple2eRomSize)
 	{
@@ -2186,7 +2186,7 @@ void MemInitializeCustomROM(void)
 		if (uNumBytesRead != CxRomSize)
 		{
 			memcpy(pCxRomInternal, &oldRomC0[0], CxRomSize);	// ROM at $C000...$CFFF
-			bRes = FALSE;
+			bRes = false;
 		}
 	}
 
@@ -2197,7 +2197,7 @@ void MemInitializeCustomROM(void)
 		if (uNumBytesRead != Apple2RomSize)
 		{
 			memcpy(memrom, &oldRom[0], Apple2RomSize);	// ROM at $D000...$FFFF
-			bRes = FALSE;
+			bRes = false;
 		}
 	}
 
@@ -2218,7 +2218,7 @@ void MemInitializeCustomROM(void)
 //
 // Since called by LoadState(), then this must not init any cards
 // - it should only init the card I/O hooks
-void MemInitializeIO(void)
+void MemInitializeIO()
 {
 	InitIoHandlers();
 
@@ -2227,7 +2227,7 @@ void MemInitializeIO(void)
 
 // Called by:
 // . Snapshot_LoadState_v2()
-void MemInitializeFromSnapshot(void)
+void MemInitializeFromSnapshot()
 {
 	MemInitializeROM();
 	MemInitializeCustomROM();
@@ -2256,13 +2256,13 @@ void MemInitializeFromSnapshot(void)
 		_ASSERT(g_eExpansionRomType == eExpRomPeripheral);
 
 		memcpy(pCxRomPeripheral + 0x800, g_SlotInfo[uSlot].expansionRom, FIRMWARE_EXPANSION_SIZE);
-		// NB. Copied to /mem/ by UpdatePaging(TRUE)
+		// NB. Copied to /mem/ by UpdatePaging(PagingFullInitialize)
 	}
 
 	GetCardMgr().GetLanguageCardMgr().SetMemModeFromSnapshot();
 
 	// Finally setup the paging tables
-	MemUpdatePaging(TRUE);
+	UpdatePaging(PagingFullInitialize);
 
 	//
 	// VidHD
@@ -2439,7 +2439,7 @@ void MemReset()
 	mem = memimage;
 
 	// INITIALIZE PAGING, FILLING IN THE 64K MEMORY IMAGE
-	ResetPaging(TRUE);		// Initialize=1, init g_memmode
+	ResetPaging(PagingFullInitialize);		// init g_memmode
 	MemAnnunciatorReset();
 
 	// INITIALIZE & RESET THE CPU
@@ -2475,13 +2475,13 @@ BYTE MemReadFloatingBus(const ULONG uExecutedCycles)
 	return ReadFloatingBus(uExecutedCycles, g_bFullSpeed);
 }
 
-BYTE MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles)
+BYTE MemReadFloatingBus(const bool highbit, const ULONG uExecutedCycles)
 {
 	BYTE r = ReadFloatingBus(uExecutedCycles, g_bFullSpeed);
 	return (r & ~0x80) | (highbit ? 0x80 : 0);
 }
 
-BYTE MemReadFloatingBusFromNTSC(void)
+BYTE MemReadFloatingBusFromNTSC()
 {
 	// fullspeed=false: to avoid NTSC_VideoGetScannerAddress() calling NTSC_VideoClockResync()
 	// NB. g_bFullSpeed only true when doing NTSC_VideoRedrawWholeScreen()
@@ -2556,7 +2556,7 @@ BYTE __stdcall MemSetPaging(WORD programcounter, WORD address, BYTE write, BYTE 
 				{
 					g_uActiveBank = value;
 					memaux = RWpages[g_uActiveBank];
-					UpdatePaging(FALSE);	// Initialize=FALSE
+					UpdatePaging(PagingUpdateOnly);
 				}
 				break;
 #endif
@@ -2626,7 +2626,7 @@ BYTE __stdcall MemSetPaging(WORD programcounter, WORD address, BYTE write, BYTE 
 			}
 		}
 
-		UpdatePaging(0);	// Initialize=0
+		UpdatePaging(PagingUpdateOnly);
 	}
 
 	// Replicate 80STORE, PAGE2 and HIRES to video sub-system
@@ -2649,7 +2649,7 @@ bool MemIsWriteAux(uint32_t memMode)
 
 //===========================================================================
 
-bool IsIIeWithoutAuxMem(void)
+bool IsIIeWithoutAuxMem()
 {
 	return IsAppleIIe(GetApple2Type()) &&
 		(GetCardMgr().QueryAux() == CT_Empty || GetCardMgr().QueryAux() == CT_80Col);
@@ -2677,7 +2677,7 @@ bool MemOptimizeForModeChanging(WORD programcounter, WORD address)
 		if ((address >= 4) && (address <= 5) &&									// Now:  RAMWRTOFF or RAMWRTON
 			((ReadUINT24FromMemory(programcounter) & 0x00FFFEFF) == 0x00C0028D))		// Next: STA $C002(RAMRDOFF) or STA $C003(RAMRDON)
 		{
-				modechanging = 1;
+				modechanging = true;
 				return true;
 		}
 
@@ -2687,7 +2687,7 @@ bool MemOptimizeForModeChanging(WORD programcounter, WORD address)
 			(((ReadUINT24FromMemory(programcounter) & 0x00FFFEFF) == 0x00C0048D) ||		// Next: STA $C004(RAMWRTOFF) or STA $C005(RAMWRTON)
 			 ((ReadUINT24FromMemory(programcounter) & 0x00FFFEFF) == 0x00C0028D)))		//    or STA $C002(RAMRDOFF)  or STA $C003(RAMRDON)
 		{
-				modechanging = 1;
+				modechanging = true;
 				return true;
 		}
 	}
@@ -2697,7 +2697,7 @@ bool MemOptimizeForModeChanging(WORD programcounter, WORD address)
 
 //===========================================================================
 
-void MemAnnunciatorReset(void)
+void MemAnnunciatorReset()
 {
 	for (UINT i=0; i<kNumAnnunciators; i++)
 		g_Annunciator[i] = 0;
@@ -2705,7 +2705,7 @@ void MemAnnunciatorReset(void)
 	if (IsCopamBase64A(GetApple2Type()))
 	{
 		SetMemMode(g_memmode & ~(MF_ALTROM0|MF_ALTROM1));
-		UpdatePaging(FALSE);	// Initialize=FALSE
+		UpdatePaging(PagingUpdateOnly);
 	}
 }
 
@@ -2716,19 +2716,19 @@ bool MemGetAnnunciator(UINT annunciator)
 
 //===========================================================================
 
-bool MemHasNoSlotClock(void)
+bool MemHasNoSlotClock()
 {
 	return g_NoSlotClock != NULL;
 }
 
-void MemInsertNoSlotClock(void)
+void MemInsertNoSlotClock()
 {
 	if (!MemHasNoSlotClock())
 		g_NoSlotClock = new CNoSlotClock;
 	g_NoSlotClock->Reset();
 }
 
-void MemRemoveNoSlotClock(void)
+void MemRemoveNoSlotClock()
 {
 	delete g_NoSlotClock;
 	g_NoSlotClock = NULL;
@@ -2789,25 +2789,25 @@ const std::string& MemGetSnapshotCardNameRamWorksIII()
 	return name;
 }
 
-static const std::string& MemGetSnapshotStructName(void)
+static const std::string& MemGetSnapshotStructName()
 {
 	static const std::string name("Memory");
 	return name;
 }
 
-const std::string& MemGetSnapshotUnitAuxSlotName(void)
+const std::string& MemGetSnapshotUnitAuxSlotName()
 {
 	static const std::string name("Auxiliary Slot");
 	return name;
 }
 
-static const std::string& MemGetSnapshotMainMemStructName(void)
+static const std::string& MemGetSnapshotMainMemStructName()
 {
 	static const std::string name("Main Memory");
 	return name;
 }
 
-static const std::string& MemGetSnapshotAuxMemStructName(void)
+static const std::string& MemGetSnapshotAuxMemStructName()
 {
 	static const std::string name("Auxiliary Memory Bank");
 	return name;
@@ -2841,10 +2841,12 @@ void MemSaveSnapshot(YamlSaveHelper& yamlSaveHelper)
 		if (!IsApple2PlusOrClone(GetApple2Type()))	// NB. Thesed are set later for II,II+ by slot-0 LC or Saturn
 		{
 			yamlSaveHelper.SaveHexUint32(SS_YAML_KEY_MMULCMODE, g_memmode & MF_LANGCARD_MASK);
-			yamlSaveHelper.SaveUint(SS_YAML_KEY_LASTRAMWRITE, GetLastRamWrite() ? 1 : 0);
+			// SS_YAML_KEY_LASTRAMWRITE is saved/loaded as Uint for backward compatibility.
+			yamlSaveHelper.SaveUint(SS_YAML_KEY_LASTRAMWRITE, GetLastRamWrite());
 		}
 		yamlSaveHelper.SaveHexUint8(SS_YAML_KEY_IOSELECT, IO_SELECT);
-		yamlSaveHelper.SaveHexUint8(SS_YAML_KEY_IOSELECT_INT, INTC8ROM ? 1 : 0);
+		// SS_YAML_KEY_IOSELECT_INT is saved/loaded as HexUint8 for backward compatibility.
+		yamlSaveHelper.SaveHexUint8(SS_YAML_KEY_IOSELECT_INT, INTC8ROM);
 		yamlSaveHelper.SaveUint(SS_YAML_KEY_EXPANSIONROMTYPE, (UINT) g_eExpansionRomType);
 		yamlSaveHelper.SaveUint(SS_YAML_KEY_PERIPHERALROMSLOT, g_uPeripheralRomSlot);
 		yamlSaveHelper.SaveUint(SS_YAML_KEY_LASTSLOTTOSETMAINMEMLC, GetCardMgr().GetLanguageCardMgr().GetLastSlotToSetMainMemLC());
@@ -2880,7 +2882,8 @@ bool MemLoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT unitVersion)
 	//
 
 	IO_SELECT = (BYTE) yamlLoadHelper.LoadUint(SS_YAML_KEY_IOSELECT);
-	INTC8ROM = yamlLoadHelper.LoadUint(SS_YAML_KEY_IOSELECT_INT) ? true : false;
+	// SS_YAML_KEY_IOSELECT_INT is saved/loaded as HexUint8 for backward compatibility.
+	INTC8ROM = yamlLoadHelper.LoadUint(SS_YAML_KEY_IOSELECT_INT);
 	g_eExpansionRomType = (eExpansionRomType) yamlLoadHelper.LoadUint(SS_YAML_KEY_EXPANSIONROMTYPE);
 	g_uPeripheralRomSlot = yamlLoadHelper.LoadUint(SS_YAML_KEY_PERIPHERALROMSLOT);
 
@@ -2892,7 +2895,8 @@ bool MemLoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT unitVersion)
 		if (GetCardMgr().GetLanguageCardMgr().GetLanguageCard())
 			GetCardMgr().GetLanguageCardMgr().GetLanguageCard()->SetLCMemMode(uMemMode & MF_LANGCARD_MASK);
 
-		SetLastRamWrite(yamlLoadHelper.LoadUint(SS_YAML_KEY_LASTRAMWRITE) ? TRUE : FALSE);
+		// SS_YAML_KEY_LASTRAMWRITE is saved/loaded as Uint for backward compatibility.
+		SetLastRamWrite(yamlLoadHelper.LoadUint(SS_YAML_KEY_LASTRAMWRITE));
 	}
 	else
 	{
@@ -2914,7 +2918,8 @@ bool MemLoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT unitVersion)
 				UINT LCMemMode = yamlLoadHelper.LoadUint(SS_YAML_KEY_MMULCMODE);
 				GetCardMgr().GetLanguageCardMgr().GetLanguageCard()->SetLCMemMode(LCMemMode);
 			}
-			SetLastRamWrite(yamlLoadHelper.LoadUint(SS_YAML_KEY_LASTRAMWRITE) ? TRUE : FALSE);
+			// SS_YAML_KEY_LASTRAMWRITE is saved/loaded as Uint for backward compatibility.
+			SetLastRamWrite(yamlLoadHelper.LoadUint(SS_YAML_KEY_LASTRAMWRITE));
 		}
 	}
 
@@ -3101,7 +3106,7 @@ static SS_CARDTYPE MemLoadSnapshotAuxCommon(YamlLoadHelper& yamlLoadHelper, cons
 	GetCardMgr().InsertAux(cardType);
 
 	memaux = RWpages[g_uActiveBank];
-	// NB. MemUpdatePaging(TRUE) called at end of Snapshot_LoadState_v2()
+	// NB. MemUpdatePaging(PagingFullInitialize) called at end of Snapshot_LoadState_v2()
 
 	return cardType;
 }

@@ -65,7 +65,7 @@ int PCapBackend::receive(const int size, uint8_t * rxframe)
 
 bool PCapBackend::isValid()
 {
-    return m_tfePcapFP;
+    return m_tfePcapFP != nullptr;
 }
 
 void PCapBackend::update(const ULONG /* nExecutedCycles */)
@@ -88,22 +88,22 @@ const std::string & PCapBackend::getInterfaceName()
     return m_interfaceName;
 }
 
-int PCapBackend::tfe_enumadapter_open(void)
+bool PCapBackend::tfe_enumadapter_open()
 {
     return tfe_arch_enumadapter_open();
 }
 
-int PCapBackend::tfe_enumadapter(std::string & name, std::string & description)
+bool PCapBackend::tfe_enumadapter(std::string & name, std::string & description)
 {
     return tfe_arch_enumadapter(name, description);
 }
 
-int PCapBackend::tfe_enumadapter_close(void)
+bool PCapBackend::tfe_enumadapter_close()
 {
     return tfe_arch_enumadapter_close();
 }
 
-const char * PCapBackend::tfe_lib_version(void)
+const char * PCapBackend::tfe_lib_version()
 {
     return tfe_arch_lib_version();
 }
@@ -111,18 +111,18 @@ const char * PCapBackend::tfe_lib_version(void)
 void PCapBackend::SetRegistryInterface(UINT slot, const std::string& name)
 {
     std::string regSection = RegGetConfigSlotSection(slot);
-    RegSaveString(regSection.c_str(), REGVALUE_UTHERNET_INTERFACE, TRUE, name);
+    RegSaveString(regSection.c_str(), REGVALUE_UTHERNET_INTERFACE, true, name);
 }
 
 std::string PCapBackend::GetRegistryInterface(UINT slot)
 {
     char interfaceName[MAX_PATH];
     std::string regSection = RegGetConfigSlotSection(slot);
-    RegLoadString(regSection.c_str(), REGVALUE_UTHERNET_INTERFACE, TRUE, interfaceName, sizeof(interfaceName), "");
+    RegLoadString(regSection.c_str(), REGVALUE_UTHERNET_INTERFACE, true, interfaceName, sizeof(interfaceName), "");
     return interfaceName;
 }
 
-int PCapBackend::tfe_is_npcap_loaded()
+bool PCapBackend::tfe_is_npcap_loaded()
 {
     return tfe_arch_is_npcap_loaded();
 }

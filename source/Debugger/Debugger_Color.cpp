@@ -200,9 +200,9 @@ static void _SetupColorRamp(const int iPrimary, int & iColor_)
 {
 	std::string strRamp;
 
-	bool bR = (iPrimary & 1) ? true : false;
-	bool bG = (iPrimary & 2) ? true : false;
-	bool bB = (iPrimary & 4) ? true : false;
+	bool bR = (iPrimary & 1);
+	bool bG = (iPrimary & 2);
+	bool bB = (iPrimary & 4);
 	int dStep = 32;
 	int nLevels = 256 / dStep;
 	for (int iLevel = nLevels; iLevel > 0; iLevel--)
@@ -227,7 +227,7 @@ static void _SetupColorRamp(const int iPrimary, int & iColor_)
 
 
 //===========================================================================
-void ConfigColorsReset (void)
+void ConfigColorsReset ()
 {
 	//	int iColor = 1; // black only has one level, skip it, since black levels same as white levels
 	//	for (int iPrimary = 1; iPrimary < 8; iPrimary++ )

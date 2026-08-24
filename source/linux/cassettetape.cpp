@@ -67,8 +67,9 @@ CassetteTape::tape_data_t CassetteTape::getCurrentWave(size_t &pos) const
 {
     if (myBaseCycles)
     {
+        const double clock = Get6502BaseClock();
         const double delta = g_nCumulativeCycles - *myBaseCycles;
-        const double position = delta / g_fCurrentCLK6502 * myFrequency;
+        const double position = delta / clock * myFrequency;
         pos = static_cast<size_t>(position);
 
         if (pos + 1 < myData.size())

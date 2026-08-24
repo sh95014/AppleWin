@@ -504,7 +504,7 @@ const uint32_t aROP4[ 256 ] =
 
 //===========================================================================
 
-HDC GetDebuggerMemDC(void)
+HDC GetDebuggerMemDC()
 {
 	if (!g_hDebuggerMemDC)
 	{
@@ -540,7 +540,7 @@ HDC GetDebuggerMemDC(void)
 	return g_hDebuggerMemDC;
 }
 
-void ReleaseDebuggerMemDC(void)
+void ReleaseDebuggerMemDC()
 {
 	if (g_hDebuggerMemDC)
 	{
@@ -559,7 +559,7 @@ void ReleaseDebuggerMemDC(void)
 }
 
 
-HDC GetConsoleFontDC(void)
+HDC GetConsoleFontDC()
 {
 	if (!g_hConsoleFontDC)
 	{
@@ -606,7 +606,7 @@ HDC GetConsoleFontDC(void)
 	return g_hConsoleFontDC;
 }
 
-void ReleaseConsoleFontDC(void)
+void ReleaseConsoleFontDC()
 {
 	if (g_hConsoleFontDC)
 	{
@@ -627,7 +627,7 @@ void ReleaseConsoleFontDC(void)
 }
 
 
-void StretchBltMemToFrameDC(void)
+void StretchBltMemToFrameDC()
 {
 	Win32Frame& win32Frame = Win32Frame::GetWin32Frame();
 
@@ -639,7 +639,7 @@ void StretchBltMemToFrameDC(void)
 	int wdest = nViewportCX;
 	int hdest = nViewportCY;
 
-	BOOL bRes = StretchBlt(
+	StretchBlt(
 		win32Frame.FrameGetDC(),			                // HDC hdcDest,
 		xdest, ydest,									    // int nXOriginDest, int nYOriginDest,
 		wdest, hdest,										// int nWidthDest,   int nHeightDest,
@@ -2814,8 +2814,8 @@ void _DrawSoftSwitchMainAuxBanks( RECT & rect, int bg_default = BG_INFO )
 	int dx = 7 * w;
 
 	int  nAddress  = 0xC002;
-	bool bMainRead = (GetMemMode() & MF_AUXREAD)  ? true : false;
-	bool bAuxWrite = (GetMemMode() & MF_AUXWRITE) ? true : false;
+	bool bMainRead = (GetMemMode() & MF_AUXREAD);
+	bool bAuxWrite = (GetMemMode() & MF_AUXWRITE);
 
 	temp.right = rect.left + dx;
 	_DrawSoftSwitch( temp, nAddress, !bMainRead, "R", "m", "x", NULL, BG_DATA_2 );
@@ -3471,7 +3471,7 @@ void DrawSubWindow_Data (Update_t bUpdate)
 		rect.right  = DISPLAY_DISASM_RIGHT;
 		rect.bottom = rect.top + nFontHeight;
 
-		iBackground = !!(iLine & 1) ? BG_DATA_1 : BG_DATA_2;
+		iBackground = (iLine & 1) ? BG_DATA_1 : BG_DATA_2;
 
 		DebuggerSetColorBG( DebuggerGetColor( iBackground ) );
 

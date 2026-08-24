@@ -23,6 +23,8 @@ namespace ra2
 
     KeyboardType getKeyboardEmulationType();
     PlaylistStartDisk getPlaylistStartDisk();
+    bool getFloppyMultiDrive();
+    Drive_e getDiskControlDrive();
     double getMouseSpeed();
     bool is280Lines();
 

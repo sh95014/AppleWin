@@ -53,7 +53,7 @@ namespace common2
         const auto loadValue = [&path](const char *name, int &dest)
         {
             uint32_t value;
-            if (RegLoadValue(path.c_str(), name, TRUE, &value))
+            if (RegLoadValue(path.c_str(), name, true, &value))
             {
                 // uint32_t and int have the same size
                 // but if they did not, this would be necessary
@@ -74,7 +74,7 @@ namespace common2
         const auto saveValue = [&path](const char *name, const int source)
         {
             // this seems to already do the right thing for negative numbers
-            RegSaveValue(path.c_str(), name, TRUE, source);
+            RegSaveValue(path.c_str(), name, true, source);
         };
         saveValue("width", geometry.width);
         saveValue("height", geometry.height);

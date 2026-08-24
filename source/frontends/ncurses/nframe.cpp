@@ -26,7 +26,7 @@ namespace na2
             setlocale(LC_ALL, "");
             initscr();
 
-            keypad(stdscr, TRUE); // required for KEY_SLEFT
+            keypad(stdscr, true); // required for KEY_SLEFT
             curs_set(0);
 
             noecho();

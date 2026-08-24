@@ -11,7 +11,7 @@ class MockingboardCard : public Card
 {
 public:
 	MockingboardCard(UINT slot, SS_CARDTYPE type);
-	virtual ~MockingboardCard(void);
+	virtual ~MockingboardCard();
 
 	virtual void InitializeIO(LPBYTE pCxRomPeripheral);
 	virtual void Destroy();
@@ -28,28 +28,29 @@ public:
 	BYTE IOWriteInternal(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nExecutedCycles);
 	BYTE PhasorIOInternal(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nExecutedCycles);
 
-	void ReinitializeClock(void);
+	void ReinitializeClock();
 	void MuteControl(bool mute);
 	void UpdateCycles(ULONG executedCycles);
-	bool IsActiveToPreventFullSpeed(void);
+	bool IsActiveToPreventFullSpeed();
 	void SetVolume(uint32_t dwVolume, uint32_t dwVolumeMax);
-	void SetCumulativeCycles(void);
-	UINT MB_Update(void);
-	short** GetVoiceBuffers(void) { return m_ppAYVoiceBuffer; }
-	int GetNumSamplesError(void) { return m_numSamplesError; }
+	void SetCumulativeCycles();
+	UINT MB_Update();
+	short** GetVoiceBuffers() { return m_ppAYVoiceBuffer; }
+	int GetNumSamplesError() { return m_numSamplesError; }
 	void SetNumSamplesError(int numSamplesError) { m_numSamplesError = numSamplesError; }
 #ifdef _DEBUG
-	void CheckCumulativeCycles(void);
+	void CheckCumulativeCycles();
 	void Get6522IrqDescription(std::string& desc);
 #endif
 
-	bool Is6522IRQ(void);
-	UINT64 GetLastCumulativeCycles(void);
+	bool Is6522IRQ();
+	UINT64 GetLastCumulativeCycles();
 	void UpdateIFR(BYTE nDevice, BYTE clr_mask, BYTE set_mask);
 	BYTE GetPCR(BYTE nDevice);
-	bool IsAnyTimer1Active(void);
-	void UseBad6522A(void) { m_MBSubUnit[0].sy6522.InitBadState(true); }
-	void UseBad6522B(void) { m_MBSubUnit[1].sy6522.InitBadState(true); }
+	bool IsAnyTimer1Active();
+	void UseBad6522A() { m_MBSubUnit[0].sy6522.InitBadState(true); }
+	void UseBad6522B() { m_MBSubUnit[1].sy6522.InitBadState(true); }
+	void SetSocketAY891x(BYTE socket, AY891xType type);
 	SSI263Type GetSocketSSI263(BYTE socket) { return m_MBSubUnit[socket].ssi263.GetType(); }
 	void SetSocketSSI263(BYTE socket, SSI263Type type);
 	SSI263Type GetSocketSC01() { return m_MBSubUnit[0].ssi263.GetSC01(); }
@@ -73,10 +74,10 @@ public:
 	};
 	void GetSnapshotForDebugger(DEBUGGER_MB_CARD* const pMBForDebugger);
 
-	static std::string GetSnapshotCardName(void);
-	static std::string GetSnapshotCardNamePhasor(void);
-	static std::string GetSnapshotCardNameMegaAudio(void);
-	static std::string GetSnapshotCardNameSDMusic(void);
+	static std::string GetSnapshotCardName();
+	static std::string GetSnapshotCardNamePhasor();
+	static std::string GetSnapshotCardNameMegaAudio();
+	static std::string GetSnapshotCardNameSDMusic();
 
 	static const unsigned short NUM_MB_CHANNELS = 2;
 	static const uint32_t SAMPLE_RATE = 44100;	// Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
@@ -108,7 +109,7 @@ private:
 			nAYCurrentRegister[0] = nAYCurrentRegister[1] = 0;	// not valid
 			state[0] = state[1] = AY_INACTIVE;
 			isAYLatchedAddressValid[0] = isAYLatchedAddressValid[1] = false;	// after AY reset
-			isChipSelected[0] = type == CT_Phasor ? false : true;	// Only Phasor is false, all other MB variants are true
+			isChipSelected[0] = (type != CT_Phasor);	// Only Phasor is false, all other MB variants are true
 			isChipSelected[1] = false;
 			SetBusState(false);
 		}
@@ -146,7 +147,7 @@ private:
 	void AY8910UpdateSetCycles();
 
 	UINT AY8910_SaveSnapshot(class YamlSaveHelper& yamlSaveHelper, BYTE subunit, BYTE ay, const std::string& suffix);
-	UINT AY8910_LoadSnapshot(class YamlLoadHelper& yamlLoadHelper, BYTE subunit, BYTE ay, const std::string& suffix);
+	UINT AY8910_LoadSnapshot(class YamlLoadHelper& yamlLoadHelper, BYTE subunit, BYTE ay, const std::string& suffix, UINT version);
 
 	UINT64 m_lastAYUpdateCycle;
 	//-------------------------------------

@@ -111,7 +111,7 @@ static int rstereopos, rchan1pos, rchan2pos, rchan3pos;
 double AY8913::m_fCurrentCLK_AY8910 = 0.0;
 
 
-void AY8913::init(void)
+void AY8913::init()
 {
 	// Init the statics that were in sound_ay_overlay()
 	rng = 1;
@@ -119,15 +119,16 @@ void AY8913::init(void)
 	env_first = 1; env_rev = 0; env_counter = 15;
 }
 
-AY8913::AY8913(void)
+AY8913::AY8913()
 {
 	memset(sound_ay_registers, 0, sizeof(sound_ay_registers));
 	init();
 	m_fCurrentCLK_AY8910 = g_fCurrentCLK6502;
+	m_type = AY_3_8913;
 };
 
 
-void AY8913::sound_ay_init( void )
+void AY8913::sound_ay_init()
 {
 	/* AY output doesn't match the claimed levels; these levels are based
 	* on the measurements posted to comp.sys.sinclair in Dec 2001 by
@@ -320,7 +321,7 @@ void AY8913::sound_init( const char *device )
 
 #if 0
 void
-sound_pause( void )
+sound_pause()
 {
   if( sound_enabled )
     sound_end();
@@ -328,7 +329,7 @@ sound_pause( void )
 
 
 void
-sound_unpause( void )
+sound_unpause()
 {
 /* No sound if fastloading in progress */
   if( settings_current.fastload && tape_is_playing() )
@@ -339,7 +340,7 @@ sound_unpause( void )
 #endif
 
 
-void AY8913::sound_end( void )
+void AY8913::sound_end()
 {
 #if 0
   if( sound_enabled ) {
@@ -471,7 +472,7 @@ sound_write_buf_pstereo( libspectrum_signed_word * out, int c )
 #define HZ_COMMON_DENOMINATOR 50
 #include "Log.h"
 
-void AY8913::sound_ay_overlay( void )
+void AY8913::sound_ay_overlay()
 {
   int tone_level[3];
   int mixer, envshape;
@@ -763,7 +764,23 @@ BYTE AY8913::sound_ay_read( int reg )
 	case 10:
 		val &= 31;
 		break;
+	case 7:		// ENABLE
+		if (m_type == AY_3_8912)
+			val &= 0x7f;
+		if (m_type == AY_3_8913)
+			val &= 0x3f;
+		break;
+	case 14:	// PORTA
+		if (m_type == AY_3_8913)
+			val = 14;	// reg doesn't exist, so bus just returns reg number
+		break;
+	case 15:	// PORTB
+		if (m_type == AY_3_8912 || m_type == AY_3_8913)
+			val = 15;	// reg doesn't exist, so bus just returns reg number
 	}
+
+	if (m_type == AY_Empty)
+		val = 0xff;
 
 	return val;
 }
@@ -776,6 +793,9 @@ BYTE AY8913::sound_ay_read( int reg )
  */
 void AY8913::sound_ay_write( int reg, int val, libspectrum_dword now )
 {
+  if (m_type == AY_Empty)
+    return;
+
   if( ay_change_count < AY_CHANGE_MAX ) {
     ay_change[ ay_change_count ].tstates = now;
     ay_change[ ay_change_count ].reg = ( reg & 15 );
@@ -792,7 +812,7 @@ void AY8913::sound_ay_write( int reg, int val, libspectrum_dword now )
 /* no need to call this initially, but should be called
  * on reset otherwise.
  */
-void AY8913::sound_ay_reset( void )
+void AY8913::sound_ay_reset()
 {
   int f;
 
@@ -836,7 +856,7 @@ void AY8913::sound_ay_reset( void )
 
 #ifdef HAVE_SAMPLERATE
 static void
-sound_resample( void )
+sound_resample()
 {
   int error;
   SRC_DATA data;
@@ -873,7 +893,7 @@ sound_resample( void )
 }
 #endif /* #ifdef HAVE_SAMPLERATE */
 
-void AY8913::sound_frame( void )
+void AY8913::sound_frame()
 {
 #if 0
   libspectrum_signed_word *ptr, *tptr;
@@ -1009,8 +1029,10 @@ sound_beeper( int is_tape, int on )
 
 //
 
-#define SS_YAML_KEY_AY8910 "AY8910"
+#define SS_YAML_KEY_AY8910_v14 "AY8910"	// v14
+#define SS_YAML_KEY_AY891x "AY891x"		// v15+
 
+#define SS_YAML_KEY_TYPE "Type"			// v15+
 #define SS_YAML_KEY_TONE0_TICK "Tone0 Tick"
 #define SS_YAML_KEY_TONE1_TICK "Tone1 Tick"
 #define SS_YAML_KEY_TONE2_TICK "Tone2 Tick"
@@ -1051,10 +1073,36 @@ sound_beeper( int is_tape, int on )
 #define SS_YAML_KEY_CHANGE "Change"
 #define SS_YAML_VALUE_CHANGE_FORMAT "%d, %d, 0x%1X, 0x%02X"
 
+std::string AY8913::Type2String()
+{
+	if (m_type == AY_Empty) return "Empty";
+	if (m_type == AY_3_8910) return "AY-3-8910";
+	if (m_type == AY_3_8912) return "AY-3-8912";
+	if (m_type == AY_3_8913) return "AY-3-8913";
+	if (m_type == YM2149F) return "YM2149F";
+	_ASSERT(0);
+	return "AY-3-8913";
+}
+
+AY891xType AY8913::String2Type(std::string type)
+{
+	if (type == "Empty") return AY_Empty;
+	if (type == "AY-3-8910") return AY_3_8910;
+	if (type == "AY-3-8912") return AY_3_8912;
+	if (type == "AY-3-8913") return AY_3_8913;
+	if (type == "YM2149F") return YM2149F;
+	_ASSERT(0);
+	return AY_3_8913;
+}
+
 void AY8913::SaveSnapshot(YamlSaveHelper& yamlSaveHelper, const std::string& suffix)
 {
-	std::string unit = std::string(SS_YAML_KEY_AY8910) + suffix;
+	std::string unit = std::string(SS_YAML_KEY_AY891x) + suffix;
 	YamlSaveHelper::Label label(yamlSaveHelper, "%s:\n", unit.c_str());
+
+	yamlSaveHelper.SaveString(SS_YAML_KEY_TYPE, Type2String());
+	if (m_type == AY_Empty)
+		return;
 
 	yamlSaveHelper.SaveUint(SS_YAML_KEY_TONE0_TICK, ay_tone_tick[0]);
 	yamlSaveHelper.SaveUint(SS_YAML_KEY_TONE1_TICK, ay_tone_tick[1]);
@@ -1106,11 +1154,23 @@ void AY8913::SaveSnapshot(YamlSaveHelper& yamlSaveHelper, const std::string& suf
 	}
 }
 
-bool AY8913::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, const std::string& suffix)
+bool AY8913::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, const std::string& suffix, UINT version)
 {
-	std::string unit = std::string(SS_YAML_KEY_AY8910) + suffix;
+	std::string unit = (version >= 15	? std::string(SS_YAML_KEY_AY891x)
+										: std::string(SS_YAML_KEY_AY8910_v14)) + suffix;
 	if (!yamlLoadHelper.GetSubMap(unit))
 		throw std::runtime_error("Card: Expected key: " + unit);
+
+	m_type = AY_3_8913;
+	if (version >= 15)
+	{
+		m_type = String2Type(yamlLoadHelper.LoadString(SS_YAML_KEY_TYPE));
+		if (m_type == AY_Empty)
+		{
+			yamlLoadHelper.PopMap();
+			return true;
+		}
+	}
 
 	ay_tone_tick[0] = yamlLoadHelper.LoadUint(SS_YAML_KEY_TONE0_TICK);
 	ay_tone_tick[1] = yamlLoadHelper.LoadUint(SS_YAML_KEY_TONE1_TICK);

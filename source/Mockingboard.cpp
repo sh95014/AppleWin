@@ -98,20 +98,23 @@ MockingboardCard::MockingboardCard(UINT slot, SS_CARDTYPE type) : Card(type, slo
 		m_MBSubUnit[i].sy6522.InitSyncEvents(m_syncEvent[id0], m_syncEvent[id1]);
 		m_MBSubUnit[i].ssi263.SetDevice(i);
 
+		// Load AY891x chip config from Registry
+		// TODO: do this when we can config the AYs via the Config GUI
+
 		// Load speech chip config from Registry
 		uint32_t type;
 		std::string regSection = RegGetConfigSlotSection(m_slot);
 		if (i == 0)
-			RegLoadValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET0, TRUE, &type, kSSI263A_Default);
+			RegLoadValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET0, true, &type, kSSI263A_Default);
 		else
-			RegLoadValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET1, TRUE, &type, kSSI263B_Default);	// socket-1 for main SSI263
+			RegLoadValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET1, true, &type, kSSI263B_Default);	// socket-1 for main SSI263
 		m_MBSubUnit[i].ssi263.SetType(SSI263Type(type));
 
 		if (i == 0)
 		{
 			uint32_t hasSC01;
 			std::string regSection = RegGetConfigSlotSection(m_slot);
-			RegLoadValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SC01, TRUE, &hasSC01, kSC01_Default == SC01 ? TRUE : FALSE);
+			RegLoadValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SC01, true, &hasSC01, kSC01_Default == SC01 ? 1 : 0);
 			m_MBSubUnit[i].ssi263.SetSC01(hasSC01 ? SC01 : SSI263Empty);
 		}
 	}
@@ -123,12 +126,29 @@ MockingboardCard::MockingboardCard(UINT slot, SS_CARDTYPE type) : Card(type, slo
 	LogFileOutput("MockingboardCard::ctor: Reset()\n");
 }
 
-MockingboardCard::~MockingboardCard(void)
+MockingboardCard::~MockingboardCard()
 {
 	Destroy();
 }
 
 //---------------------------------------------------------------------------
+
+void MockingboardCard::SetSocketAY891x(BYTE socket, AY891xType type)
+{
+	UINT subUnit = socket & 1;
+	UINT ayUnit = socket < 2 ? 0 : 1;
+	m_MBSubUnit[subUnit].ay8913[ayUnit].SetType(type);
+
+	std::string regSection = RegGetConfigSlotSection(m_slot);
+	if (socket == 0)
+		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_AY_SOCKET0, true, type);
+	else if (socket == 1)
+		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_AY_SOCKET1, true, type);
+	else if (socket == 2)
+		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_AY_SOCKET2, true, type);
+	else
+		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_AY_SOCKET3, true, type);
+}
 
 void MockingboardCard::SetSocketSSI263(BYTE socket, SSI263Type type)
 {
@@ -136,9 +156,9 @@ void MockingboardCard::SetSocketSSI263(BYTE socket, SSI263Type type)
 
 	std::string regSection = RegGetConfigSlotSection(m_slot);
 	if (socket == 0)
-		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET0, TRUE, type);
+		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET0, true, type);
 	else
-		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET1, TRUE, type);
+		RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SSI263_SOCKET1, true, type);
 }
 
 void MockingboardCard::SetSocketSC01(SSI263Type type)
@@ -146,12 +166,12 @@ void MockingboardCard::SetSocketSC01(SSI263Type type)
 	m_MBSubUnit[0].ssi263.SetSC01(type);
 
 	std::string regSection = RegGetConfigSlotSection(m_slot);
-	RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SC01, TRUE, type == SC01 ? TRUE : FALSE);
+	RegSaveValue(regSection.c_str(), REGVALUE_MOCKINGBOARD_SC01, true, type == SC01);
 }
 
 //---------------------------------------------------------------------------
 
-bool MockingboardCard::IsAnyTimer1Active(void)
+bool MockingboardCard::IsAnyTimer1Active()
 {
 	bool active = false;
 	for (UINT i = 0; i < NUM_SUBUNITS_PER_MB; i++)
@@ -432,13 +452,13 @@ void MockingboardCard::UpdateIFRandIRQ(MB_SUBUNIT* pMB, BYTE clr_mask, BYTE set_
 //---------------------------------------------------------------------------
 
 // Called from MockingboardCardMgr
-bool MockingboardCard::Is6522IRQ(void)
+bool MockingboardCard::Is6522IRQ()
 {
 	// Now update the IRQ signal from all 6522s
 	// . OR-sum of all active TIMER1, TIMER2 & SPEECH sources (from all 6522s)
 	bool irq = false;
 	for (UINT i = 0; i < NUM_SUBUNITS_PER_MB; i++)
-		irq |= m_MBSubUnit[i].sy6522.GetReg(SY6522::rIFR) & 0x80 ? true : false;
+		irq |= ((m_MBSubUnit[i].sy6522.GetReg(SY6522::rIFR) & 0x80) != 0);
 
 	// NB. Mockingboard generates IRQ on both 6522s:
 	// . SSI263's IRQ (A/!R) is routed via the 2nd 6522's CA1 input (at $Cn80) and must generate a 6502 IRQ (not NMI)
@@ -452,7 +472,7 @@ bool MockingboardCard::Is6522IRQ(void)
 //---------------------------------------------------------------------------
 
 // Called from class SSI263
-UINT64 MockingboardCard::GetLastCumulativeCycles(void)
+UINT64 MockingboardCard::GetLastCumulativeCycles()
 {
 	return m_lastCumulativeCycle;
 }
@@ -472,7 +492,7 @@ BYTE MockingboardCard::GetPCR(BYTE nDevice)
 // Called by:
 // . MB_SyncEventCallback() -> MockingboardCardManager::UpdateSoundBuffer() on a TIMER1 (not TIMER2) underflow - when IsAnyTimer1Active() == true (for any MB)
 // . MockingboardCardManager::Update()                                                                         - when IsAnyTimer1Active() == false (for all MB's)
-UINT MockingboardCard::MB_Update(void)
+UINT MockingboardCard::MB_Update()
 {
 	if (g_bFullSpeed)
 	{
@@ -570,7 +590,7 @@ UINT MockingboardCard::MB_Update(void)
 //-----------------------------------------------------------------------------
 
 // NB. Called when /g_fCurrentCLK6502/ changes
-void MockingboardCard::ReinitializeClock(void)
+void MockingboardCard::ReinitializeClock()
 {
 	AY8910_InitClock((int)g_fCurrentCLK6502);	// todo: account for g_PhasorClockScaleFactor?
 												// NB. Other calls to AY8910_InitClock() use the constant CLK_6502
@@ -578,7 +598,7 @@ void MockingboardCard::ReinitializeClock(void)
 
 //-----------------------------------------------------------------------------
 
-void MockingboardCard::Destroy(void)
+void MockingboardCard::Destroy()
 {
 	for (UINT i = 0; i < NUM_SSI263; i++)
 		m_MBSubUnit[i].ssi263.DSUninit();
@@ -678,7 +698,7 @@ BYTE MockingboardCard::IOReadInternal(WORD PC, WORD nAddr, BYTE bWrite, BYTE nVa
 		if (CS & 2)
 			nRes |= m_MBSubUnit[SY6522_DEVICE_B].sy6522.Read(nAddr & 0xf);
 
-		bool bAccessedDevice = (CS & 3) ? true : false;
+		bool bAccessedDevice = (CS & 3);
 
 		bool CS_SSI263 = !(nAddr & 0x10) && (nAddr & 0x60) && !(nAddr & 0x80);				// SSI263 at $Cn2x and/or $Cn4x
 
@@ -786,9 +806,9 @@ BYTE MockingboardCard::IOWriteInternal(WORD PC, WORD nAddr, BYTE bWrite, BYTE nV
 		if (m_phasorMode == PH_Mockingboard || m_phasorMode == PH_Phasor)	// No SSI263 for Echo+
 		{
 			// Confirmed that Phasor has no extra logic to map SSI263 (it's the same as Mockingboard's)
-			bool CS_SSI263_A = nAddr & 0x40;					// SSI263 at $Cn4x-Cn7x, $CnCx-CnFx
+			bool CS_SSI263_A = (nAddr & 0x40);					// SSI263 at $Cn4x-Cn7x, $CnCx-CnFx
 
-			bool CS_SSI263_B = nAddr & 0x20;					// SSI263 at $Cn2x-Cn3x, $Cn6x-Cn7x, $CnAx-CnBx, $CnEx-CnFx
+			bool CS_SSI263_B = (nAddr & 0x20);					// SSI263 at $Cn2x-Cn3x, $Cn6x-Cn7x, $CnAx-CnBx, $CnEx-CnFx
 
 			// NB. Mockingboard mode: writes to $Cn4x/SSI263 also get written to 1st 6522 (have confirmed on real Phasor h/w)
 			if (CS_SSI263_A)	// Primary SSI263
@@ -930,7 +950,7 @@ void MockingboardCard::MuteControl(bool mute)
 //-----------------------------------------------------------------------------
 
 #ifdef _DEBUG
-void MockingboardCard::CheckCumulativeCycles(void)
+void MockingboardCard::CheckCumulativeCycles()
 {
 	_ASSERT(m_lastCumulativeCycle == g_nCumulativeCycles);
 	m_lastCumulativeCycle = g_nCumulativeCycles;
@@ -938,7 +958,7 @@ void MockingboardCard::CheckCumulativeCycles(void)
 #endif
 
 // Called by: ResetState() and Snapshot_LoadState_v2()
-void MockingboardCard::SetCumulativeCycles(void)
+void MockingboardCard::SetCumulativeCycles()
 {
 	m_lastCumulativeCycle = g_nCumulativeCycles;
 }
@@ -1027,7 +1047,7 @@ int MockingboardCard::MB_SyncEventCallbackInternal(int id, int /*cycles*/, ULONG
 
 //-----------------------------------------------------------------------------
 
-bool MockingboardCard::IsActiveToPreventFullSpeed(void)
+bool MockingboardCard::IsActiveToPreventFullSpeed()
 {
 	// Full-speed check ignores SSI263::IsPhonemeActive(), because: (GH#1340)
 	// . Once an SSI263 has started playing a phoneme (and the chip isn't powered-down) then it'll repeat it indefinitely.
@@ -1158,10 +1178,10 @@ UINT MockingboardCard::AY8910_SaveSnapshot(YamlSaveHelper& yamlSaveHelper, BYTE 
 	return 1;
 }
 
-UINT MockingboardCard::AY8910_LoadSnapshot(YamlLoadHelper& yamlLoadHelper, BYTE subunit, BYTE ay, const std::string& suffix)
+UINT MockingboardCard::AY8910_LoadSnapshot(YamlLoadHelper& yamlLoadHelper, BYTE subunit, BYTE ay, const std::string& suffix, UINT version)
 {
 	_ASSERT(subunit < NUM_SUBUNITS_PER_MB && ay < NUM_AY8913_PER_SUBUNIT);
-	return m_MBSubUnit[subunit].ay8913[ay].LoadSnapshot(yamlLoadHelper, suffix) ? 1 : 0;
+	return m_MBSubUnit[subunit].ay8913[ay].LoadSnapshot(yamlLoadHelper, suffix, version) ? 1 : 0;
 }
 
 //=============================================================================
@@ -1191,7 +1211,8 @@ UINT MockingboardCard::AY8910_LoadSnapshot(YamlLoadHelper& yamlLoadHelper, BYTE 
 //13: Removed SS_YAML_KEY_SSI263_ACTIVE_PHONEME
 //    Removed SS_YAML_KEY_VOTRAX_PHONEME (as this has been present in the SC01 subunit since v12!)
 //14: Added: SSI263: Type
-const UINT kUNIT_VERSION = 14;
+//15: Added: AY891x: Type
+const UINT kUNIT_VERSION = 15;
 
 #define SS_YAML_KEY_MB_UNIT "Unit"
 #define SS_YAML_KEY_AY_CURR_REG "AY Current Register"
@@ -1215,25 +1236,25 @@ const UINT kUNIT_VERSION = 14;
 
 #define SS_YAML_KEY_VOTRAX_PHONEME "Votrax Phoneme"
 
-std::string MockingboardCard::GetSnapshotCardName(void)
+std::string MockingboardCard::GetSnapshotCardName()
 {
 	static const std::string name("Mockingboard C");
 	return name;
 }
 
-std::string MockingboardCard::GetSnapshotCardNamePhasor(void)
+std::string MockingboardCard::GetSnapshotCardNamePhasor()
 {
 	static const std::string name("Phasor");
 	return name;
 }
 
-std::string MockingboardCard::GetSnapshotCardNameMegaAudio(void)
+std::string MockingboardCard::GetSnapshotCardNameMegaAudio()
 {
 	static const std::string name("MEGA Audio");
 	return name;
 }
 
-std::string MockingboardCard::GetSnapshotCardNameSDMusic(void)
+std::string MockingboardCard::GetSnapshotCardNameSDMusic()
 {
 	static const std::string name("SD Music");
 	return name;
@@ -1306,7 +1327,7 @@ bool MockingboardCard::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT version
 
 		pMB->sy6522.LoadSnapshot(yamlLoadHelper, version);
 		UpdateIFRandIRQ(pMB, 0, pMB->sy6522.GetReg(SY6522::rIFR));			// Assert any pending IRQs (GH#677)
-		AY8910_LoadSnapshot(yamlLoadHelper, subunit, AY8913_DEVICE_A, std::string(""));
+		AY8910_LoadSnapshot(yamlLoadHelper, subunit, AY8913_DEVICE_A, std::string(""), version);
 
 		pMB->ssi263.LoadSnapshot(yamlLoadHelper, PH_Mockingboard, version, subunit);
 
@@ -1430,19 +1451,19 @@ bool MockingboardCard::Phasor_LoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT 
 		if (version >= 5 && version <= 8)
 		{
 			const BYTE phasorDevice = subunit == 0 ? AY8913_DEVICE_B : AY8913_DEVICE_A;
-			AY8910_LoadSnapshot(yamlLoadHelper, 0, phasorDevice, std::string("-A"));
-			AY8910_LoadSnapshot(yamlLoadHelper, 1, phasorDevice, std::string("-B"));
+			AY8910_LoadSnapshot(yamlLoadHelper, 0, phasorDevice, std::string("-A"), version);
+			AY8910_LoadSnapshot(yamlLoadHelper, 1, phasorDevice, std::string("-B"), version);
 		}
 		else if (version <= 4 || version == 9)
 		{
 			const BYTE phasorDevice = subunit == 0 ? AY8913_DEVICE_A : AY8913_DEVICE_B;
-			AY8910_LoadSnapshot(yamlLoadHelper, 0, phasorDevice, std::string("-A"));
-			AY8910_LoadSnapshot(yamlLoadHelper, 1, phasorDevice, std::string("-B"));
+			AY8910_LoadSnapshot(yamlLoadHelper, 0, phasorDevice, std::string("-A"), version);
+			AY8910_LoadSnapshot(yamlLoadHelper, 1, phasorDevice, std::string("-B"), version);
 		}
 		else
 		{
-			AY8910_LoadSnapshot(yamlLoadHelper, subunit, AY8913_DEVICE_A, std::string("-A"));
-			AY8910_LoadSnapshot(yamlLoadHelper, subunit, AY8913_DEVICE_B, std::string("-B"));
+			AY8910_LoadSnapshot(yamlLoadHelper, subunit, AY8913_DEVICE_A, std::string("-A"), version);
+			AY8910_LoadSnapshot(yamlLoadHelper, subunit, AY8913_DEVICE_B, std::string("-B"), version);
 		}
 
 		pMB->ssi263.LoadSnapshot(yamlLoadHelper, m_phasorMode, version, subunit);

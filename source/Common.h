@@ -125,6 +125,10 @@ enum AppMode_e
 #define  REGVALUE_LAST_DISK_1		"Last Disk Image 1"
 #define  REGVALUE_LAST_DISK_2		"Last Disk Image 2"
 #define  REGVALUE_LAST_HARDDISK_	"Last Harddisk Image "
+#define REGVALUE_MOCKINGBOARD_AY_SOCKET0 "AY Socket 0"
+#define REGVALUE_MOCKINGBOARD_AY_SOCKET1 "AY Socket 1"
+#define REGVALUE_MOCKINGBOARD_AY_SOCKET2 "AY Socket 2"
+#define REGVALUE_MOCKINGBOARD_AY_SOCKET3 "AY Socket 3"
 #define REGVALUE_MOCKINGBOARD_SSI263_SOCKET0 "SSI263 Socket 0"
 #define REGVALUE_MOCKINGBOARD_SSI263_SOCKET1 "SSI263 Socket 1"
 #define REGVALUE_MOCKINGBOARD_SC01 "SC01"
@@ -233,7 +237,7 @@ inline bool IsApple2PlusOrClone(eApple2Type type)	// Apple ][,][+,][J-Plus or cl
 
 inline bool IsAppleIIe(eApple2Type type)			// Apple //e,Enhanced//e or clone //e,Enhanced//e
 {
-	return type & APPLE2E_MASK;
+	return (type & APPLE2E_MASK) != 0;
 }
 
 inline bool IsAppleIIeOrAbove(eApple2Type type)		// Apple //e,Enhanced//e,//c or clone //e,Enhanced//e
@@ -247,12 +251,12 @@ inline bool IsAppleIIc(eApple2Type type)			// Apple //c
 }
 
 extern eApple2Type g_Apple2Type;
-inline bool IsEnhancedIIE(void)
+inline bool IsEnhancedIIE()
 {
 	return ( (g_Apple2Type == A2TYPE_APPLE2EENHANCED) || (g_Apple2Type == A2TYPE_TK30002E) );
 }
 
-inline bool IsEnhancedIIEorIIC(void)
+inline bool IsEnhancedIIEorIIC()
 {
 	return ( (g_Apple2Type == A2TYPE_APPLE2EENHANCED) || (g_Apple2Type == A2TYPE_TK30002E) || IS_APPLE2C() );
 }

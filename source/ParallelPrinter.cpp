@@ -53,7 +53,7 @@ void ParallelPrinterCard::InitializeIO(LPBYTE pCxRomPeripheral)
 }
 
 //===========================================================================
-bool ParallelPrinterCard::CheckPrint(void)
+bool ParallelPrinterCard::CheckPrint()
 {
 	m_inactivity = 0;
 	if (m_file == NULL)
@@ -71,7 +71,7 @@ bool ParallelPrinterCard::CheckPrint(void)
 }
 
 //===========================================================================
-void ParallelPrinterCard::ClosePrint(void)
+void ParallelPrinterCard::ClosePrint()
 {
 	if (m_file != NULL)
 	{
@@ -90,7 +90,7 @@ void ParallelPrinterCard::ClosePrint(void)
 }
 
 //===========================================================================
-void ParallelPrinterCard::Destroy(void)
+void ParallelPrinterCard::Destroy()
 {
 	ClosePrint();
 }
@@ -154,7 +154,7 @@ BYTE __stdcall ParallelPrinterCard::IOWrite(WORD, WORD address, BYTE, BYTE value
 
 //===========================================================================
 
-const std::string& ParallelPrinterCard::GetFilename(void)
+const std::string& ParallelPrinterCard::GetFilename()
 {
 	return m_szPrintFilename;
 }
@@ -170,47 +170,47 @@ void ParallelPrinterCard::SetFilename(const std::string& prtFilename)
 	else  //No registry entry is available
 	{
 		m_szPrintFilename = g_sProgramDir + DEFAULT_PRINT_FILENAME;
-		RegSaveString(REG_CONFIG, REGVALUE_PRINTER_FILENAME, 1, m_szPrintFilename);
+		RegSaveString(REG_CONFIG, REGVALUE_PRINTER_FILENAME, true, m_szPrintFilename);
 	}
 }
 
 //===========================================================================
 
-void ParallelPrinterCard::GetRegistryConfig(void)
+void ParallelPrinterCard::GetRegistryConfig()
 {
 	std::string regSection = RegGetConfigSlotSection(m_slot);
 
 	uint32_t dwTmp;
 	char szFilename[MAX_PATH];
 
-	if (RegLoadValue(regSection.c_str(), REGVALUE_DUMP_TO_PRINTER, TRUE, &dwTmp))
-		SetDumpToPrinter(dwTmp ? true : false);
+	if (RegLoadValue(regSection.c_str(), REGVALUE_DUMP_TO_PRINTER, true, &dwTmp))
+		SetDumpToPrinter(dwTmp != 0);
 
-	if (RegLoadValue(regSection.c_str(), REGVALUE_CONVERT_ENCODING, TRUE, &dwTmp))
-		SetConvertEncoding(dwTmp ? true : false);
+	if (RegLoadValue(regSection.c_str(), REGVALUE_CONVERT_ENCODING, true, &dwTmp))
+		SetConvertEncoding(dwTmp != 0);
 
-	if (RegLoadValue(regSection.c_str(), REGVALUE_FILTER_UNPRINTABLE, TRUE, &dwTmp))
-		SetFilterUnprintable(dwTmp ? true : false);
+	if (RegLoadValue(regSection.c_str(), REGVALUE_FILTER_UNPRINTABLE, true, &dwTmp))
+		SetFilterUnprintable(dwTmp != 0);
 
-	if (RegLoadValue(regSection.c_str(), REGVALUE_PRINTER_APPEND, TRUE, &dwTmp))
-		SetPrinterAppend(dwTmp ? true : false);
+	if (RegLoadValue(regSection.c_str(), REGVALUE_PRINTER_APPEND, true, &dwTmp))
+		SetPrinterAppend(dwTmp != 0);
 
-	if (RegLoadString(regSection.c_str(), REGVALUE_PRINTER_FILENAME, 1, szFilename, MAX_PATH, ""))
+	if (RegLoadString(regSection.c_str(), REGVALUE_PRINTER_FILENAME, true, szFilename, MAX_PATH, ""))
 		SetFilename(szFilename);
 
-	if (RegLoadValue(regSection.c_str(), REGVALUE_PRINTER_IDLE_LIMIT, TRUE, &dwTmp))
+	if (RegLoadValue(regSection.c_str(), REGVALUE_PRINTER_IDLE_LIMIT, true, &dwTmp))
 		SetIdleLimit(dwTmp);
 }
 
-void ParallelPrinterCard::SetRegistryConfig(void)
+void ParallelPrinterCard::SetRegistryConfig()
 {
 	std::string regSection = RegGetConfigSlotSection(m_slot);
-	RegSaveValue(regSection.c_str(), REGVALUE_DUMP_TO_PRINTER, TRUE, GetDumpToPrinter() ? 1 : 0);
-	RegSaveValue(regSection.c_str(), REGVALUE_CONVERT_ENCODING, TRUE, GetConvertEncoding() ? 1 : 0);
-	RegSaveValue(regSection.c_str(), REGVALUE_FILTER_UNPRINTABLE, TRUE, GetFilterUnprintable() ? 1 : 0);
-	RegSaveValue(regSection.c_str(), REGVALUE_PRINTER_APPEND, TRUE, GetPrinterAppend() ? 1 : 0);
-	RegSaveString(regSection.c_str(), REGVALUE_PRINTER_FILENAME, TRUE, GetFilename());
-	RegSaveValue(regSection.c_str(), REGVALUE_PRINTER_IDLE_LIMIT, TRUE, GetIdleLimit());
+	RegSaveValue(regSection.c_str(), REGVALUE_DUMP_TO_PRINTER, true, GetDumpToPrinter());
+	RegSaveValue(regSection.c_str(), REGVALUE_CONVERT_ENCODING, true, GetConvertEncoding());
+	RegSaveValue(regSection.c_str(), REGVALUE_FILTER_UNPRINTABLE, true, GetFilterUnprintable());
+	RegSaveValue(regSection.c_str(), REGVALUE_PRINTER_APPEND, true, GetPrinterAppend());
+	RegSaveString(regSection.c_str(), REGVALUE_PRINTER_FILENAME, true, GetFilename());
+	RegSaveValue(regSection.c_str(), REGVALUE_PRINTER_IDLE_LIMIT, true, GetIdleLimit());
 }
 
 //===========================================================================
@@ -225,7 +225,7 @@ void ParallelPrinterCard::SetRegistryConfig(void)
 #define SS_YAML_KEY_APPEND "Printer Append"
 #define SS_YAML_KEY_DUMPTOREALPRINTER "Enable Dump To Real Printer"
 
-const std::string& ParallelPrinterCard::GetSnapshotCardName(void)
+const std::string& ParallelPrinterCard::GetSnapshotCardName()
 {
 	static const std::string name("Generic Printer");
 	return name;
@@ -239,7 +239,7 @@ void ParallelPrinterCard::SaveSnapshot(class YamlSaveHelper& yamlSaveHelper)
 	yamlSaveHelper.SaveUint(SS_YAML_KEY_INACTIVITY, m_inactivity);
 	yamlSaveHelper.SaveUint(SS_YAML_KEY_IDLELIMIT, m_printerIdleLimit);
 	yamlSaveHelper.SaveString(SS_YAML_KEY_FILENAME, m_szPrintFilename);
-	yamlSaveHelper.SaveBool(SS_YAML_KEY_FILEOPEN, (m_file != NULL) ? true : false);
+	yamlSaveHelper.SaveBool(SS_YAML_KEY_FILEOPEN, (m_file != NULL));
 	yamlSaveHelper.SaveBool(SS_YAML_KEY_DUMPTOPRINTER, m_bDumpToPrinter);
 	yamlSaveHelper.SaveBool(SS_YAML_KEY_CONVERTENCODING, m_bConvertEncoding);
 	yamlSaveHelper.SaveBool(SS_YAML_KEY_FILTERUNPRINTABLE, m_bFilterUnprintable);
@@ -260,7 +260,7 @@ bool ParallelPrinterCard::LoadSnapshot(class YamlLoadHelper& yamlLoadHelper, UIN
 	{
 		yamlLoadHelper.LoadBool(SS_YAML_KEY_APPEND);	// Consume
 		m_bPrinterAppend = true;	// Re-open print-file in append mode
-		BOOL bRes = CheckPrint();
+		const bool bRes = CheckPrint();
 		if (!bRes)
 			throw std::runtime_error("Printer Card: Unable to resume printing to file");
 	}

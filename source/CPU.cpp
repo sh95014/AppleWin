@@ -132,7 +132,7 @@ static bool g_bCritSectionValid = false;	// Deleting CritialSection when not val
 static CRITICAL_SECTION g_CriticalSection;	// To guard /g_bmIRQ/ & /g_bmNMI/
 static volatile UINT32 g_bmIRQ = 0;
 static volatile UINT32 g_bmNMI = 0;
-static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
+static volatile bool g_bNmiFlank = false; // Positive going flank on NMI line
 
 static bool g_irqDefer1Opcode = false;
 static bool g_interruptInLastExecutionBatch = false;	// Last batch of executed cycles included an interrupt (IRQ/NMI)
@@ -145,7 +145,7 @@ static bool g_irqOnLastOpcodeCycle = false;
 static eCpuType g_MainCPU = CPU_65C02;
 static eCpuType g_ActiveCPU = CPU_65C02;
 
-eCpuType GetMainCpu(void)
+eCpuType GetMainCpu()
 {
 	return g_MainCPU;
 }
@@ -175,7 +175,7 @@ void SetMainCpuDefault(eApple2Type apple2Type)
 	SetMainCpu( ProbeMainCpuDefault(apple2Type) );
 }
 
-eCpuType GetActiveCpu(void)
+eCpuType GetActiveCpu()
 {
 	return g_ActiveCPU;
 }
@@ -185,27 +185,27 @@ void SetActiveCpu(eCpuType cpu)
 	g_ActiveCPU = cpu;
 }
 
-bool IsIrqAsserted(void)
+bool IsIrqAsserted()
 {
-	return g_bmIRQ ? true : false;
+	return (g_bmIRQ != 0);
 }
 
-bool Is6502InterruptEnabled(void)
+bool Is6502InterruptEnabled()
 {
 	return !(regs.ps & AF_INTERRUPT);
 }
 
-void ResetCyclesExecutedForDebugger(void)
+void ResetCyclesExecutedForDebugger()
 {
 	g_nCyclesExecuted = 0;
 }
 
-bool IsInterruptInLastExecution(void)
+bool IsInterruptInLastExecution()
 {
 	return g_interruptInLastExecutionBatch;
 }
 
-void SetIrqOnLastOpcodeCycle(void)
+void SetIrqOnLastOpcodeCycle()
 {
 	if (!(regs.ps & AF_INTERRUPT))
 		g_irqOnLastOpcodeCycle = true;
@@ -280,7 +280,7 @@ char g_OutputBuffer[OUTPUT_BUFFER_SIZE+1+1];	// +1 for EOL, +1 for NULL
 UINT OutputBufferIdx = 0;
 bool bEscMode = false;
 
-void CaptureCOUT(void)
+void CaptureCOUT()
 {
 	const char ch = regs.a & 0x7f;
 
@@ -319,7 +319,7 @@ void CaptureCOUT(void)
 	}
 	else if (ch == 0x1B)	// Escape
 	{
-		bEscMode = bEscMode ? false : true;		// Toggle mode
+		bEscMode = !bEscMode;		// Toggle mode
 	}
 	else if (ch >= ' ' && ch <= '~')
 	{
@@ -405,7 +405,7 @@ static __forceinline bool NMI(ULONG& uExecutedCycles, BOOL& flagc, BOOL& flagn, 
 		return false;
 
 	// NMI signals are only serviced once
-	g_bNmiFlank = FALSE;
+	g_bNmiFlank = false;
 #ifdef _DEBUG
 	g_nCycleIrqStart = g_nCumulativeCycles + uExecutedCycles;
 #endif
@@ -753,7 +753,7 @@ uint32_t CpuExecute(const uint32_t uCycles, const bool bVideoUpdate)
 // Called by:
 // . CpuInitialize()
 // . SY6522.Reset()
-void CpuCreateCriticalSection(void)
+void CpuCreateCriticalSection()
 {
 	if (!g_bCritSectionValid)
 	{
@@ -766,7 +766,7 @@ void CpuCreateCriticalSection(void)
 
 // Called from RepeatInitialization():
 // . MemInitialize() -> MemReset()
-void CpuInitialize(void)
+void CpuInitialize()
 {
 	regs.a = regs.x = regs.y = 0xFF;
 	regs.sp = 0x01FF;
@@ -886,7 +886,7 @@ void CpuNmiReset()
 	_ASSERT(g_bCritSectionValid);
 	if (g_bCritSectionValid) EnterCriticalSection(&g_CriticalSection);
 	g_bmNMI = 0;
-	g_bNmiFlank = FALSE;
+	g_bNmiFlank = false;
 	if (g_bCritSectionValid) LeaveCriticalSection(&g_CriticalSection);
 }
 
@@ -895,7 +895,7 @@ void CpuNmiAssert(eIRQSRC Device)
 	_ASSERT(g_bCritSectionValid);
 	if (g_bCritSectionValid) EnterCriticalSection(&g_CriticalSection);
 	if (g_bmNMI == 0) // NMI line is just becoming active
-	    g_bNmiFlank = TRUE;
+	    g_bNmiFlank = true;
 	g_bmNMI |= 1<<Device;
 	if (g_bCritSectionValid) LeaveCriticalSection(&g_CriticalSection);
 }
@@ -923,7 +923,7 @@ void CpuNmiDeassert(eIRQSRC Device)
 #define SS_YAML_VALUE_6502 "6502"
 #define SS_YAML_VALUE_65C02 "65C02"
 
-static const std::string& CpuGetSnapshotStructName(void)
+static const std::string& CpuGetSnapshotStructName()
 {
 	static const std::string name("CPU");
 	return name;

@@ -97,7 +97,7 @@ CSuperSerialCard::CSuperSerialCard(UINT slot) :
 	const size_t SERIALCHOICE_ITEM_LENGTH = 12;
 	char serialPortName[SERIALCHOICE_ITEM_LENGTH];
 	std::string regSection = RegGetConfigSlotSection(m_slot);
-	RegLoadString(regSection.c_str(), REGVALUE_SERIAL_PORT_NAME, TRUE, serialPortName, sizeof(serialPortName), "");
+	RegLoadString(regSection.c_str(), REGVALUE_SERIAL_PORT_NAME, true, serialPortName, sizeof(serialPortName), "");
 
 	SetSerialPortName(serialPortName);
 }
@@ -291,7 +291,7 @@ bool CSuperSerialCard::CheckComm()
 		{
 			GetCommModemStatus(m_hCommHandle, const_cast<DWORD*>(&m_dwModemStatus));
 
-			//BOOL bRes = SetupComm(m_hCommHandle, 8192, 8192);
+			//const bool bRes = SetupComm(m_hCommHandle, 8192, 8192);
 			//_ASSERT(bRes);
 
 			UpdateCommState();
@@ -710,7 +710,7 @@ BYTE __stdcall CSuperSerialCard::CommReceive(WORD, WORD, BYTE, BYTE, ULONG)
 
 //===========================================================================
 
-void CSuperSerialCard::TransmitDone(void)
+void CSuperSerialCard::TransmitDone()
 {
 	if (m_hCommHandle != INVALID_HANDLE_VALUE)
 	{
@@ -762,7 +762,7 @@ BYTE __stdcall CSuperSerialCard::CommTransmit(WORD, WORD, BYTE, BYTE value, ULON
 	}
 	else if (m_hCommHandle != INVALID_HANDLE_VALUE)
 	{
-		BOOL res = false;
+		bool res = false;
 		DWORD error = 0;
 
 		// Use CriticalSection to keep WriteFile() & m_vbTxEmpty in sync (GH#707)
@@ -1077,7 +1077,7 @@ DWORD WINAPI CSuperSerialCard::CommThread(LPVOID lpParameter)
 {
 	CSuperSerialCard* pSSC = (CSuperSerialCard*) lpParameter;
 
-	BOOL bRes = SetCommMask(pSSC->m_hCommHandle, EV_RLSD | EV_DSR | EV_CTS | EV_TXEMPTY | EV_RXCHAR);
+	const bool bRes = SetCommMask(pSSC->m_hCommHandle, EV_RLSD | EV_DSR | EV_CTS | EV_TXEMPTY | EV_RXCHAR);
 	if (!bRes)
 	{
 		LogOutput("SSC: CommThread(): SetCommMask() failed\n");
@@ -1095,7 +1095,7 @@ DWORD WINAPI CSuperSerialCard::CommThread(LPVOID lpParameter)
 		DWORD dwEvtMask = 0;
 		DWORD dwWaitResult;
 
-		bRes = WaitCommEvent(pSSC->m_hCommHandle, &dwEvtMask, &pSSC->m_o);	// Will return immediately (probably with ERROR_IO_PENDING)
+		const bool bRes = WaitCommEvent(pSSC->m_hCommHandle, &dwEvtMask, &pSSC->m_o);	// Will return immediately (probably with ERROR_IO_PENDING)
 		if (!bRes)
 		{
 			DWORD dwRet = GetLastError();
@@ -1395,10 +1395,10 @@ void CSuperSerialCard::SetSerialPortName(const char* pSerialPortName)
 	}
 }
 
-void CSuperSerialCard::SetRegistrySerialPortName(void)
+void CSuperSerialCard::SetRegistrySerialPortName()
 {
 	std::string regSection = RegGetConfigSlotSection(m_slot);
-	RegSaveString(regSection.c_str(), REGVALUE_SERIAL_PORT_NAME, TRUE, GetSerialPortName());
+	RegSaveString(regSection.c_str(), REGVALUE_SERIAL_PORT_NAME, true, GetSerialPortName());
 }
 
 //===========================================================================
@@ -1429,7 +1429,7 @@ static const UINT kUNIT_VERSION = 2;
 #define SS_YAML_KEY_SERIALPORTNAME "Serial Port Name"
 #define SS_YAML_KEY_SUPPORT_DCD "Support DCD"
 
-const std::string& CSuperSerialCard::GetSnapshotCardName(void)
+const std::string& CSuperSerialCard::GetSnapshotCardName()
 {
 	static const std::string name("Super Serial Card");
 	return name;

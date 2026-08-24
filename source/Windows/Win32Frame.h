@@ -26,8 +26,8 @@ class Video;
 class Win32Frame : public FrameBase
 {
 public:
-	Win32Frame(void);
-	virtual ~Win32Frame(void) {}
+	Win32Frame();
+	virtual ~Win32Frame() {}
 
 	static Win32Frame& GetWin32Frame();
 	static LRESULT CALLBACK FrameWndProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam);
@@ -48,9 +48,9 @@ public:
 	virtual void SetLoadedSaveStateFlag(const bool bFlag);
 
 	virtual void Initialize(bool resetVideoState);
-	virtual void Destroy(void);
-	virtual void VideoPresentScreen(void);
-	virtual void ResizeWindow(void);
+	virtual void Destroy();
+	virtual void VideoPresentScreen();
+	virtual void ResizeWindow();
 
 	virtual int FrameMessageBox(LPCSTR lpText, LPCSTR lpCaption, UINT uType);
 	virtual void GetBitmap(WORD id, LONG cb, LPVOID lpvBits);
@@ -62,20 +62,20 @@ public:
 	virtual std::shared_ptr<NetworkBackend> CreateNetworkBackend(const std::string& interfaceName);
 	virtual std::shared_ptr<SoundBuffer> CreateSoundBuffer(uint32_t dwBufferSize, uint32_t nSampleRate, int nChannels, const char* pszVoiceName);
 
-	bool GetFullScreenShowSubunitStatus(void);
-	bool GetWindowedModeShowDiskiiStatus(void);
-	int GetFullScreenOffsetX(void);
-	int GetFullScreenOffsetY(void);
-	bool IsFullScreen(void);
+	bool GetFullScreenShowSubunitStatus();
+	bool GetWindowedModeShowDiskiiStatus();
+	int GetFullScreenOffsetX();
+	int GetFullScreenOffsetY();
+	bool IsFullScreen();
 	void FrameRegisterClass();
-	void FrameCreateWindow(void);
-	UINT Get3DBorderWidth(void);
-	UINT Get3DBorderHeight(void);
-	int GetViewportScale(void);
+	void FrameCreateWindow();
+	UINT Get3DBorderWidth();
+	UINT Get3DBorderHeight();
+	int GetViewportScale();
 	void GetViewportCXCY(int& nViewportCX, int& nViewportCY);
 	void SetFullScreenViewportScale(int nNewXScale, int nNewYScale);
 
-	void ApplyVideoModeChange(void);
+	void ApplyVideoModeChange();
 
 	HDC FrameGetDC();
 	void FrameReleaseDC();
@@ -90,11 +90,11 @@ private:
 
 	void VideoCreateDIBSection(bool resetVideoState);
 	void VideoDrawLogoBitmap(HDC hDstDC, int xoff, int yoff, int srcw, int srch, int scale);
-	bool DDInit(void);
-	void DDUninit(void);
+	bool DDInit();
+	void DDUninit();
 
-	void Benchmark(void);
-	void DisplayLogo(void);
+	void Benchmark();
+	void DisplayLogo();
 	void GetTrackSector(UINT slot, int& drive1Track, int& drive2Track, int& activeFloppy);
 	void CreateTrackSectorStrings(int track, int sector, std::string& strTrack, std::string& strSector);
 	void DrawTrackSector(HDC dc, UINT slot, int drive1Track, int drive1Sector, int drive2Track, int drive2Sector);
@@ -105,28 +105,28 @@ private:
 	void DrawCrosshairs(int x, int y);
 	void DrawFrameWindow(bool bPaintingWindow = false);
 	void DrawStatusArea(HDC passdc, int drawflags);
-	void Draw3dRect(HDC dc, int x1, int y1, int x2, int y2, BOOL out);
+	void Draw3dRect(HDC dc, int x1, int y1, int x2, int y2, bool out);
 	void DrawBitmapRect(HDC dc, int x, int y, LPRECT rect, HBITMAP bitmap);
 	void ProcessButtonClick(int button, bool bFromButtonUI = false);
 	bool ConfirmReboot(bool bFromButtonUI);
 	void ProcessDiskPopupMenu(HWND hwnd, POINT pt, const int iDrive);
 	void RelayEvent(UINT message, WPARAM wparam, LPARAM lparam);
-	void SetFullScreenMode(void);
-	void SetNormalMode(void);
-	void SetUsingCursor(BOOL bNewValue);
-	void SetupTooltipControls(void);
+	void SetFullScreenMode();
+	void SetNormalMode();
+	void SetUsingCursor(bool bNewValue);
+	void SetupTooltipControls();
 	void FrameResizeWindow(int nNewScale);
 	void RevealCursor();
 	void ScreenWindowResize(const bool bCtrlKey);
 	void UpdateMouseInAppleViewport(int iOutOfBoundsX, int iOutOfBoundsY, int x = 0, int y = 0);
 	void DrawCrosshairsMouse();
 	void FrameSetCursorPosByMousePos(int x, int y, int dx, int dy, bool bLeavingAppleScreen);
-	void CreateGdiObjects(void);
-	void DeleteGdiObjects(void);
-	void FrameShowCursor(BOOL bShow);
-	void FullScreenRevealCursor(void);
+	void CreateGdiObjects();
+	void DeleteGdiObjects();
+	void FrameShowCursor(bool bShow);
+	void FullScreenRevealCursor();
 	void GetWidthHeight(int& nWidth, int& nHeight);
-	void SetSlotUIOffsets(void);
+	void SetSlotUIOffsets();
 
 	bool g_bAltEnter_ToggleFullScreen; // Default for ALT+ENTER is to toggle between windowed and full-screen modes
 	bool    g_bIsFullScreen;
@@ -138,7 +138,7 @@ private:
 	HBITMAP       g_hDeviceBitmap;
 	HDC           g_hDeviceDC;
 	LPBITMAPINFO  g_pFramebufferinfo;
-	BOOL    g_bUsingCursor;	// TRUE = AppleWin is using (hiding) the mouse-cursor && restricting cursor to window - see SetUsingCursor()
+	bool    g_bUsingCursor;	// true = AppleWin is using (hiding) the mouse-cursor && restricting cursor to window - see SetUsingCursor()
 	bool    g_bAppActive;
 	bool g_bFrameActive;
 	bool g_windowMinimized;

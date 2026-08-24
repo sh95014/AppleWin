@@ -22,6 +22,7 @@ namespace ra2
         std::string label;
         bool writeProtected = IMAGE_FORCE_WRITE_PROTECTED;
         bool createIfNecessary = IMAGE_DONT_CREATE;
+        bool isSaveDisk = false;
     };
 
     class DiskControl
@@ -43,7 +44,7 @@ namespace ra2
         bool addImageIndex();
 
         // these 2 functions update the images for the Disc Control Interface
-        bool insertDisk(const std::string &path);
+        bool insertDisk(const Drive_e drive, const std::string &path);
         bool insertPlaylist(const std::string &path);
 
         bool getImagePath(unsigned index, char *path, size_t len) const;
@@ -57,11 +58,16 @@ namespace ra2
     private:
         std::vector<DiskInfo> myImages;
 
-        bool myEjected;
-        size_t myIndex;
+        // per-drive state for multi-drive support
+        bool myEjected[NUM_DRIVES];
+        size_t myIndex[NUM_DRIVES];
+
         std::string myCurrentDiskFolder;
 
-        bool insertFloppyDisk(const std::string &path, const bool writeProtected, bool const createIfNecessary);
+        Drive_e activeDrive() const;
+        bool setEjectedStateForDrive(const Drive_e drive, bool state);
+        bool insertFloppyDisk(
+            const Drive_e drive, const std::string &path, const bool writeProtected, bool const createIfNecessary);
         bool insertHardDisk(const std::string &path);
         void storeCurrentDiskFolder(const std::string &path);
 

@@ -166,7 +166,7 @@ void LoadConfiguration(bool loadImages)
 
 	uint32_t copyProtectionDongleType;
 	std::string regSection = RegGetConfigSlotSection(GAME_IO_CONNECTOR);
-	if (RegLoadValue(regSection.c_str(), REGVALUE_GAME_IO_TYPE, TRUE, &copyProtectionDongleType))
+	if (RegLoadValue(regSection.c_str(), REGVALUE_GAME_IO_TYPE, true, &copyProtectionDongleType))
 		SetCopyProtectionDongleType((DONGLETYPE)copyProtectionDongleType);
 	else
 		SetCopyProtectionDongleType(DT_EMPTY);
@@ -180,16 +180,16 @@ void LoadConfiguration(bool loadImages)
 	uint32_t dwTmp = 0;
 
 	if(REGLOAD(REGVALUE_FS_SHOW_SUBUNIT_STATUS, &dwTmp))
-		GetFrame().SetFullScreenShowSubunitStatus(dwTmp ? true : false);
+		GetFrame().SetFullScreenShowSubunitStatus(dwTmp != 0);
 
 	if (REGLOAD(REGVALUE_SHOW_DISKII_STATUS, &dwTmp))
-		GetFrame().SetWindowedModeShowDiskiiStatus(dwTmp ? true : false);
+		GetFrame().SetWindowedModeShowDiskiiStatus(dwTmp != 0);
 
 	if(REGLOAD(REGVALUE_THE_FREEZES_F8_ROM, &dwTmp))
 		GetPropertySheet().SetTheFreezesF8Rom(dwTmp);
 
 	if(REGLOAD(REGVALUE_SAVE_STATE_ON_EXIT, &dwTmp))
-		SetSaveStateOnExit(dwTmp ? true : false);
+		SetSaveStateOnExit(dwTmp != 0);
 
 	if(REGLOAD(REGVALUE_PDL_XTRIM, &dwTmp))
 		JoySetTrim((short)dwTmp, true);
@@ -204,7 +204,7 @@ void LoadConfiguration(bool loadImages)
 	if(REGLOAD(REGVALUE_AUTOFIRE, &dwTmp))
 		GetPropertySheet().SetAutofire(dwTmp);
 	if(REGLOAD(REGVALUE_SWAP_BUTTONS_0_AND_1, &dwTmp))
-		GetPropertySheet().SetButtonsSwapState(dwTmp ? true : false);
+		GetPropertySheet().SetButtonsSwapState(dwTmp != 0);
 	if(REGLOAD(REGVALUE_CENTERING_CONTROL, &dwTmp))
 		GetPropertySheet().SetJoystickCenteringControl(dwTmp);
 
@@ -223,7 +223,7 @@ void LoadConfiguration(bool loadImages)
 	{
 		std::string regSection = RegGetConfigSlotSection(slot);
 
-		if (RegLoadValue(regSection.c_str(), REGVALUE_CARD_TYPE, TRUE, &dwTmp))
+		if (RegLoadValue(regSection.c_str(), REGVALUE_CARD_TYPE, true, &dwTmp))
 		{
 			if (slot == SLOT0)
 				SetExpansionMemType((SS_CARDTYPE)dwTmp, false);
@@ -238,7 +238,7 @@ void LoadConfiguration(bool loadImages)
 			// Legacy:
 			if (slot == SLOT3)
 			{
-				RegLoadString(REG_CONFIG, REGVALUE_UTHERNET_INTERFACE, 1, szFilename, MAX_PATH, "");
+				RegLoadString(REG_CONFIG, REGVALUE_UTHERNET_INTERFACE, true, szFilename, MAX_PATH, "");
 				// copy it to the new location
 				PCapBackend::SetRegistryInterface(slot, szFilename);
 
@@ -261,14 +261,14 @@ void LoadConfiguration(bool loadImages)
 	{
 		std::string regSection = RegGetConfigSlotSection(SLOT_AUX);
 
-		if (RegLoadValue(regSection.c_str(), REGVALUE_CARD_TYPE, TRUE, &dwTmp))
+		if (RegLoadValue(regSection.c_str(), REGVALUE_CARD_TYPE, true, &dwTmp))
 		{
 			SS_CARDTYPE type = (SS_CARDTYPE)dwTmp;
 			const bool noUpdateRegistry = false;
 			GetCardMgr().InsertAux(type, noUpdateRegistry);
 			SetExpansionMemType(type, noUpdateRegistry);
 
-			RegLoadValue(regSection.c_str(), REGVALUE_AUX_NUM_BANKS, TRUE, &dwTmp, kDefaultExMemoryBanksRealRW3);
+			RegLoadValue(regSection.c_str(), REGVALUE_AUX_NUM_BANKS, true, &dwTmp, kDefaultExMemoryBanksRealRW3);
 			SetRamWorksMemorySize(dwTmp, noUpdateRegistry);
 		}
 		else	// new install or legacy
@@ -289,12 +289,12 @@ void LoadConfiguration(bool loadImages)
 
 	// Load save-state pathname *before* inserting any harddisk/disk images (for both init & reinit cases)
 	// NB. inserting harddisk/disk can change snapshot pathname
-	RegLoadString(REG_CONFIG, REGVALUE_SAVESTATE_FILENAME, 1, szFilename, MAX_PATH, "");	// Can be pathname or just filename
+	RegLoadString(REG_CONFIG, REGVALUE_SAVESTATE_FILENAME, true, szFilename, MAX_PATH, "");	// Can be pathname or just filename
 	Snapshot_SetFilename(szFilename);	// If not in Registry than default will be used (ie. g_sCurrentDir + default filename)
 
 	//
 
-	RegLoadString(REG_PREFS, REGVALUE_PREF_HDV_START_DIR, 1, szFilename, MAX_PATH, "");
+	RegLoadString(REG_PREFS, REGVALUE_PREF_HDV_START_DIR, true, szFilename, MAX_PATH, "");
 	if (szFilename[0] == '\0')
 		GetCurrentDirectory(sizeof(szFilename), szFilename);
 	SetCurrentImageDir(szFilename);
@@ -316,7 +316,7 @@ void LoadConfiguration(bool loadImages)
 	//
 
 	// Current/Starting Dir is the "root" of where the user keeps their disk images
-	RegLoadString(REG_PREFS, REGVALUE_PREF_START_DIR, 1, szFilename, MAX_PATH, "");
+	RegLoadString(REG_PREFS, REGVALUE_PREF_START_DIR, true, szFilename, MAX_PATH, "");
 	if (szFilename[0] == '\0')
 		GetCurrentDirectory(sizeof(szFilename), szFilename);
 	SetCurrentImageDir(szFilename);
@@ -327,7 +327,7 @@ void LoadConfiguration(bool loadImages)
 	// Do this after populating the slots with Disk II controller(s)
 	uint32_t dwEnhanceDisk;
 	REGLOAD_DEFAULT(REGVALUE_ENHANCE_DISK_SPEED, &dwEnhanceDisk, 1);
-	GetCardMgr().GetDisk2CardMgr().SetEnhanceDisk(dwEnhanceDisk ? true : false);
+	GetCardMgr().GetDisk2CardMgr().SetEnhanceDisk(dwEnhanceDisk != 0);
 
 	//
 
@@ -340,7 +340,7 @@ void LoadConfiguration(bool loadImages)
 		GetFrame().SetViewportScale(dwTmp);
 
 	if (REGLOAD(REGVALUE_CONFIRM_REBOOT, &dwTmp))
-		GetFrame().g_bConfirmReboot = dwTmp;
+		GetFrame().g_bConfirmReboot = (dwTmp != 0);
 }
 
 static std::string GetFullPath(LPCSTR szFileName)
@@ -408,8 +408,7 @@ static bool DoHardDiskInsert(const UINT slot, const int nDrive, LPCSTR szFileNam
 	std::string strPathName = GetFullPath(szFileName);
 	if (strPathName.empty()) return false;
 
-	BOOL bRes = card.Insert(nDrive, strPathName);
-	bool res = (bRes == TRUE);
+	const bool res = card.Insert(nDrive, strPathName);
 	if (res)
 		SetCurrentDir(strPathName);
 	return res;

@@ -69,7 +69,7 @@ static bool g_fullScreenResolutionChangedByUser = false;
 
 //===========================================================================
 
-bool GetLoadedSaveStateFlag(void)
+bool GetLoadedSaveStateFlag()
 {
 	return g_bLoadedSaveState;
 }
@@ -79,22 +79,22 @@ void Win32Frame::SetLoadedSaveStateFlag(const bool bFlag)
 	g_bLoadedSaveState = bFlag;
 }
 
-bool GetHookAltTab(void)
+bool GetHookAltTab()
 {
 	return g_bHookAltTab;
 }
 
-bool GetHookAltGrControl(void)
+bool GetHookAltGrControl()
 {
 	return g_bHookAltGrControl;
 }
 
-bool GetFullScreenResolutionChangedByUser(void)
+bool GetFullScreenResolutionChangedByUser()
 {
 	return g_fullScreenResolutionChangedByUser;
 }
 
-static void ResetToLogoMode(void)
+static void ResetToLogoMode()
 {
 	g_nAppMode = MODE_LOGO;
 	GetFrame().SetLoadedSaveStateFlag(false);
@@ -105,7 +105,7 @@ static void ResetToLogoMode(void)
 static bool g_bPriorityNormal = true;
 
 // Make APPLEWIN process higher priority
-void SetPriorityAboveNormal(void)
+void SetPriorityAboveNormal()
 {
 	if (!g_bPriorityNormal)
 		return;
@@ -118,7 +118,7 @@ void SetPriorityAboveNormal(void)
 }
 
 // Make APPLEWIN process normal priority
-void SetPriorityNormal(void)
+void SetPriorityNormal()
 {
 	if (g_bPriorityNormal)
 		return;
@@ -135,7 +135,7 @@ void SetPriorityNormal(void)
 static UINT g_uModeStepping_Cycles = 0;
 static bool g_uModeStepping_LastGetKey_ScrollLock = false;
 
-static void ContinueExecution(void)
+static void ContinueExecution()
 {
 #ifdef LOG_PERF_TIMINGS
 	PerfMarker* pPerfMarkerTotal = new PerfMarker(g_timeTotal);
@@ -290,7 +290,7 @@ void SingleStep(bool bReinit)
 
 //===========================================================================
 
-void EnterMessageLoop(void)
+void EnterMessageLoop()
 {
 	MSG message;
 
@@ -342,7 +342,7 @@ void EnterMessageLoop(void)
 
 //===========================================================================
 
-static void GetProgramDirectory(void)
+static void GetProgramDirectory()
 {
 	char programDir[MAX_PATH];
 	GetModuleFileName((HINSTANCE)0, programDir, MAX_PATH);
@@ -363,7 +363,7 @@ static void GetProgramDirectory(void)
 
 //===========================================================================
 
-void RegisterExtensions(void)
+void RegisterExtensions()
 {
 	char szModuleFileName[MAX_PATH];
 	GetModuleFileName(static_cast<HMODULE>(NULL), szModuleFileName, sizeof(szModuleFileName));
@@ -456,32 +456,32 @@ void RegisterExtensions(void)
 //===========================================================================
 
 // NB. On a restart, it's OK to call RegisterHotKey() again since the old g_hFrameWindow has been destroyed
-static void RegisterHotKeys(void)
+static void RegisterHotKeys()
 {
-	BOOL bStatus[3] = {0,0,0};
+	bool bStatus[3] = {false, false, false};
 
-	bStatus[0] = RegisterHotKey( 
+	bStatus[0] = RegisterHotKey(
 		GetFrame().g_hFrameWindow , // HWND hWnd
 		VK_SNAPSHOT_560, // int id (user/custom id)
 		0              , // UINT fsModifiers
 		VK_SNAPSHOT      // UINT vk = PrintScreen
 	);
 
-	bStatus[1] = RegisterHotKey( 
+	bStatus[1] = RegisterHotKey(
 		GetFrame().g_hFrameWindow , // HWND hWnd
 		VK_SNAPSHOT_280, // int id (user/custom id)
 		MOD_SHIFT      , // UINT fsModifiers
 		VK_SNAPSHOT      // UINT vk = PrintScreen
 	);
 
-	bStatus[2] = RegisterHotKey( 
+	bStatus[2] = RegisterHotKey(
 		GetFrame().g_hFrameWindow  , // HWND hWnd
 		VK_SNAPSHOT_TEXT, // int id (user/custom id)
 		MOD_CONTROL     , // UINT fsModifiers
 		VK_SNAPSHOT       // UINT vk = PrintScreen
 	);
 
-	if ((!bStatus[0] || !bStatus[1] || !bStatus[2]))
+	if (!bStatus[0] || !bStatus[1] || !bStatus[2])
 	{
 		std::string msg("Unable to register for PrintScreen key(s):\n");
 
@@ -514,10 +514,10 @@ static void ExceptionHandler(const char* pError)
 
 //---------------------------------------------------------------------------
 
-static void GetAppleWinVersion(void);
+static void GetAppleWinVersion();
 static void OneTimeInitialization(HINSTANCE passinstance);
-static void RepeatInitialization(void);
-static void Shutdown(void);
+static void RepeatInitialization();
+static void Shutdown();
 
 int APIENTRY WinMain(HINSTANCE passinstance, HINSTANCE, LPSTR lpCmdLine, int)
 {
@@ -584,7 +584,7 @@ int APIENTRY WinMain(HINSTANCE passinstance, HINSTANCE, LPSTR lpCmdLine, int)
 	return 0;
 }
 
-static void GetAppleWinVersion(void)
+static void GetAppleWinVersion()
 {
     char szPath[_MAX_PATH];
 
@@ -671,7 +671,7 @@ static void OneTimeInitialization(HINSTANCE passinstance)
 }
 
 // DO INITIALIZATION THAT MUST BE REPEATED FOR A RESTART
-static void RepeatInitialization(void)
+static void RepeatInitialization()
 {
 	KeybReset();
 	GetVideo().SetVidHD(false);	// Set true later (eg. by LoadConfiguration() or cmd-line) if VidHDCard is instantiated
@@ -741,7 +741,7 @@ static void RepeatInitialization(void)
 	VideoSwitchVideocardPalette(RGB_GetVideocard(), GetVideo().GetVideoType());
 
 	// Allow the slots to be configured as empty
-	// . remove all first, so that single-instance cards can can switch slots
+	// . remove all first, so that single-instance cards can switch slots
 	// NB. this state is persisted to the Registry/conf.ini
 	for (UINT i = SLOT0; i < NUM_SLOTS; i++)
 	{
@@ -795,6 +795,12 @@ static void RepeatInitialization(void)
 				dynamic_cast<MockingboardCard&>(GetCardMgr().GetRef(i)).UseBad6522A();
 			if (g_cmdLine.slotInfo[i].useBad6522B)
 				dynamic_cast<MockingboardCard&>(GetCardMgr().GetRef(i)).UseBad6522B();
+			for (UINT socket = 0; socket < NUM_AY8913; socket++)
+			{
+				const AY891xType type = g_cmdLine.slotInfo[i].socketAY891x[socket];
+				if (type != AY_Unknown)
+					dynamic_cast<MockingboardCard&>(GetCardMgr().GetRef(i)).SetSocketAY891x(socket, type);
+			}
 			for (UINT socket = 0; socket < NUM_SSI263; socket++)
 			{
 				const SSI263Type type = g_cmdLine.slotInfo[i].socketSSI263[socket];
@@ -916,7 +922,7 @@ static void RepeatInitialization(void)
 		if (!AboutDlg())
 			g_cmdLine.bShutdown = true;											// Close everything down
 		else
-			RegSaveString(REG_CONFIG, REGVALUE_VERSION, TRUE, g_VERSIONSTRING);	// Only save version after user accepts license
+			RegSaveString(REG_CONFIG, REGVALUE_VERSION, true, g_VERSIONSTRING);	// Only save version after user accepts license
 	}
 
 	if (g_bCapturePrintScreenKey)
@@ -1004,7 +1010,7 @@ static void RepeatInitialization(void)
 	}
 }
 
-static void Shutdown(void)
+static void Shutdown()
 {
 	// NB. WM_CLOSE has already called SetNormalMode() to exit full screen mode & restore default resolution
 
@@ -1029,19 +1035,19 @@ static void Shutdown(void)
 		GetCardMgr().Remove(SLOT7);
 }
 
-IPropertySheet& GetPropertySheet(void)
+IPropertySheet& GetPropertySheet()
 {
 	static CPropertySheet sg_PropertySheet;
 	return sg_PropertySheet;
 }
 
-FrameBase& GetFrame(void)
+FrameBase& GetFrame()
 {
 	static Win32Frame sg_Win32Frame;
 	return sg_Win32Frame;
 }
 
-Video& GetVideo(void)
+Video& GetVideo()
 {
 	static Video video;
 	return video;

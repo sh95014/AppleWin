@@ -35,33 +35,39 @@ namespace
 
     bool retro_set_eject_state(bool ejected)
     {
+        ourGame->updateVariables();
         ra2::log_cb(RETRO_LOG_INFO, "RA2: %s (%d)\n", __FUNCTION__, ejected);
         return ourGame->getDiskControl().setEjectedState(ejected);
     }
 
     bool retro_get_eject_state()
     {
+        ourGame->updateVariables();
         return ourGame->getDiskControl().getEjectedState();
     }
 
     unsigned retro_get_image_index()
     {
+        ourGame->updateVariables();
         return ourGame->getDiskControl().getImageIndex();
     }
 
     bool retro_set_image_index(unsigned index)
     {
+        ourGame->updateVariables();
         ra2::log_cb(RETRO_LOG_INFO, "RA2: %s (%d)\n", __FUNCTION__, index);
         return ourGame->getDiskControl().setImageIndex(index);
     }
 
     unsigned retro_get_num_images()
     {
+        ourGame->updateVariables();
         return ourGame->getDiskControl().getNumImages();
     }
 
     bool retro_replace_image_index(unsigned index, const struct retro_game_info *info)
     {
+        ourGame->updateVariables();
         ra2::log_cb(RETRO_LOG_INFO, "RA2: %s (%s)\n", __FUNCTION__, info->path);
         if (info->path)
         {
@@ -75,6 +81,7 @@ namespace
 
     bool retro_add_image_index()
     {
+        ourGame->updateVariables();
         ra2::log_cb(RETRO_LOG_INFO, "RA2: %s\n", __FUNCTION__);
         return ourGame->getDiskControl().addImageIndex();
     }
@@ -88,12 +95,14 @@ namespace
 
     bool retro_get_image_path(unsigned index, char *path, size_t len)
     {
+        ourGame->updateVariables();
         ra2::log_cb(RETRO_LOG_INFO, "RA2: %s (%d)\n", __FUNCTION__, index);
         return ourGame->getDiskControl().getImagePath(index, path, len);
     }
 
     bool retro_get_image_label(unsigned index, char *label, size_t len)
     {
+        ourGame->updateVariables();
         ra2::log_cb(RETRO_LOG_INFO, "RA2: %s (%d)\n", __FUNCTION__, index);
         return ourGame->getDiskControl().getImageLabel(index, label, len);
     }
@@ -341,7 +350,7 @@ bool retro_load_game(const retro_game_info *info)
             }
             else
             {
-                ok = game->getDiskControl().insertDisk(gamePath);
+                ok = game->getDiskControl().insertDisk(DRIVE_1, gamePath);
             }
             ra2::log_cb(RETRO_LOG_INFO, "Game path: %s -> %d\n", info->path, ok);
         }

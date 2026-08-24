@@ -48,6 +48,8 @@ namespace
     constexpr int STATE_FILENAME = 1026;
     constexpr int LOAD_STATE = 1027;
 
+    constexpr int VIDEOROM = 1028;
+
     struct OptionData_t
     {
         const char *name;
@@ -141,6 +143,12 @@ namespace
         shortOptions.append(shorts.str());
     }
 
+    std::string canonicalPath(const char *name)
+    {
+        // resolve all paths to avoid issues with chdir and relative paths
+        return std::filesystem::weakly_canonical(name).string();
+    }
+
 } // namespace
 
 namespace common2
@@ -196,6 +204,7 @@ namespace common2
                  {"memclear",                required_argument,    MEM_CLEAR,        "Memory initialization pattern [0..7]"},
                  {"rom",                     required_argument,    ROM,              "Custom 12k/16k ROM"},
                  {"f8rom",                   required_argument,    F8ROM,            "Custom 2k ROM"},
+                 {"videorom",                required_argument,    VIDEOROM,         "Custom Video ROM"},
              }},
             {"Audio",
              {
@@ -274,7 +283,7 @@ namespace common2
             }
             case 'c':
             {
-                options.configurationFile = optarg;
+                options.configurationFile = canonicalPath(optarg);
                 break;
             }
             case 'l':
@@ -284,12 +293,12 @@ namespace common2
             }
             case '1':
             {
-                options.disk1 = optarg;
+                options.disk1 = canonicalPath(optarg);
                 break;
             }
             case '2':
             {
-                options.disk2 = optarg;
+                options.disk2 = canonicalPath(optarg);
                 break;
             }
             case 'r':
@@ -334,12 +343,12 @@ namespace common2
             }
             case DISK_H1:
             {
-                options.hardDisk1 = optarg;
+                options.hardDisk1 = canonicalPath(optarg);
                 break;
             }
             case DISK_H2:
             {
-                options.hardDisk2 = optarg;
+                options.hardDisk2 = canonicalPath(optarg);
                 break;
             }
             case MEM_CLEAR:
@@ -353,12 +362,17 @@ namespace common2
             }
             case ROM:
             {
-                options.customRom = optarg;
+                options.customRom = canonicalPath(optarg);
                 break;
             }
             case F8ROM:
             {
-                options.customRomF8 = optarg;
+                options.customRomF8 = canonicalPath(optarg);
+                break;
+            }
+            case VIDEOROM:
+            {
+                options.customRomVideo = canonicalPath(optarg);
                 break;
             }
             case NO_AUDIO:
@@ -373,12 +387,12 @@ namespace common2
             }
             case WAV_SPEAKER:
             {
-                options.wavFileSpeaker = optarg;
+                options.wavFileSpeaker = canonicalPath(optarg);
                 break;
             }
             case WAV_MOCKINGBOARD:
             {
-                options.wavFileMockingboard = optarg;
+                options.wavFileMockingboard = canonicalPath(optarg);
                 break;
             }
             case SDL_DRIVER:
@@ -418,7 +432,7 @@ namespace common2
             }
             case MAPPING_FILE:
             {
-                options.gameControllerMappingFile = optarg;
+                options.gameControllerMappingFile = canonicalPath(optarg);
                 break;
             }
             case AUDIO_DEVICE:
@@ -438,13 +452,13 @@ namespace common2
             }
             case STATE_FILENAME:
             {
-                options.snapshotFilename = optarg;
+                options.snapshotFilename = canonicalPath(optarg);
                 options.loadSnapshot = false;
                 break;
             }
             case LOAD_STATE:
             {
-                options.snapshotFilename = optarg;
+                options.snapshotFilename = canonicalPath(optarg);
                 options.loadSnapshot = true;
                 break;
             }

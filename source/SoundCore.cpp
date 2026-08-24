@@ -49,7 +49,7 @@ static VOICE* g_pSpeakerVoice = NULL;
 // NB. Also similar is done by: MockingboardCardManager::Destroy()
 // - which is called from WM_DESTROY (when both restarting VM & exiting the app)
 
-VOICE::~VOICE(void)
+VOICE::~VOICE()
 {
 	if (lpDSBvoice)
 	{
@@ -589,4 +589,34 @@ void SysClk_StopTimer()
 	}
 
 	g_bRefClockTimerActive = false;
+}
+
+bool SoundCore_ValidateAndAlignWriteOffset(
+    uint32_t& rByteOffset,
+    DWORD dwCurrentPlayCursor,
+    DWORD dwCurrentWriteCursor)
+{
+	// Verify that the write offset hasn't drifted into the unsafe hardware playback zone
+	// (between the play cursor and the write cursor). If it has, align it to the write cursor.
+	// Returns true if alignment was performed (drift/error detected), false otherwise.
+	if (dwCurrentWriteCursor > dwCurrentPlayCursor)
+	{
+		// |-----PxxxxxW-----|
+		if ((rByteOffset > dwCurrentPlayCursor) && (rByteOffset < dwCurrentWriteCursor))
+		{
+			rByteOffset = dwCurrentWriteCursor;
+			return true;
+		}
+	}
+	else
+	{
+		// |xxW----------Pxxx|
+		if ((rByteOffset > dwCurrentPlayCursor) || (rByteOffset < dwCurrentWriteCursor))
+		{
+			rByteOffset = dwCurrentWriteCursor;
+			return true;
+		}
+	}
+
+	return false;
 }

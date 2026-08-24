@@ -51,7 +51,7 @@ static bool  g_bTK3KModeKey   = false; //TK3000 //e |Mode| key
 
 static bool  g_bCapsLock = true; //Caps lock key for Apple2 and Lat/Cyr lock for Pravets8
 static BYTE  keycode         = 0;	// Current Apple keycode
-static BOOL  keywaiting      = 0;
+static bool  keywaiting      = false;
 static bool  g_bAltGrSendsWM_CHAR = false;
 
 //
@@ -73,7 +73,7 @@ void KeybSetCapsLock(bool state)
 void KeybReset()
 {
 	keycode = 0;
-	keywaiting = 0;
+	keywaiting = false;
 }
 
 //===========================================================================
@@ -103,9 +103,9 @@ bool KeybGetShiftStatus()
 //===========================================================================
 void KeybUpdateCtrlShiftStatus()
 {
-	g_bAltKey   = (GetKeyState( VK_MENU   ) < 0) ? true : false;	//  L or R alt
-	g_bCtrlKey  = (GetKeyState( VK_CONTROL) < 0) ? true : false;	//  L or R ctrl
-	g_bShiftKey = (GetKeyState( VK_SHIFT  ) < 0) ? true : false;	//  L or R shift
+	g_bAltKey   = (GetKeyState( VK_MENU   ) < 0);	//  L or R alt
+	g_bCtrlKey  = (GetKeyState( VK_CONTROL) < 0);	//  L or R ctrl
+	g_bShiftKey = (GetKeyState( VK_SHIFT  ) < 0);	//  L or R shift
 }
 
 //===========================================================================
@@ -213,7 +213,7 @@ void KeybQueueKeypress (WPARAM key, Keystroke_e bASCII)
 		{	// For the TK3000 //e we use Scroll Lock to switch between Apple ][ and accented chars modes
 			if (GetApple2Type() == A2TYPE_TK30002E)
 			{
-				g_bTK3KModeKey = (GetKeyState(VK_SCROLL) & 1) ? true : false;	// Sync with the Scroll Lock status
+				g_bTK3KModeKey = (GetKeyState(VK_SCROLL) & 1);	// Sync with the Scroll Lock status
 				GetFrame().FrameRefreshStatus(DRAW_LEDS | DRAW_DISK_STATUS);	// TODO: Implement |Mode| LED in the UI; make it appear only when in TK3000 mode
 				GetFrame().VideoRedrawScreen();	// TODO: Still need to implement page mode switching and 'whatnot'
 			}
@@ -256,7 +256,7 @@ void KeybQueueKeypress (WPARAM key, Keystroke_e bASCII)
 		}
 	}
 
-	keywaiting = 1;
+	keywaiting = true;
 }
 
 //===========================================================================
@@ -401,7 +401,7 @@ void KeybAnyKeyDown(UINT message, WPARAM wparam, bool bIsExtended)
 	}
 }
 
-static bool IsAKD(void)
+static bool IsAKD()
 {
 	uint64_t* p = &g_AKDFlags[0][0];
 
@@ -414,7 +414,7 @@ static bool IsAKD(void)
 
 //===========================================================================
 
-BYTE KeybReadData (void)
+BYTE KeybReadData()
 {
 	LogFileTimeUntilFirstKeyRead();
 
@@ -427,14 +427,14 @@ BYTE KeybReadData (void)
 
 //===========================================================================
 
-BYTE KeybClearStrobe(void)
+BYTE KeybClearStrobe()
 {
-	keywaiting = 0;
+	keywaiting = false;
 
 	return ClipboardReadOrPeek(true);
 }
 
-BYTE KeybReadFlag (void)
+BYTE KeybReadFlag()
 {
 	_ASSERT(!IS_APPLE2);	// And also not Pravets machines?
 
@@ -448,7 +448,7 @@ BYTE KeybReadFlag (void)
 }
 
 //===========================================================================
-void KeybToggleCapsLock ()
+void KeybToggleCapsLock()
 {
 	if (!IS_APPLE2)
 	{
@@ -462,7 +462,7 @@ void KeybToggleCapsLock ()
 #define SS_YAML_KEY_LASTKEY "Last Key"
 #define SS_YAML_KEY_KEYWAITING "Key Waiting"
 
-static const std::string& KeybGetSnapshotStructName(void)
+static const std::string& KeybGetSnapshotStructName()
 {
 	static const std::string name("Keyboard");
 	return name;
@@ -472,7 +472,7 @@ void KeybSaveSnapshot(YamlSaveHelper& yamlSaveHelper)
 {
 	YamlSaveHelper::Label state(yamlSaveHelper, "%s:\n", KeybGetSnapshotStructName().c_str());
 	yamlSaveHelper.SaveHexUint8(SS_YAML_KEY_LASTKEY, keycode);
-	yamlSaveHelper.SaveBool(SS_YAML_KEY_KEYWAITING, keywaiting ? true : false);
+	yamlSaveHelper.SaveBool(SS_YAML_KEY_KEYWAITING, keywaiting);
 }
 
 void KeybLoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT version)
@@ -483,7 +483,7 @@ void KeybLoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT version)
 	keycode = (BYTE) yamlLoadHelper.LoadUint(SS_YAML_KEY_LASTKEY);
 
 	if (version >= 2)
-		keywaiting = (BOOL) yamlLoadHelper.LoadBool(SS_YAML_KEY_KEYWAITING);
+		keywaiting = yamlLoadHelper.LoadBool(SS_YAML_KEY_KEYWAITING);
 
 	yamlLoadHelper.PopMap();
 }

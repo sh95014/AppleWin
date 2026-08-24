@@ -24,14 +24,18 @@ namespace
     const char *REG_RA2 = "ra2";
     const char *REGVALUE_KEYBOARD_TYPE = "Keyboard type";
     const char *REGVALUE_PLAYLIST_START = "Playlist start";
+    const char *REGVALUE_FLOPPY_MULTI_DRIVE = "Floppy multidrive";
+    const char *REGVALUE_DISK_CONTROL_DRIVE = "Disk control drive";
     const char *REGVALUE_MOUSE_SPEED_00 = "Mouse speed";
 
     const char *CATEGORY_SYSTEM = "system";
     const char *CATEGORY_INPUT = "input";
     const char *CATEGORY_RETROPAD_MAPPING = "retropad";
+    const char *CATEGORY_DISK_CONTROL = "disk_control";
 
     retro_core_option_v2_category ourOptionCatsUS[] = {
         {CATEGORY_SYSTEM, "System", "Configure system options."},
+        {CATEGORY_DISK_CONTROL, "Disk Control", "Configure disk control options."},
         {CATEGORY_INPUT, "Input", "Configure input options."},
         {CATEGORY_RETROPAD_MAPPING, "RetroPad Mapping", "Configure RetroPad mapping options."},
         {nullptr, nullptr, nullptr},
@@ -295,9 +299,22 @@ namespace
         },
         {
             {
+                "disk_control_drive",
+                "Disk Control Drive",
+                CATEGORY_DISK_CONTROL,
+                {
+                    {"Drive 1", DRIVE_1},
+                    {"Drive 2", DRIVE_2},
+                },
+            },
+            REG_RA2,
+            REGVALUE_DISK_CONTROL_DRIVE,
+        },
+        {
+            {
                 "playlist_start",
                 "Playlist Start Disk",
-                CATEGORY_SYSTEM,
+                CATEGORY_DISK_CONTROL,
                 {
                     {"First", static_cast<uint32_t>(ra2::PlaylistStartDisk::First)},
                     {"Previous", static_cast<uint32_t>(ra2::PlaylistStartDisk::Previous)},
@@ -305,6 +322,19 @@ namespace
             },
             REG_RA2,
             REGVALUE_PLAYLIST_START,
+        },
+        {
+            {
+                "floppy_multidrive",
+                "Floppy MultiDrive",
+                CATEGORY_DISK_CONTROL,
+                {
+                    {"disabled", 0},
+                    {"enabled", 1},
+                },
+            },
+            REG_RA2,
+            REGVALUE_FLOPPY_MULTI_DRIVE,
         },
         {
             {
@@ -561,24 +591,38 @@ namespace ra2
         return registry;
     }
 
+    bool getFloppyMultiDrive()
+    {
+        uint32_t value = 0;
+        RegLoadValue(REG_RA2, REGVALUE_FLOPPY_MULTI_DRIVE, true, &value);
+        return value != 0;
+    }
+
     KeyboardType getKeyboardEmulationType()
     {
         uint32_t value = static_cast<uint32_t>(KeyboardType::ASCII);
-        RegLoadValue(REG_RA2, REGVALUE_KEYBOARD_TYPE, TRUE, &value);
+        RegLoadValue(REG_RA2, REGVALUE_KEYBOARD_TYPE, true, &value);
         return static_cast<KeyboardType>(value);
     }
 
     PlaylistStartDisk getPlaylistStartDisk()
     {
         uint32_t value = static_cast<uint32_t>(PlaylistStartDisk::First);
-        RegLoadValue(REG_RA2, REGVALUE_PLAYLIST_START, TRUE, &value);
+        RegLoadValue(REG_RA2, REGVALUE_PLAYLIST_START, true, &value);
         return static_cast<PlaylistStartDisk>(value);
+    }
+
+    Drive_e getDiskControlDrive()
+    {
+        uint32_t value = DRIVE_1;
+        RegLoadValue(REG_RA2, REGVALUE_DISK_CONTROL_DRIVE, true, &value);
+        return (value == DRIVE_2) ? DRIVE_2 : DRIVE_1;
     }
 
     double getMouseSpeed()
     {
         uint32_t value = 100;
-        RegLoadValue(REG_RA2, REGVALUE_MOUSE_SPEED_00, TRUE, &value);
+        RegLoadValue(REG_RA2, REGVALUE_MOUSE_SPEED_00, true, &value);
         return value / 100.0;
     }
 

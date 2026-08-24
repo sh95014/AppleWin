@@ -97,11 +97,11 @@ namespace ra2
             const VideoStyle_e prevVideoStyle = video.GetVideoStyle();
 
             uint32_t dwTmp = prevVideoType;
-            RegLoadValue(REG_CONFIG, REGVALUE_VIDEO_MODE, TRUE, &dwTmp);
+            RegLoadValue(REG_CONFIG, REGVALUE_VIDEO_MODE, true, &dwTmp);
             const VideoType_e newVideoType = static_cast<VideoType_e>(dwTmp);
 
             dwTmp = prevVideoStyle;
-            RegLoadValue(REG_CONFIG, REGVALUE_VIDEO_STYLE, TRUE, &dwTmp);
+            RegLoadValue(REG_CONFIG, REGVALUE_VIDEO_STYLE, true, &dwTmp);
             const VideoStyle_e newVideoStyle = static_cast<VideoStyle_e>(dwTmp);
 
             if ((prevVideoType != newVideoType) || (prevVideoStyle != newVideoStyle))

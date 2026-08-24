@@ -9,7 +9,7 @@ FrameBase::FrameBase()
 {
 	g_hFrameWindow = (HWND)0;
 	g_bConfirmReboot = kConfirmReboot_Default;
-	g_bMultiMon = 0; // OFF = load window position & clamp initial frame to screen, ON = use window position as is
+	g_bMultiMon = false; // OFF = load window position & clamp initial frame to screen, ON = use window position as is
 	g_bFreshReset = false;
 	g_hInstance = (HINSTANCE)0;
 	g_bDisplayPrintScreenFileName = false;
@@ -30,7 +30,7 @@ void FrameBase::VideoRefreshScreen(uint32_t uRedrawWholeScreenVideoMode, bool bR
 	VideoPresentScreen();
 }
 
-void FrameBase::VideoRedrawScreen(void)
+void FrameBase::VideoRedrawScreen()
 {
 	// NB. Can't rely on g_uVideoMode being non-zero (ie. so it can double up as a flag) since 'GR,PAGE1,non-mixed' mode == 0x00.
 	VideoRefreshScreen(GetVideo().GetVideoMode(), true);
@@ -127,7 +127,7 @@ std::string FrameBase::Util_MakeScreenShotFileName() const
 	return StrFormat("%s%s_%09d.bmp", folder.c_str(), pPrefixFileName.c_str(), g_nLastScreenShot);
 }
 
-// Returns TRUE if file exists, else FALSE
+// Returns true if file exists, else false
 bool FrameBase::Util_TestScreenShotFileName(const char* pFileName)
 {
 	bool bFileExists = false;

@@ -340,7 +340,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 	static bool      g_bBenchmarking = false;
 
-	static BOOL      g_bProfiling       = 0;
+	static bool      g_bProfiling       = false;
 	static int       g_nDebugSteps      = 0;
 	static uint32_t  g_nDebugStepCycles = 0;
 	static int       g_nDebugStepStart  = 0;
@@ -386,7 +386,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	void _BWZ_RemoveOne ( Breakpoint_t *aBreakWatchZero, const int iSlot, int & nTotal );
 	void _BWZ_RemoveAll ( Breakpoint_t *aBreakWatchZero, const int nMax, int & nTotal );
 
-//	bool CheckBreakpoint (WORD address, BOOL memory);
 	bool _CmdBreakpointAddReg ( Breakpoint_t *pBP, BreakpointSource_t iSrc, BreakpointOperator_t iCmp, WORD nAddress, int nLen, bool bIsTempBreakpoint );
 	int  _CmdBreakpointAddCommonArg ( const int nArg, int iArg, BreakpointSource_t iSrc, BreakpointOperator_t iCmp, bool bIsTempBreakpoint=false );
 
@@ -440,13 +439,13 @@ public:
 		return m_Instance;
 	}
 
-	void Reset(void)
+	void Reset()
 	{
 		m_bIsVideoModeValid = false;
 		m_uVideoMode = 0;
 	}
 
-	bool IsSet(void)
+	bool IsSet()
 	{
 		return m_bIsVideoModeValid;
 	}
@@ -818,7 +817,7 @@ Update_t CmdProfile (int nArgs)
 		if (iParam == PARAM_RESET)
 		{
 			ProfileReset();
-			g_bProfiling = 1;
+			g_bProfiling = true;
 			ConsoleBufferPush( " Resetting profile data." );
 		}
 		else
@@ -888,7 +887,7 @@ Update_t _BP_InfoNone ()
 // iOpcodeType = AM_IMPLIED (BRK), AM_1, AM_2, AM_3
 static bool IsDebugBreakOnInvalid (int iOpcodeType)
 {
-	return ((g_nDebugBreakOnInvalid >> iOpcodeType) & 1) ? true : false;
+	return (g_nDebugBreakOnInvalid & (1 << iOpcodeType));
 }
 
 // iOpcodeType = AM_IMPLIED (BRK), AM_1, AM_2, AM_3
@@ -1073,7 +1072,7 @@ Update_t CmdBreakOnInterrupt (int nArgs)
 
 	if (nArgs == 1)
 	{
-		g_bDebugBreakOnInterrupt = (iParam == PARAM_ON) ? true : false;
+		g_bDebugBreakOnInterrupt = (iParam == PARAM_ON);
 		strcpy(sAction, "Setting");
 	}
 
@@ -1086,7 +1085,6 @@ Update_t CmdBreakOnInterrupt (int nArgs)
 }
 
 
-// bool bBP = g_nBreakpoints && CheckBreakpoint(nOffset,nOffset == regs.pc);
 //===========================================================================
 bool GetBreakpointInfo ( WORD nOffset, bool & bBreakpointActive_, bool & bBreakpointEnable_ )
 {
@@ -1556,7 +1554,7 @@ int CheckBreakpointsVideo ()
 }
 
 //===========================================================================
-static int CheckBreakpointsDmaToOrFromIOMemory (void)
+static int CheckBreakpointsDmaToOrFromIOMemory ()
 {
 	int res = g_DebugBreakOnDMAIO.isToOrFromMemory;
 	g_DebugBreakOnDMAIO.isToOrFromMemory = 0;
@@ -2764,7 +2762,7 @@ Update_t CmdUnassemble (int nArgs)
 Update_t CmdKey (int nArgs)
 {
 	KeybQueueKeypress(
-		nArgs ? g_aArgs[1].nValue ? g_aArgs[1].nValue : g_aArgs[1].sArg[0] : ' ', ASCII); // FIXME!!!
+		nArgs ? (g_aArgs[1].nValue ? g_aArgs[1].nValue : g_aArgs[1].sArg[0]) : ' ', ASCII); // FIXME!!!
 	return UPDATE_CONSOLE_DISPLAY;
 }
 
@@ -3190,7 +3188,7 @@ Update_t CmdConfigDisasm (int nArgs)
 					if ((nArgs > 1) && (! bDisplayCurrentSettings)) // set
 					{					
 						iArg++;
-						g_bConfigDisasmAddressColon = (g_aArgs[ iArg ].nValue) ? true : false;
+						g_bConfigDisasmAddressColon = (g_aArgs[ iArg ].nValue != 0);
 					}
 					else // show current setting
 					{
@@ -3204,7 +3202,7 @@ Update_t CmdConfigDisasm (int nArgs)
 					if ((nArgs > 1) && (! bDisplayCurrentSettings)) // set
 					{
 						iArg++;
-						g_bConfigDisasmOpcodesView = (g_aArgs[ iArg ].nValue) ? true : false;
+						g_bConfigDisasmOpcodesView = (g_aArgs[ iArg ].nValue != 0);
 					}
 					else
 					{
@@ -3218,7 +3216,7 @@ Update_t CmdConfigDisasm (int nArgs)
 					if ((nArgs > 1) && (! bDisplayCurrentSettings)) // set
 					{
 						iArg++;
-						g_bConfigInfoTargetPointer = (g_aArgs[ iArg ].nValue) ? true : false;
+						g_bConfigInfoTargetPointer = (g_aArgs[ iArg ].nValue != 0);
 					}
 					else
 					{
@@ -3232,7 +3230,7 @@ Update_t CmdConfigDisasm (int nArgs)
 					if ((nArgs > 1) && (! bDisplayCurrentSettings)) // set
 					{
 						iArg++;
-						g_bConfigDisasmOpcodeSpaces = (g_aArgs[ iArg ].nValue) ? true : false;
+						g_bConfigDisasmOpcodeSpaces = (g_aArgs[ iArg ].nValue != 0);
 					}
 					else
 					{
@@ -4034,10 +4032,7 @@ Update_t CmdDisk (int nArgs)
 		if (nArgs > 3)
 			return HelpLastCommand();
 
-		bool bProtect = true;
-
-		if (nArgs == 3)
-			bProtect = g_aArgs[ 3 ].nValue ? true : false;
+		const bool bProtect = (nArgs < 3) || (g_aArgs[ 3 ].nValue != 0);
 
 		diskCard.SetProtect( iDrive, bProtect );
 		GetFrame().FrameRefreshStatus(DRAW_LEDS | DRAW_BUTTON_DRIVES | DRAW_DISK_STATUS);
@@ -4198,15 +4193,15 @@ static Update_t _CmdMemoryDump (int nArgs, int iWhich, int iView )
 
 	int iArg = 1;	// skip cmd
 	int dArgPrefix = 0;
-	g_aMemDump[iWhich].addrPrefix.Clear();
-	if (!Range_GetAllPrefixes(iArg, nArgs, dArgPrefix, &g_aMemDump[iWhich].addrPrefix, false))
+	AddressPrefix_t addrPrefix;
+	if (!Range_GetAllPrefixes(iArg, nArgs, dArgPrefix, &addrPrefix, false))
 		return Help_Arg_1(g_iCommand);
 
 	WORD nAddress = 0;
 	if (!MemoryDumpCheck(iArg, &nAddress))
 		return Help_Arg_1(g_iCommand);
 
-	if (g_aMemDump[iWhich].addrPrefix.nSlot == AddressPrefix_t::kSlotInvalid &&
+	if (addrPrefix.nSlot == AddressPrefix_t::kSlotInvalid &&
 	   (g_aArgs[iArg].eDevice == DEV_MB_SUBUNIT || g_aArgs[iArg].eDevice == DEV_AY8913_PAIR))
 	{
 		ConsolePrintFormat("Slot prefix required for MB or AY device");
@@ -4217,6 +4212,7 @@ static Update_t _CmdMemoryDump (int nArgs, int iWhich, int iView )
 	g_aMemDump[iWhich].eDevice = g_aArgs[iArg].eDevice;
 	g_aMemDump[iWhich].bActive = true;
 	g_aMemDump[iWhich].eView = (MemoryView_e) iView;
+	g_aMemDump[iWhich].addrPrefix = addrPrefix;
 
 	return UPDATE_MEM_DUMP; // TODO: This really needed? Don't think we do any actual output
 }
@@ -4823,7 +4819,7 @@ Update_t CmdMemoryLoad (int nArgs)
 
 			memcpy(pMemBankBase + nAddressStart, pMemory.get() + nAddressStart, nAddressLen);
 
-			MemUpdatePaging(TRUE);
+			MemUpdatePaging(PagingFullInitialize);
 		}
 		else
 		{
@@ -6587,7 +6583,7 @@ Update_t CmdOutputPrint (int nArgs)
 
 	for ( int iArg = 1; iArg <= nArgs; iArg++ )
 	{
-		sText += (!!(g_aArgs[ iArg ].bType & TYPE_QUOTED_2))
+		sText += (g_aArgs[ iArg ].bType & TYPE_QUOTED_2)
 			? g_aArgs[ iArg ].sArg
 			: WordToHexStr( g_aArgs[ iArg ].nValue );
 
@@ -7027,7 +7023,7 @@ Update_t CmdSource (int nArgs)
 			const std::string pFileName = g_aArgs[ iArg ].sArg;
 
 			int iParam;
-			bool bFound = FindParam( pFileName.c_str(), MATCH_EXACT, iParam, _PARAM_SOURCE_BEGIN, _PARAM_SOURCE_END ) > 0 ? true : false;
+			bool bFound = FindParam( pFileName.c_str(), MATCH_EXACT, iParam, _PARAM_SOURCE_BEGIN, _PARAM_SOURCE_END ) > 0;
 			if (bFound && (iParam == PARAM_SRC_SYMBOLS))
 			{
 				g_bSourceAddSymbols = true;
@@ -8871,7 +8867,7 @@ bool ProfileSave ()
 }
 
 
-static void InitDisasm (void)
+static void InitDisasm ()
 {
 	g_nDisasmCurAddress = regs.pc;
 	DisasmCalcTopBotAddress();
@@ -9009,7 +9005,7 @@ static void CheckBreakOpcode ( int iOpcode )
 		g_bDebugBreakpointHit |= BP_HIT_OPCODE;
 }
 
-static void UpdateLBR (void)
+static void UpdateLBR ()
 {
 	const BYTE nOpcode = ReadByteFromMemory(regs.pc);
 
@@ -9246,7 +9242,7 @@ void DebugContinueStepping (const bool bCallerWillUpdateDisplay/*=false*/)
 }
 
 //===========================================================================
-void DebugStopStepping (void)
+void DebugStopStepping ()
 {
 	_ASSERT(g_nAppMode == MODE_STEPPING);
 
@@ -9478,7 +9474,7 @@ void DebugInitialize ()
 }
 
 //===========================================================================
-void DebugReset (void)
+void DebugReset ()
 {
 	g_videoScannerDisplayInfo.Reset();
 	g_LBR = LBR_UNDEFINED;
@@ -10102,7 +10098,7 @@ void DebuggerProcessKey ( int keycode )
 		UpdateDisplay( bUpdateDisplay );
 }
 
-void DebugDisplay ( BOOL bInitDisasm/*=FALSE*/ )
+void DebugDisplay ( bool bInitDisasm /*=false*/ )
 {
 	if (bInitDisasm)
 		InitDisasm();
@@ -10172,7 +10168,7 @@ void DebuggerCursorNext ()
 
 
 //===========================================================================
-bool IsDebugSteppingAtFullSpeed (void)
+bool IsDebugSteppingAtFullSpeed ()
 {
 	return (g_nAppMode == MODE_STEPPING) && g_bDebugFullSpeed;
 }

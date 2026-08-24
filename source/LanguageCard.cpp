@@ -68,7 +68,7 @@ LanguageCardUnit * LanguageCardUnit::create(UINT slot)
 
 LanguageCardUnit::LanguageCardUnit(SS_CARDTYPE type, UINT slot) :
 	Card(type, slot),
-	m_uLastRamWrite(0),
+	m_bLastRamWrite(false),
 	m_memMode(kMemModeInitialState),
 	m_pMemory(NULL)
 {
@@ -79,7 +79,7 @@ LanguageCardUnit::LanguageCardUnit(SS_CARDTYPE type, UINT slot) :
 		SetMemMainLanguageCard(NULL, SLOT0, true);
 }
 
-LanguageCardUnit::~LanguageCardUnit(void)
+LanguageCardUnit::~LanguageCardUnit()
 {
 	// Nothing to do for SetMemMainLanguageCard():
 	// . if //e, then no ptr to clean up (since just using memmain)
@@ -145,7 +145,7 @@ BYTE __stdcall LanguageCardUnit::IO(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValu
 		memmode &= ~MF_WRITERAM; // UTAIIe:5-23
 	}
 
-	pLC->SetLastRamWrite( ((uAddr & 1) && !bWrite) ); // UTAIIe:5-23
+	pLC->SetLastRamWrite((uAddr & 1) && !bWrite); // UTAIIe:5-23
 	pLC->SetLCMemMode(memmode);
 
 	const bool bCardChanged = GetCardMgr().GetLanguageCardMgr().GetLastSlotToSetMainMemLC() != SLOT0;
@@ -227,7 +227,7 @@ LanguageCardSlot0::LanguageCardSlot0(SS_CARDTYPE type, UINT slot)
 		SetMemMainLanguageCard(m_pMemory, SLOT0);
 }
 
-LanguageCardSlot0::~LanguageCardSlot0(void)
+LanguageCardSlot0::~LanguageCardSlot0()
 {
 	delete [] m_pMemory;
 	m_pMemory = NULL;
@@ -242,13 +242,13 @@ static const UINT kUNIT_LANGUAGECARD_VER = 1;
 #define SS_YAML_KEY_MEMORYMODE "Memory Mode"
 #define SS_YAML_KEY_LASTRAMWRITE "Last RAM Write"
 
-const std::string& LanguageCardSlot0::GetSnapshotMemStructName(void)
+const std::string& LanguageCardSlot0::GetSnapshotMemStructName()
 {
 	static const std::string name("Memory Bank");
 	return name;
 }
 
-const std::string& LanguageCardSlot0::GetSnapshotCardName(void)
+const std::string& LanguageCardSlot0::GetSnapshotCardName()
 {
 	static const std::string name("Language Card");
 	return name;
@@ -257,13 +257,15 @@ const std::string& LanguageCardSlot0::GetSnapshotCardName(void)
 void LanguageCardSlot0::SaveLCState(YamlSaveHelper& yamlSaveHelper)
 {
 	yamlSaveHelper.SaveHexUint32(SS_YAML_KEY_MEMORYMODE, GetLCMemMode() & MF_LANGCARD_MASK);
-	yamlSaveHelper.SaveUint(SS_YAML_KEY_LASTRAMWRITE, GetLastRamWrite() ? 1 : 0);
+	// SS_YAML_KEY_LASTRAMWRITE is saved/loaded as Uint for backward compatibility.
+	yamlSaveHelper.SaveUint(SS_YAML_KEY_LASTRAMWRITE, GetLastRamWrite());
 }
 
 void LanguageCardSlot0::LoadLCState(YamlLoadHelper& yamlLoadHelper)
 {
 	UINT memMode      = yamlLoadHelper.LoadUint(SS_YAML_KEY_MEMORYMODE) & MF_LANGCARD_MASK;
-	BOOL lastRamWrite = yamlLoadHelper.LoadUint(SS_YAML_KEY_LASTRAMWRITE) ? TRUE : FALSE;
+	// SS_YAML_KEY_LASTRAMWRITE is saved/loaded as Uint for backward compatibility.
+	bool lastRamWrite = yamlLoadHelper.LoadUint(SS_YAML_KEY_LASTRAMWRITE);
 	SetLCMemMode(memMode);
 	SetLastRamWrite(lastRamWrite);
 }
@@ -308,7 +310,7 @@ bool LanguageCardSlot0::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT versio
 
 	yamlLoadHelper.PopMap();
 
-	// NB. MemUpdatePaging(TRUE) called at end of Snapshot_LoadState_v2()
+	// NB. MemUpdatePaging(PagingFullInitialize) called at end of Snapshot_LoadState_v2()
 
 	return true;
 }
@@ -329,7 +331,7 @@ Saturn128K::Saturn128K(UINT slot, UINT banks)
 	if (banks == 0)
 	{
 		std::string regSection = RegGetConfigSlotSection(m_slot);
-		RegLoadValue(regSection.c_str(), REGVALUE_SATURN_NUM_BANKS, TRUE, &m_uSaturnTotalBanks, kMaxSaturnBanks);
+		RegLoadValue(regSection.c_str(), REGVALUE_SATURN_NUM_BANKS, true, &m_uSaturnTotalBanks, kMaxSaturnBanks);
 	}
 
 	for (UINT i=0; i<kMaxSaturnBanks; i++)
@@ -344,7 +346,7 @@ Saturn128K::Saturn128K(UINT slot, UINT banks)
 		::SetMemMainLanguageCard(m_aSaturnBanks[m_uSaturnActiveBank], SLOT0);
 }
 
-Saturn128K::~Saturn128K(void)
+Saturn128K::~Saturn128K()
 {
 	m_aSaturnBanks[0] = NULL;	// just zero this - deallocated in base ctor
 
@@ -361,7 +363,7 @@ Saturn128K::~Saturn128K(void)
 	// In reality, dtor only called when whole VM is being destroyed, so won't have have use-after-frees.
 }
 
-UINT Saturn128K::GetActiveBank(void)
+UINT Saturn128K::GetActiveBank()
 {
 	return m_uSaturnActiveBank;
 }
@@ -444,7 +446,7 @@ BYTE __stdcall Saturn128K::IO(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULO
 		else
 			memmode &= ~MF_WRITERAM;
 
-		pLC->SetLastRamWrite(uAddr & 1);		// Saturn differs from Apple's 16K LC: any access (LC is read-only)
+		pLC->SetLastRamWrite((uAddr & 1));		// Saturn differs from Apple's 16K LC: any access (LC is read-only)
 		pLC->SetLCMemMode(memmode);
 
 		bBankChanged = GetCardMgr().GetLanguageCardMgr().GetLastSlotToSetMainMemLC() != uSlot;
@@ -473,13 +475,13 @@ static const UINT kUNIT_SATURN_VER = 1;
 #define SS_YAML_KEY_NUM_SATURN_BANKS "Num Saturn Banks"
 #define SS_YAML_KEY_ACTIVE_SATURN_BANK "Active Saturn Bank"
 
-const std::string& Saturn128K::GetSnapshotMemStructName(void)
+const std::string& Saturn128K::GetSnapshotMemStructName()
 {
 	static const std::string name("Memory Bank");
 	return name;
 }
 
-const std::string& Saturn128K::GetSnapshotCardName(void)
+const std::string& Saturn128K::GetSnapshotCardName()
 {
 	static const std::string name("Saturn 128");
 	return name;
@@ -542,12 +544,12 @@ bool Saturn128K::LoadSnapshot(YamlLoadHelper& yamlLoadHelper, UINT version)
 
 	// NB. MemInitializeFromSnapshot() called at end of Snapshot_LoadState_v2():
 	// . SetMemMainLanguageCard() for the slot/card that last set the 16KB LC bank
-	// . MemUpdatePaging(TRUE)
+	// . MemUpdatePaging(PagingFullInitialize)
 
 	return true;
 }
 
-void Saturn128K::SetMemMainLanguageCard(void)
+void Saturn128K::SetMemMainLanguageCard()
 {
 	::SetMemMainLanguageCard(m_aSaturnBanks[m_uSaturnActiveBank], m_slot);
 }
@@ -582,7 +584,7 @@ void Saturn128K::SetSaturnMemorySize(uint8_t banks)
 	m_uSaturnTotalBanks = banks;
 
 	std::string regSection = RegGetConfigSlotSection(m_slot);
-	RegSaveValue(regSection.c_str(), REGVALUE_SATURN_NUM_BANKS, TRUE, m_uSaturnTotalBanks);
+	RegSaveValue(regSection.c_str(), REGVALUE_SATURN_NUM_BANKS, true, m_uSaturnTotalBanks);
 }
 
 uint8_t Saturn128K::GetSaturnMemorySizeSlot0()
@@ -608,7 +610,7 @@ void Saturn128K::SetSaturnMemorySizeSlot0(uint8_t banks)
 * . TODO: assist with debugger's display of "sNN" for active 16K bank
 */
 
-// Only called by ResetPaging(BOOL initialize)
+// Only called by ResetPaging(bool initialize)
 // NB. Individual cards (LC or Saturn) are reset via GetCardMgr().Reset()
 void LanguageCardManager::Reset(const bool powerCycle /*=false*/)
 {
@@ -616,7 +618,7 @@ void LanguageCardManager::Reset(const bool powerCycle /*=false*/)
 		return;
 
 //	if (GetLanguageCard())	// Redundant: done via GetCardMgr().Reset()
-//		GetLanguageCard()->SetLastRamWrite(0);
+//		GetLanguageCard()->SetLastRamWrite(false);
 
 	if (IsApple2PlusOrClone(GetApple2Type()) && GetCardMgr().QuerySlot(SLOT0) == CT_Empty)
 		::SetMemMode(0);
@@ -671,10 +673,10 @@ void LanguageCardManager::SetMemMode(const uint8_t slot)
 			card.SetMainMemLanguageCardMemory();
 	}
 
-	MemUpdatePaging(0);	// Initialize=0
+	MemUpdatePaging(PagingUpdateOnly);
 }
 
-void LanguageCardManager::SetMemModeFromSnapshot(void)
+void LanguageCardManager::SetMemModeFromSnapshot()
 {
 	// If multiple "Language Cards" (eg. LC+Saturn or 2xSaturn) then setup via the last card that selected the 16KB LC bank.
 	// NB. Skip if not Saturn card (ie. a LC), since LC's are only in slot0 and in the ctor it has called SetMainMemLanguageCard()

@@ -32,24 +32,24 @@
 /** #define TFE_DEBUG_ARCH 1 **/
 /* #define TFE_DEBUG_FRAMES - might be defined in TFE.H! */
 
-int tfe_arch_enumadapter_open(void)
+bool tfe_arch_enumadapter_open()
 {
-    return 0;
+    return false;
 }
 
-int tfe_arch_enumadapter(std::string &name, std::string &description)
+bool tfe_arch_enumadapter(std::string &name, std::string &description)
 {
-    return 0;
+    return false;
 }
 
-int tfe_arch_enumadapter_close(void)
+bool tfe_arch_enumadapter_close()
 {
-    return 0;
+    return false;
 }
 
 pcap_t *TfePcapOpenAdapter(const std::string &interface_name)
 {
-    return NULL;
+    return nullptr;
 }
 
 void TfePcapCloseAdapter(pcap_t *TfePcapFP)
@@ -77,38 +77,43 @@ void tfe_arch_set_hashfilter(const uint32_t hash_mask[2])
 #endif
 }
 
+static const char *bool_to_cstring(bool b)
+{
+    return b ? "true" : "false";
+}
+
 void tfe_arch_recv_ctl(
-    int bBroadcast,   /* broadcast */
-    int bIA,          /* individual address (IA) */
-    int bMulticast,   /* multicast if address passes the hash filter */
-    int bCorrect,     /* accept correct frames */
-    int bPromiscuous, /* promiscuous mode */
-    int bIAHash       /* accept if IA passes the hash filter */
+    bool bBroadcast,   /* broadcast */
+    bool bIA,          /* individual address (IA) */
+    bool bMulticast,   /* multicast if address passes the hash filter */
+    bool bCorrect,     /* accept correct frames */
+    bool bPromiscuous, /* promiscuous mode */
+    bool bIAHash       /* accept if IA passes the hash filter */
 )
 {
 #if defined(TFE_DEBUG_ARCH) || defined(TFE_DEBUG_FRAMES)
     if (g_fh)
     {
         fprintf(g_fh, "tfe_arch_recv_ctl() called with the following parameters:");
-        fprintf(g_fh, "\tbBroadcast   = %s", bBroadcast ? "TRUE" : "FALSE");
-        fprintf(g_fh, "\tbIA          = %s", bIA ? "TRUE" : "FALSE");
-        fprintf(g_fh, "\tbMulticast   = %s", bMulticast ? "TRUE" : "FALSE");
-        fprintf(g_fh, "\tbCorrect     = %s", bCorrect ? "TRUE" : "FALSE");
-        fprintf(g_fh, "\tbPromiscuous = %s", bPromiscuous ? "TRUE" : "FALSE");
-        fprintf(g_fh, "\tbIAHash      = %s", bIAHash ? "TRUE" : "FALSE");
+        fprintf(g_fh, "\tbBroadcast   = %s", bool_to_cstring(bBroadcast));
+        fprintf(g_fh, "\tbIA          = %s", bool_to_cstring(bIA));
+        fprintf(g_fh, "\tbMulticast   = %s", bool_to_cstring(bMulticast));
+        fprintf(g_fh, "\tbCorrect     = %s", bool_to_cstring(bCorrect));
+        fprintf(g_fh, "\tbPromiscuous = %s", bool_to_cstring(bPromiscuous));
+        fprintf(g_fh, "\tbIAHash      = %s", bool_to_cstring(bIAHash));
         fprintf(g_fh, "\n");
     }
 #endif
 }
 
-void tfe_arch_line_ctl(int bEnableTransmitter, int bEnableReceiver)
+void tfe_arch_line_ctl(bool bEnableTransmitter, bool bEnableReceiver)
 {
 #if defined(TFE_DEBUG_ARCH) || defined(TFE_DEBUG_FRAMES)
     if (g_fh)
     {
         fprintf(g_fh, "tfe_arch_line_ctl() called with the following parameters:");
-        fprintf(g_fh, "\tbEnableTransmitter = %s", bEnableTransmitter ? "TRUE" : "FALSE");
-        fprintf(g_fh, "\tbEnableReceiver    = %s", bEnableReceiver ? "TRUE" : "FALSE");
+        fprintf(g_fh, "\tbEnableTransmitter = %s", bool_to_cstring(bEnableTransmitter));
+        fprintf(g_fh, "\tbEnableReceiver    = %s", bool_to_cstring(bEnableReceiver));
         fprintf(g_fh, "\n");
     }
 #endif
@@ -131,12 +136,12 @@ int tfe_arch_receive(
 
 const char *tfe_arch_lib_version()
 {
-    return 0;
+    return nullptr;
 }
 
-int tfe_arch_is_npcap_loaded()
+bool tfe_arch_is_npcap_loaded()
 {
-    return 0;
+    return false;
 }
 
 // #endif /* #ifdef HAVE_TFE */

@@ -23,7 +23,7 @@ void RegSetConfigSlotNewCardType(UINT slot, SS_CARDTYPE type)
     std::string regSection;
     regSection = RegGetConfigSlotSection(slot);
 
-    RegSaveValue(regSection.c_str(), REGVALUE_CARD_TYPE, TRUE, type);
+    RegSaveValue(regSection.c_str(), REGVALUE_CARD_TYPE, true, type);
 }
 
 void RegSetConfigGameIOConnectorNewDongleType(UINT slot, DONGLETYPE type)
@@ -37,5 +37,5 @@ void RegSetConfigGameIOConnectorNewDongleType(UINT slot, DONGLETYPE type)
     std::string regSection;
     regSection = RegGetConfigSlotSection(slot);
 
-    RegSaveValue(regSection.c_str(), REGVALUE_GAME_IO_TYPE, TRUE, type);
+    RegSaveValue(regSection.c_str(), REGVALUE_GAME_IO_TYPE, true, type);
 }

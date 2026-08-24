@@ -21,10 +21,10 @@ public:
 
 	static INT_PTR CALLBACK DlgProc(HWND hWnd, UINT message, WPARAM wparam, LPARAM lparam);
 
-	UINT GetScrollLockToggle(void) { return m_uScrollLockToggle; }
+	UINT GetScrollLockToggle() { return m_uScrollLockToggle; }
 	void SetScrollLockToggle(UINT uValue) { m_uScrollLockToggle = uValue; }
 
-	uint32_t GetVolumeMax(void) { return VOLUME_MAX; }
+	uint32_t GetVolumeMax() { return VOLUME_MAX; }
 
 	virtual void ApplyConfigAfterClose();	// IPropertySheetPage
 	virtual void ResetToDefault();			// IPropertySheetPage
@@ -38,7 +38,7 @@ protected:
 private:
 	void InitOptions(HWND hWnd);
 	eApple2Type GetApple2Type(uint32_t NewMenuItem);
-	void EnableTrackbar(HWND hWnd, BOOL enable);
+	void EnableTrackbar(HWND hWnd, bool enable);
 	void ui_tfe_settings_dialog(HWND hWnd);
 
 	static CPageConfig* ms_this;

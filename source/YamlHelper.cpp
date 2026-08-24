@@ -47,7 +47,7 @@ int YamlHelper::InitParser(const char* pPathname)
 	return 1;
 }
 
-void YamlHelper::FinaliseParser(void)
+void YamlHelper::FinaliseParser()
 {
 	if (m_hFile)
 		fclose(m_hFile);
@@ -83,7 +83,7 @@ UINT YamlHelper::ParseFileHdr(const char* tag)
 	return yamlLoadHelper.LoadUint(SS_YAML_KEY_VERSION);
 }
 
-void YamlHelper::GetNextEvent(void)
+void YamlHelper::GetNextEvent()
 {
 	yaml_event_delete(&m_newEvent);
 	if (!yaml_parser_parse(&m_parser, &m_newEvent))
@@ -133,7 +133,7 @@ int YamlHelper::GetScalar(std::string& scalar)
 	return res;
 }
 
-void YamlHelper::GetMapStartEvent(void)
+void YamlHelper::GetMapStartEvent()
 {
 	GetNextEvent();
 
@@ -195,7 +195,7 @@ int YamlHelper::ParseMap(MapYaml& mapYaml)
 				pKey.clear();
 			}
 
-			bKey = bKey ? false : true;
+			bKey = !bKey;
 			break;
 		case YAML_SEQUENCE_START_EVENT:
 		case YAML_SEQUENCE_END_EVENT:
@@ -258,7 +258,7 @@ void YamlHelper::GetMapRemainder(std::string& mapName, MapYaml& mapYaml)
 
 //
 
-void YamlHelper::MakeAsciiToHexTable(void)
+void YamlHelper::MakeAsciiToHexTable()
 {
 	memset(m_AsciiToHex, -1, sizeof(m_AsciiToHex));
 
@@ -522,7 +522,9 @@ void YamlSaveHelper::SaveString(const char* key,  const char* value)
 	}
 
 	// A string in quotes needs double-backslashes, otherwise backslash treated as an escape-character (GH#1499)
-	if (std::string(m_pMbStr).find("\\") != std::string::npos)
+	// . Instead of special-casing quoted-strings, just double-up the backslashes for all strings (to reduce test cases)
+	if (std::string(m_pMbStr).find("\\") != std::string::npos &&	// String contains a backslash?
+		std::string(m_pMbStr).find("\\\\") == std::string::npos)	// and backslashes haven't been already doubled
 	{
 		std::string str(m_pMbStr);
 		size_t pos = 0;
