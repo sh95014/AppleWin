@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1350,6 +1350,10 @@
 		B0F9E3C32A2AC58E009C1D3F /* SymbolTable.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = SymbolTable.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		97063E4F30AE1756000CBE7F /* spng */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = spng; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		B0098BF8277E0F6800F38E0C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -1545,6 +1549,7 @@
 				B089EF3027BADA8100BDC415 /* Mariani-Info.plist */,
 				97D1D5392D2085C90088C2A2 /* minizip */,
 				B09AB68F277A15A90002A6C3 /* libyaml */,
+				97063E4F30AE1756000CBE7F /* spng */,
 				B09AB5E4277A14850002A6C3 /* AppleWin */,
 				B049E82F277B5E2600FC14A3 /* common2 */,
 				B032DE23277A0C23006DC0F7 /* mariani */,
@@ -2522,6 +2527,9 @@
 			);
 			dependencies = (
 				B0E55A6027B78461003173F2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				97063E4F30AE1756000CBE7F /* spng */,
 			);
 			name = AppleWin;
 			productName = AppleWin;
