@@ -8,7 +8,7 @@
 .core-defs:
   variables:
     CORENAME: applewin
-    CORE_ARGS: '-DBUILD_LIBRETRO=ON -DENABLE_NETWORKING=OFF -G Ninja'
+    CORE_ARGS: "-DBUILD_LIBRETRO=ON -DENABLE_NETWORKING=OFF -G Ninja"
     GIT_SUBMODULE_STRATEGY: recursive
 
 # Inclusion templates, required for the build to work
@@ -16,38 +16,38 @@ include:
   ################################## DESKTOPS ################################
 
   # Windows
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/windows-cmake-mingw.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/windows-cmake-mingw.yml"
 
   # Linux
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/linux-cmake.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/linux-cmake.yml"
 
   # MacOS 64-bit
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/osx-cmake-x86.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/osx-cmake-x86.yml"
 
   # MacOS ARM 64-bit
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/osx-cmake-arm64.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/osx-cmake-arm64.yml"
 
   ################################## CELLULAR ################################
   # Android
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/android-cmake.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/android-cmake.yml"
 
   # iOS
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/ios-cmake.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/ios-cmake.yml"
 
   # tvOS (AppleTV)
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/tvos-cmake.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/tvos-cmake.yml"
 
   #################################### MISC ##################################
   # webOS (LGTV)
-  - project: 'libretro-infrastructure/ci-templates'
-    file: '/webos-cmake.yml'
+  - project: "libretro-infrastructure/ci-templates"
+    file: "/webos-cmake.yml"
 
 # Stages for building
 stages:
@@ -65,7 +65,7 @@ libretro-build-windows-x64:
   extends:
     - .libretro-windows-cmake-x86_64
     - .core-defs
-  image: $CI_SERVER_HOST:5050/libretro-infrastructure/libretro-build-mxe-win-cross-cores:gcc10
+  image: $CI_SERVER_HOST:5050/libretro-infrastructure/libretro-build-mxe-win-cross-cores:gcc14
   before_script:
     - export NUMPROC=$(($(nproc)/5))
     - apt-get update -qy
@@ -76,7 +76,7 @@ libretro-build-windows-i686:
   extends:
     - .libretro-windows-cmake-x86
     - .core-defs
-  image: $CI_SERVER_HOST:5050/libretro-infrastructure/libretro-build-mxe-win-cross-cores:gcc10
+  image: $CI_SERVER_HOST:5050/libretro-infrastructure/libretro-build-mxe-win-cross-cores:gcc14
   before_script:
     - export NUMPROC=$(($(nproc)/5))
     - apt-get update -qy
@@ -87,13 +87,25 @@ libretro-build-linux-x64:
   extends:
     - .libretro-linux-cmake-x86_64
     - .core-defs
+  image: $CI_SERVER_HOST:5050/libretro-infrastructure/libretro-build-amd64-ubuntu:backports
   before_script:
     - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16FAAD7AF99A65E2
+    # Kitware's apt signing key, for the CMake repository this image builds
+    # against. Fetched over HTTPS rather than through gpg's own keyserver
+    # client: hkp://keyserver.ubuntu.com resolves to addresses the container
+    # cannot always reach - "gpg: keyserver receive failed: Cannot assign
+    # requested address", which took the x64 job down on 17/09 while the i686
+    # one, running the same line minutes later, got through. curl picks a
+    # reachable address and fails loudly if it cannot, and the key lands where
+    # apt reads keys from now that apt-key is deprecated.
+    - curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x16FAAD7AF99A65E2'
+      | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kitware-archive.gpg
     - sudo apt-get update -qy
     - sudo apt-get -qy install $(cat source/frontends/libretro/xenial/packages.txt)
   variables:
     EXTRA_PATH: source/frontends/libretro
+    CC: /usr/bin/gcc-14
+    CXX: /usr/bin/g++-14
 
 # Linux 32-bit
 libretro-build-linux-i686:
@@ -102,7 +114,16 @@ libretro-build-linux-i686:
     - .core-defs
   before_script:
     - export NUMPROC=$(($(nproc)/5))
-    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 16FAAD7AF99A65E2
+    # Kitware's apt signing key, for the CMake repository this image builds
+    # against. Fetched over HTTPS rather than through gpg's own keyserver
+    # client: hkp://keyserver.ubuntu.com resolves to addresses the container
+    # cannot always reach - "gpg: keyserver receive failed: Cannot assign
+    # requested address", which took the x64 job down on 17/09 while the i686
+    # one, running the same line minutes later, got through. curl picks a
+    # reachable address and fails loudly if it cannot, and the key lands where
+    # apt reads keys from now that apt-key is deprecated.
+    - curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x16FAAD7AF99A65E2'
+      | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/kitware-archive.gpg
     - sudo apt-get update -qy
     - sudo apt-get -qy install $(cat source/frontends/libretro/xenial/packages.txt)
   variables:
@@ -115,6 +136,8 @@ libretro-build-linux-aarch64:
     - .core-defs
   variables:
     EXTRA_PATH: source/frontends/libretro
+    CC: /usr/bin/gcc-14
+    CXX: /usr/bin/g++-14
 
 # MacOS 64-bit
 libretro-build-osx-x64:
@@ -135,6 +158,18 @@ libretro-build-osx-arm64:
 
 ################################### CELLULAR #################################
 
+# Android ARMv7a
+android-armeabi-v7a:
+  extends:
+    - .libretro-android-cmake-armeabi-v7a
+    - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+  variables:
+    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
+    API_LEVEL: 24
+    EXTRA_PATH: source/frontends/libretro
+
 # Android ARMv8a
 android-arm64-v8a:
   extends:
@@ -149,19 +184,28 @@ android-arm64-v8a:
 # The Android runners are based on Debian, not Ubuntu
 
 # Android 64-bit x86
-#android-x86_64:
-#  extends:
-#    - .libretro-android-cmake-x86_64
-#    - .core-defs
-#  before_script:
-#    - export NUMPROC=$(($(nproc)/5))
-#    - echo "deb http://deb.debian.org/debian bullseye-backports main" >> /etc/apt/sources.list
-#    - apt-get update -qy
-#    - apt-get install -qy cmake/bullseye-backports
-#  variables:
-#    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
-#    API_LEVEL: 24
-# Not supported; if this doesn't work the first time around, I'm cutting it
+android-x86_64:
+  extends:
+    - .libretro-android-cmake-x86_64
+    - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+  variables:
+    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
+    API_LEVEL: 24
+    EXTRA_PATH: source/frontends/libretro
+
+# Android 32-bit x86
+android-x86:
+  extends:
+    - .libretro-android-cmake-x86
+    - .core-defs
+  before_script:
+    - export NUMPROC=$(($(nproc)/5))
+  variables:
+    CXXFLAGS: -Wno-deprecated-declarations -Wno-unknown-attributes
+    API_LEVEL: 24
+    EXTRA_PATH: source/frontends/libretro
 
 # iOS
 libretro-build-ios-arm64:
