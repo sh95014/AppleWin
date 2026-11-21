@@ -61,6 +61,8 @@ using namespace DiskImgLib;
 
 #define BLINK_INTERVAL      0.5 // seconds
 
+extern common2::EmulatorOptions gEmulatorOptions;
+
 @interface AppDelegate ()
 
 @property (strong) IBOutlet NSWindow *window;
@@ -162,6 +164,11 @@ Disk_Status_e driveStatus[(size_t)NUM_SLOTS * (size_t)NUM_DRIVES];
     // in case user launches straight to full-screen
     self.fullScreenScale = -1;
     self.hadStatusBarWhileWindowed = self.hasStatusBar;
+    
+    if (gEmulatorOptions.fullscreen &&
+        (self.window.styleMask & NSWindowStyleMaskFullScreen) == 0) {
+        [self.window toggleFullScreen:self];
+    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self LogWindowFrame:__PRETTY_FUNCTION__];
